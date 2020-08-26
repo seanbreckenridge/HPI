@@ -29,6 +29,8 @@
 - [ ] polar? some other reading system? formalize documents/configure `my.pdfs`
 - [ ] backup newsboat `rss` feeds
 - [ ] backup sms/phone calls
+- [ ] backup todo lists (todotxt)
+- [ ] create DAL for todotxt (perhaps rewrite todotxtio in python since it breaks all the time)
 - [ ] configure `my.stackexchange`
 - [ ] configure `my.reddit`/`rexport`
 - [ ] food/tracking caloric intake?
