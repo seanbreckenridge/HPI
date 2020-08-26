@@ -84,5 +84,3 @@ def _main():
 if __name__ == '__main__':
     _main()
 
-get_highlights = highlights # TODO deprecate
-get_pages = pages # TODO deprecate
