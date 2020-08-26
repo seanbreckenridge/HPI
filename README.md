@@ -27,6 +27,13 @@
 - [ ] save browser history (look at promnesia scripts)
 - [ ] configure `my.media` (youtube history)
 - [ ] polar? some other reading system? formalize documents/configure `my.pdfs`
+- [ ] better [exobrain](https://github.com/seanbreckenridge/exobrain) for notes...? want:
+  - private/public notes
+  - filter by category/tag (more than just the directory)
+  - generate an RSS feed (if only so I can periodically `curl` it to track my own posts)
+  - be able to connect/reference whatever reading tool I end up using
+  - [maybe] let the inverted index connect related info automatically?
+  - `org` mode may solve most of these, but I have to learn org mode
 - [ ] backup newsboat `rss` feeds
 - [ ] backup sms/phone calls
 - [ ] backup todo lists (todotxt)
