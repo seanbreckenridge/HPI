@@ -37,7 +37,7 @@
 - [ ] backup newsboat `rss` feeds
 - [ ] backup sms/phone calls
 - [ ] backup todo lists (todotxt)
-- [ ] create DAL for todotxt (perhaps rewrite todotxtio in python since it breaks all the time)
+- [ ] create DAL for todotxt (use <https://github.com/bram85/topydo> to read todo file)
 - [ ] configure `my.stackexchange`
 - [ ] configure `my.reddit`/`rexport`
 - [ ] food/tracking caloric intake?
