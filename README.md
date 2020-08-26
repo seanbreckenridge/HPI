@@ -14,7 +14,7 @@
 
 ### Currently in-use modules/scripts
 
-- `ghexport`, with [`jobs/ghexport.job`](jobs/ghexport.job) to download github export once a week.
+- `ghexport`, with [`jobs/ghexport.job`](jobs/ghexport.job) to download github export once every 2 weeks.
 
 ---
 

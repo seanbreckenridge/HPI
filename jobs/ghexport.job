@@ -11,6 +11,6 @@ GHDIR="${REPOS}/ghexport"
 wait-for-internet
 
 # expires every 90 days
-evry 7 days -ghexport && {
+evry 14 days -ghexport && {
 	arctree -r 3 "${BACKUP_DIR}/{utcnow}.json" -- python3 "${GHDIR}/export.py" --secrets "${XDG_CONFIG_HOME}/my/my/config/gh_secret_token.py"
 }
