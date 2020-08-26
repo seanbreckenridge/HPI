@@ -20,18 +20,20 @@
 
 ### TODO:
 
-- backup/parse zsh history and create corresponding DAL
-- setup script to track weight
-- configure `my.coding`
-- save youtube history
-- save browser history (look at promnesia scripts)
-- configure `my.media`
-- polar? some other reading system? formalize documents/configure `my.pdfs`
-- backup newsboat `rss` feeds
-- backup sms/phone calls
-- configure `my.stackexchange`
-- configure `my.reddit`/`rexport`
-- food/tracking caloric intake?
+- [ ] update [bgproc](https://github.com/seanbreckenridge/bgproc) to accept a different lockfile for another background loop
+- [ ] backup/parse zsh history and create corresponding DAL
+- [ ] setup script to track weight
+- [ ] configure `my.coding`
+- [ ] save browser history (look at promnesia scripts)
+- [ ] configure `my.media` (youtube history)
+- [ ] polar? some other reading system? formalize documents/configure `my.pdfs`
+- [ ] backup newsboat `rss` feeds
+- [ ] backup sms/phone calls
+- [ ] configure `my.stackexchange`
+- [ ] configure `my.reddit`/`rexport`
+- [ ] food/tracking caloric intake?
+- [ ] daemon to capture i3/x-window tree structure (instead of rescuetime)
+- [ ] mpv-socket-daemon, use sockets/`socat` to capture what Im currently watching/listening to
 ---
 
 Last referenced commit hash: [`07dd61ca6ae2b6de20d6954ca1584accede8b762`](https://github.com/karlicoss/HPI/commit/07dd61ca6ae2b6de20d6954ca1584accede8b762)
