@@ -1,0 +1,18 @@
+: 1594693071:0;ls
+: 1594693154:2;while true; do genpasswd -n $(tput cols); sleep 0.1; done
+: 1594693172:3;while true; do\
+for i in {1.."$(tput cols)"}; do genpasswd -n "$i"; done \
+for i in $(seq 1 "$(tput cols)" | tac); do genpasswd -n "$i"; done\
+done
+: 1594693184:2;while true; do\
+for i in {1.."$(tput cols)"}; do genpasswd -n "$i"; done \
+for i in $(seq 1 "$(tput cols)" | tac); do genpasswd -n "$i"; done\
+done
+: 1594693220:0;{ for i in 1..10; do echo $i; done }
+: 1594693231:0;{ for i in $(seq 10); do echo $i; done }
+: 1594693239:2;{ for i in $(seq 10); do echo $i; sleep 1; done }
+: 1594693242:10;{ for i in $(seq 10); do echo $i; sleep 1; done } | tac
+: 1594693261:29;man tac
+: 1594693293:0;which parallel-moreutils
+: 1594693297:0;ls
+: 1594693297:0;ls

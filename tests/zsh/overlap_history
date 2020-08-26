@@ -1,0 +1,4 @@
+: 1594693239:2;{ for i in $(seq 10); do echo $i; sleep 1; done }
+: 1594693242:10;{ for i in $(seq 10); do echo $i; sleep 1; done } | tac
+: 1594693261:29;man tac
+: 1594693293:0;which parallel-moreutils

@@ -20,7 +20,8 @@
 
 ### TODO:
 
-- [ ] backup/parse zsh history and create corresponding DAL
+- [x] backup/parse zsh history and create corresponding DAL
+- [x] add tests for zsh history
 - [ ] setup script to track weight
 - [ ] configure `my.coding`
 - [ ] save browser history (look at promnesia scripts)
