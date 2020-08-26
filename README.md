@@ -34,6 +34,7 @@
 - [ ] food/tracking caloric intake?
 - [ ] daemon to capture i3/x-window tree structure (instead of rescuetime)
 - [ ] mpv-socket-daemon, use sockets/`socat` to capture what Im currently watching/listening to
+- [ ] testing???
 ---
 
 Last referenced commit hash: [`07dd61ca6ae2b6de20d6954ca1584accede8b762`](https://github.com/karlicoss/HPI/commit/07dd61ca6ae2b6de20d6954ca1584accede8b762)
