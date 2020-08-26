@@ -1,0 +1,67 @@
+#!/bin/bash -x
+
+readonly DATA_DIR="${HOME}/data"
+
+require() {
+	BINARY="${1:?Must provide command to check}"
+	if which "$BINARY" >/dev/null 2>&1; then
+		return 0
+	else
+		printf "Could not find '%s' on your \$PATH\n" "$BINARY"
+		return 1
+	fi
+} && export -f require
+
+clone_if_not_exists() {
+	if [[ ! -d "$2" ]]; then
+		git clone "$1" "$2" || exit $?
+	fi
+} && export -f clone_if_not_exists
+
+install_hpi() {
+	echo "Installing HPI..."
+	cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+	pip install --user -e .
+}
+
+create_data_dir() {
+	echo "Creating data dir..."
+	[[ ! -d "$DATA_DIR" ]] && mkdir -p "$DATA_DIR"
+}
+
+install_python_extras() {
+	echo "Installing extra python packages..."
+	pip install -r ./additional_python_packages.txt
+}
+
+setup_arctree() {
+	echo "Installing arctree..."
+	local INSTALL_INTO="${HOME}/.local/bin"
+	if [[ ! -d "$INSTALL_INTO" ]]; then
+		printf '%s does not exist, not sure where to install arctree\n' "$INSTALL_INTO" >&2
+		exit 1
+	fi
+	cd "$INSTALL_INTO" || {
+		printf 'Could not cd into %s\n' "$INSTALL_INTO"
+		exit 1
+	}
+	local TARGET="./arctree"
+	curl -s 'https://raw.githubusercontent.com/karlicoss/arctee/master/arctee.py' >"$TARGET" || exit $?
+	chmod +x "$TARGET"
+}
+
+set -e
+require bgproc            # https://github.com/seanbreckenridge/bgproc
+require wait-for-internet # https://github.com/seanbreckenridge/wait-for-internet
+require evry              # https://github.com/seanbreckenridge/evry
+set +e
+
+wait-for-internet
+
+(setup_arctree) || exit $? # run in subshell to not 'cd' in current process
+create_data_dir
+install_hpi
+install_python_extras
+
+# application specific setup
+bash -x ./setup_scripts/ghexport
