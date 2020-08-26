@@ -8,7 +8,7 @@
 ### Notable Changes
 
 - collection of [`bootstrap`](./bootstrap) scripts to setup things on my computer
-- [`jobs`](./jobs) contains anacron-like jobs that are run periodically, using [`evry`](https://github.com/seanbreckenridge/evry)
+- [`jobs`](./jobs) contains anacron-like jobs that are run periodically, using [`bgproc`](https://github.com/seanbreckenridge/bgproc) and [`evry`](https://github.com/seanbreckenridge/evry). So, this repo has both the [DAL](https://beepb00p.xyz/exports.html#dal) and the scripts to backup the data.
 
 ---
 
@@ -20,7 +20,6 @@
 
 ### TODO:
 
-- [ ] update [bgproc](https://github.com/seanbreckenridge/bgproc) to accept a different lockfile for another background loop
 - [ ] backup/parse zsh history and create corresponding DAL
 - [ ] setup script to track weight
 - [ ] configure `my.coding`

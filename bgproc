@@ -1,0 +1,18 @@
+#!/bin/bash -u
+# A wrapper around my bgproc script
+# https://github.com/seanbreckenridge/bgproc
+# used to run tasks in the background
+#
+# See the ./jobs folder for what this runs
+
+# cd into the ./jobs directory
+HPI_DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+cd "$HPI_DIR/jobs" || {
+	echo "Could not change cwd to HPI/jobs"
+	exit 1
+}
+
+declare -rx BGPROC_LOCKFILE='/tmp/HPI_LOCK'
+declare -rx BGPROC_LOGFILE="${HOME}/.cache/hpi_bgproc.log"
+
+exec bgproc
