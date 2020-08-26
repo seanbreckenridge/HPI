@@ -47,6 +47,8 @@
 - [ ] mpv-socket-daemon, use sockets/`socat` to capture what Im currently watching/listening to
 - [ ] patch in rifle/ranger history?
 - [ ] discord backups?
+- [ ] backup MAL
+- [ ] backup trakt? (have API access)
 - [ ] testing???
 ---
 
