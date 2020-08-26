@@ -1,0 +1,18 @@
+#!/bin/bash -uex
+# makes sure that data directories at ~/data exist
+
+readonly DATA_PREFIX="${HOME}/data"
+
+declare -a directories
+directories=(
+	'github/gdpr'
+	'github/ghexport'
+	'zsh_history'
+)
+
+for dir in "${directories[@]}"; do
+	ddir="${DATA_PREFIX}/${dir}"
+	if [[ ! -d "${ddir}" ]]; then
+		mkdir -vp "${ddir}"
+	fi
+done

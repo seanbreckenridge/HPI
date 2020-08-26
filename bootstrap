@@ -59,10 +59,13 @@ set +e
 
 wait-for-internet
 
+# HPI global setup
 (setup_arctree) || exit $? # run in subshell to not 'cd' in current process
 create_data_dir
 install_hpi
 install_python_extras
 
-# application specific setup
+# export specfic setup
+./setup_scripts/directories
+
 bash -x ./setup_scripts/ghexport
