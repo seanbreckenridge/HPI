@@ -44,6 +44,7 @@
 - [ ] android app to track my location?
 - [ ] daemon to capture i3/x-window tree structure (instead of rescuetime)
 - [ ] mpv-socket-daemon, use sockets/`socat` to capture what Im currently watching/listening to
+- [ ] patch in rifle/ranger history?
 - [ ] discord backups?
 - [ ] testing???
 ---
@@ -856,8 +857,7 @@ Other links:
     infrastructure](https://beepb00p.xyz/sad-infra.html): here I am
     going into motivation and difficulties arising in the implementation
 
--- {#section-1}
-==
+---
 
 Open to any feedback and thoughts!
 
