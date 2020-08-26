@@ -1,5 +1,7 @@
 #!/bin/bash -x
 
+cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+
 readonly DATA_DIR="${HOME}/data"
 
 require() {
@@ -20,7 +22,6 @@ clone_if_not_exists() {
 
 install_hpi() {
 	echo "Installing HPI..."
-	cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
 	pip install --user -e .
 }
 
