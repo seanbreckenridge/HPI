@@ -15,6 +15,7 @@
 ### Currently in-use modules/scripts
 
 - `ghexport`, with [`jobs/ghexport.job`](jobs/ghexport.job) to download github action periodically.
+- `zsh`, [example usage](https://gist.github.com/seanbreckenridge/921b49da3fadf09e45a23bb5a06b030e)
 
 ---
 
