@@ -1,0 +1,40 @@
+#!/bin/bash
+
+readonly DATA_DIR="${HOME}/data"
+
+install_hpi() {
+  echo "Installing HPI..."
+  cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+  pip install --user -e .
+}
+
+create_data_dir() {
+  echo "Creating data dir..."
+  [[ ! -d "$DATA_DIR" ]] && mkdir -p "$DATA_DIR"
+}
+
+install_python_extras() {
+  echo "Installing extra python packages..."
+  pip install -r ./additional_python_packages.txt
+}
+
+setup_arctree() {
+  echo "Installing arctree..."
+  local INSTALL_INTO="${HOME}/.local/bin"
+  if [[ ! -d "$INSTALL_INTO" ]]; then
+    printf '%s does not exist, not sure where to install arctree\n' "$INSTALL_INTO" >&2
+    exit 1
+  fi
+  cd "$INSTALL_INTO" || {
+    printf 'Could not cd into %s\n' "$INSTALL_INTO"
+    exit 1
+  }
+  local TARGET="./arctree"
+  curl -s 'https://raw.githubusercontent.com/karlicoss/arctee/master/arctee.py' > "$TARGET" || exit $?
+  chmod +x "$TARGET"
+}
+
+(setup_arctree)  # run in subshell to not 'cd' in current process
+create_data_dir
+install_hpi
+install_python_extras
