@@ -41,6 +41,7 @@
 - [ ] configure `my.stackexchange`
 - [ ] configure `my.reddit`/`rexport`
 - [ ] food/tracking caloric intake?
+- [ ] android app to track my location?
 - [ ] daemon to capture i3/x-window tree structure (instead of rescuetime)
 - [ ] mpv-socket-daemon, use sockets/`socat` to capture what Im currently watching/listening to
 - [ ] discord backups?
