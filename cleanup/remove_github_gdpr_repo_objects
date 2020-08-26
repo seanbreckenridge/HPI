@@ -1,0 +1,12 @@
+#!/bin/bash -eu
+# remove git object (diff) data from the gdpr export
+# the `.git` repo would be saved in my regular
+# backups, else saved in a regular complete
+# github-repo-backup
+#
+# my.github only needs the event/issue data,
+# and the existence of the git repo to grab
+# basic metadata like when a repo was created
+
+cd ~/data/github/gdpr/repositories/seanbreckenridge
+fd --type file 'pack-.*(idx|pack)' -X rm -v
