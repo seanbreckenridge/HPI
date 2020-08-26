@@ -12,6 +12,32 @@
 
 ---
 
+### Currently in-use modules/scripts
+
+- `ghexport`, with [`jobs/ghexport.job`](jobs/ghexport.job) to download github export once a week.
+
+---
+
+### TODO:
+
+- backup/parse zsh history and create corresponding DAL
+- setup script to track weight
+- configure `my.coding`
+- save youtube history
+- save browser history (look at promnesia scripts)
+- configure `my.media`
+- polar? some other reading system? formalize documents/configure `my.pdfs`
+- backup newsboat `rss` feeds
+- backup sms/phone calls
+- configure `my.stackexchange`
+- configure `my.reddit`/`rexport`
+- food/tracking caloric intake?
+---
+
+Last referenced commit hash: [`07dd61ca6ae2b6de20d6954ca1584accede8b762`](https://github.com/karlicoss/HPI/commit/07dd61ca6ae2b6de20d6954ca1584accede8b762)
+
+---
+
 **TLDR**: I'm using [HPI](https://github.com/karlicoss/HPI) (Human
 Programming Interface) package as a means of unifying, accessing and
 interacting with all of my personal data.
