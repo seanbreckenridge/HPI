@@ -1,75 +1,70 @@
-'''
+"""
 Weight data (manually logged)
-'''
+"""
 
+import csv
+
+from pathlib import Path
 from datetime import datetime
-from typing import NamedTuple, Iterator
+from dataclasses import dataclass
+from typing import NamedTuple, Iterator, Optional
 
-from ..common import LazyLogger
-from ..error import Res
-from ..notes import orgmode
+from ..core import PathIsh
+from ..core.error import Res
 
-from my.config import weight as config
+from my.config import weight as user_config
 
 
-log = LazyLogger('my.body.weight')
+@dataclass
+class weight(user_config):
+    # csv file with utc date, weight
+    logfile: PathIsh
+
+    @property
+    def file(self) -> Optional[Path]:
+        """
+        Warn the user if the logfile doesnt exist, else return the absolute path
+        """
+        p: Path = Path(self.logfile).expanduser().absolute()
+        if not p.exists():
+            import warnings
+
+            warnings.warn(f"weight: {p} does not exist")
+            return
+        else:
+            return p
+
+
+from ..core.cfg import make_config
+
+config = make_config(weight)
 
 
 class Entry(NamedTuple):
     dt: datetime
     value: float
-    # TODO comment??
+
+    def write(self):
+        """Write the entry to the CSV log file"""
+        with open(config.file, "a", newline="") as csv_file:
+            csv_writer = csv.writer(csv_file, delimiter="|", quoting=csv.QUOTE_MINIMAL)
+            # converts to epoch seconds in UTC
+            csv_writer.writerow([int(self.dt.timestamp()), self.value])
 
 
 Result = Res[Entry]
 
 
-# TODO cachew?
-def from_orgmode() -> Iterator[Result]:
-    orgs = orgmode.query()
-    for o in orgs.query_all(lambda o: o.with_tag('weight')):
-        try:
-            # TODO can it throw? not sure
-            created = o.created
-            assert created is not None
-        except Exception as e:
-            log.exception(e)
-            yield e
-            continue
-        try:
-            w = float(o.heading)
-        except Exception as e:
-            log.exception(e)
-            yield e
-            continue
-        # TODO not sure if it's really necessary..
-        created = config.default_timezone.localize(created)
-        yield Entry(
-            dt=created,
-            value=w,
-            # TODO add org note content as comment?
-        )
-
-
-def dataframe():
-    import pandas as pd # type: ignore
-    entries = from_orgmode()
-    def it():
-        for e in from_orgmode():
-            if isinstance(e, Exception):
-                yield {
-                    'error': str(e),
-                }
-            else:
-                yield {
-                    'dt'    : e.dt,
-                    'weight': e.value,
-                }
-    df = pd.DataFrame(it())
-    df.set_index('dt', inplace=True)
-    df.index = pd.to_datetime(df.index, utc=True)
-    return df
-
-# TODO move to a submodule? e.g. my.body.weight.orgmode?
-# so there could be more sources
-# not sure about my.body thing though
+def history() -> Iterator[Result]:
+    with open(config.file, "r", newline="") as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter="|", quoting=csv.QUOTE_MINIMAL)
+        for line in csv_reader:
+            try:
+                dt_str, val_str = line
+                # returns date in UTC time
+                # TODO: maybe make these all explicit using pytz and tz= ... or arrow? or set a global timezone for the DAL?
+                yield Entry(
+                    dt=datetime.utcfromtimestamp(int(dt_str)), value=float(val_str)
+                )
+            except Exception as e:
+                yield e

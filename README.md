@@ -17,6 +17,7 @@
 - `ghexport`, with [`jobs/ghexport.job`](jobs/ghexport.job) to download github action periodically.
 - `zsh`, [example usage](https://gist.github.com/seanbreckenridge/921b49da3fadf09e45a23bb5a06b030e)
 - `my.reddit`, corresponding [job](./jobs/rexport.job)
+- `my.body.weight` to track weight (w/ TUI to add to log)
 
 ---
 
@@ -24,13 +25,25 @@
 
 - [x] backup/parse zsh history and create corresponding DAL
 - [x] add tests for zsh history
+- [x] setup script to track weight
 - [ ] backup todo lists (todotxt)
 - [ ] create DAL for todotxt (use <https://github.com/bram85/topydo> to read todo file)
-- [ ] setup script to track weight
+- [ ] daemon to capture i3/x-window tree structure (instead of rescuetime)
+- [ ] mpv-socket-daemon, use sockets/`socat` to capture what Im currently watching/listening to
+- [ ] patch in rifle/ranger history?
 - [ ] configure `my.coding`
 - [ ] save browser history (look at promnesia scripts)
 - [ ] configure `my.media` (youtube history)
 - [ ] polar? some other reading system? formalize documents/configure `my.pdfs`
+- [ ] backup newsboat `rss` feeds
+- [ ] backup sms/phone calls
+- [x] configure `my.reddit`/`rexport`
+- [ ] food/tracking caloric intake?
+- [ ] android app to track my location?
+- [ ] discord backups?
+- [ ] backup MAL
+- [ ] backup trakt? (have API access)
+- [ ] testing???
 - [ ] better [exobrain](https://github.com/seanbreckenridge/exobrain) for notes...? want:
   - private/public notes
   - filter by category/tag (more than just the directory)
@@ -38,18 +51,6 @@
   - be able to connect/reference whatever reading tool I end up using
   - [maybe] let the inverted index connect related info automatically?
   - `org` mode may solve most of these, but I have to learn org mode
-- [ ] backup newsboat `rss` feeds
-- [ ] backup sms/phone calls
-- [x] configure `my.reddit`/`rexport`
-- [ ] food/tracking caloric intake?
-- [ ] android app to track my location?
-- [ ] daemon to capture i3/x-window tree structure (instead of rescuetime)
-- [ ] mpv-socket-daemon, use sockets/`socat` to capture what Im currently watching/listening to
-- [ ] patch in rifle/ranger history?
-- [ ] discord backups?
-- [ ] backup MAL
-- [ ] backup trakt? (have API access)
-- [ ] testing???
 
 ### delayed todos
 - [ ] configure `my.stackexchange` (isnt really documented/able to use in HPI without modifications [wait for repo](https://github.com/karlicoss/ghexport))
