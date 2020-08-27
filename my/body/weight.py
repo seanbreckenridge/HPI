@@ -7,7 +7,7 @@ import csv
 from pathlib import Path
 from datetime import datetime
 from dataclasses import dataclass
-from typing import NamedTuple, Iterator, Optional
+from typing import NamedTuple, Iterable, Optional
 
 from ..core import PathIsh
 from ..core.error import Res
@@ -30,7 +30,7 @@ class weight(user_config):
             import warnings
 
             warnings.warn(f"weight: {p} does not exist")
-            return
+            return None
         else:
             return p
 
@@ -52,10 +52,10 @@ class Entry(NamedTuple):
             csv_writer.writerow([int(self.dt.timestamp()), self.value])
 
 
-Result = Res[Entry]
+Result = Iterable[Res[Entry]]
 
 
-def history() -> Iterator[Result]:
+def history() -> Result:
     with open(config.file, "r", newline="") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter="|", quoting=csv.QUOTE_MINIMAL)
         for line in csv_reader:
