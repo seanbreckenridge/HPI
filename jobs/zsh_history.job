@@ -6,5 +6,6 @@
 evry 3 months -backup_zsh_history && {
 	BACKUP_DIR="${HOME}/data/zsh_history"
 	ZSH_HIST_FILE="${ZDOTDIR:?ZDOTDIR environment variable not set}/.zsh_history"
+	printlog "zsh_history:Backing up zsh history..."
 	arctree "${BACKUP_DIR}/{utcnow}.zsh" -- cat "$ZSH_HIST_FILE"
 }

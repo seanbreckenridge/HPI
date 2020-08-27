@@ -13,6 +13,8 @@ cd "$HPI_DIR/jobs" || {
 }
 
 declare -rx BGPROC_LOCKFILE='/tmp/HPI_LOCK'
+# just printlog/log messages
 declare -rx BGPROC_LOGFILE="${HOME}/.cache/hpi_bgproc.log"
 
-exec bgproc
+# all messages, including application/job output
+exec bgproc 2>&1 | tee -a "${HOME}/.cache/hpi_app.log"
