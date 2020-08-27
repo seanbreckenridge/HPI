@@ -22,11 +22,9 @@ class zsh(user_config):
     export_path: Paths
 
     # path to current zsh history (i.e. the live file)
-    live_zsh_history: Optional[PathIsh] = None
-
+    live_file: Optional[PathIsh] = None
 
 from .core.cfg import make_config
-
 config = make_config(zsh)
 
 #######
@@ -37,21 +35,22 @@ from typing import Sequence
 
 from .core import get_files, warn_if_empty
 from .core.common import listify
+from .core.file import yield_lines
 
 
 @listify
 def inputs() -> Sequence[Path]:
     """
-    Returns all inputs, including live_zsh_history if provided and exported histories
+    Returns all inputs, including live_file if provided and exported histories
     """
     yield from get_files(config.export_path, glob="*.zsh")
-    if config.live_zsh_history is not None:
-        p: Path = Path(config.live_zsh_history).expanduser().absolute()
+    if config.live_file is not None:
+        p: Path = Path(config.live_file).expanduser().absolute()
         if p.exists():
             yield p
         else:
             warnings.warn(
-                f"'live_zsh_history' provided {config.live_zsh_history} but that file doesn't exist."
+                f"'live_file' provided {config.live_file} but that file doesn't exist."
             )
 
 
@@ -63,10 +62,9 @@ def inputs() -> Sequence[Path]:
 ### https://github.com/seanbreckenridge/dotfiles/blob/95f1869632e6c0d72fb5fbf901f0dacddbbd1043/.config/zsh/env_config.zsh#L9-L18
 
 import re
-import io
 
 from datetime import datetime, timedelta
-from typing import NamedTuple, Iterable, Iterator, Set, Tuple
+from typing import NamedTuple, Iterable, Set, Tuple
 from itertools import chain
 
 from .core.error import Res
@@ -75,7 +73,6 @@ from .core.error import Res
 duration = timedelta
 
 from .core.common import LazyLogger
-
 logger = LazyLogger(__name__)
 
 # represents one history entry
@@ -115,7 +112,7 @@ def _parse_file(histfile: Path) -> Results:
     dt, dur, command = None, None, ""
     # cant parse line by line since some commands are multiline
     # sort of structured like a do-while loop
-    for line in _yield_lines(histfile):
+    for line in yield_lines(histfile):
         r = _parse_metadata(line)
         # if regex didnt match, this is a multi line command string
         if r is None:
@@ -167,11 +164,3 @@ def _parse_duration(dur: Optional[str]) -> duration:
         return duration(seconds=0)
     else:
         return duration(seconds=int(dur))
-
-
-def _yield_lines(histfile: Path) -> Iterator[str]:
-    with io.open(histfile, encoding="latin-1") as hist_f:
-        for line in hist_f:
-            if line.strip() == "":
-                continue
-            yield line
