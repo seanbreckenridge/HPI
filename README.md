@@ -14,10 +14,13 @@
 
 ### Currently in-use modules/scripts
 
+See [here](https://github.com/seanbreckenridge/dotfiles/tree/master/.config/my/my/config) for config.
+
 - `ghexport`, with [`jobs/ghexport.job`](jobs/ghexport.job) to download github action periodically.
 - `zsh`, [example usage](https://gist.github.com/seanbreckenridge/921b49da3fadf09e45a23bb5a06b030e)
 - `my.reddit`, corresponding [job](./jobs/rexport.job)
 - `my.body.weight` to track weight (w/ TUI to add to log)
+- `my.coding` to track git commits across the system
 
 ---
 
@@ -26,16 +29,17 @@
 - [x] backup/parse zsh history and create corresponding DAL
 - [x] add tests for zsh history
 - [x] setup script to track weight
+- [ ] backup newsboat `rss` feeds
 - [ ] backup todo lists (todotxt)
 - [ ] create DAL for todotxt (use <https://github.com/bram85/topydo> to read todo file)
 - [ ] daemon to capture i3/x-window tree structure (instead of rescuetime)
 - [ ] mpv-socket-daemon, use sockets/`socat` to capture what Im currently watching/listening to
 - [ ] patch in rifle/ranger history?
-- [ ] configure `my.coding`
-- [ ] save browser history (look at promnesia scripts)
+- [x] configure `my.coding`
+- [ ] save browser history (look at promnesia scripts?)
 - [ ] configure `my.media` (youtube history)
+- [ ] configure google takeout/mounted google drive
 - [ ] polar? some other reading system? formalize documents/configure `my.pdfs`
-- [ ] backup newsboat `rss` feeds
 - [ ] backup sms/phone calls
 - [x] configure `my.reddit`/`rexport`
 - [ ] food/tracking caloric intake?
@@ -53,7 +57,7 @@
   - `org` mode may solve most of these, but I have to learn org mode
 
 ### delayed todos
-- [ ] configure `my.stackexchange` (isnt really documented/able to use in HPI without modifications [wait for repo](https://github.com/karlicoss/ghexport))
+- [ ] configure `my.stackexchange` (isnt really documented/able to use in HPI without modifications [wait for repo](https://github.com/karlicoss/ghexport/issues/3#issuecomment-680732889))
 ---
 
 Last referenced commit hash: [`07dd61ca6ae2b6de20d6954ca1584accede8b762`](https://github.com/karlicoss/HPI/commit/07dd61ca6ae2b6de20d6954ca1584accede8b762)
