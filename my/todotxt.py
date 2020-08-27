@@ -34,7 +34,6 @@ class todotxt(user_config):
 
 
 from .core.cfg import make_config
-
 config = make_config(todotxt)
 
 #######
@@ -42,23 +41,12 @@ config = make_config(todotxt)
 import warnings
 from pathlib import Path
 from typing import Sequence
-
-from .core import get_files, warn_if_empty
-from .core.common import listify
-
-
-@listify
-def inputs() -> Sequence[Path]:
-    """
-    Returns all todo.txt related files
-    """
-    yield from get_files(config.export_path, glob="*.txt")
-
-
 from datetime import datetime
 from typing import NamedTuple, Iterator, Set, List, Tuple
 from itertools import chain
 
+
+from .core import get_files, warn_if_empty
 from .core.error import Res
 from .core.common import LazyLogger
 from .core.file import yield_lines
@@ -80,6 +68,11 @@ class Todo(NamedTuple):
     tags: List[str]
 
 
+def inputs() -> Sequence[Path]:
+    """Returns all done.txt files"""
+    return get_files(config.export_path, glob="*done.txt")
+
+
 Results = Iterator[Res[Todo]]
 
 
@@ -92,7 +85,7 @@ def history(from_paths=inputs) -> Results:
 
 def todos(from_file: Optional[PathIsh] = config.live_file) -> Results:
     """
-    Parses the currently in use todo.txt file
+    Parses the currently in use todo.txt file (returns my current todos)
     """
     if from_file is None:
         warnings.warn(f"Did not recieve a valid 'live_file' to read from: {from_file}")

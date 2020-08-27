@@ -16,7 +16,7 @@
 
 See [here](https://github.com/seanbreckenridge/dotfiles/tree/master/.config/my/my/config) for config.
 
-- `ghexport`, with [`jobs/ghexport.job`](jobs/ghexport.job) to download github action periodically.
+- `my.github`, with [`jobs/ghexport.job`](jobs/ghexport.job) to download github actions periodically.
 - `zsh`, [example usage](https://gist.github.com/seanbreckenridge/921b49da3fadf09e45a23bb5a06b030e)
 - `my.reddit`, corresponding [job](./jobs/rexport.job)
 - `my.body.weight` to track weight (w/ TUI to add to log)
