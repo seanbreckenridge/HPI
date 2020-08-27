@@ -67,6 +67,7 @@ import io
 
 from datetime import datetime, timedelta
 from typing import NamedTuple, Iterable, Iterator, Set, Tuple
+from itertools import chain
 
 from .core.error import Res
 
@@ -74,6 +75,7 @@ from .core.error import Res
 duration = timedelta
 
 from .core.common import LazyLogger
+
 logger = LazyLogger(__name__)
 
 # represents one history entry
@@ -86,25 +88,17 @@ class Entry(NamedTuple):
 Results = Iterable[Res[Entry]]
 
 
-def history(from_paths=inputs):
+def history(from_paths=inputs) -> Results:
     yield from _merge_histories(*map(_parse_file, from_paths()))
 
 
 @warn_if_empty
 def _merge_histories(*sources: Results) -> Results:
-
-    from itertools import chain
-
     emitted: Set[Tuple[datetime, str]] = set()
     for e in chain(*sources):
         if isinstance(e, Exception):
             yield e
             continue
-
-        # replace spaces and slashes and strip command
-        # this is just to make the (dt, commandstr) pair more likely
-        # to remove duplicates and be unique
-        # the command from the event is emitted without any changes
         key = (e.dt, e.command)
         if key in emitted:
             # logger.debug('ignoring %s: %s', key, e)
@@ -140,7 +134,9 @@ def _parse_file(histfile: Path) -> Results:
     # yield the last entry
     if command.strip() != "":
         yield Entry(
-            dt=_parse_datetime(dt), duration=_parse_duration(dur), command=command.strip()
+            dt=_parse_datetime(dt),
+            duration=_parse_duration(dur),
+            command=command.strip(),
         )
 
 
@@ -160,7 +156,9 @@ def _parse_datetime(date: Optional[str]) -> datetime:
         logger.warning(f"_parse_datetime receieved {date}, expected a datetime")
         return datetime.now()
     else:
-        return datetime.utcfromtimestamp(int(date),)
+        return datetime.utcfromtimestamp(
+            int(date),
+        )
 
 
 def _parse_duration(dur: Optional[str]) -> duration:
@@ -177,5 +175,3 @@ def _yield_lines(histfile: Path) -> Iterator[str]:
             if line.strip() == "":
                 continue
             yield line
-
-
