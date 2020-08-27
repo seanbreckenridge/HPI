@@ -2,11 +2,12 @@
 Git commits data for repositories on your filesystem
 """
 
+
 from pathlib import Path
 from datetime import datetime, timezone
-from typing import List, NamedTuple, Optional, Dict, Any, Iterator, Set
+from typing import List, NamedTuple, Optional, Dict, Any, Iterator, Set, List
 
-from ..common import PathIsh, LazyLogger, mcachew
+from ..core.common import PathIsh, LazyLogger, mcachew
 from my.config import commits as config
 
 # pip3 install gitpython
@@ -17,23 +18,32 @@ from git.repo.fun import is_git_dir, find_worktree_git_dir # type: ignore
 log = LazyLogger('my.commits', level='info')
 
 
-_things = {
-    *config.emails,
-    *config.names,
-}
+# TODO: task-pool something like https://sean.fish/d/repos-pull-all?dark
+# to pull all repos?
+
+
+#_things = {
+#    *config.emails,
+#    *config.names,
+#}
+#
+#print(_things)
 
 
 def by_me(c) -> bool:
     actor = c.author
     if actor.email in config.emails:
         return True
-    if actor.name in config.names:
-        return True
-    aa = f"{actor.email} {actor.name}"
-    for thing in _things:
-        if thing in aa:
-            # TODO this is probably useless
-            raise RuntimeError("WARNING!!!", actor, c, c.repo)
+    # disabled this because of name conflicts, all of my commits have an email attached to them
+#    if actor.name in config.names:
+#        return True
+
+#    disabled this (along with _things) because it doesn't seem to be doing much
+#    aa = f"{actor.email} {actor.name}"
+#    for thing in _things:
+#        if thing in aa:
+#            # TODO this is probably useless
+#            raise RuntimeError("WARNING!!!", actor, c, c.repo)
     return False
 
 
@@ -116,7 +126,7 @@ def canonical_name(repo: Path) -> str:
 def git_repos_in(roots: List[Path]) -> List[Path]:
     from subprocess import check_output
     outputs = check_output([
-        'fdfind',
+        'fd',
         # '--follow', # right, not so sure about follow... make configurable?
         '--hidden',
         '--full-path',

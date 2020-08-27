@@ -3,3 +3,4 @@ atomicwrites
 backoff
 cachew
 pytz
+gitpython
