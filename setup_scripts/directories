@@ -10,6 +10,7 @@ directories=(
 	'zsh_history'
 	'rexport'
 	'todotxt'
+	'rss'
 )
 
 for dir in "${directories[@]}"; do

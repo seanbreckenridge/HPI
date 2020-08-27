@@ -1,0 +1,9 @@
+#!/bin/bash
+# backup current rss feed
+
+evry 1 day -backup_rss && {
+	readonly RSS_FILE="${XDG_CONFIG_HOME}/newsboat/urls"
+	readonly BACKUP_DIR="${HOME}/data/rss"
+	printlog "rss:backing up..."
+	arctree "${BACKUP_DIR}/{utcnow}.txt" -- cat "${RSS_FILE}"
+}
