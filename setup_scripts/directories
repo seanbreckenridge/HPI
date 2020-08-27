@@ -9,6 +9,7 @@ directories=(
 	'github/ghexport'
 	'zsh_history'
 	'rexport'
+	'todotxt'
 )
 
 for dir in "${directories[@]}"; do

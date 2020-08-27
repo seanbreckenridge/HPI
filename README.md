@@ -21,6 +21,7 @@ See [here](https://github.com/seanbreckenridge/dotfiles/tree/master/.config/my/m
 - `my.reddit`, corresponding [job](./jobs/rexport.job)
 - `my.body.weight` to track weight (w/ TUI to add to log)
 - `my.coding` to track git commits across the system
+- `my.todotxt`, to track my to-do list history
 
 ---
 
@@ -29,9 +30,9 @@ See [here](https://github.com/seanbreckenridge/dotfiles/tree/master/.config/my/m
 - [x] backup/parse zsh history and create corresponding DAL
 - [x] add tests for zsh history
 - [x] setup script to track weight
+- [x] backup todo lists (todotxt)
+- [x] create DAL for todotxt (use <https://github.com/bram85/topydo> to read todo file)
 - [ ] backup newsboat `rss` feeds
-- [ ] backup todo lists (todotxt)
-- [ ] create DAL for todotxt (use <https://github.com/bram85/topydo> to read todo file)
 - [ ] daemon to capture i3/x-window tree structure (instead of rescuetime)
 - [ ] mpv-socket-daemon, use sockets/`socat` to capture what Im currently watching/listening to
 - [ ] patch in rifle/ranger history?

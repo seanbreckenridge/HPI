@@ -1,0 +1,10 @@
+#!/bin/bash
+# backup todo.txt
+
+evry 1 day -backup_todotxt && {
+	readonly TODOTXT_DIR="${XDG_CONFIG_HOME}/todo"
+	readonly BACKUP_DIR="${HOME}/data/todotxt"
+	printlog "todotxt:backing up..."
+	arctree "${BACKUP_DIR}/{utcnow}-todo.txt" -- cat "${TODOTXT_DIR}/todo.txt"
+	arctree "${BACKUP_DIR}/{utcnow}-done.txt" -- cat "${TODOTXT_DIR}/done.txt"
+}
