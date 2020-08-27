@@ -73,7 +73,7 @@ from .core.error import Res
 # represent command length
 duration = timedelta
 
-from .kython.klogging import LazyLogger
+from .core.common import LazyLogger
 logger = LazyLogger(__name__)
 
 # represents one history entry
