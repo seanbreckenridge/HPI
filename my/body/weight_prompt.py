@@ -2,6 +2,8 @@
 Prompts the user for weight and writes to logfile
 """
 
+import sys
+
 from pprint import pprint
 from datetime import datetime
 
@@ -20,12 +22,16 @@ def is_float(text: str) -> bool:
 
 
 def weight_prompt_tui() -> float:
-    weight_str = prompt(
-        "Enter Weight (lbs) > ",
-        validator=Validator.from_callable(
-            is_float, error_message="Could not convert to float"
-        ),
-    )
+    try:
+        weight_str = prompt(
+            "Enter Weight (lbs) > ",
+            validator=Validator.from_callable(
+                is_float, error_message="Could not convert to float"
+            ),
+        )
+    except (EOFError, KeyboardInterrupt) as e:
+        print()
+        sys.exit(1)
     return float(weight_str)
 
 
