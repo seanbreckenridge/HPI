@@ -1,12 +1,10 @@
 #!/bin/bash
 
-BACKUP_DIR="${HOME}/data/zsh_history"
-ZSH_HIST_FILE="${ZDOTDIR:?ZDOTDIR environment variable not set}/.zsh_history"
-
 # isnt needed that often, is only used so that backups exist
 # otherwise, the zsh DAL reads from $ZDOTDIR/zsh_hist_file_name
 # (set in ~/.config/my
 evry 3 months -backup_zsh_history && {
-  arctree "${BACKUP_DIR}/{utcnow}.zsh" -- cat "$ZSH_HIST_FILE"
+	BACKUP_DIR="${HOME}/data/zsh_history"
+	ZSH_HIST_FILE="${ZDOTDIR:?ZDOTDIR environment variable not set}/.zsh_history"
+	arctree "${BACKUP_DIR}/{utcnow}.zsh" -- cat "$ZSH_HIST_FILE"
 }
-

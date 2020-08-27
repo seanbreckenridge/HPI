@@ -1,9 +1,8 @@
 #!/bin/bash
 
-BACKUP_DIR="${HOME}/data/github/ghexport"
-GHDIR="${REPOS}/ghexport"
-
 # expires every 90 days
-evry 4 weeks -ghexport && {
+evry 1 month -ghexport && {
+	BACKUP_DIR="${HOME}/data/github/ghexport"
+	GHDIR="${REPOS}/ghexport"
 	arctree -r 3 "${BACKUP_DIR}/{utcnow}.json" -- python3 "${GHDIR}/export.py" --secrets "${XDG_CONFIG_HOME}/my/my/config/gh_secret_token.py"
 }

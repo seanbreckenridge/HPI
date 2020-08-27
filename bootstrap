@@ -69,3 +69,4 @@ install_python_extras
 ./setup_scripts/directories
 
 bash -x ./setup_scripts/ghexport
+bash -x ./setup_scripts/rexport

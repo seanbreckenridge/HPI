@@ -8,6 +8,7 @@ directories=(
 	'github/gdpr'
 	'github/ghexport'
 	'zsh_history'
+	'rexport'
 )
 
 for dir in "${directories[@]}"; do

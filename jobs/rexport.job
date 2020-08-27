@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# limits queries to 1000 entries, see https://github.com/karlicoss/rexport/#api-limitations
+evry 1 month -rexport && {
+	BACKUP_DIR="${HOME}/data/rexport"
+	GHDIR="${REPOS}/rexport"
+	arctree -r 3 "${BACKUP_DIR}/{utcnow}.json" -- python3 "${GHDIR}/export.py" --secrets "${XDG_CONFIG_HOME}/my/my/config/reddit_secret.py"
+}

@@ -16,6 +16,7 @@
 
 - `ghexport`, with [`jobs/ghexport.job`](jobs/ghexport.job) to download github action periodically.
 - `zsh`, [example usage](https://gist.github.com/seanbreckenridge/921b49da3fadf09e45a23bb5a06b030e)
+- `my.reddit`, corresponding [job](./jobs/rexport.job)
 
 ---
 
@@ -40,7 +41,7 @@
 - [ ] backup todo lists (todotxt)
 - [ ] create DAL for todotxt (use <https://github.com/bram85/topydo> to read todo file)
 - [ ] configure `my.stackexchange`
-- [ ] configure `my.reddit`/`rexport`
+- [x] configure `my.reddit`/`rexport`
 - [ ] food/tracking caloric intake?
 - [ ] android app to track my location?
 - [ ] daemon to capture i3/x-window tree structure (instead of rescuetime)
