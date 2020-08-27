@@ -24,6 +24,8 @@
 
 - [x] backup/parse zsh history and create corresponding DAL
 - [x] add tests for zsh history
+- [ ] backup todo lists (todotxt)
+- [ ] create DAL for todotxt (use <https://github.com/bram85/topydo> to read todo file)
 - [ ] setup script to track weight
 - [ ] configure `my.coding`
 - [ ] save browser history (look at promnesia scripts)
@@ -38,9 +40,6 @@
   - `org` mode may solve most of these, but I have to learn org mode
 - [ ] backup newsboat `rss` feeds
 - [ ] backup sms/phone calls
-- [ ] backup todo lists (todotxt)
-- [ ] create DAL for todotxt (use <https://github.com/bram85/topydo> to read todo file)
-- [ ] configure `my.stackexchange`
 - [x] configure `my.reddit`/`rexport`
 - [ ] food/tracking caloric intake?
 - [ ] android app to track my location?
@@ -51,6 +50,9 @@
 - [ ] backup MAL
 - [ ] backup trakt? (have API access)
 - [ ] testing???
+
+### delayed todos
+- [ ] configure `my.stackexchange` (isnt really documented/able to use in HPI without modifications [wait for repo](https://github.com/karlicoss/ghexport))
 ---
 
 Last referenced commit hash: [`07dd61ca6ae2b6de20d6954ca1584accede8b762`](https://github.com/karlicoss/HPI/commit/07dd61ca6ae2b6de20d6954ca1584accede8b762)
