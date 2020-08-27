@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # limits queries to 1000 entries, see https://github.com/karlicoss/rexport/#api-limitations
-evry 1 month -rexport && {
+# leaving this at 3 months for now, I dont use reddit as often anymore
+# can decrease if I start using it again
+evry 3 month -rexport && {
 	readonly BACKUP_DIR="${HOME}/data/rexport"
 	readonly GHDIR="${REPOS}/rexport"
 	printlog "rexport:Running reddit export..."
