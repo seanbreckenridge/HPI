@@ -11,6 +11,7 @@ directories=(
 	'rexport'
 	'todotxt'
 	'rss'
+	'firefox/dbs'
 )
 
 for dir in "${directories[@]}"; do

@@ -22,6 +22,7 @@ See [here](https://github.com/seanbreckenridge/dotfiles/tree/master/.config/my/m
 - `my.body.weight` to track weight (w/ TUI to add to log)
 - `my.coding` to track git commits across the system
 - `my.todotxt`, to track my to-do list history
+- `my.browsing`, using my [`ffexport`](https://github.com/seanbreckenridge/ffexport) tool to backup/parse firefox history
 
 ---
 
@@ -37,7 +38,7 @@ See [here](https://github.com/seanbreckenridge/dotfiles/tree/master/.config/my/m
 - [ ] mpv-socket-daemon, use sockets/`socat` to capture what Im currently watching/listening to
 - [ ] patch in rifle/ranger history?
 - [x] configure `my.coding`
-- [ ] save browser history (look at promnesia scripts?)
+- [x] save browser history (look at promnesia scripts?)
 - [ ] configure `my.media` (youtube history)
 - [ ] configure google takeout/mounted google drive
 - [ ] polar? some other reading system? formalize documents/configure `my.pdfs`
@@ -59,8 +60,8 @@ See [here](https://github.com/seanbreckenridge/dotfiles/tree/master/.config/my/m
 
 ### delayed todos
 - [ ] configure `my.stackexchange` (isnt really documented/able to use in HPI without modifications [wait for repo](https://github.com/karlicoss/ghexport/issues/3#issuecomment-680732889))
-- reddit: maybe manually export comments past the last 1000? would be nice to see them in context for lifelogging. could be done manually by scrolling back and parsing HTML
-- rss - rss is continually backed up. once a good sample has been accrued, write a DAL to show when feeds were added/removed
+- [ ] reddit: maybe manually export comments past the last 1000? would be nice to see them in context for lifelogging. could be done manually by scrolling back and parsing HTML
+- [ ] rss - rss is continually backed up. once a good sample has been accrued, write a DAL to show when feeds were added/removed
 ---
 
 Last referenced commit hash: [`07dd61ca6ae2b6de20d6954ca1584accede8b762`](https://github.com/karlicoss/HPI/commit/07dd61ca6ae2b6de20d6954ca1584accede8b762)
