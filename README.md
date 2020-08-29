@@ -5,24 +5,18 @@
 
 ---
 
-### Notable Changes
-
-- collection of [`bootstrap`](./bootstrap) scripts to setup things on my computer
-- [`jobs`](./jobs) contains anacron-like jobs that are run periodically, using [`bgproc`](https://github.com/seanbreckenridge/bgproc) and [`evry`](https://github.com/seanbreckenridge/evry). So, this repo has both the [DAL](https://beepb00p.xyz/exports.html#dal) and the scripts to backup the data.
-
----
-
 ### Currently in-use modules/scripts
 
-See [here](https://github.com/seanbreckenridge/dotfiles/tree/master/.config/my/my/config) for config.
 
 - `my.github`, with [`jobs/ghexport.job`](jobs/ghexport.job) to download github actions periodically.
-- `zsh`, [example usage](https://gist.github.com/seanbreckenridge/921b49da3fadf09e45a23bb5a06b030e)
 - `my.reddit`, corresponding [job](./jobs/rexport.job)
+- `my.zsh`, [example usage](https://gist.github.com/seanbreckenridge/921b49da3fadf09e45a23bb5a06b030e)
 - `my.body.weight` to track weight (w/ TUI to add to log)
 - `my.coding` to track git commits across the system
 - `my.todotxt`, to track my to-do list history
 - `my.browsing`, using my [`ffexport`](https://github.com/seanbreckenridge/ffexport) tool to backup/parse firefox history
+
+See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py) for config.
 
 ---
 
@@ -62,6 +56,14 @@ See [here](https://github.com/seanbreckenridge/dotfiles/tree/master/.config/my/m
 - [ ] configure `my.stackexchange` (isnt really documented/able to use in HPI without modifications [wait for repo](https://github.com/karlicoss/ghexport/issues/3#issuecomment-680732889))
 - [ ] reddit: maybe manually export comments past the last 1000? would be nice to see them in context for lifelogging. could be done manually by scrolling back and parsing HTML
 - [ ] rss - rss is continually backed up. once a good sample has been accrued, write a DAL to show when feeds were added/removed
+
+---
+
+### Structural Changes
+
+- collection of [`bootstrap`](./bootstrap) scripts to setup things on my computer
+- [`jobs`](./jobs) contains anacron-like jobs that are run periodically, using [`bgproc`](https://github.com/seanbreckenridge/bgproc) and [`evry`](https://github.com/seanbreckenridge/evry). So, this repo has both the [DAL](https://beepb00p.xyz/exports.html#dal) and the scripts to backup the data.
+
 ---
 
 Last referenced commit hash: [`07dd61ca6ae2b6de20d6954ca1584accede8b762`](https://github.com/karlicoss/HPI/commit/07dd61ca6ae2b6de20d6954ca1584accede8b762)
