@@ -7,7 +7,6 @@ from dataclasses import dataclass
 from typing import NamedTuple, Iterable
 
 from ..core import PathIsh
-from ..core.error import Res
 
 from my.config import weight as user_config
 
@@ -27,10 +26,11 @@ class Weight(NamedTuple):
     value: float
 
 
-Result = Iterable[Res[Weight]]
+Result = Iterable[Weight]
 
 
 def history() -> Result:
+    # fails if the file doesnt exist
     yield from load_from(Weight, config.datafile)
 
 
