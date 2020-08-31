@@ -7,13 +7,12 @@ Used in ./prompt_weight.job
 
 import sys
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from my.body.weight import history
 
-last_time: datetime = list(history())[-1].dt
-now: datetime = datetime.utcnow()
+last_logged_at = list(history())[-1].dt
 
-# if its been more than 7 days
-if now - last_time > timedelta(days=7):
+# if its been more than 7 days since I logged my weight
+if datetime.now(tz=timezone.utc) - last_logged_at > timedelta(days=7):
     sys.exit(1)
