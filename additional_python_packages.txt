@@ -6,3 +6,5 @@ pytz
 gitpython
 topydo
 ffexport
+autotui
+dateparser
