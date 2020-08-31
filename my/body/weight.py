@@ -34,6 +34,6 @@ def history() -> Result:
     yield from load_from(Weight, config.datafile)
 
 
-# alias 'weight-log=python3 -c "from my.body.weight import prompt; prompt()"'
+# alias 'weight=python3 -c "from my.body.weight import prompt; prompt()"'
 def prompt():
     load_prompt_and_writeback(Weight, config.datafile)

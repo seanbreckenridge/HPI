@@ -11,7 +11,7 @@ from datetime import datetime, timedelta, timezone
 
 from my.body.weight import history
 
-last_logged_at = list(history())[-1].dt
+last_logged_at = list(history())[-1].when
 
 # if its been more than 7 days since I logged my weight
 if datetime.now(tz=timezone.utc) - last_logged_at > timedelta(days=7):
