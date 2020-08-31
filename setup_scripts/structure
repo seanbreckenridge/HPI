@@ -13,10 +13,21 @@ directories=(
 	'rss'
 	'firefox/dbs'
 )
+declare -a files
+files=(
+	'weight.json'
+)
 
 for dir in "${directories[@]}"; do
 	ddir="${DATA_PREFIX}/${dir}"
 	if [[ ! -d "${ddir}" ]]; then
-		mkdir -vp "${ddir}"
+		mkdir -p "${ddir}"
+	fi
+done
+
+for file in "${files[@]}"; do
+	dfile="${DATA_PREFIX}/${dir}"
+	if [[ ! -e "${dfile}" ]]; then
+		touch "${dfile}"
 	fi
 done
