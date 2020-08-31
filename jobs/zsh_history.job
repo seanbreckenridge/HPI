@@ -3,7 +3,7 @@
 # isnt needed that often, is only used so that backups exist
 # otherwise, the zsh DAL reads from $ZDOTDIR/zsh_hist_file_name
 # (set in ~/.config/my/my/__init__.py)
-evry 3 months -backup_zsh_history && {
+evry 1 month -backup_zsh_history && {
 	readonly BACKUP_DIR="${HOME}/data/zsh_history"
 	readonly ZSH_HIST_FILE="${ZDOTDIR:?ZDOTDIR environment variable not set}/.zsh_history"
 	printlog "zsh_history:Backing up zsh history..."

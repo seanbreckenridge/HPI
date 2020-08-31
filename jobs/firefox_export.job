@@ -1,7 +1,7 @@
 #!/bin/bash
 # backup firefox browsing history
 
-evry 10 days -backup_firefox_history && {
+evry 3 weeks -backup_firefox_history && {
 	readonly BACKUP_DIR="${HOME}/data/firefox/dbs"
 	printlog "ffexport:backing up history database..."
 	ffexport save --to "${BACKUP_DIR}"
