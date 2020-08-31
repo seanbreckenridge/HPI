@@ -22,8 +22,8 @@ from ..core.cfg import make_config
 config = make_config(weight)
 
 class Weight(NamedTuple):
-    dt: datetime
-    value: float
+    when: datetime
+    pounds: float
 
 
 Result = Iterable[Weight]
