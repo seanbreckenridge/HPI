@@ -40,10 +40,9 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 - [x] configure `my.reddit`/`rexport`
 - [ ] food/tracking caloric intake?
 - [ ] android app to track my location?
-- [ ] discord backups?
-- [ ] backup MAL
+- [ ] discord backups - can request [exports](https://support.discord.com/hc/en-us/articles/360004027692) once a month, write a DAL once I have access
+- [ ] backup MAL (ugh)
 - [ ] backup trakt? (have API access)
-- [ ] testing???
 - [ ] better [exobrain](https://github.com/seanbreckenridge/exobrain) for notes...? want:
   - private/public notes
   - filter by category/tag (more than just the directory)
