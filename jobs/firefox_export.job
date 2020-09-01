@@ -2,6 +2,7 @@
 # backup firefox browsing history
 
 evry 3 weeks -backup_firefox_history && {
+	export FFEXPORT_LOGS=5
 	readonly BACKUP_DIR="${HOME}/data/firefox/dbs"
 	printlog "ffexport:backing up history database..."
 	ffexport save --to "${BACKUP_DIR}"
