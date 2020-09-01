@@ -1,4 +1,4 @@
-## Modified from [`karlicoss/HPI`](https://github.com/karlicoss/HPI) to more fit my life
+### Modified from [`karlicoss/HPI`](https://github.com/karlicoss/HPI) to more fit my life
 
 - A lot of the documentation remains unchanged from the original.
 - *For now*, I don't expect anyone else to use this directly, the code is up here as reference.
