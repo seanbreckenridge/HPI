@@ -12,6 +12,7 @@ directories=(
 	'todotxt'
 	'rss'
 	'firefox/dbs'
+	'mpv'
 )
 declare -a files
 files=(
