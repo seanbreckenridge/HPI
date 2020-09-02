@@ -28,7 +28,6 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 - [x] backup todo lists (todotxt)
 - [x] create DAL for todotxt (use <https://github.com/bram85/topydo> to read todo file)
 - [x] backup newsboat `rss` feeds
-- [ ] daemon to capture i3/x-window tree structure (instead of rescuetime)
 - [x] mpv-socket-daemon; done, see [`mpv-history-daemon`](https://github.com/seanbreckenridge/mpv-sockets/blob/master/DAEMON.md)
 - [ ] create DAL to load in mpv history
 - [ ] patch in rifle/ranger history?
@@ -38,6 +37,7 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 - [ ] configure google takeout/mounted google drive
 - [ ] polar? some other reading system? formalize documents/configure `my.pdfs`
 - [ ] backup sms/phone calls
+- [ ] create DAL for [`lolexport`](https://github.com/seanbreckenridge/lolexport)
 - [x] configure `my.reddit`/`rexport`
 - [ ] food/tracking caloric intake?
 - [ ] android app to track my location?
