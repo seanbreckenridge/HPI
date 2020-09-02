@@ -23,17 +23,6 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 
 ### TODO:
 
-- [x] backup/parse zsh history and create corresponding DAL
-- [x] add tests for zsh history
-- [x] setup script to track weight
-- [x] backup todo lists (todotxt)
-- [x] create DAL for todotxt (use <https://github.com/bram85/topydo> to read todo file)
-- [x] backup newsboat `rss` feeds
-- [x] mpv-socket-daemon; done, see [`mpv-history-daemon`](https://github.com/seanbreckenridge/mpv-sockets/blob/master/DAEMON.md)
-- [x] create DAL to load in mpv history
-- [x] configure `my.reddit`/`rexport`
-- [x] configure `my.coding`
-- [x] save browser history (look at promnesia scripts?)
 - [ ] patch in rifle/ranger history?
 - [ ] configure `my.media` (youtube history)
 - [ ] configure google takeout/mounted google drive
