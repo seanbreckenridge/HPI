@@ -44,6 +44,7 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 - [ ] discord backups - can request [exports](https://support.discord.com/hc/en-us/articles/360004027692) once a month, write a DAL once I have access
 - [ ] backup MAL (ugh)
 - [ ] backup trakt? (have API access)
+- [ ] parse historical forums/video game usage? (sites I used to be active on, could be cool to look back on)
 - [ ] better [exobrain](https://github.com/seanbreckenridge/exobrain) for notes...? want:
   - private/public notes
   - filter by category/tag (more than just the directory)
