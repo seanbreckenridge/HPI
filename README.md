@@ -15,6 +15,7 @@
 - `my.coding` to track git commits across the system
 - `my.todotxt`, to track my to-do list history
 - `my.browsing`, using my [`ffexport`](https://github.com/seanbreckenridge/ffexport) tool to backup/parse firefox history
+- `my.media.playback`, accesses movies/music that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-sockets/blob/master/DAEMON.md)
 
 See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py) for config.
 
