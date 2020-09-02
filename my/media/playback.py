@@ -252,7 +252,7 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
                 media_data["is_stream"] = True
                 continue
             # test if this is an absolute path
-            if event_data.startswith("/") or os.path.exists(os.path.abspath(event_data)):
+            if event_data.startswith("/") and os.path.exists(event_data):
                 media_data[event_name] = event_data
             else:
                 full_path: str = os.path.join(working_dir, event_data)
@@ -297,6 +297,8 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
             # check after to make sure eof/mpv-quit/final-write
             # was the last item, else write out whatever
             # media_data has in the dict currently
+            if not is_playing:
+                pause_duration = pause_duration + (dt_float - pause_start_time)
             media_data["end_time"] = dt_float
             media_data["pause_duration"] = pause_duration
             media_data["percents"] = percents
@@ -311,7 +313,9 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
             # if the eof didnt happen and mpv was quit manually, save
             # quit time as end_time
             if REQUIRED_KEYS.issubset(set(media_data)):
-
+                # if I quit while it was paused
+                if not is_playing and pause_start_time is not None:
+                    pause_duration = pause_duration + (dt_float - pause_start_time)
                 media_data["end_time"] = dt_float
                 media_data["pause_duration"] = pause_duration
                 media_data["percents"] = percents
@@ -331,6 +335,11 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
             # if we got through all the keys, and this has been playing for at least a minute,
             # even though this is sorta broken, log it anyways
             if most_recent_time - media_data["start_time"] > 60:
+                # if it crashed while it was paused
+                if not is_playing and pause_start_time is not None:
+                    pause_duration = pause_duration + (
+                        most_recent_time - pause_start_time
+                    )
                 logger.debug(
                     "slightly broken, but yielding anyways... {}".format(media_data)
                 )
