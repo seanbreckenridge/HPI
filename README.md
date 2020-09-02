@@ -15,7 +15,7 @@
 - `my.coding` to track git commits across the system
 - `my.todotxt`, to track my to-do list history
 - `my.browsing`, using my [`ffexport`](https://github.com/seanbreckenridge/ffexport) tool to backup/parse firefox history
-- `my.media.playback`, accesses movies/music that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-sockets/blob/master/DAEMON.md)
+- `my.media.playback`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-sockets/blob/master/DAEMON.md)
 
 See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py) for config.
 
@@ -31,21 +31,21 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 - [x] backup newsboat `rss` feeds
 - [x] mpv-socket-daemon; done, see [`mpv-history-daemon`](https://github.com/seanbreckenridge/mpv-sockets/blob/master/DAEMON.md)
 - [x] create DAL to load in mpv history
-- [ ] patch in rifle/ranger history?
+- [x] configure `my.reddit`/`rexport`
 - [x] configure `my.coding`
 - [x] save browser history (look at promnesia scripts?)
+- [ ] patch in rifle/ranger history?
 - [ ] configure `my.media` (youtube history)
 - [ ] configure google takeout/mounted google drive
+- [ ] parse historical forums/video game usage? (sites I used to be active on, could be cool to look back on)
+- [ ] create DAL for [`lolexport`](https://github.com/seanbreckenridge/lolexport)
+- [ ] android app to track my location?
+- [ ] backup trakt? (have API access)
+- [ ] backup MAL (ugh)
 - [ ] polar? some other reading system? formalize documents/configure `my.pdfs`
 - [ ] backup sms/phone calls
-- [ ] create DAL for [`lolexport`](https://github.com/seanbreckenridge/lolexport)
-- [x] configure `my.reddit`/`rexport`
 - [ ] food/tracking caloric intake?
-- [ ] android app to track my location?
-- [ ] discord backups - can request [exports](https://support.discord.com/hc/en-us/articles/360004027692) once a month, write a DAL once I have access
-- [ ] backup MAL (ugh)
-- [ ] backup trakt? (have API access)
-- [ ] parse historical forums/video game usage? (sites I used to be active on, could be cool to look back on)
+- [ ] generic metadata gatherer/DAL/library for URLs? would be used for a couple things (my.browsing, my.media.playback; could be plugged into another other module to get more data)
 - [ ] better [exobrain](https://github.com/seanbreckenridge/exobrain) for notes...? want:
   - private/public notes
   - filter by category/tag (more than just the directory)
@@ -55,6 +55,7 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
   - `org` mode may solve most of these, but I have to learn org mode
 
 ### delayed todos
+- [ ] discord backups - can request [exports](https://support.discord.com/hc/en-us/articles/360004027692) once a month, write a DAL once I have access
 - [ ] configure `my.stackexchange` (isnt really documented/able to use in HPI without modifications [wait for repo](https://github.com/karlicoss/ghexport/issues/3#issuecomment-680732889))
 - [ ] reddit: maybe manually export comments past the last 1000? would be nice to see them in context for lifelogging. could be done manually by scrolling back and parsing HTML
 - [ ] rss - rss is continually backed up. once a good sample has been accrued, write a DAL to show when feeds were added/removed
