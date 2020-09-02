@@ -159,6 +159,7 @@ URL_REGEX = re.compile(
 )
 
 
+# https://stackoverflow.com/a/7160778/9348376
 def _is_urlish(url: str) -> bool:
     return re.match(URL_REGEX, url) is not None
 
