@@ -233,9 +233,6 @@ def stats():
     }
 
 
-##
-
-
 def main() -> None:
     for e in events(parallel=False):
         print(e)

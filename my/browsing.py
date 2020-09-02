@@ -35,7 +35,7 @@ def inputs() -> Sequence[Path]:
     """
     Returns all inputs, including old sqlite backups (from config.export_path) and the current firefox history
     """
-    yield from get_files(config.export_path, glob="*.sqlite")
+    yield from get_files(config.export_path)
     # get the live file from ~/.mozilla/.... (see ffexport.save_hist)
     tmp_dir: str = tempfile.mkdtemp()
     # I only use the one profile, so profile defaults to *

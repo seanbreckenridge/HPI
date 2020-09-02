@@ -33,6 +33,12 @@ def history() -> Result:
     # fails if the file doesnt exist
     yield from load_from(Weight, config.datafile)
 
+def stats():
+    from ..core import stat
+    return {
+        **stat(history)
+    }
+
 
 # alias 'weight=python3 -c "from my.body.weight import prompt; prompt()"'
 def prompt():

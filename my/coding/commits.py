@@ -1,6 +1,5 @@
 """
-Git commits data for repositories on your filesystem
-"""
+Git commits data for repositories on your filesystem """
 
 
 from pathlib import Path
@@ -15,7 +14,7 @@ import git # type: ignore
 from git.repo.fun import is_git_dir, find_worktree_git_dir # type: ignore
 
 
-log = LazyLogger('my.commits', level='info')
+log = LazyLogger('my.commits', level='warning')
 
 
 # TODO: task-pool something like https://sean.fish/d/repos-pull-all?dark
@@ -187,5 +186,12 @@ def print_all():
     for c in commits():
         print(c)
 
+
+def stats():
+    from ..core import stat
+    return {
+        **stat(commits),
+        **stat(repos),
+    }
 
 # TODO enforce read only? although it doesn't touch index

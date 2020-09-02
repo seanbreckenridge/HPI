@@ -89,6 +89,13 @@ def history(from_paths=inputs) -> Results:
     yield from _merge_histories(*map(_parse_file, from_paths()))
 
 
+def stats():
+    from .core import stat
+    return {
+        **stat(history)
+    }
+
+
 @warn_if_empty
 def _merge_histories(*sources: Results) -> Results:
     emitted: Set[Tuple[datetime, str]] = set()
@@ -164,3 +171,4 @@ def _parse_duration(dur: Optional[str]) -> duration:
         return duration(seconds=0)
     else:
         return duration(seconds=int(dur))
+

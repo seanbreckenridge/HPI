@@ -158,7 +158,7 @@ def modules_check(args):
         if stats is None:
             continue
         from . import common
-        common.QUICK_STATS = True
+        common.QUICK_STATS = False
         # todo make it a cmdline option..
 
         try:
@@ -180,7 +180,7 @@ def list_modules(args):
 
 # todo check that it finds private modules too?
 def doctor(args):
-    config_check(args)
+    #config_check(args)
     modules_check(args)
 
 
