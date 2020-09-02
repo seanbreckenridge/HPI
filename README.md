@@ -1,3 +1,19 @@
+**TLDR**: I'm using [HPI](https://github.com/seanbreckenridge/HPI) (Human
+Programming Interface) package as a means of unifying, accessing and
+interacting with all of my personal data.
+
+It's a Python library (named `my`), a collection of modules for:
+
+-   social networks: posts, comments, favorites
+-   shell/program histories (zsh, mpv, firefox)
+-   reading: e-books and pdfs
+-   todos and notes
+-   location
+-   photos & videos
+-   instant messaging
+
+[*Why?*](https://github.com/seanbreckenridge/HPI#why)
+
 ### Modified from [`karlicoss/HPI`](https://github.com/karlicoss/HPI) to more fit my life
 
 - A lot of the documentation remains unchanged from the original.
@@ -62,22 +78,6 @@ Last referenced commit hash: [`07dd61ca6ae2b6de20d6954ca1584accede8b762`](https:
 
 ---
 
-**TLDR**: I'm using [HPI](https://github.com/karlicoss/HPI) (Human
-Programming Interface) package as a means of unifying, accessing and
-interacting with all of my personal data.
-
-It's a Python library (named `my`), a collection of modules for:
-
--   social networks: posts, comments, favorites
--   reading: e-books and pdfs
--   annotations: highlights and comments
--   todos and notes
--   health data: sleep, exercise, weight, heart rate, and other body
-    metrics
--   location
--   photos & videos
--   browser history
--   instant messaging
 
 The package hides the [gory
 details](https://beepb00p.xyz/sad-infra.html#exports_are_hard) of
