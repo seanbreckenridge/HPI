@@ -238,10 +238,7 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
         elif event_name == "working-directory":
             # shouldnt be added to media_data, affects path, but is the
             # same across the entire run of mpv
-            if os.path.exists(event_data):
-                working_dir = event_data
-            else:
-                logger.warning(f"working-directory doesn't exist: {event_data}")
+            working_dir = event_data
         elif event_name == "path":
             media_data["is_stream"] = False
             # if its ytdl://scheme
@@ -254,13 +251,12 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
                 media_data["is_stream"] = True
                 continue
             # test if this is an absolute path
-            abs_path = os.path.abspath(event_data)
-            if os.path.exists(abs_path):
-                media_data[event_name] = abs_path
-            # else, try to combine working-dir (working-dir is always logged before path items)
-            full_path: str = os.path.join(working_dir, event_data)
-            if os.path.exists(full_path):
+            if event_data.startswith("/") or os.path.exists(os.path.abspath(event_data)):
+                media_data[event_name] = event_data
+            else:
+                full_path: str = os.path.join(working_dir, event_data)
                 media_data[event_name] = full_path
+                logger.debug("{} doesn't exist...".format(full_path))
         elif event_name == "metadata":
             # TODO: how to parse this better?
             media_data[event_name] = event_data
