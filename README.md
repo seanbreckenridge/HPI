@@ -29,7 +29,7 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 - [x] create DAL for todotxt (use <https://github.com/bram85/topydo> to read todo file)
 - [x] backup newsboat `rss` feeds
 - [x] mpv-socket-daemon; done, see [`mpv-history-daemon`](https://github.com/seanbreckenridge/mpv-sockets/blob/master/DAEMON.md)
-- [ ] create DAL to load in mpv history
+- [x] create DAL to load in mpv history
 - [ ] patch in rifle/ranger history?
 - [x] configure `my.coding`
 - [x] save browser history (look at promnesia scripts?)
