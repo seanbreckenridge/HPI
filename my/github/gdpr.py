@@ -36,6 +36,7 @@ def events() -> Iterable[Res[Event]]:
         'issue_events_': None, # eh, doesn't seem to have any useful bodies
         'attachments_' : None, # not sure if useful
         'users'        : None, # just contains random users
+        'projects'     : None, # eh, kan-bans arent that useful
         'repositories_'  : _parse_repository,
         'issue_comments_': _parse_issue_comment,
         'issues_'        : _parse_issue,
