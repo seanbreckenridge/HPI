@@ -75,6 +75,7 @@ def games() -> Results:
 
 
 def all_games(from_paths=inputs) -> Results:
+    # combine the results from multiple files
     yield from chain(*map(_read_parsed_json, from_paths()))
 
 
@@ -84,6 +85,7 @@ def achievements() -> AchResults:
 
 
 def all_achievements(from_paths=inputs) -> AchResults:
+    # combine the results from multiple achievement lists
     yield from chain(*map(lambda g: g.achievements, all_games(from_paths)))
 
 
