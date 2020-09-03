@@ -4,13 +4,14 @@ interacting with all of my personal data.
 
 It's a Python library (named `my`), a collection of modules for:
 
--   social networks: posts, comments, favorites
--   shell/program histories (zsh, mpv, firefox)
--   reading: e-books and pdfs
--   todos and notes
--   location
--   photos & videos
--   instant messaging
+- social networks: posts, comments, favorites
+- shell/program histories (zsh, mpv, firefox)
+- reading: e-books and pdfs
+- todos and notes
+- location
+- photos & videos
+- instant messaging
+- some video game achievements/history
 
 [*Why?*](https://github.com/seanbreckenridge/HPI#why)
 
@@ -23,9 +24,9 @@ It's a Python library (named `my`), a collection of modules for:
 
 ### Currently in-use modules/scripts
 
-- `my.github`, with [`jobs/ghexport.job`](jobs/ghexport.job) to download github actions periodically.
-- `my.reddit`, corresponding [job](./jobs/rexport.job)
-- `my.zsh`, [example usage](https://gist.github.com/seanbreckenridge/921b49da3fadf09e45a23bb5a06b030e)
+- `my.github`, get all github actions (comments, issues, etc.)
+- `my.reddit`, get saved posts, comments
+- `my.zsh`, access to my shell history w/ timestamps; [example usage](https://gist.github.com/seanbreckenridge/921b49da3fadf09e45a23bb5a06b030e)
 - `my.body.weight` to track weight (with a TUI powered by [`autotui`](https://github.com/seanbreckenridge/autotui))
 - `my.coding` to track git commits across the system
 - `my.todotxt`, to track my to-do list history
