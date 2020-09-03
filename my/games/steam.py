@@ -126,5 +126,5 @@ def stats():
 
     return {
         **stat(games),
-        **stat(achivements),
+        **stat(achievements),
     }
