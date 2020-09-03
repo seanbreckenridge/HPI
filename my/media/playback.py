@@ -100,9 +100,6 @@ def _read_event_stream(p: Path) -> Results:
         # required keys
         if not REQUIRED_KEYS.issubset(set(d)):
             logger.debug("Doesnt have required keys, ignoring...")
-            import pdb
-
-            pdb.set_trace()
             continue
         if d["end_time"] < d["start_time"]:
             logger.warning(f"End time is less than start time! {d}")
