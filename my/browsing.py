@@ -55,3 +55,8 @@ def history(from_paths=inputs) -> Results:
     """
     yield from read_and_merge(*from_paths())
 
+def stats():
+    from .core import stat
+    return {
+        **stat(history)
+    }
