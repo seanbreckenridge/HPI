@@ -23,11 +23,10 @@ It's a Python library (named `my`), a collection of modules for:
 
 ### Currently in-use modules/scripts
 
-
 - `my.github`, with [`jobs/ghexport.job`](jobs/ghexport.job) to download github actions periodically.
 - `my.reddit`, corresponding [job](./jobs/rexport.job)
 - `my.zsh`, [example usage](https://gist.github.com/seanbreckenridge/921b49da3fadf09e45a23bb5a06b030e)
-- `my.body.weight` to track weight (w/ TUI to add to log)
+- `my.body.weight` to track weight (with a TUI powered by [`autotui`](https://github.com/seanbreckenridge/autotui))
 - `my.coding` to track git commits across the system
 - `my.todotxt`, to track my to-do list history
 - `my.browsing`, using my [`ffexport`](https://github.com/seanbreckenridge/ffexport) tool to backup/parse firefox history
@@ -45,7 +44,6 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 - [ ] configure `my.media` (youtube history)
 - [ ] configure google takeout/mounted google drive
 - [ ] parse historical forums/video game usage? (sites I used to be active on, could be cool to look back on)
-- [ ] create DAL for [`lolexport`](https://github.com/seanbreckenridge/lolexport)
 - [ ] android app to track my location?
 - [ ] backup trakt? (have API access)
 - [ ] backup MAL (ugh)
