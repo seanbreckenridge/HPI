@@ -13,6 +13,10 @@ directories=(
 	'rss'
 	'firefox/dbs'
 	'mpv'
+	'blizzard'
+	'facebook_gdpr'
+	'league_of_legends'
+	'rps_comments'
 )
 declare -a files
 files=(
