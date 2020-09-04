@@ -367,14 +367,14 @@ def stat(func: Callable[[], Iterable[C]]) -> Dict[str, Any]:
 
     # todo not sure if there is something in more_itertools to compute this?
     errors = 0
-    last = None
+    #last = None
     def funcit():
-        nonlocal errors, last
+        nonlocal errors#, last
         for x in func():
             if isinstance(x, Exception):
                 errors += 1
-            else:
-                last = x
+            #else:
+                #last = x
             yield x
 
     it = iter(funcit())
@@ -395,10 +395,10 @@ def stat(func: Callable[[], Iterable[C]]) -> Dict[str, Any]:
     if errors > 0:
         res['errors'] = errors
 
-    if last is not None:
-        dt = guess_datetime(last)
-        if dt is not None:
-            res['last'] = dt
+    #if last is not None:
+    #    dt = guess_datetime(last)
+    #    if dt is not None:
+    #        res['last'] = dt
 
     return {
         func.__name__: res,
