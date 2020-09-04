@@ -171,7 +171,7 @@ def _hashf(_repos: List[Path]):
 # TODO per-repo cache?
 # TODO set default cache path?
 # TODO got similar issue as in photos with a helper method.. figure it out
-@mcachew(hashf=_hashf, logger=log, cache_path='/tmp/cachew/')
+@mcachew(hashf=_hashf, logger=log, cache_path='/tmp/coding-cachew/')
 def _commits(_repos) -> Iterator[Commit]:
     for r in _repos:
         log.info('processing %s', r)
