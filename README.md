@@ -65,7 +65,6 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 ### delayed todos
 - [ ] discord backups - can request [exports](https://support.discord.com/hc/en-us/articles/360004027692) once a month, write a DAL once I have access
 - [ ] configure `my.stackexchange` (isnt really documented/able to use in HPI without modifications [wait for repo](https://github.com/karlicoss/ghexport/issues/3#issuecomment-680732889))
-- [ ] reddit: maybe manually export comments past the last 1000? would be nice to see them in context for lifelogging. could be done manually by scrolling back and parsing HTML
 - [ ] rss - rss is continually backed up. once a good sample has been accrued, write a DAL to show when feeds were added/removed
 
 ---
