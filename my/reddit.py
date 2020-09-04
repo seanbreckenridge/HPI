@@ -271,7 +271,7 @@ def _merge_comments(*sources: Sequence[Path]) -> Iterator[Union[PComment, Commen
     #ignored = 0
     emitted: Set[Tuple[datetime, str]] = set()
     for e in chain(*sources):
-        key = get_key(e)
+        key = int(e.raw['created_utc'])
         if key in emitted:
             #ignored += 1
             #logger.info('ignoring %s: %s', key, e)
@@ -279,12 +279,4 @@ def _merge_comments(*sources: Sequence[Path]) -> Iterator[Union[PComment, Commen
         yield e
         emitted.add(key)
     #logger.info(f"Ignored {ignored}...")
-
-
-# handle conflicts between rexport and pushshift raw structure
-def get_key(val: Dict[str, Any]):
-    s = val.raw['subreddit']
-    if isinstance(s, dict):
-        s = s['display_name']
-    return (int(val.raw['created_utc']), s)
 
