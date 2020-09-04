@@ -63,7 +63,7 @@ def inputs() -> Sequence[Path]:
 
 import re
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import NamedTuple, Iterable, Set, Tuple
 from itertools import chain
 
@@ -160,8 +160,9 @@ def _parse_datetime(date: Optional[str]) -> datetime:
         logger.warning(f"_parse_datetime receieved {date}, expected a datetime")
         return datetime.now()
     else:
-        return datetime.utcfromtimestamp(
+        return datetime.fromtimestamp(
             int(date),
+            tz=timezone.utc,
         )
 
 
