@@ -30,9 +30,6 @@ from .core import get_files
 
 
 def inputs() -> Sequence[Path]:
-    """
-    Returns all inputs, including live_file if provided and exported histories
-    """
     return get_files(config.export_path)
 
 
