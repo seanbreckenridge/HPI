@@ -18,6 +18,9 @@ class reddit(uconfig):
     # path[s]/glob to the exported JSON data
     export_path: Paths
 
+    # path to one or more https://github.com/seanbreckenridge/pushshift_comment_export exported data
+    pushshift_export_path: Paths
+
     # path to a local clone of rexport
     # alternatively, you can put the repository (or a symlink) in $MY_CONFIG/my/config/repos/rexport
     rexport    : Optional[PathIsh] = None
@@ -58,8 +61,12 @@ else:
 
 ############################
 
-from typing import List, Sequence, Mapping, Iterator
-from .core.common import mcachew, get_files, LazyLogger, make_dict
+from typing import List, Sequence, Mapping, Iterator, Union
+from .core.common import mcachew, get_files, LazyLogger, make_dict, warn_if_empty
+
+# comments further back than what the reddit API (1000 results) can get
+# https://github.com/seanbreckenridge/pushshift_comment_export
+from pushshift_comment_export.dal import PComment, read_file
 
 
 logger = LazyLogger(__name__, level='debug')
@@ -80,7 +87,7 @@ Upvote     = dal.Upvote
 def _dal() -> dal.DAL:
     inp = list(inputs())
     return dal.DAL(inp)
-cache = mcachew(hashf=inputs) # depends on inputs only
+cache = mcachew(hashf=lambda: inputs() + comment_inputs()) # depends on inputs only
 
 
 @cache
@@ -89,8 +96,9 @@ def saved() -> Iterator[Save]:
 
 
 @cache
-def comments() -> Iterator[Comment]:
-    return _dal().comments()
+def comments() -> Iterator[Union[Comment, PComment]]:
+    # prefer _dal.comments to pushshift, gets added to emitted first
+    yield from _merge_comments(_dal().comments(), pushshift_comments())
 
 
 @cache
@@ -241,7 +249,42 @@ def main() -> None:
 if __name__ == '__main__':
     main()
 
-# TODO deprecate...
+# load in additional comments from pushshift
 
-get_sources = inputs
-get_events = events
+from itertools import chain
+from typing import Set, Tuple, Union
+
+
+def comment_inputs() -> Sequence[Path]:
+    return get_files(config.pushshift_export_path)
+
+def pushshift_comments() -> Iterator[PComment]:
+    return chain(*map(read_file, comment_inputs()))
+
+
+# combine comments
+# not going to be totally compatabile, because rexport and
+# pushshift have different JSON representations. Looks like
+# a lot of the major ones are the same though
+@warn_if_empty
+def _merge_comments(*sources: Sequence[Path]) -> Iterator[Union[PComment, Comment]]:
+    #ignored = 0
+    emitted: Set[Tuple[datetime, str]] = set()
+    for e in chain(*sources):
+        key = get_key(e)
+        if key in emitted:
+            #ignored += 1
+            #logger.info('ignoring %s: %s', key, e)
+            continue
+        yield e
+        emitted.add(key)
+    #logger.info(f"Ignored {ignored}...")
+
+
+# handle conflicts between rexport and pushshift raw structure
+def get_key(val: Dict[str, Any]):
+    s = val.raw['subreddit']
+    if isinstance(s, dict):
+        s = s['display_name']
+    return (int(val.raw['created_utc']), s)
+
