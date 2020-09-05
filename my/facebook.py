@@ -2,7 +2,7 @@
 Parses the facebook GPDR Export
 """
 
-# TODO later, use a separate user config? (github_gdpr)
+# see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import facebook as user_config
 
 from dataclasses import dataclass
