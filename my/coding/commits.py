@@ -16,7 +16,7 @@ import git # type: ignore
 from git.repo.fun import is_git_dir, find_worktree_git_dir # type: ignore
 
 
-log = LazyLogger('my.commits', level='info')
+log = LazyLogger('my.commits', level='warning')
 
 CACHEW_PATH = "/tmp/coding-cachw"
 

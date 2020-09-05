@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 '''
 PDF documents and annotations on your filesystem
 '''

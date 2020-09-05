@@ -2,8 +2,9 @@
 from datetime import datetime
 from typing import NamedTuple, List, Iterable
 
-from ..google.takeout.html import read_html
-from ..google.takeout.paths import get_last_takeout
+from .takeout.html import read_html
+from .takeout.paths import get_last_takeout
+
 
 
 class Watched(NamedTuple):
@@ -30,14 +31,3 @@ def watched() -> Iterable[Watched]:
     return list(sorted(watches, key=lambda e: e.when))
 
 
-# todo deprecate
-get_watched = watched
-
-
-def main():
-    # TODO shit. a LOT of watches...
-    for w in get_watched():
-        print(w)
-
-if __name__ == '__main__':
-    main()

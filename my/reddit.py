@@ -149,7 +149,7 @@ class Event(NamedTuple):
 Url = str
 
 def _get_bdate(bfile: Path) -> datetime:
-    RE = re.compile(r'reddit.(\d{14})')
+    RE = re.compile(r'(\d{14})')
     stem = bfile.stem
     stem = stem.replace('T', '').replace('Z', '') # adapt for arctee
     match = RE.search(stem)
@@ -227,7 +227,7 @@ def events(*args, **kwargs) -> List[Event]:
     inp = inputs()
     # 2.2s for 300 files without cachew
     # 0.2s for 300 files with cachew
-    evit = _get_events(inp, *args, **kwargs)
+    evit = _get_events(inp, *args, **kwargs, parallel=False)
     return list(sorted(evit, key=lambda e: e.cmp_key))
 
 

@@ -49,7 +49,6 @@ from itertools import chain
 from .core import get_files, warn_if_empty
 from .core.error import Res
 from .core.common import LazyLogger
-from .core.file import yield_lines
 
 # pip3 install topydo
 from topydo.lib.TodoParser import parse_line
@@ -119,7 +118,7 @@ def _merge_histories(*sources: Results) -> Results:
 
 
 def _parse_file(todofile: Path):
-    for line in yield_lines(todofile):
+    for line in todofile.open():
         try:
             t = parse_line(line)
             yield Todo(
