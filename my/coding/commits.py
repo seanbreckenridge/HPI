@@ -3,9 +3,10 @@ Git commits data for repositories on your filesystem
 """
 
 
+import os
 from pathlib import Path
 from datetime import datetime, timezone
-from typing import List, NamedTuple, Optional, Dict, Any, Iterator, Set, List
+from typing import List, NamedTuple, Optional, Dict, Any, Iterator, Set
 
 from ..core.common import PathIsh, LazyLogger, mcachew
 from my.config import commits as config
@@ -17,6 +18,10 @@ from git.repo.fun import is_git_dir, find_worktree_git_dir # type: ignore
 
 log = LazyLogger('my.commits', level='info')
 
+CACHEW_PATH = "/tmp/coding-cachw"
+
+# create cache path
+os.makedirs(CACHEW_PATH, exist_ok=True)
 
 # TODO: task-pool something like https://sean.fish/d/repos-pull-all?dark
 # to pull all repos?
@@ -149,34 +154,31 @@ def repos():
     return git_repos_in(config.roots)
 
 
-def _hashf(_repos: List[Path]):
+# returns modification time for an index to use as hash function
+def _repo_hashf(_repo: Path) -> int:
     # TODO maybe use smth from git library? ugh..
-    res = []
-    for r in _repos:
-        # TODO just use anything except index? ugh.
-        for pp in {
-                '.git/FETCH_HEAD',
-                '.git/HEAD',
-                'FETCH_HEAD', # bare
-                'HEAD', # bare
-        }:
-            ff = r / pp
-            if ff.exists():
-                updated = ff.stat().st_mtime
-                break
-        else:
-            raise RuntimeError(r)
-        res.append((r, updated))
-    return res
+    # TODO just use anything except index? ugh.
+    for pp in {
+            '.git/FETCH_HEAD',
+            '.git/HEAD',
+            'FETCH_HEAD', # bare
+            'HEAD', # bare
+    }:
+        ff = _repo / pp  # wtf, this joins paths for Path items...
+        if ff.exists():
+            return int(ff.stat().st_mtime)
+            break
+    else:
+        raise RuntimeError(_repo)
 
-# TODO per-repo cache?
-# TODO set default cache path?
-# TODO got similar issue as in photos with a helper method.. figure it out
-@mcachew(hashf=_hashf, logger=log, cache_path='/tmp/coding-cachew/')
-def _commits(_repos) -> Iterator[Commit]:
+def _commits(_repos: List[Path]) -> Iterator[Commit]:
     for r in _repos:
-        log.info('processing %s', r)
-        yield from repo_commits(r)
+        yield from _cached_commits(r)
+
+@mcachew(hashf=_repo_hashf, logger=log, cache_path=lambda repo_path: f'{CACHEW_PATH}/{str(repo_path).replace("/", "")}')
+def _cached_commits(_repo: Path) -> Iterator[Commit]:
+    log.info('processing %s', _repo)
+    yield from repo_commits(_repo)
 
 
 def commits() -> Iterator[Commit]:
