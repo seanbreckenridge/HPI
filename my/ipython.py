@@ -11,7 +11,7 @@ python3() {
     echo -e "$(tput setaf 2)Launching ipython instead...$(tput sgr0)"
     ipython
   else
-    python3 "$@"
+    /usr/bin/python3 "$@"
   fi
 }
 """
