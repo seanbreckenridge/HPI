@@ -47,6 +47,7 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 ### TODO:
 
 - [ ] patch in rifle/ranger history?
+- [ ] parse spotify gdpr
 - [ ] configure `my.media` (youtube history)
 - [ ] configure google takeout/mounted google drive
 - [ ] android app to track my location?

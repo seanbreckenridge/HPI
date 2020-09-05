@@ -2,6 +2,8 @@
 Photos and videos on your filesystem, their GPS and timestamps
 """
 
+# reminder: facebook photos?
+
 # pip install geopy magic
 
 from datetime import datetime

@@ -23,7 +23,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 from itertools import chain
-from typing import Iterable, Dict, Any, NamedTuple, Union, Optional
+from typing import Iterable, Dict, Any, NamedTuple, Union, Optional, List
 
 from .core.error import Res
 from .core import get_files
@@ -31,6 +31,8 @@ from .core import get_files
 from .core.common import LazyLogger
 
 logger = LazyLogger(__name__)
+
+Json = Dict[str, Any]
 
 
 class Contact(NamedTuple):
@@ -40,18 +42,24 @@ class Contact(NamedTuple):
     updated: datetime
 
 
-class AppInstall(NamedTuple):
-    name: str
-    added: datetime
-
-
 class Action(NamedTuple):
     description: str
     at: datetime
+    metadata: Json = {}
 
 
-class ThirdPartyAction(Action):
-    pass
+# (logs/account activity)
+class AdminAction(NamedTuple):
+    description: str
+    at: datetime
+    ip: str
+    user_agent: str
+    metadata: Json = {}
+
+
+class Search(NamedTuple):
+    query: str
+    at: datetime
 
 
 class Post(NamedTuple):
@@ -67,7 +75,7 @@ class Comment(NamedTuple):
     metadata: Optional[str]
 
 
-class JoinedEvent(NamedTuple):
+class AcceptedEvent(NamedTuple):
     name: str
     starts_at: datetime
     ends_at: datetime
@@ -79,12 +87,33 @@ class Friend(NamedTuple):
     added: bool  # whether this was when I added a friend or removed one
 
 
-class PageLike(NamedTuple):
-    name: str
+# i.e. a PM
+class Message(NamedTuple):
+    author: str
     at: datetime
+    content: str
+    metadata: Optional[str] = None
 
 
-Event = Union[Contact, AppInstall]
+# a chain of messages back and forth, with one or more people
+class Conversation(NamedTuple):
+    title: str
+    participants: List[str]
+    messages: List[Message]
+
+
+Event = Union[
+    Contact,
+    Conversation,
+    Friend,
+    AcceptedEvent,
+    Action,
+    Post,
+    Comment,
+    Search,
+    AdminAction,
+    Contact,
+]
 
 
 def events() -> Iterable[Res[Event]]:
@@ -109,9 +138,8 @@ def events() -> Iterable[Res[Event]]:
         "friends/removed_": _parse_deleted_friends,
         "groups/your_group_membership": _parse_group_activity,
         "groups/your_posts_and_comments": _parse_group_posts,
-        "likes_and_reactions/pages.json": _parse_page_likes,
+        "likes_and_reactions/pages": _parse_page_likes,
         "likes_and_reactions/posts_and_comments": _parse_reactions,
-        "messages/stickers_used": None,
         "location": None,  # No data
         "marketplace": None,
         "other_activity": None,
@@ -122,11 +150,21 @@ def events() -> Iterable[Res[Event]]:
         "saved_items": None,
         "stories": None,
         "your_places": None,
-        "security_and_login_information/": None,  # implement
-        "messages/": None,  # implement
-        "profile_information/profile_update_history": None,  # implement
-        "search_history": None,  # implement
-        "posts/": None,  # implement
+        "posts/your_posts": _parse_posts,
+        "search_history": _parse_search_history,
+        "profile_information/profile_update_history": _parse_posts,
+        "messages/stickers_used": None,  # no one needs stickers o_o
+        "messages/": _parse_conversation,
+        "security_and_login_information/account_activity": _parse_account_activity,
+        "security_and_login_information/authorized_logins": _parse_authorized_logins,
+        "security_and_login_information/administrative_records": _parse_admin_records,
+        "security_and_login_information/where_you": None,
+        "security_and_login_information/used_ip_addresses": None,
+        "security_and_login_information/account_status_changes": None,
+        "security_and_login_information/logins_and_logouts": None,
+        "security_and_login_information/login_protection": None,
+        "security_and_login_information/datr_cookie": None,
+        "posts/other_people's_posts_to_your_timeline": None,  # maybe implement this? OtherComment NamedTuple? Comment should just be mine
     }
     for f in files:
         handler: Any
@@ -142,7 +180,16 @@ def events() -> Iterable[Res[Event]]:
             continue
 
         if handler is None:
-            # ignored
+            # explicitly ignored
+            continue
+
+        if f.is_dir():
+            # rglob("*") matches directories, as well as any subredirectories/json files in those
+            # this is here exclusively for the messages dir, which has a larger structure
+            # json files from inside the dirs are still picked up by rglob
+            continue
+
+        if f.suffix != ".json":
             continue
 
         j = json.loads(f.read_text())
@@ -170,17 +217,17 @@ def _parse_address_book(d: Dict) -> Iterable[Contact]:
                 )
 
 
-def _parse_installed_apps(d: Dict) -> Iterable[AppInstall]:
+def _parse_installed_apps(d: Dict) -> Iterable[Action]:
     for app in d["installed_apps"]:
-        yield AppInstall(
-            name=app["name"],
-            added=fepoch(app["added_timestamp"]),
+        yield Action(
+            description="{} was installed".format(app["name"]),
+            at=fepoch(app["added_timestamp"]),
         )
 
 
-def _parse_app_posts(d: Dict) -> Iterable[ThirdPartyAction]:
+def _parse_app_posts(d: Dict) -> Iterable[Action]:
     for post in d["app_posts"]:
-        yield ThirdPartyAction(description=post["title"], at=fepoch(post["timestamp"]))
+        yield Action(description=post["title"], at=fepoch(post["timestamp"]))
 
 
 def _parse_group_comments(d: Dict) -> Iterable[Comment]:
@@ -193,9 +240,9 @@ def _parse_group_comments(d: Dict) -> Iterable[Comment]:
         )
 
 
-def _parse_joined_events(d: Dict) -> Iterable[JoinedEvent]:
+def _parse_joined_events(d: Dict) -> Iterable[AcceptedEvent]:
     for event in d["event_responses"]["events_joined"]:
-        yield JoinedEvent(
+        yield AcceptedEvent(
             name=event["name"],
             starts_at=fepoch(event["start_timestamp"]),
             ends_at=fepoch(event["end_timestamp"]),
@@ -240,14 +287,240 @@ def _parse_group_posts(d: Dict) -> Iterable[Union[Comment, Post]]:
                     )
 
 
-def _parse_page_likes(d: Dict) -> Iterable[PageLike]:
+def _parse_page_likes(d: Dict) -> Iterable[Action]:
     for page in d["page_likes"]:
-        yield PageLike(name=page["name"], at=fepoch(page["timestamp"]))
+        yield Action(
+            description="Liked Page {}".format(page["name"]),
+            at=fepoch(page["timestamp"]),
+        )
 
 
 def _parse_reactions(d: Dict) -> Iterable[Action]:
     for react in d["reactions"]:
         yield Action(description=react["title"], at=fepoch(react["timestamp"]))
+
+
+def _parse_search_history(d: Dict) -> Iterable[Search]:
+    for search in d["searches"]:
+        assert len(search["data"]) == 1
+        yield Search(query=search["data"][0]["text"], at=fepoch(search["timestamp"]))
+
+
+def _parse_conversation(
+    d: Dict,
+) -> Iterable[Res[Conversation]]:  # will only return 1 convo
+    participants: List[str] = [p["name"] for p in d["participants"]]
+    messages = list(_parse_messages_in_conversation(d["messages"]))
+    # propogate up exception if one exists
+    try:
+        yield next(filter(lambda m: isinstance(m, Exception), messages))
+    except StopIteration:  # there was no error found out
+        yield Conversation(
+            participants=participants,
+            title=d["title"],
+            messages=messages,
+        )
+
+
+def _parse_messages_in_conversation(messages: List[Dict]) -> Iterable[Res[Message]]:
+    for m in messages:
+        timestamp = fepoch(m["timestamp_ms"] / 1000)
+        author = m["sender_name"]
+        if m["type"] == "Unsubscribe":
+            continue
+        elif m["type"] in ["Generic", "Share"]:
+            # eh, I dont care that much about these in context, can do anaylsis on my/photos.py on its own
+            if any([k in m for k in ["photos", "sticker"]]):
+                continue
+            elif "content" in m:
+                yield Message(
+                    at=timestamp,
+                    author=author,
+                    content=m["content"],
+                    metadata=m.get("share"),
+                )
+            # if this just actually doesnt have a field with content for some reason, ignore it
+            elif set(m.keys()).issubset(set(["sender_name", "timestamp_ms", "type"])):
+                continue
+            else:
+                yield RuntimeError(
+                    "Not sure how to parse message without 'photos' or 'content': {}".format(
+                        m
+                    )
+                )
+        else:
+            yield RuntimeError("Not sure how to parse message for type: {}".format(m))
+
+
+# yikes. this is pretty much whenever I posted *anything*, or a third party app communicated
+# back to facebook that I listened to something/played a game, so it has like 5000 events
+#
+# not sure if I hit all the types, but this yields RuntimeErrors if it cant parse something,
+# so just check hpi doctor to make sure its all gooood
+# or
+# list(filter(lambda e: isinstance(e, Exception), events())),
+# throw a 'import pdb; pdb.set_trace()' at where its throwing the error
+# and add a new case for a new type of post
+def _parse_posts(d: Dict) -> Iterable[Res[Union[Post, Action]]]:
+    all_posts = d
+    # handle both profile updates and posts
+    if isinstance(all_posts, dict) and "profile_updates" in all_posts:
+        all_posts = all_posts["profile_updates"]
+    for post in all_posts:
+        if "attachments" in post:
+            att = post["attachments"]
+            # e.g. photo with a description
+            # make sure the structure looks like a media post
+            # traverse into the image metadata post to see if we can find a description
+            if len(att) >= 1 and "data" in att[0] and len(att[0]["data"]) >= 1:
+                # make sure each data item has only one item of media
+                if all([len(attach["data"]) == 1 for attach in att]):
+                    att_data = [attach["data"][0] for attach in att]
+                    # switch, over posts that have descriptions (e.g. me describing what the photo is), and posts that dont
+                    for dat in att_data:
+                        if "media" in dat:
+                            mdat = dat["media"]
+                            # image where I described something
+                            if "description" in mdat:
+                                yield Action(
+                                    description=mdat["description"],
+                                    at=fepoch(post["timestamp"]),
+                                    metadata=mdat,
+                                )
+                            # image when I just posted to a album
+                            elif "title" in mdat:
+                                yield Action(
+                                    description="Posted to Album {}".format(
+                                        mdat["title"]
+                                    ),
+                                    at=fepoch(post["timestamp"]),
+                                    metadata=mdat,
+                                )
+                            else:
+                                yield RuntimeError(
+                                    "No known way to parse image post {}".format(post)
+                                )
+                        elif "place" in dat:
+                            # check-in into place
+                            if "name" in dat["place"]:
+                                yield Action(
+                                    description="Visited {}".format(
+                                        dat["place"]["name"]
+                                    ),
+                                    at=fepoch(post["timestamp"]),
+                                    metadata=dat,
+                                )
+                            else:
+                                yield RuntimeError(
+                                    "No known way to parse location post {}".format(
+                                        post
+                                    )
+                                )
+                        elif "life_event" in dat:
+                            # started high school etc.
+                            ddat = dat["life_event"]
+                            yield Action(
+                                description=ddat["title"],
+                                at=fepoch(post["timestamp"]),
+                                metadata=ddat,
+                            )
+                        # third party app event (e.g. Listened to Spotify Song)
+                        elif "title" in post:
+                            if "external_context" in dat:
+                                if "title" in post:
+                                    yield Action(
+                                        description=post["title"],
+                                        at=fepoch(post["timestamp"]),
+                                        metadata=dat,
+                                    )
+                            # seems like bad data handling on facebooks part.
+                            # these are still events,
+                            # but it doesnt have an external context,
+                            # its like a stringified version of the data
+                            elif "text" in dat:
+                                yield Action(
+                                    description=post["title"],
+                                    at=fepoch(post["timestamp"]),
+                                    metadata=dat,
+                                )
+                            else:
+                                yield RuntimeError(
+                                    "No known way to parse attachment post with title {}".format(
+                                        post
+                                    )
+                                )
+                        else:  # unknown data type
+                            yield RuntimeError(
+                                "No known way to parse data type with attachment {}".format(
+                                    post
+                                )
+                            )
+                else:  # unknown structure
+                    yield RuntimeError(
+                        "No known way to parse data from post {}".format(post)
+                    )
+            else:
+                yield RuntimeError(
+                    "No known way to parse attachment post {}".format(post)
+                )
+        elif "data" in post and len(post["data"]) == 1:
+            dat = post["data"][0]
+            # basic post I wrote on my timeline
+            if "post" in dat and isinstance(dat["post"], str) and "title" in post:
+                yield Post(
+                    content=dat["post"],
+                    at=fepoch(post["timestamp"]),
+                    action=post["title"],
+                )
+            elif "profile_update" in dat:
+                yield Action(
+                    description="Updated Profile",
+                    at=fepoch(post["timestamp"]),
+                    metadata=dat["profile_update"],
+                )
+            else:
+                yield RuntimeError("No known way to parse basic post {}".format(post))
+        # post without any actual content (e.g. {'timestamp': 1334515711, 'title': 'Sean Breckenridge posted in club'})
+        # treat this as an action since I have no content here
+        elif set(("timestamp", "title")) == set(post.keys()):
+            yield Action(description=post["title"], at=fepoch(post["timestamp"]))
+        else:
+            yield RuntimeError("No known way to parse post {}".format(post))
+
+
+def _parse_account_activity(d: Dict) -> Iterable[AdminAction]:
+    for ac in d["account_activity"]:
+        yield AdminAction(
+            description=ac["action"],
+            at=fepoch(ac["timestamp"]),
+            ip=ac["ip_address"],
+            user_agent=ac["user_agent"],
+        )
+
+
+def _parse_authorized_logins(d: Dict) -> Iterable[AdminAction]:
+    for ac in d["recognized_devices"]:
+        metadata = {}
+        if "updated_timestamp" in ac:
+            metadata["updated_at"] = fepoch(ac["updated_timestamp"])
+        yield AdminAction(
+            description="Known Device: {}".format(ac["name"]),
+            at=fepoch(ac["created_timestamp"]),
+            ip=ac["ip_address"],
+            user_agent=ac["user_agent"],
+            metadata=metadata,
+        )
+
+
+def _parse_admin_records(d: Dict) -> Iterable[AdminAction]:
+    for rec in d["admin_records"]:
+        s = rec["session"]
+        yield AdminAction(
+            description=rec["event"],
+            at=fepoch(s["created_timestamp"]),
+            ip=s["ip_address"],
+            user_agent=s["user_agent"],
+        )
 
 
 def fepoch(epoch_time: int) -> datetime:
