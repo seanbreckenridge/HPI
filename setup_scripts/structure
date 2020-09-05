@@ -18,6 +18,8 @@ directories=(
 	'league_of_legends'
 	'rps_comments'
 	'ipython'
+	'old_forums'
+
 )
 declare -a files
 files=(
