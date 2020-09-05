@@ -17,6 +17,7 @@ directories=(
 	'facebook_gdpr'
 	'league_of_legends'
 	'rps_comments'
+	'ipython'
 )
 declare -a files
 files=(
