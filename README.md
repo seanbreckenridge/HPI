@@ -76,6 +76,7 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 
 - collection of [`bootstrap`](./bootstrap) scripts to setup things on my computer
 - [`jobs`](./jobs) contains anacron-like jobs that are run periodically, using [`bgproc`](https://github.com/seanbreckenridge/bgproc) and [`evry`](https://github.com/seanbreckenridge/evry). So, this repo has both the [DAL](https://beepb00p.xyz/exports.html#dal) and the scripts to backup the data.
+- `HPI_LOGS` controls the `kython` logging verbosity across the entire package mostly for running `HPI_LOGS=debug hpi doctor`
 
 ---
 

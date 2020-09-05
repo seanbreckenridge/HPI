@@ -1,5 +1,6 @@
 """
-Git commits data for repositories on your filesystem """
+Git commits data for repositories on your filesystem
+"""
 
 
 from pathlib import Path
@@ -14,7 +15,7 @@ import git # type: ignore
 from git.repo.fun import is_git_dir, find_worktree_git_dir # type: ignore
 
 
-log = LazyLogger('my.commits', level='warning')
+log = LazyLogger('my.commits', level='info')
 
 
 # TODO: task-pool something like https://sean.fish/d/repos-pull-all?dark

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 import logging
 from typing import Union, Optional
 
@@ -7,6 +8,8 @@ LevelIsh = Optional[Union[Level, str]]
 
 
 def mklevel(level: LevelIsh) -> Level:
+    if 'HPI_LOGS' in os.environ:
+        return getattr(logging, os.environ["HPI_LOGS"].upper())
     if level is None:
         return logging.NOTSET
     if isinstance(level, int):

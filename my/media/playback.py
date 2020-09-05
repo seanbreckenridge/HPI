@@ -99,7 +99,7 @@ def _read_event_stream(p: Path) -> Results:
     for d in _reconstruct_event_stream(p):
         # required keys
         if not REQUIRED_KEYS.issubset(set(d)):
-            logger.debug("Doesnt have required keys, ignoring...")
+            #logger.debug("Doesnt have required keys, ignoring...")
             continue
         if d["end_time"] < d["start_time"]:
             logger.warning(f"End time is less than start time! {d}")
@@ -253,7 +253,6 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
             else:
                 full_path: str = os.path.join(working_dir, event_data)
                 media_data[event_name] = full_path
-                logger.debug("{} doesn't exist...".format(full_path))
         elif event_name == "metadata":
             # TODO: how to parse this better?
             media_data[event_name] = event_data

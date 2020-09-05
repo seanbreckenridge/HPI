@@ -20,15 +20,22 @@ config = make_config(firefox)
 
 #######
 
+import os
 import tempfile
 from pathlib import Path
 from typing import Iterator, Sequence
 
 from .core.common import listify, get_files
 
+
+# monkey patch ffexport logs
+if "HPI_LOGS" in os.environ:
+    from .kython.klogging import mklevel
+    os.environ["FFEXPORT_LOGS"] = str(mklevel(os.environ["HPI_LOGS"]))
+
+
 from ffexport import read_and_merge, Visit
 from ffexport.save_hist import backup_history
-
 
 @listify
 def inputs() -> Sequence[Path]:
