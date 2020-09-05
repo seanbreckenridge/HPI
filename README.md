@@ -49,7 +49,6 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 - [ ] patch in rifle/ranger history?
 - [ ] configure `my.media` (youtube history)
 - [ ] configure google takeout/mounted google drive
-- [ ] parse historical forums/video game usage? (sites I used to be active on, could be cool to look back on)
 - [ ] android app to track my location?
 - [ ] backup trakt? (have API access)
 - [ ] backup MAL (ugh)
