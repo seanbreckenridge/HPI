@@ -35,7 +35,6 @@ from typing import Sequence
 
 from .core import get_files, warn_if_empty
 from .core.common import listify
-from .core.file import yield_lines
 
 
 @listify
@@ -63,26 +62,19 @@ def inputs() -> Sequence[Path]:
 
 import re
 
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from typing import NamedTuple, Iterable, Set, Tuple
 from itertools import chain
 
-from .core.error import Res
 
-# represent command length
-duration = timedelta
-
-from .core.common import LazyLogger
-logger = LazyLogger(__name__)
-
-# represents one history entry
+# represents one history entry (command)
 class Entry(NamedTuple):
     dt: datetime
-    duration: duration
+    duration: int
     command: str
 
 
-Results = Iterable[Res[Entry]]
+Results = Iterable[Entry]
 
 
 def history(from_paths=inputs) -> Results:
@@ -100,9 +92,6 @@ def stats():
 def _merge_histories(*sources: Results) -> Results:
     emitted: Set[Tuple[datetime, str]] = set()
     for e in chain(*sources):
-        if isinstance(e, Exception):
-            yield e
-            continue
         key = (e.dt, e.command)
         if key in emitted:
             # logger.debug('ignoring %s: %s', key, e)
@@ -116,10 +105,10 @@ def _merge_histories(*sources: Results) -> Results:
 # pre-emptively read files in, check if ones a substring of another and
 # exclude it
 def _parse_file(histfile: Path) -> Results:
-    dt, dur, command = None, None, ""
+    dt, dur, command = None, None, None
     # cant parse line by line since some commands are multiline
     # sort of structured like a do-while loop
-    for line in yield_lines(histfile):
+    for line in histfile.open(encoding="latin-1"):
         r = _parse_metadata(line)
         # if regex didnt match, this is a multi line command string
         if r is None:
@@ -129,47 +118,29 @@ def _parse_file(histfile: Path) -> Results:
             # yield the last command
             if dt:
                 yield Entry(
-                    dt=_parse_datetime(dt),
-                    duration=_parse_duration(dur),
-                    command=command.strip(),
+                    dt=dt,
+                    duration=dur,
+                    command=command,
                 )
             # set 'current' dt, dur, command to matched groups
             dt, dur, command = r
     # yield the last entry
-    if command.strip() != "":
+    if command:
         yield Entry(
-            dt=_parse_datetime(dt),
-            duration=_parse_duration(dur),
-            command=command.strip(),
+            dt=dt,
+            duration=dur,
+            command=command,
         )
 
 
-def _parse_metadata(histline: str) -> Optional[Iterable[str]]:
+PATTERN = re.compile(r"^: (\d+):(\d+);(.*)$")
+
+def _parse_metadata(histline: str) -> Optional[Tuple[str]]:
     """
     parse the date, duration, and command from a line
     """
-    matches = re.match(r"^: (\d+):(\d+);(.*)$", histline)
-    if not bool(matches):
-        return None
-    else:
-        return list(matches.groups())
-
-
-def _parse_datetime(date: Optional[str]) -> datetime:
-    if date is None:
-        logger.warning(f"_parse_datetime receieved {date}, expected a datetime")
-        return datetime.now()
-    else:
-        return datetime.fromtimestamp(
-            int(date),
-            tz=timezone.utc,
-        )
-
-
-def _parse_duration(dur: Optional[str]) -> duration:
-    if dur is None:
-        logger.warning(f"_parse_duration receieved {dur}, expected a string")
-        return duration(seconds=0)
-    else:
-        return duration(seconds=int(dur))
-
+    matches = PATTERN.match(histline)
+    if matches:
+        g = matches.groups()
+        return (datetime.fromtimestamp(int(g[0]), tz=timezone.utc), int(g[1]), g[2])
+    return None
