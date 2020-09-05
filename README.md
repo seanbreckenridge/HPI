@@ -38,6 +38,7 @@ It's a Python library (named `my`), a collection of modules for:
 - `my.old_forums`, random posts from forums I used to use in the past, see [`forum_parser`](https://github.com/seanbreckenridge/forum_parser)
 - `my.skype` to parse a couple datetimes from the skype GDPR export
 - `my.ipython`, for timestamped python REPL history
+- `my.facebook`, to parse the GDPR export I downloaded from facebook before deleting my account
 
 See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py) for config.
 
