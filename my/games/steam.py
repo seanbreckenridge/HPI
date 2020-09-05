@@ -90,8 +90,7 @@ def all_achievements(from_paths=inputs) -> AchResults:
 
 
 def _read_parsed_json(p: Path) -> Results:
-    with p.open("r") as jf:
-        items = json.load(jf)
+    items = json.loads(p.read_text())
     for _, game in items.items():
         ach_lambda = partial(_parse_achievement, game_name=game["name"])
         try:

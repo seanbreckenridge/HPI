@@ -166,8 +166,7 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
     Takes about a dozen events receieved chronologically from the MPV
     socket, and reconstructs what I was doing while it was playing.
     """
-    with p.open() as pf:
-        events = json.load(pf)
+    events = json.loads(p.read_text())
     # mpv socket names are created like:
     #
     # declare -a mpv_options

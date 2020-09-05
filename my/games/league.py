@@ -90,8 +90,7 @@ def history(from_paths=inputs, summoner_name: Optional[str] = None) -> Results:
 
 
 def _read_parsed_json(p: Path, username: str) -> Results:
-    with p.open("r") as jf:
-        items = json.load(jf)
+    items = json.loads(p.read_text())
     for game in items:
         # get my stats
         participant_id = [k for k, v in game["playerNames"].items() if v == username]

@@ -57,8 +57,7 @@ def history(from_paths=inputs) -> Results:
 
 
 def _parse_file(post_file: Path) -> Results:
-    with post_file.open('r') as pf:
-        items = json.load(pf)
+    items = json.loads(post_file.read_text())
     for p in items:
         yield Post(
             dt=datetime.fromtimestamp(p["date"], tz=timezone.utc),

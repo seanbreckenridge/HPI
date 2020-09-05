@@ -49,8 +49,7 @@ def events(from_paths=inputs) -> Results:
 
 
 def _parse_json_file(p: Path) -> Results:
-    with p.open("r") as jf:
-        items = json.load(jf)
+    items = json.loads(p.read_text())
     for e_info in items:
         dt, meta_tuple = e_info
         meta_tag, meta_joined = meta_tuple

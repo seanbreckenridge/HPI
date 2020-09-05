@@ -55,8 +55,7 @@ def timestamps(from_paths=inputs) -> Results:
 
 
 def _parse_file(post_file: Path) -> Results:
-    with post_file.open('r') as pf:
-        items = json.load(pf)
+    items = json.loads(post_file.read_text())
     for conv in items["conversations"]:
         for msg in conv["MessageList"]:
             yield dateparser.parse(msg["originalarrivaltime"].rstrip("Z"))
