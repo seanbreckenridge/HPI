@@ -23,7 +23,7 @@ shellcheck_scripts() {
 	while IFS=$'\n' read -r shell_script; do
 		shellcheck "$shell_script" || SUCCESS='false'
 	done < <(list_shell_scripts)
-	# If all the shellc
+	# If all the shellchecks succeeded
 	if [[ "$SUCCESS" == 'true' ]]; then
 		shfmt_scripts_in_place
 	else
