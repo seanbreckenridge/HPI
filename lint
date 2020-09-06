@@ -1,5 +1,6 @@
 #!/bin/bash
-# Wrapper around mypy/pytest/flake8, pauses at each step if there are errors
+# Wrapper around mypy/pytest/flake8 for python, and shellcheck/shfmt for bash
+# pauses at each step if there are errors
 cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")" || {
 	echo "Couldn't cd to current dir"
 	exit 1
