@@ -8,17 +8,23 @@ from my.pdfs import get_annots, annotated_pdfs
 
 
 ROOT = Path(__file__).parent.absolute()
-EXPECTED_HIGHLIGHTS = set(['Since 1994, when we first began organizing web sites, we have enjoyed a rare opportunity to participate in the birth of a new discipline. ',
-                           'And yet, unlearn we must, ',
-                           '',
-                         ])
+EXPECTED_HIGHLIGHTS = set(
+    [
+        "Since 1994, when we first began organizing web sites, we have enjoyed a rare opportunity to participate in the birth of a new discipline. ",
+        "And yet, unlearn we must, ",
+        "",
+    ]
+)
+
 
 def test_get_annots():
     """
     Test get_annots, with a real PDF file
     get_annots should return a list of three Annotation objects
     """
-    annotations = get_annots(Path(ROOT / 'Information Architecture for the World Wide Web.pdf'))
+    annotations = get_annots(
+        Path(ROOT / "Information Architecture for the World Wide Web.pdf")
+    )
     assert len(annotations) == 3
     assert set([a.highlight for a in annotations]) == EXPECTED_HIGHLIGHTS
 
@@ -28,7 +34,7 @@ def test_annotated_pdfs_with_filelist():
     Test annotated_pdfs, with a real PDF file
     annotated_pdfs should return a list of one Pdf object, with three Annotations
     """
-    filelist = [Path(ROOT / 'Information Architecture for the World Wide Web.pdf')]
+    filelist = [Path(ROOT / "Information Architecture for the World Wide Web.pdf")]
     annotations_generator = annotated_pdfs(filelist=filelist, roots=None)
 
     assert inspect.isgeneratorfunction(annotated_pdfs)

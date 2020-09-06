@@ -11,9 +11,12 @@ def test():
 
     from datetime import datetime
     import pytz
+
     w = Watched(
-        url='https://www.youtube.com/watch?v=hTGJfRPLe08',
-        title='Jamie xx - Gosh',
-        when=datetime(year=2018, month=6, day=21, hour=5, minute=48, second=34, tzinfo=pytz.utc),
+        url="https://www.youtube.com/watch?v=hTGJfRPLe08",
+        title="Jamie xx - Gosh",
+        when=datetime(
+            year=2018, month=6, day=21, hour=5, minute=48, second=34, tzinfo=pytz.utc
+        ),
     )
     assert w in watched

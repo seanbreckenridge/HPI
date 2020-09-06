@@ -5,8 +5,10 @@ from my.core.common import make_dict
 
 from more_itertools import ilen
 
-def test() -> None:
+
+def test_reddit_has_data() -> None:
     from my.reddit import events, inputs, saved, _dal, comments, pushshift_comments
+
     assert ilen(events()) > 10
     assert ilen(saved()) > 10
     assert ilen(inputs()) >= 1
@@ -15,8 +17,8 @@ def test() -> None:
 
 def test_saves() -> None:
     from my.reddit import events, inputs, saved
+
     # TODO not sure if this is necesasry anymore?
     saves = list(saved())
     # just check that they are unique..
     assert len(make_dict(saves, key=lambda s: s.sid)) > 10
-

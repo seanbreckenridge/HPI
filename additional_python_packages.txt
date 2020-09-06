@@ -8,3 +8,6 @@ topydo
 ffexport
 autotui
 dateparser
+more_itertools
+pytest
+pytest-random-order
