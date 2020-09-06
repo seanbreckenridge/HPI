@@ -88,6 +88,7 @@ prompt_black() {
 main() {
 	custom_pyflakes || prompt
 	pytest "$@" || prompt
+	cleanup_firefox
 	echo "Running mypy..."
 	mypy --color-output --ignore-missing-imports ./my || prompt
 	echo "Checking python formatting..."
@@ -98,5 +99,4 @@ main() {
 	git status
 }
 
-cleanup_firefox
 main "$@"
