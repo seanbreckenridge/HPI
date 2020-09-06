@@ -12,8 +12,8 @@ from typing import NamedTuple, List, Optional, Iterator
 from contextlib import redirect_stderr
 
 
-from .common import mcachew, group_by_key
-from .error import Res, split_errors
+from .core.common import mcachew, group_by_key
+from .core.error import Res, split_errors
 
 # path to pdfannots (https://github.com/0xabu/pdfannots)
 import my.config.repos.pdfannots.pdfannots as pdfannots
