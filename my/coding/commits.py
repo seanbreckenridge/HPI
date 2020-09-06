@@ -13,7 +13,7 @@ from my.config import commits as config
 
 # pip3 install gitpython
 import git  # type: ignore
-from git.repo.fun import is_git_dir # type: ignore
+from git.repo.fun import is_git_dir  # type: ignore
 
 
 log = LazyLogger("my.commits", level="warning")

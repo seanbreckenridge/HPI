@@ -231,7 +231,7 @@ def _get_events(backups: Sequence[Path], parallel: bool = True) -> Iterator[Even
                 last_saved = s.backup_dt
                 yield Event(
                     dt=s.created if first else last_saved,
-                    text="favorited{}".format(' [initial]' if first else ''),
+                    text="favorited{}".format(" [initial]" if first else ""),
                     kind=s,
                     eid=f"fav-{s.sid}",
                     url=s.url,
