@@ -2,7 +2,10 @@
 # remind me to log my weight
 
 evry 1 hour -logweight && {
-	cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+	cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")" || {
+		send-error "Couldn't cd to current dir"
+		exit 1
+	}
 	printlog "check_weight:checking..."
 	./check_weight.py || notify-send "havent updated weight in more than a week!"
 }

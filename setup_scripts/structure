@@ -34,7 +34,7 @@ for dir in "${directories[@]}"; do
 done
 
 for file in "${files[@]}"; do
-	dfile="${DATA_PREFIX}/${dir}"
+	dfile="${DATA_PREFIX}/${file}"
 	if [[ ! -e "${dfile}" ]]; then
 		touch "${dfile}"
 	fi

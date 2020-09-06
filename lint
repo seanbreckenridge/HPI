@@ -1,44 +1,79 @@
 #!/bin/bash
 # Wrapper around mypy/pytest/flake8, pauses at each step if there are errors
-cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")" || {
+	echo "Couldn't cd to current dir"
+	exit 1
+}
 
 readonly FLAKE8_IGNORE='E225,E501,E302,E402,E305,E261,E265,E116,E252,E702,E266,E741,E306,E203,E731,W503'
 readonly FLAKE8_FILES_IGNORE="*polar.py,*kython*,*stackexchange.py,*core/common.py,*core/init.py,*core/__init__.py,*config/__init__.py"
 
+list_shell_scripts() {
+	echo bootstrap
+	echo lint
+	echo bgproc
+	fd '.job' jobs
+	fd . setup_scripts
+}
+
+# call shellcheck on all the scripts
+shellcheck_scripts() {
+	local SUCCESS='true'
+	while IFS=$'\n' read -r shell_script; do
+		shellcheck "$shell_script" || SUCCESS='false'
+	done < <(list_shell_scripts)
+	# If all the shellc
+	if [[ "$SUCCESS" == 'true' ]]; then
+		shfmt_scripts_in_place
+	else
+		echo "One or more shellcheck invocations returned false, skipping shellcheck..."
+	fi
+}
+
+# call shfmt on multiple files
+shfmt_scripts_in_place() {
+	while IFS=$'\n' read -r shell_script; do
+		printf "Running shfmt on: %s\n" "$shell_script"
+		shfmt "$shell_script" >/tmp/shfmt-temp && cat /tmp/shfmt-temp >"$shell_script"
+	done < <(list_shell_scripts)
+}
+
 # remove temporary firefox dbs from previous runs
 # fills up /tmp and causes storage issues otherwise
 cleanup_firefox() {
-  echo "Cleaning up old firefox databases..."
-  find /tmp -iname "places*sqlite" -delete -print 2>/dev/null
+	echo "Cleaning up old firefox databases..."
+	find /tmp -iname "places*sqlite" -delete -print 2>/dev/null
 }
 
 prompt() {
-  echo -en "$(tput setaf 1)Hit enter to continue > $(tput sgr0)"
-  read -r
+	echo -en "$(tput setaf 1)Hit enter to continue > $(tput sgr0)"
+	read -r
 }
 
 custom_pyflakes() {
-  printf "Running pyflakes with:\nignored rules: %s\nIgnored file patterns:\n%s\n" "$FLAKE8_IGNORE" "$(tr ',' '\n' <<<"$FLAKE8_FILES_IGNORE")"
-  # capture flake8 output so I can determine whether or not there were lines returned
-  # if there were return 1, so it prompts to wait while I look at the error
-  local FLAKE8_OUTPUT="$(find my -iname '*.py' -exec flake8 --ignore="$FLAKE8_IGNORE" --extend-exclude="$FLAKE8_FILES_IGNORE" {} +)"
-  local FLAKE8_OUTPUT_LENGTH="$(wc -c <<<"$FLAKE8_OUTPUT")"
-  # ignore newlines/spaces for some reason, all errors will have string length > 5
-  if (( FLAKE8_OUTPUT_LENGTH > 5 )); then
-    printf '%s\n' "$FLAKE8_OUTPUT"
-    return 1
-  else
-    return 0
-  fi
+	local FLAKE8_OUTPUT FLAKE8_OUTPUT_LENGTH
+	printf "Running pyflakes with:\nignored rules: %s\nIgnored file patterns:\n%s\n" "$FLAKE8_IGNORE" "$(tr ',' '\n' <<<"$FLAKE8_FILES_IGNORE")"
+	# capture flake8 output so I can determine whether or not there were lines returned
+	# if there were return 1, so it prompts to wait while I look at the error
+	FLAKE8_OUTPUT="$(find my -iname '*.py' -exec flake8 --ignore="$FLAKE8_IGNORE" --extend-exclude="$FLAKE8_FILES_IGNORE" {} +)"
+	FLAKE8_OUTPUT_LENGTH="$(wc -c <<<"$FLAKE8_OUTPUT")"
+	# ignore newlines/spaces for some reason, all errors will have string length > 5
+	if ((FLAKE8_OUTPUT_LENGTH > 5)); then
+		printf '%s\n' "$FLAKE8_OUTPUT"
+		return 1
+	else
+		return 0
+	fi
 }
 
-
 main() {
-  custom_pyflakes || prompt
-  pytest "$@" || prompt
-  echo "Running mypy..."
-  mypy --color-output --ignore-missing-imports ./my
-  echo -e "$(tput setaf 2)Done!$(tput sgr0)"
+	custom_pyflakes || prompt
+	pytest "$@" || prompt
+	echo "Running mypy..."
+	mypy --color-output --ignore-missing-imports ./my || prompt
+	echo "Running shellcheck..."
+	shellcheck_scripts
+	echo -e "$(tput setaf 2)Done!$(tput sgr0)"
 }
 
 cleanup_firefox
