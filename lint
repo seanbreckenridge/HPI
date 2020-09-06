@@ -32,10 +32,12 @@ shellcheck_scripts() {
 
 # call shfmt on multiple files
 shfmt_scripts_in_place() {
+	local COUNT=0
 	while IFS=$'\n' read -r shell_script; do
-		printf "Running shfmt on: %s\n" "$shell_script"
+		((COUNT++))
 		shfmt "$shell_script" >/tmp/shfmt-temp && cat /tmp/shfmt-temp >"$shell_script"
 	done < <(list_shell_scripts)
+	echo "$(tput setaf 2)Ran shfmt on $COUNT files$(tput sgr0)"
 }
 
 # remove temporary firefox dbs from previous runs
@@ -74,6 +76,7 @@ main() {
 	echo "Running shellcheck..."
 	shellcheck_scripts
 	echo -e "$(tput setaf 2)Done!$(tput sgr0)"
+	git status
 }
 
 cleanup_firefox
