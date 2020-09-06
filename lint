@@ -27,7 +27,7 @@ shellcheck_scripts() {
 	if [[ "$SUCCESS" == 'true' ]]; then
 		shfmt_scripts_in_place
 	else
-		echo "One or more shellcheck invocations returned false, skipping shellcheck..."
+		echo "One or more shellcheck invocations returned false, skipping shfmt..."
 	fi
 }
 
