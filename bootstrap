@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
 
@@ -36,6 +36,10 @@ install_python_extras() {
 }
 
 setup_arctree() {
+	if which arctree; then
+		echo "arctree is already installed"
+		return
+	fi
 	echo "Installing arctree..."
 	local INSTALL_INTO="${HOME}/.local/bin"
 	if [[ ! -d "$INSTALL_INTO" ]]; then
