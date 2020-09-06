@@ -49,8 +49,10 @@ cleanup_firefox() {
 }
 
 prompt() {
-	echo -en "$(tput setaf 1)Hit enter to continue > $(tput sgr0)"
-	read -r
+	local MESSAGE
+	MESSAGE="${1:-Hit enter to continue > }"
+	echo -en "$(tput setaf 1)${MESSAGE}$(tput sgr0)"
+	read -r # if no variable is specified, sets the REPLY environment variable
 }
 
 custom_pyflakes() {
@@ -69,11 +71,27 @@ custom_pyflakes() {
 	fi
 }
 
+prompt_black() {
+	# if black returns error code, prompt to autoformat
+	fd '.py$' -E setup.py -X black --check || {
+		prompt "Run black autoformat (N/y)? "
+		case "$REPLY" in
+		y | Y)
+			fd '.py$' -E setup.py -X black
+			;;
+		*) ;;
+
+		esac
+	}
+}
+
 main() {
 	custom_pyflakes || prompt
 	pytest "$@" || prompt
 	echo "Running mypy..."
 	mypy --color-output --ignore-missing-imports ./my || prompt
+	echo "Checking python formatting..."
+	prompt_black
 	echo "Running shellcheck..."
 	shellcheck_scripts
 	echo -e "$(tput setaf 2)Done!$(tput sgr0)"
