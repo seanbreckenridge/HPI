@@ -285,7 +285,7 @@ def pushshift_comments() -> Iterator[PComment]:
 
 
 # combine comments
-# not going to be totally compatabile, because rexport and
+# not going to be totally compatible, because rexport and
 # pushshift have different JSON representations. Looks like
 # a lot of the major ones are the same though
 @warn_if_empty

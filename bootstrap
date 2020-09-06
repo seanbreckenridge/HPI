@@ -69,7 +69,7 @@ create_data_dir
 install_hpi
 install_python_extras
 
-# export specfic setup
+# export specific setup
 ./setup_scripts/structure
 
 bash -x ./setup_scripts/ghexport

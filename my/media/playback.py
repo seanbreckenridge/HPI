@@ -264,7 +264,7 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
             media_data[event_name] = event_data
         elif event_name in ["seek", "paused", "resumed"]:
             if event_name == "paused":
-                # if a pause event was recieved while mpv was still playing,
+                # if a pause event was received while mpv was still playing,
                 # save when it was paused, we can calculate complete pause time
                 # while this piece of media was playing by combining sequences of
                 # pause times
@@ -272,7 +272,7 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
                     is_playing = False
                     pause_start_time = dt_float
                 else:
-                    logger.debug("recieved pause event while paused?")
+                    logger.debug("received pause event while paused?")
             elif event_name == "resumed":
                 # if its currently paused, and we received a resume event
                 if not is_playing:
@@ -282,7 +282,7 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
                         pause_duration = pause_duration + (dt_float - pause_start_time)  # type: ignore
                         pause_start_time = None
                 else:
-                    # logger.warning("recieved resumed event while already playing?")
+                    # logger.warning("received resumed event while already playing?")
                     pass
             if event_data is not None and "percent-pos" in event_data:
                 percents[dt_float] = event_data["percent-pos"]
@@ -303,7 +303,7 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
             media_data = {}
             percents = {}
         elif event_name in ["mpv-quit", "final-write"]:
-            # if this hapened right after an eof, it can be ignored
+            # if this happened right after an eof, it can be ignored
 
             # if the eof didnt happen and mpv was quit manually, save
             # quit time as end_time

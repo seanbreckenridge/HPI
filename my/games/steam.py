@@ -1,5 +1,5 @@
 """
-Parses steam game/achivement data scraped with
+Parses steam game/achievement data scraped with
 https://github.com/seanbreckenridge/steamscraper
 """
 

@@ -88,7 +88,7 @@ def todos(from_file: Optional[PathIsh] = config.live_file) -> Results:
     Parses the currently in use todo.txt file (returns my current todos)
     """
     if from_file is None:
-        warnings.warn(f"Did not recieve a valid 'live_file' to read from: {from_file}")
+        warnings.warn(f"Did not receive a valid 'live_file' to read from: {from_file}")
     else:
         p = Path(from_file).expanduser().absolute()
         if p.exists():

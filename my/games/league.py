@@ -82,7 +82,7 @@ Results = Iterable[Res[Game]]
 def history(from_paths=inputs, summoner_name: Optional[str] = None) -> Results:
     if summoner_name is None:
         if config.username is None:
-            raise RuntimeError("No league of legends username recieved!")
+            raise RuntimeError("No league of legends username received!")
         else:
             summoner_name = config.username
     _read_parsed_json_for_user = partial(_read_parsed_json, username=summoner_name)

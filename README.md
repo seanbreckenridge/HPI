@@ -142,7 +142,7 @@ fingertips. This library is my attempt to achieve this vision.
     -   Accessing exercise data
     -   Book reading progress
     -   Messenger stats
-    -   Querying Roam Reasearch database
+    -   Querying Roam Research database
 -   How does it get input data?
 -   Q & A
     -   Why Python?
@@ -660,7 +660,7 @@ return plot_file
 
 ![](https://beepb00p.xyz/messenger_2016_to_2019.png)
 
-Querying Roam Reasearch database
+Querying Roam Research database
 --------------------------------
 
 I've got some code examples

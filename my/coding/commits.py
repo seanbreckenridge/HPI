@@ -53,7 +53,7 @@ def by_me(c) -> bool:
 
 
 class Commit(NamedTuple):
-    commited_dt: datetime
+    committed_dt: datetime
     authored_dt: datetime
     message: str
     repo: str  # TODO put canonical name here straightaway??
@@ -63,7 +63,7 @@ class Commit(NamedTuple):
 
     @property
     def dt(self) -> datetime:
-        return self.commited_dt
+        return self.committed_dt
 
 
 # TODO not sure, maybe a better idea to move it to timeline?
@@ -97,7 +97,7 @@ def _repo_commits_aux(gr: git.Repo, rev: str, emitted: Set[str]) -> Iterator[Com
         repo = str(_git_root(gr.git_dir))
 
         yield Commit(
-            commited_dt=fix_datetime(c.committed_datetime),
+            committed_dt=fix_datetime(c.committed_datetime),
             authored_dt=fix_datetime(c.authored_datetime),
             message=c.message.strip(),
             repo=repo,

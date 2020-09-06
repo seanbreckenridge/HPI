@@ -311,7 +311,7 @@ def _parse_conversation(
 ) -> Iterable[Res[Conversation]]:  # will only return 1 convo
     participants: List[str] = [p["name"] for p in d["participants"]]
     messages = list(_parse_messages_in_conversation(d["messages"]))
-    # propogate up exception if one exists
+    # propagate up exception if one exists
     try:
         yield next(filter(lambda m: isinstance(m, Exception), messages))
     except StopIteration:  # there was no error found out
@@ -329,7 +329,7 @@ def _parse_messages_in_conversation(messages: List[Dict]) -> Iterable[Res[Messag
         if m["type"] == "Unsubscribe":
             continue
         elif m["type"] in ["Generic", "Share"]:
-            # eh, I dont care that much about these in context, can do anaylsis on my/photos.py on its own
+            # eh, I dont care that much about these in context, can do analysis on my/photos.py on its own
             if any([k in m for k in ["photos", "sticker"]]):
                 continue
             elif "content" in m:
