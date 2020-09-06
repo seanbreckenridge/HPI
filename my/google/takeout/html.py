@@ -1,13 +1,13 @@
-'''
+"""
 Google Takeout exports: browsing history, search/youtube/google play activity
-'''
+"""
 
 from enum import Enum
 import re
 from pathlib import Path
 from datetime import datetime
 from html.parser import HTMLParser
-from typing import List, Dict, Optional, Any, Callable, Iterable, Tuple
+from typing import List, Optional, Any, Callable, Iterable, Tuple
 from collections import OrderedDict
 from urllib.parse import unquote
 import pytz
@@ -25,8 +25,8 @@ def parse_dt(s: str) -> datetime:
     # ugh. https://bugs.python.org/issue22377 %Z doesn't work properly
 
     end = s[-3:]
-    tz: Any # meh
-    if end == ' PM' or end == ' AM':
+    tz: Any  # meh
+    if end == " PM" or end == " AM":
         # old takeouts didn't have timezone
         # hopefully it was utc? Legacy, so no that much of an issue anymore..
         tz = pytz.utc
@@ -40,10 +40,10 @@ def parse_dt(s: str) -> datetime:
 
 
 def test_parse_dt():
-    parse_dt('Jun 23, 2015, 2:43:45 PM')
-    parse_dt('Jan 25, 2019, 8:23:48 AM GMT')
-    parse_dt('Jan 22, 2020, 8:34:00 PM UTC')
-    parse_dt('Sep 10, 2019, 8:51:45 PM MSK')
+    parse_dt("Jun 23, 2015, 2:43:45 PM")
+    parse_dt("Jan 25, 2019, 8:23:48 AM GMT")
+    parse_dt("Jan 22, 2020, 8:34:00 PM UTC")
+    parse_dt("Sep 10, 2019, 8:51:45 PM MSK")
 
 
 class State(Enum):
@@ -73,24 +73,25 @@ class TakeoutHTMLParser(HTMLParser):
 
     # enter content cell -> scan link -> scan date -> finish till next content cell
     def handle_starttag(self, tag, attrs):
-        if self.state == State.INSIDE and tag == 'a':
+        if self.state == State.INSIDE and tag == "a":
             self.state = State.PARSING_LINK
             attrs = OrderedDict(attrs)
-            hr = attrs['href']
+            hr = attrs["href"]
 
             # sometimes it's starts with this prefix, it's apparently clicks from google search? or visits from chrome address line? who knows...
             # TODO handle http?
-            prefix = r'https://www.google.com/url?q='
+            prefix = r"https://www.google.com/url?q="
             if hr.startswith(prefix + "http"):
-                hr = hr[len(prefix):]
-                hr = unquote(hr) # TODO not sure about that...
-            assert self.url is None; self.url = hr
+                hr = hr[len(prefix) :]
+                hr = unquote(hr)  # TODO not sure about that...
+            assert self.url is None
+            self.url = hr
 
     def handle_endtag(self, tag):
-        if self.state == State.PARSING_LINK and tag == 'a':
+        if self.state == State.PARSING_LINK and tag == "a":
             assert self.title is None
             assert len(self.title_parts) > 0
-            self.title = ''.join(self.title_parts)
+            self.title = "".join(self.title_parts)
             self.title_parts = []
 
             self.state = State.PARSING_DATE
@@ -117,13 +118,15 @@ class TakeoutHTMLParser(HTMLParser):
 
         # TODO extracting channel as part of wereyouhere could be useful as well
         # need to check for regex because there might be some stuff in between
-        if self.state == State.PARSING_DATE and re.search(r'\d{4}.*:.*:', data):
+        if self.state == State.PARSING_DATE and re.search(r"\d{4}.*:.*:", data):
             time = parse_dt(data.strip())
             assert time.tzinfo is not None
 
-            assert self.url is not None; assert self.title is not None
+            assert self.url is not None
+            assert self.title is not None
             self.callback(time, self.url, self.title)
-            self.url = None; self.title = None
+            self.url = None
+            self.title = None
 
             self.state = State.OUTSIDE
             return
@@ -131,9 +134,12 @@ class TakeoutHTMLParser(HTMLParser):
 
 def read_html(tpath: Path, file: str) -> Iterable[Parsed]:
     from ...kython.kompress import kopen
+
     results: List[Parsed] = []
+
     def cb(dt: datetime, url: Url, title: Title) -> None:
         results.append((dt, url, title))
+
     parser = TakeoutHTMLParser(callback=cb)
     with kopen(tpath, file) as fo:
         data = fo.read()

@@ -32,11 +32,12 @@ class ipython(user_config):
 
 
 from .core.cfg import make_config
+
 config = make_config(ipython)
 
 
 from datetime import datetime
-from typing import Iterable, NamedTuple, Sequence
+from typing import Iterable, NamedTuple, Sequence, Callable, List
 from itertools import chain
 
 from IPython.core.history import HistoryAccessor
@@ -55,7 +56,7 @@ Results = Iterable[Command]
 
 # Return backed up sqlite databases
 @listify
-def inputs() -> Sequence[str]:
+def inputs() -> Sequence[str]:  # type: ignore
     yield from map(str, get_files(config.export_path))
     # the empty string makes IPython use the live history file ~/.local/share/ipython/.../history.sqlite
     # instead of one of the files from the export backup
@@ -63,13 +64,13 @@ def inputs() -> Sequence[str]:
     yield ""
 
 
-def history(from_paths=inputs) -> Results:
-    yield from _merge_histories(*from_paths())
+def history(from_paths: Callable[[None], List[Sequence[str]]] = inputs) -> Results:
+    yield from _merge_histories(*from_paths())  # type: ignore
 
 
 @warn_if_empty
-def _merge_histories(*sources: Sequence[str]):
-    yield from set(chain(*map(_parse_database, sources)))
+def _merge_histories(*sources: Sequence[str]) -> Results:
+    yield from set(chain(*map(_parse_database, sources)))  # type: ignore
 
 
 def _parse_database(sqlite_database: str = "") -> Results:
@@ -92,7 +93,6 @@ def _parse_database(sqlite_database: str = "") -> Results:
 
 
 def stats():
-   from .core import stat
-   return {
-       **stat(history)
-   }
+    from .core import stat
+
+    return {**stat(history)}

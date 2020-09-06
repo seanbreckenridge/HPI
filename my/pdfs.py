@@ -1,10 +1,10 @@
-'''
+# type: ignore
+"""
 PDF documents and annotations on your filesystem
-'''
+"""
 from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime
 import re
-import sys
 import io
 import logging
 from pathlib import Path
@@ -21,7 +21,7 @@ from my.config import pdfs as config
 
 
 def get_logger():
-    return logging.getLogger('my.pdfs')
+    return logging.getLogger("my.pdfs")
 
 
 def is_ignored(p: Path) -> bool:
@@ -30,7 +30,7 @@ def is_ignored(p: Path) -> bool:
     is_ignored function taken either from config,
     or if not defined, it's a function that returns False
     """
-    if hasattr(config, 'is_ignored'):
+    if hasattr(config, "is_ignored"):
         return config.is_ignored(p)
 
     # Default
@@ -43,20 +43,23 @@ def candidates(filelist=None, roots=None) -> Iterator[Path]:
     else:
         return candidates_from_roots(roots)
 
+
 def candidates_from_filelist(filelist) -> Iterator[Path]:
     for f in filelist:
         p = Path(f)
         if not is_ignored(p):
             yield p
 
+
 def candidates_from_roots(roots=None) -> Iterator[Path]:
     if roots is None:
         roots = config.roots
 
     for r in roots:
-        for p in Path(r).rglob('*.pdf'):
+        for p in Path(r).rglob("*.pdf"):
             if not is_ignored(p):
                 yield p
+
 
 # TODO canonical names
 # TODO defensive if pdf was removed, also cachew key needs to be defensive
@@ -73,19 +76,19 @@ class Annotation(NamedTuple):
 
 def as_annotation(*, raw_ann, path: str) -> Annotation:
     d = vars(raw_ann)
-    d['page'] = raw_ann.page.pageno
-    for a in ('boxes', 'rect'):
+    d["page"] = raw_ann.page.pageno
+    for a in ("boxes", "rect"):
         if a in d:
             del d[a]
-    dates = d.get('date')
+    dates = d.get("date")
     date: Optional[datetime] = None
     if dates is not None:
         dates = dates.replace("'", "")
         # 20190630213504+0100
-        dates = re.sub('Z0000$', '+0000', dates)
-        FMT = '%Y%m%d%H%M%S'
+        dates = re.sub("Z0000$", "+0000", dates)
+        FMT = "%Y%m%d%H%M%S"
         # TODO is it utc if there is not timestamp?
-        for fmt in [FMT, FMT + '%z']:
+        for fmt in [FMT, FMT + "%z"]:
             try:
                 date = datetime.strptime(dates, fmt)
                 break
@@ -95,17 +98,17 @@ def as_annotation(*, raw_ann, path: str) -> Annotation:
             # TODO defensive?
             raise RuntimeError(dates)
     return Annotation(
-        path      = path,
-        author    = d['author'],
-        page      = d['page'],
-        highlight = d['text'],
-        comment   = d['contents'],
-        date      = date,
+        path=path,
+        author=d["author"],
+        page=d["page"],
+        highlight=d["text"],
+        comment=d["contents"],
+        date=date,
     )
 
 
 def get_annots(p: Path) -> List[Annotation]:
-    with p.open('rb') as fo:
+    with p.open("rb") as fo:
         f = io.StringIO()
         with redirect_stderr(f):
             (annots, outlines) = pdfannots.process_file(fo, emit_progress=False)
@@ -118,25 +121,24 @@ def hash_files(pdfs: List[Path]):
     # if mtime hasn't changed then the file hasn't changed either
     return [(pdf, pdf.stat().st_mtime) for pdf in pdfs]
 
+
 # TODO might make more sense to be more fine grained here, e.g. cache annotations for indifidual files
+
 
 @mcachew(hashf=hash_files)
 def _iter_annotations(pdfs: List[Path]) -> Iterator[Res[Annotation]]:
     logger = get_logger()
 
-    logger.info('processing %d pdfs', len(pdfs))
+    logger.info("processing %d pdfs", len(pdfs))
 
     # TODO how to print to stdout synchronously?
     with ProcessPoolExecutor() as pool:
-        futures = [
-            pool.submit(get_annots, pdf)
-            for pdf in pdfs
-        ]
+        futures = [pool.submit(get_annots, pdf) for pdf in pdfs]
         for f, pdf in zip(futures, pdfs):
             try:
                 yield from f.result()
             except Exception as e:
-                logger.error('While processing %s:', pdf)
+                logger.error("While processing %s:", pdf)
                 logger.exception(e)
                 # TODO not sure if should attach pdf as well; it's a bit annoying to pass around?
                 # also really have to think about interaction with cachew...
@@ -167,22 +169,25 @@ def annotated_pdfs(filelist=None, roots=None) -> Iterator[Res[Pdf]]:
 
 
 def test():
-    res = get_annots(Path('/L/zzz_syncthing/TODO/TOREAD/done/mature-optimization_wtf.pdf'))
+    res = get_annots(
+        Path("/L/zzz_syncthing/TODO/TOREAD/done/mature-optimization_wtf.pdf")
+    )
     assert len(res) > 3
 
 
 def test2():
-    res = get_annots(Path('/L/zzz_borg/downloads/nonlinear2.pdf'))
+    res = get_annots(Path("/L/zzz_borg/downloads/nonlinear2.pdf"))
     print(res)
 
 
 def test_with_error():
     # TODO need example of pdf file...
     import tempfile
+
     with tempfile.TemporaryDirectory() as td:
         root = Path(td)
-        g = root / 'garbage.pdf'
-        g.write_text('garbage')
+        g = root / "garbage.pdf"
+        g.write_text("garbage")
         roots = [
             root,
             # '/usr/share/doc/texlive-doc/latex/amsrefs/',
@@ -198,6 +203,7 @@ def main():
 
     logger = get_logger()
     from .common import setup_logger
+
     setup_logger(logger, level=logging.DEBUG)
 
     collected = list(annotated_pdfs())
@@ -206,7 +212,6 @@ def main():
             if isinstance(r, Exception):
                 logger.exception(r)
             else:
-                logger.info('collected annotations in: %s', r.path)
+                logger.info("collected annotations in: %s", r.path)
                 for a in r.annotations:
                     pprint(a)
-

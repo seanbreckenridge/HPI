@@ -18,6 +18,7 @@ class old_forums(user_config):
 
 
 from .core.cfg import make_config
+
 config = make_config(old_forums)
 
 #######
@@ -38,6 +39,7 @@ from typing import NamedTuple, Iterable
 from itertools import chain
 
 from .core.common import LazyLogger
+
 logger = LazyLogger(__name__)
 
 # represents one post on a forum entry
@@ -70,6 +72,5 @@ def _parse_file(post_file: Path) -> Results:
 
 def stats():
     from .core import stat
-    return {
-        **stat(history)
-    }
+
+    return {**stat(history)}

@@ -18,6 +18,7 @@ class blizzard(user_config):
 
 
 from ..core.cfg import make_config
+
 config = make_config(blizzard)
 
 #######

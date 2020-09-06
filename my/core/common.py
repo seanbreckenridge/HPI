@@ -3,7 +3,20 @@ from pathlib import Path
 from datetime import datetime
 import functools
 import types
-from typing import Union, Callable, Dict, Iterable, TypeVar, Sequence, List, Optional, Any, cast, Tuple, TYPE_CHECKING
+from typing import (
+    Union,
+    Callable,
+    Dict,
+    Iterable,
+    TypeVar,
+    Sequence,
+    List,
+    Optional,
+    Any,
+    cast,
+    Tuple,
+    TYPE_CHECKING,
+)
 import warnings
 
 # some helper functions
@@ -11,46 +24,51 @@ PathIsh = Union[Path, str]
 
 # TODO only used in tests? not sure if useful at all.
 # TODO port annotations to kython?..
-def import_file(p: PathIsh, name: Optional[str]=None) -> types.ModuleType:
+def import_file(p: PathIsh, name: Optional[str] = None) -> types.ModuleType:
     p = Path(p)
     if name is None:
         name = p.stem
     import importlib.util
+
     spec = importlib.util.spec_from_file_location(name, p)
     foo = importlib.util.module_from_spec(spec)
-    loader = spec.loader; assert loader is not None
-    loader.exec_module(foo) # type: ignore[attr-defined]
+    loader = spec.loader
+    assert loader is not None
+    loader.exec_module(foo)  # type: ignore[attr-defined]
     return foo
 
 
 def import_from(path: PathIsh, name: str) -> types.ModuleType:
     path = str(path)
     import sys
+
     try:
         sys.path.append(path)
         import importlib
+
         return importlib.import_module(name)
     finally:
         sys.path.remove(path)
 
 
-def import_dir(path: PathIsh, extra: str='') -> types.ModuleType:
+def import_dir(path: PathIsh, extra: str = "") -> types.ModuleType:
     p = Path(path)
-    if p.parts[0] == '~':
-        p = p.expanduser() # TODO eh. not sure about this..
+    if p.parts[0] == "~":
+        p = p.expanduser()  # TODO eh. not sure about this..
     return import_from(p.parent, p.name + extra)
 
 
-T = TypeVar('T')
-K = TypeVar('K')
-V = TypeVar('V')
+T = TypeVar("T")
+K = TypeVar("K")
+V = TypeVar("V")
+
 
 def the(l: Iterable[T]) -> T:
     it = iter(l)
     try:
         first = next(it)
     except StopIteration as ee:
-        raise RuntimeError('Empty iterator?')
+        raise RuntimeError("Empty iterator?")
     assert all(e == first for e in it)
     return first
 
@@ -69,23 +87,29 @@ def group_by_key(l: Iterable[T], key: Callable[[T], K]) -> Dict[K, List[T]]:
 def _identity(v: T) -> V:
     return cast(V, v)
 
-def make_dict(l: Iterable[T], key: Callable[[T], K], value: Callable[[T], V]=_identity) -> Dict[K, V]:
+
+def make_dict(
+    l: Iterable[T], key: Callable[[T], K], value: Callable[[T], V] = _identity
+) -> Dict[K, V]:
     res: Dict[K, V] = {}
     for i in l:
         k = key(i)
         v = value(i)
-        pv = res.get(k, None) # type: ignore
+        pv = res.get(k, None)  # type: ignore
         if pv is not None:
-            raise RuntimeError(f"Duplicate key: {k}. Previous value: {pv}, new value: {v}")
+            raise RuntimeError(
+                f"Duplicate key: {k}. Previous value: {pv}, new value: {v}"
+            )
         res[k] = v
     return res
 
 
-Cl = TypeVar('Cl')
-R = TypeVar('R')
+Cl = TypeVar("Cl")
+R = TypeVar("R")
+
 
 def cproperty(f: Callable[[Cl], R]) -> R:
-    return property(functools.lru_cache(maxsize=1)(f)) # type: ignore
+    return property(functools.lru_cache(maxsize=1)(f))  # type: ignore
 
 
 # https://stackoverflow.com/a/12377059/706389
@@ -94,11 +118,14 @@ def listify(fn=None, wrapper=list):
     Wraps a function's return value in wrapper (e.g. list)
     Useful when an algorithm can be expressed more cleanly as a generator
     """
+
     def listify_return(fn):
         @functools.wraps(fn)
         def listify_helper(*args, **kw):
             return wrapper(fn(*args, **kw))
+
         return listify_helper
+
     if fn is None:
         return listify_return
     return listify_return(fn)
@@ -120,16 +147,18 @@ Paths = Union[Sequence[PathIsh], PathIsh]
 def _is_compressed(p: Path) -> bool:
     # todo kinda lame way for now.. use mime ideally?
     # should cooperate with kompress.kopen?
-    return p.suffix in {'.xz', '.lz4', '.zstd'}
+    return p.suffix in {".xz", ".lz4", ".zstd"}
 
 
 # TODO support '' for emtpy path
-DEFAULT_GLOB = '*'
+DEFAULT_GLOB = "*"
+
+
 def get_files(
-        pp: Paths,
-        glob: str=DEFAULT_GLOB,
-        sort: bool=True,
-        guess_compression: bool=True,
+    pp: Paths,
+    glob: str = DEFAULT_GLOB,
+    sort: bool = True,
+    guess_compression: bool = True,
 ) -> Tuple[Path, ...]:
     """
     Helper function to avoid boilerplate.
@@ -141,30 +170,33 @@ def get_files(
     if isinstance(pp, Path):
         sources = [pp]
     elif isinstance(pp, str):
-        if pp == '':
+        if pp == "":
             # special case -- makes sense for optional data sources, etc
-            return () # early return to prevent warnings etc
+            return ()  # early return to prevent warnings etc
         sources = [Path(pp)]
     else:
         sources = [Path(p) for p in pp]
 
     def caller() -> str:
         import traceback
+
         # TODO ugh. very flaky... -3 because [<this function>, get_files(), <actual caller>]
         return traceback.extract_stack()[-3].filename
 
     paths: List[Path] = []
     for src in sources:
-        if src.parts[0] == '~':
+        if src.parts[0] == "~":
             src = src.expanduser()
         if src.is_dir():
-            gp: Iterable[Path] = src.glob(glob) # todo not sure if should be recursive?
+            gp: Iterable[Path] = src.glob(glob)  # todo not sure if should be recursive?
             paths.extend(gp)
         else:
             ss = str(src)
-            if '*' in ss:
+            if "*" in ss:
                 if glob != DEFAULT_GLOB:
-                    warnings.warn(f"{caller()}: treating {ss} as glob path. Explicit glob={glob} argument is ignored!")
+                    warnings.warn(
+                        f"{caller()}: treating {ss} as glob path. Explicit glob={glob} argument is ignored!"
+                    )
                 paths.extend(map(Path, do_glob(ss)))
             else:
                 if not src.is_file():
@@ -179,11 +211,15 @@ def get_files(
         # todo make it conditionally defensive based on some global settings
         # TODO not sure about using warnings module for this
         import traceback
-        warnings.warn(f'{caller()}: no paths were matched against {paths}. This might result in missing data.')
+
+        warnings.warn(
+            f"{caller()}: no paths were matched against {paths}. This might result in missing data."
+        )
         traceback.print_stack()
 
     if guess_compression:
-        from ..kython.kompress import CPath # todo move to core?
+        from ..kython.kompress import CPath  # todo move to core?
+
         paths = [CPath(p) if _is_compressed(p) else p for p in paths]
     return tuple(paths)
 
@@ -192,17 +228,27 @@ def get_files(
 if TYPE_CHECKING:
     from typing import Callable, TypeVar
     from typing_extensions import Protocol
+
     # TODO reuse types from cachew? although not sure if we want hard dependency on it in typecheck time..
     # I guess, later just define pass through once this is fixed: https://github.com/python/typing/issues/270
     # ok, that's actually a super nice 'pattern'
-    F = TypeVar('F')
+    F = TypeVar("F")
+
     class McachewType(Protocol):
-        def __call__(self, cache_path: Any=None, *, hashf: Any=None, chunk_by: int=0, logger: Any=None) -> Callable[[F], F]:
+        def __call__(
+            self,
+            cache_path: Any = None,
+            *,
+            hashf: Any = None,
+            chunk_by: int = 0,
+            logger: Any = None,
+        ) -> Callable[[F], F]:
             ...
 
     mcachew: McachewType
 
-def mcachew(*args, **kwargs): # type: ignore[no-redef]
+
+def mcachew(*args, **kwargs):  # type: ignore[no-redef]
     """
     Stands for 'Maybe cachew'.
     Defensive wrapper around @cachew to make it an optional dependency.
@@ -210,22 +256,27 @@ def mcachew(*args, **kwargs): # type: ignore[no-redef]
     try:
         import cachew
     except ModuleNotFoundError:
-        warnings.warn('cachew library not found. You might want to install it to speed things up. See https://github.com/karlicoss/cachew')
+        warnings.warn(
+            "cachew library not found. You might want to install it to speed things up. See https://github.com/karlicoss/cachew"
+        )
         return lambda orig_func: orig_func
     else:
         import cachew.experimental
+
         cachew.experimental.enable_exceptions()  # TODO do it only once?
         return cachew.cachew(*args, **kwargs)
 
 
 @functools.lru_cache(1)
 def _magic():
-    import magic # type: ignore
+    import magic  # type: ignore
+
     return magic.Magic(mime=True)
 
 
 # TODO could reuse in pdf module?
-import mimetypes # todo do I need init()?
+import mimetypes  # todo do I need init()?
+
 # todo wtf? fastermime thinks it's mime is application/json even if the extension is xz??
 # whereas magic detects correctly: application/x-zstd and application/x-xz
 def fastermime(path: PathIsh) -> str:
@@ -244,8 +295,8 @@ Json = Dict[str, Any]
 
 from typing import TypeVar, Callable, Generic
 
-_C = TypeVar('_C')
-_R = TypeVar('_R')
+_C = TypeVar("_C")
+_R = TypeVar("_R")
 
 # https://stackoverflow.com/a/5192374/706389
 class classproperty(Generic[_R]):
@@ -271,9 +322,10 @@ tzdatetime = datetime
 
 fromisoformat: Callable[[str], datetime]
 import sys
+
 if sys.version_info.minor >= 7:
     # prevent mypy on py3.6 from complaining...
-    fromisoformat_real = datetime.fromisoformat # type: ignore[attr-defined]
+    fromisoformat_real = datetime.fromisoformat  # type: ignore[attr-defined]
     fromisoformat = fromisoformat_real
 else:
     from .py37 import fromisoformat
@@ -286,29 +338,32 @@ def isoparse(s: str) -> tzdatetime:
     """
     # TODO could use dateutil? but it's quite slow as far as I remember..
     # TODO support non-utc.. somehow?
-    assert s.endswith('Z'), s
-    s = s[:-1] + '+00:00'
+    assert s.endswith("Z"), s
+    s = s[:-1] + "+00:00"
     return fromisoformat(s)
 
 
 import re
+
 # https://stackoverflow.com/a/295466/706389
 def get_valid_filename(s: str) -> str:
-    s = str(s).strip().replace(' ', '_')
-    return re.sub(r'(?u)[^-\w.]', '', s)
+    s = str(s).strip().replace(" ", "_")
+    return re.sub(r"(?u)[^-\w.]", "", s)
 
 
 from typing import Generic, Sized, Callable
 
 
 # X = TypeVar('X')
-def _warn_iterator(it, f: Any=None):
+def _warn_iterator(it, f: Any = None):
     emitted = False
     for i in it:
         yield i
         emitted = True
     if not emitted:
-        warnings.warn(f"Function {f} didn't emit any data, make sure your config paths are correct")
+        warnings.warn(
+            f"Function {f} didn't emit any data, make sure your config paths are correct"
+        )
 
 
 # TODO ugh, so I want to express something like:
@@ -320,16 +375,27 @@ def _warn_iterator(it, f: Any=None):
 # I guess for now overloads are fine...
 
 from typing import overload
-X = TypeVar('X')
+
+X = TypeVar("X")
+
+
 @overload
-def _warn_iterable(it: List[X]    , f: Any=None) -> List[X]    : ...
+def _warn_iterable(it: List[X], f: Any = None) -> List[X]:
+    ...
+
+
 @overload
-def _warn_iterable(it: Iterable[X], f: Any=None) -> Iterable[X]: ...
+def _warn_iterable(it: Iterable[X], f: Any = None) -> Iterable[X]:
+    ...
+
+
 def _warn_iterable(it, f=None):
     if isinstance(it, Sized):
         sz = len(it)
         if sz == 0:
-            warnings.warn(f"Function {f} returned empty container, make sure your config paths are correct")
+            warnings.warn(
+                f"Function {f} returned empty container, make sure your config paths are correct"
+            )
         return it
     else:
         return _warn_iterator(it, f=f)
@@ -337,22 +403,29 @@ def _warn_iterable(it, f=None):
 
 # ok, this seems to work...
 # https://github.com/python/mypy/issues/1927#issue-167100413
-FL = TypeVar('FL', bound=Callable[..., List])
-FI = TypeVar('FI', bound=Callable[..., Iterable])
+FL = TypeVar("FL", bound=Callable[..., List])
+FI = TypeVar("FI", bound=Callable[..., Iterable])
+
 
 @overload
-def warn_if_empty(f: FL) -> FL: ...
+def warn_if_empty(f: FL) -> FL:
+    ...
+
+
 @overload
-def warn_if_empty(f: FI) -> FI: ...
+def warn_if_empty(f: FI) -> FI:
+    ...
 
 
 def warn_if_empty(f):
     from functools import wraps
+
     @wraps(f)
     def wrapped(*args, **kwargs):
         res = f(*args, **kwargs)
         return _warn_iterable(res, f=f)
-    return wrapped # type: ignore
+
+    return wrapped  # type: ignore
 
 
 # hacky hook to speed up for 'hpi doctor'
@@ -360,21 +433,21 @@ def warn_if_empty(f):
 QUICK_STATS = False
 
 
-C = TypeVar('C')
+C = TypeVar("C")
 # todo not sure about return type...
 def stat(func: Callable[[], Iterable[C]]) -> Dict[str, Any]:
     from more_itertools import ilen, take, first
 
     # todo not sure if there is something in more_itertools to compute this?
     errors = 0
-    #last = None
+    # last = None
     def funcit():
-        nonlocal errors#, last
+        nonlocal errors  # , last
         for x in func():
             if isinstance(x, Exception):
                 errors += 1
-            #else:
-                #last = x
+            # else:
+            # last = x
             yield x
 
     it = iter(funcit())
@@ -382,20 +455,20 @@ def stat(func: Callable[[], Iterable[C]]) -> Dict[str, Any]:
     if QUICK_STATS:
         initial = take(100, it)
         count = len(initial)
-        if first(it, None) is not None: # todo can actually be none...
+        if first(it, None) is not None:  # todo can actually be none...
             # haven't exhausted
-            count = f'{count}+'
+            count = f"{count}+"
     else:
         count = ilen(it)
 
     res = {
-        'count': count,
+        "count": count,
     }
 
     if errors > 0:
-        res['errors'] = errors
+        res["errors"] = errors
 
-    #if last is not None:
+    # if last is not None:
     #    dt = guess_datetime(last)
     #    if dt is not None:
     #        res['last'] = dt
@@ -408,7 +481,7 @@ def stat(func: Callable[[], Iterable[C]]) -> Dict[str, Any]:
 # experimental, not sure about it..
 def guess_datetime(x: Any) -> Optional[datetime]:
     # todo support datacalsses
-    asdict = getattr(x, '_asdict', None)
+    asdict = getattr(x, "_asdict", None)
     if asdict is None:
         return None
     # todo check if there are multiple?

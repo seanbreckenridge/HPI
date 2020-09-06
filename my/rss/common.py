@@ -6,10 +6,11 @@ from typing import NamedTuple, Optional, List, Dict
 class Subscription(NamedTuple):
     title: str
     url: str
-    id: str # TODO not sure about it...
+    id: str  # TODO not sure about it...
     # eh, not all of them got reasonable 'created' time
     created_at: Optional[datetime]
-    subscribed: bool=True
+    subscribed: bool = True
+
 
 from typing import Iterable, Tuple, Sequence
 
@@ -18,6 +19,8 @@ SubscriptionState = Tuple[datetime, Sequence[Subscription]]
 
 
 from ..core import warn_if_empty
+
+
 @warn_if_empty
 def compute_subscriptions(*sources: Iterable[SubscriptionState]) -> List[Subscription]:
     """
@@ -25,6 +28,7 @@ def compute_subscriptions(*sources: Iterable[SubscriptionState]) -> List[Subscri
     In addition, keeps track of unsubscribed as well (so you'd remember when and why you unsubscribed)
     """
     from itertools import chain
+
     states = list(chain.from_iterable(sources))
     # TODO keep 'source'/'provider'/'service' attribute?
 

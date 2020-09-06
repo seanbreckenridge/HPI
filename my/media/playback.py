@@ -64,8 +64,8 @@ class Media(NamedTuple):
             sc = sc + 1
         if self.pause_duration > 1.0:
             sc = sc + 1
-        sc = sc + (len(self.metadata) / 4)
-        sc = sc + (len(self.percents) / 8)
+        sc = sc + int(len(self.metadata) / 4)
+        sc = sc + int(len(self.percents) / 8)
         return float(sc)
 
 
@@ -95,11 +95,11 @@ def _read_event_stream(p: Path) -> Results:
     # sometimes youtube-dl will show up twice ...?
     # use 'path' as a primary key to remove possible
     # duplicate event data
-    items: Dict[str:Media] = {}
+    items: Dict[str, Media] = {}
     for d in _reconstruct_event_stream(p):
         # required keys
         if not REQUIRED_KEYS.issubset(set(d)):
-            #logger.debug("Doesnt have required keys, ignoring...")
+            # logger.debug("Doesnt have required keys, ignoring...")
             continue
         if d["end_time"] < d["start_time"]:
             logger.warning(f"End time is less than start time! {d}")
@@ -181,19 +181,19 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
         logger.warning(str(ve))
 
     # dictionary for storing data while we parse though events
-    media_data = {}
+    media_data: Dict[str, Any] = {}
 
     # 'globals', set at the beginning
     working_dir = os.environ["HOME"]
     is_first_item = True  # helps control how to handle duration
     # playlist_count = None
-    most_recent_time = None
+    most_recent_time: float = 0.0
 
     # used to help determine state
     yielded_count = 0
     is_playing = True  # assume playing at beginning
     pause_duration = 0.0  # pause duration for this entry
-    pause_start_time = None  # if the entry is paused, when it started
+    pause_start_time: Optional[float] = None  # if the entry is paused, when it started
     percents: Dict[float, float] = {}
 
     for dt_s in sorted(events):
@@ -279,7 +279,7 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
                     is_playing = True
                     # if we know when it was paused, add how long it was paused to pause_duration
                     if pause_start_time is not None:
-                        pause_duration = pause_duration + (dt_float - pause_start_time)
+                        pause_duration = pause_duration + (dt_float - pause_start_time)  # type: ignore
                         pause_start_time = None
                 else:
                     # logger.warning("recieved resumed event while already playing?")
@@ -293,7 +293,7 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
             # was the last item, else write out whatever
             # media_data has in the dict currently
             if not is_playing:
-                pause_duration = pause_duration + (dt_float - pause_start_time)
+                pause_duration = pause_duration + (dt_float - pause_start_time)  # type: ignore
             media_data["end_time"] = dt_float
             media_data["pause_duration"] = pause_duration
             media_data["percents"] = percents

@@ -7,8 +7,8 @@ from itertools import tee
 from typing import Union, TypeVar, Iterable, List, Tuple, Type
 
 
-T = TypeVar('T')
-E = TypeVar('E', bound=Exception) # TODO make covariant?
+T = TypeVar("T")
+E = TypeVar("E", bound=Exception)  # TODO make covariant?
 
 ResT = Union[T, E]
 
@@ -27,18 +27,16 @@ def echain(ex: E, cause: Exception) -> E:
     return ex
 
 
-def split_errors(l: Iterable[ResT[T, E]], ET: Type[E]) -> Tuple[Iterable[T], Iterable[E]]:
+def split_errors(
+    l: Iterable[ResT[T, E]], ET: Type[E]
+) -> Tuple[Iterable[T], Iterable[E]]:
     # TODO would be nice to have ET=Exception default?
     vit, eit = tee(l)
     # TODO ugh, not sure if I can reconcile type checking and runtime and convince mypy that ET and E are the same type?
     values: Iterable[T] = (
-        r # type: ignore[misc]
-        for r in vit
-        if not isinstance(r, ET))
-    errors: Iterable[E] = (
-        r
-        for r in eit
-        if     isinstance(r, ET))
+        r for r in vit if not isinstance(r, ET)  # type: ignore[misc]
+    )
+    errors: Iterable[E] = (r for r in eit if isinstance(r, ET))
     # TODO would be interesting to be able to have yield statement anywehere in code
     # so there are multiple 'entry points' to the return value
     return (values, errors)
@@ -73,27 +71,26 @@ def test_sort_res_by() -> None:
             return self.args == other.args
 
     ress = [
-        Exc('first'),
-        Exc('second'),
+        Exc("first"),
+        Exc("second"),
         5,
         3,
-        Exc('xxx'),
+        Exc("xxx"),
         2,
         1,
-        Exc('last'),
+        Exc("last"),
     ]
-    results = sort_res_by(ress, lambda x: x) # type: ignore
+    results = sort_res_by(ress, lambda x: x)  # type: ignore
     assert results == [
         1,
-        Exc('xxx'),
+        Exc("xxx"),
         2,
         3,
-        Exc('first'),
-        Exc('second'),
+        Exc("first"),
+        Exc("second"),
         5,
-        Exc('last'),
+        Exc("last"),
     ]
 
-    results2 = sort_res_by(ress + [0], lambda x: x) # type: ignore
-    assert results2 == [Exc('last'), 0] + results[:-1]
-
+    results2 = sort_res_by(ress + [0], lambda x: x)  # type: ignore
+    assert results2 == [Exc("last"), 0] + results[:-1]

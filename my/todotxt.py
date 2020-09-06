@@ -34,6 +34,7 @@ class todotxt(user_config):
 
 
 from .core.cfg import make_config
+
 config = make_config(todotxt)
 
 #######
@@ -95,12 +96,15 @@ def todos(from_file: Optional[PathIsh] = config.live_file) -> Results:
         else:
             warnings.warn(f"{p} does not exist")
 
+
 def stats():
     from .core import stat
+
     return {
         **stat(todos),
         **stat(history),
     }
+
 
 @warn_if_empty
 def _merge_histories(*sources: Results) -> Results:

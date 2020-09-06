@@ -22,6 +22,7 @@ class skype(user_config):
 
 
 from .core.cfg import make_config
+
 config = make_config(skype)
 
 #######
@@ -44,6 +45,7 @@ from itertools import chain
 import dateparser
 
 from .core.common import LazyLogger
+
 logger = LazyLogger(__name__)
 
 
@@ -63,6 +65,5 @@ def _parse_file(post_file: Path) -> Results:
 
 def stats():
     from .core import stat
-    return {
-        **stat(timestamps)
-    }
+
+    return {**stat(timestamps)}

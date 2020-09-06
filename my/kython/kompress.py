@@ -10,45 +10,49 @@ PathIsh = Union[Path, str]
 
 
 def _zstd_open(path: Path, *args, **kwargs) -> IO[str]:
-    import zstandard as zstd # type: ignore
-    fh = path.open('rb')
+    import zstandard as zstd  # type: ignore
+
+    fh = path.open("rb")
     dctx = zstd.ZstdDecompressor()
     reader = dctx.stream_reader(fh)
-    return io.TextIOWrapper(reader, **kwargs) # meh
+    return io.TextIOWrapper(reader, **kwargs)  # meh
 
 
 # TODO returns protocol that we can call 'read' against?
 # TODO use the 'dependent type' trick?
-def kopen(path: PathIsh, *args, mode: str='rt', **kwargs) -> IO[str]:
+def kopen(path: PathIsh, *args, mode: str = "rt", **kwargs) -> IO[str]:
     # TODO handle mode in *rags?
-    encoding = kwargs.get('encoding', 'utf8')
-    kwargs['encoding'] = encoding
+    encoding = kwargs.get("encoding", "utf8")
+    kwargs["encoding"] = encoding
 
     pp = Path(path)
     suf = pp.suffix
-    if suf in {'.xz'}:
+    if suf in {".xz"}:
         import lzma
+
         return lzma.open(pp, mode, *args, **kwargs)
-    elif suf in {'.zip'}:
+    elif suf in {".zip"}:
         # eh. this behaviour is a bit dodgy...
         from zipfile import ZipFile
+
         zfile = ZipFile(pp)
 
-        [subpath] = args # meh?
+        [subpath] = args  # meh?
 
         ## oh god... https://stackoverflow.com/a/5639960/706389
-        ifile = zfile.open(subpath, mode='r')
+        ifile = zfile.open(subpath, mode="r")
         ifile.readable = lambda: True  # type: ignore
-        ifile.writable = lambda: False # type: ignore
-        ifile.seekable = lambda: False # type: ignore
-        ifile.read1    = ifile.read    # type: ignore
+        ifile.writable = lambda: False  # type: ignore
+        ifile.seekable = lambda: False  # type: ignore
+        ifile.read1 = ifile.read  # type: ignore
         # TODO pass all kwargs here??
         # todo 'expected "BinaryIO"'??
-        return io.TextIOWrapper(ifile, encoding=encoding) # type: ignore[arg-type]
-    elif suf in {'.lz4'}:
-        import lz4.frame # type: ignore
+        return io.TextIOWrapper(ifile, encoding=encoding)  # type: ignore[arg-type]
+    elif suf in {".lz4"}:
+        import lz4.frame  # type: ignore
+
         return lz4.frame.open(str(pp), mode, *args, **kwargs)
-    elif suf in {'.zstd'}:
+    elif suf in {".zstd"}:
         return _zstd_open(pp, mode, *args, **kwargs)
     else:
         return pp.open(mode, *args, **kwargs)
@@ -61,7 +65,7 @@ if typing.TYPE_CHECKING:
     # otherwise mypy can't figure out that BasePath is a type alias..
     BasePath = pathlib.Path
 else:
-    BasePath = pathlib.WindowsPath if os.name == 'nt' else pathlib.PosixPath
+    BasePath = pathlib.WindowsPath if os.name == "nt" else pathlib.PosixPath
 
 
 class CPath(BasePath):
@@ -73,12 +77,13 @@ class CPath(BasePath):
     Path only has _accessor and _closed slots, so can't directly set .open method
     _accessor.open has to return file descriptor, doesn't work for compressed stuff.
     """
+
     def open(self, *args, **kwargs):
         # TODO assert read only?
         return kopen(str(self))
 
 
-open = kopen # TODO deprecate
+open = kopen  # TODO deprecate
 
 
 # meh

@@ -24,7 +24,9 @@ class zsh(user_config):
     # path to current zsh history (i.e. the live file)
     live_file: Optional[PathIsh] = None
 
+
 from .core.cfg import make_config
+
 config = make_config(zsh)
 
 #######
@@ -38,7 +40,7 @@ from .core.common import listify
 
 
 @listify
-def inputs() -> Sequence[Path]:
+def inputs() -> Sequence[Path]:  # type: ignore
     """
     Returns all inputs, including live_file if provided and exported histories
     """
@@ -83,9 +85,8 @@ def history(from_paths=inputs) -> Results:
 
 def stats():
     from .core import stat
-    return {
-        **stat(history)
-    }
+
+    return {**stat(history)}
 
 
 @warn_if_empty
@@ -105,7 +106,7 @@ def _merge_histories(*sources: Results) -> Results:
 # pre-emptively read files in, check if ones a substring of another and
 # exclude it
 def _parse_file(histfile: Path) -> Results:
-    dt, dur, command = None, None, None
+    dt, dur, command = None, None, ""
     # cant parse line by line since some commands are multiline
     # sort of structured like a do-while loop
     for line in histfile.open(encoding="latin-1"):
@@ -116,10 +117,10 @@ def _parse_file(histfile: Path) -> Results:
         else:
             # this 'if' is needed for the first item (since its not set on the first loop)
             # yield the last command
-            if dt:
+            if dur is not None:
                 yield Entry(
-                    dt=dt,
-                    duration=dur,
+                    dt=dt,  # type: ignore
+                    duration=dur,  # type: ignore
                     command=command,
                 )
             # set 'current' dt, dur, command to matched groups
@@ -127,15 +128,16 @@ def _parse_file(histfile: Path) -> Results:
     # yield the last entry
     if command:
         yield Entry(
-            dt=dt,
-            duration=dur,
+            dt=dt,  # type: ignore
+            duration=dur,  # type: ignore
             command=command,
         )
 
 
 PATTERN = re.compile(r"^: (\d+):(\d+);(.*)$")
 
-def _parse_metadata(histline: str) -> Optional[Tuple[str]]:
+
+def _parse_metadata(histline: str) -> Optional[Tuple[datetime, int, str]]:
     """
     parse the date, duration, and command from a line
     """

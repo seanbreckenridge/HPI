@@ -9,11 +9,12 @@ from types import ModuleType
 from my.config import reddit as uconfig
 from dataclasses import dataclass
 
+
 @dataclass
 class reddit(uconfig):
-    '''
+    """
     Uses [[https://github.com/karlicoss/rexport][rexport]] output.
-    '''
+    """
 
     # path[s]/glob to the exported JSON data
     export_path: Paths
@@ -23,31 +24,37 @@ class reddit(uconfig):
 
     # path to a local clone of rexport
     # alternatively, you can put the repository (or a symlink) in $MY_CONFIG/my/config/repos/rexport
-    rexport    : Optional[PathIsh] = None
+    rexport: Optional[PathIsh] = None
 
     @property
     def dal_module(self) -> ModuleType:
         rpath = self.rexport
         if rpath is not None:
             from .core.common import import_dir
-            return import_dir(rpath, '.dal')
+
+            return import_dir(rpath, ".dal")
         else:
             import my.config.repos.rexport.dal as dal
+
             return dal
 
 
 from .core.cfg import make_config, Attrs
+
 # hmm, also nice thing about this is that migration is possible to test without the rest of the config?
 def migration(attrs: Attrs) -> Attrs:
-    if 'export_dir' in attrs: # legacy name
-        attrs['export_path'] = attrs['export_dir']
+    if "export_dir" in attrs:  # legacy name
+        attrs["export_path"] = attrs["export_dir"]
     return attrs
+
+
 config = make_config(reddit, migration=migration)
 
 ###
 # TODO not sure about the laziness...
 
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     # TODO not sure what is the right way to handle this..
     import my.config.repos.rexport.dal as dal
@@ -68,52 +75,60 @@ from .core.common import mcachew, get_files, LazyLogger, make_dict, warn_if_empt
 # https://github.com/seanbreckenridge/pushshift_comment_export
 from pushshift_comment_export.dal import PComment, read_file
 
+RComment = Union[PComment, dal.Comment]
 
-logger = LazyLogger(__name__, level='debug')
+
+logger = LazyLogger(__name__, level="debug")
 
 
 from pathlib import Path
+
+
 def inputs() -> Sequence[Path]:
     return get_files(config.export_path)
 
 
-Sid        = dal.Sid
-Save       = dal.Save
-Comment    = dal.Comment
+Sid = str
+Save = dal.Save
+Comment = dal.Comment
 Submission = dal.Submission
-Upvote     = dal.Upvote
+Upvote = dal.Upvote
 
 
 def _dal() -> dal.DAL:
     inp = list(inputs())
     return dal.DAL(inp)
-cache = mcachew(hashf=lambda: inputs() + comment_inputs()) # depends on inputs only
+
+
+cache = mcachew(
+    hashf=lambda: list(inputs()).extend(list(comment_inputs()))
+)  # depends on inputs only
 
 
 @cache
-def saved() -> Iterator[Save]:
+def saved() -> Iterator[Save]:  # type: ignore
     return _dal().saved()
 
 
 @cache
-def comments() -> Iterator[Union[Comment, PComment]]:
+def comments() -> Iterator[RComment]:
     # prefer _dal.comments to pushshift, gets added to emitted first
     yield from _merge_comments(_dal().comments(), pushshift_comments())
 
 
 @cache
-def submissions() -> Iterator[Submission]:
+def submissions() -> Iterator[Submission]:  # type: ignore
     return _dal().submissions()
 
 
 @cache
-def upvoted() -> Iterator[Upvote]:
+def upvoted() -> Iterator[Upvote]:  # type: ignore
     return _dal().upvoted()
 
 
 ### the rest of the file is some elaborate attempt of restoring favorite/unfavorite times
 
-from typing import Dict, Union, Iterable, Iterator, NamedTuple, Any
+from typing import Dict, Union, Iterable, Iterator, NamedTuple
 from functools import lru_cache
 import pytz
 import re
@@ -122,12 +137,14 @@ from multiprocessing import Pool
 
 # TODO hmm. apparently decompressing takes quite a bit of time...
 
+
 class SaveWithDt(NamedTuple):
-    save: Save
+    save: Save  # type: ignore
     backup_dt: datetime
 
     def __getattr__(self, x):
         return getattr(self.save, x)
+
 
 # TODO for future events?
 EventKind = SaveWithDt
@@ -143,15 +160,16 @@ class Event(NamedTuple):
 
     @property
     def cmp_key(self):
-        return (self.dt, (1 if 'unfavorited' in self.text else 0))
+        return (self.dt, (1 if "unfavorited" in self.text else 0))
 
 
 Url = str
 
+
 def _get_bdate(bfile: Path) -> datetime:
-    RE = re.compile(r'(\d{14})')
+    RE = re.compile(r"(\d{14})")
     stem = bfile.stem
-    stem = stem.replace('T', '').replace('Z', '') # adapt for arctee
+    stem = stem.replace("T", "").replace("Z", "")  # adapt for arctee
     match = RE.search(stem)
     assert match is not None
     bdt = pytz.utc.localize(datetime.strptime(match.group(1), "%Y%m%d%H%M%S"))
@@ -159,20 +177,21 @@ def _get_bdate(bfile: Path) -> datetime:
 
 
 def _get_state(bfile: Path) -> Dict[Sid, SaveWithDt]:
-    logger.debug('handling %s', bfile)
+    logger.debug("handling %s", bfile)
 
     bdt = _get_bdate(bfile)
 
     saves = [SaveWithDt(save, bdt) for save in dal.DAL([bfile]).saved()]
     return make_dict(
-        sorted(saves, key=lambda p: p.save.created),
+        sorted(saves, key=lambda p: p.save.created),  # type: ignore
         key=lambda s: s.save.sid,
     )
+
 
 # TODO hmm. think about it.. if we set default backups=inputs()
 # it's called early so it ends up as a global variable that we can't monkey patch easily
 @mcachew
-def _get_events(backups: Sequence[Path], parallel: bool=True) -> Iterator[Event]:
+def _get_events(backups: Sequence[Path], parallel: bool = True) -> Iterator[Event]:
     # TODO cachew: let it transform return type? so you don't have to write a wrapper for lists?
 
     prev_saves: Mapping[Sid, SaveWithDt] = {}
@@ -200,27 +219,28 @@ def _get_events(backups: Sequence[Path], parallel: bool=True) -> Iterator[Event]
                 # eh. I guess just take max and it will always be correct?
                 assert not first
                 yield Event(
-                    dt=bdt, # TODO average wit ps.save_dt? 
-                    text=f"unfavorited",
+                    dt=bdt,  # TODO average wit ps.save_dt?
+                    text="unfavorited",
                     kind=ps,
-                    eid=f'unf-{ps.sid}',
+                    eid=f"unf-{ps.sid}",
                     url=ps.url,
                     title=ps.title,
                 )
-            else: # already in saves
+            else:  # already in saves
                 s = saves[key]
                 last_saved = s.backup_dt
                 yield Event(
                     dt=s.created if first else last_saved,
-                    text=f"favorited{' [initial]' if first else ''}",
+                    text="favorited{}".format(' [initial]' if first else ''),
                     kind=s,
-                    eid=f'fav-{s.sid}',
+                    eid=f"fav-{s.sid}",
                     url=s.url,
                     title=s.title,
                 )
         prev_saves = saves
 
     # TODO a bit awkward, favorited should compare lower than unfavorited?
+
 
 @lru_cache(1)
 def events(*args, **kwargs) -> List[Event]:
@@ -233,11 +253,12 @@ def events(*args, **kwargs) -> List[Event]:
 
 def stats():
     from .core import stat
+
     return {
-        **stat(saved      ),
-        **stat(comments   ),
+        **stat(saved),
+        **stat(comments),
         **stat(submissions),
-        **stat(upvoted    ),
+        **stat(upvoted),
     }
 
 
@@ -246,17 +267,18 @@ def main() -> None:
         print(e)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 
 # load in additional comments from pushshift
 
 from itertools import chain
-from typing import Set, Tuple, Union
+from typing import Set, Union
 
 
 def comment_inputs() -> Sequence[Path]:
     return get_files(config.pushshift_export_path)
+
 
 def pushshift_comments() -> Iterator[PComment]:
     return chain(*map(read_file, comment_inputs()))
@@ -267,16 +289,15 @@ def pushshift_comments() -> Iterator[PComment]:
 # pushshift have different JSON representations. Looks like
 # a lot of the major ones are the same though
 @warn_if_empty
-def _merge_comments(*sources: Sequence[Path]) -> Iterator[Union[PComment, Comment]]:
-    #ignored = 0
-    emitted: Set[Tuple[datetime, str]] = set()
+def _merge_comments(*sources: Sequence[RComment]) -> Iterator[RComment]:
+    # ignored = 0
+    emitted: Set[int] = set()
     for e in chain(*sources):
-        key = int(e.raw['created_utc'])
+        key = int(e.raw["created_utc"])
         if key in emitted:
-            #ignored += 1
-            #logger.info('ignoring %s: %s', key, e)
+            # ignored += 1
+            # logger.info('ignoring %s: %s', key, e)
             continue
         yield e
         emitted.add(key)
-    #logger.info(f"Ignored {ignored}...")
-
+    # logger.info(f"Ignored {ignored}...")

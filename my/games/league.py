@@ -29,7 +29,7 @@ config = make_config(league_of_legends)
 import json
 from pathlib import Path
 from datetime import datetime, timezone
-from typing import NamedTuple, Iterable, Sequence, Dict, Union, List, Optional
+from typing import NamedTuple, Iterable, Sequence, Dict, Union, List, Optional, Any
 from functools import partial
 from itertools import chain
 
@@ -47,7 +47,7 @@ def inputs() -> Sequence[Path]:
 
 ChampionInfo = Dict[str, Union[str, List[str]]]
 Metadata = Optional[str]
-Stats = Dict[str, Union[int, bool]]
+Json = Dict[str, Any]
 Players = List[str]
 
 # represents one League of Legends game
@@ -58,8 +58,8 @@ class Game(NamedTuple):
     game_creation: datetime
     game_duration: int
     players: Players
-    my_stats: Stats  # just my characters' stats, though all are in the JSON dump
-    all_stats: List[Stats]
+    my_stats: Json  # just my characters' stats, though all are in the JSON dump
+    all_stats: List[Json]
     queue: Metadata
     role: Metadata
     lane: Metadata
@@ -129,4 +129,5 @@ def _read_parsed_json(p: Path, username: str) -> Results:
 
 def stats():
     from ..core import stat
+
     return {**stat(history)}

@@ -8,7 +8,7 @@ LevelIsh = Optional[Union[Level, str]]
 
 
 def mklevel(level: LevelIsh) -> Level:
-    if 'HPI_LOGS' in os.environ:
+    if "HPI_LOGS" in os.environ:
         return getattr(logging, os.environ["HPI_LOGS"].upper())
     if level is None:
         return logging.NOTSET
@@ -17,17 +17,18 @@ def mklevel(level: LevelIsh) -> Level:
     return getattr(logging, level.upper())
 
 
-_FMT = '{start}[%(levelname)-7s %(asctime)s %(name)s %(filename)s:%(lineno)d]{end} %(message)s'
-_FMT_COLOR   = _FMT.format(start='%(color)s', end='%(end_color)s')
-_FMT_NOCOLOR = _FMT.format(start='', end='')
+_FMT = "{start}[%(levelname)-7s %(asctime)s %(name)s %(filename)s:%(lineno)d]{end} %(message)s"
+_FMT_COLOR = _FMT.format(start="%(color)s", end="%(end_color)s")
+_FMT_NOCOLOR = _FMT.format(start="", end="")
 
 
 def setup_logger(logger: logging.Logger, level: LevelIsh) -> None:
     lvl = mklevel(level)
     try:
-        import logzero # type: ignore
+        import logzero  # type: ignore
     except ModuleNotFoundError:
         import warnings
+
         warnings.warn("You might want to install 'logzero' for nice colored logs!")
         logger.setLevel(lvl)
         h = logging.StreamHandler()
@@ -37,7 +38,7 @@ def setup_logger(logger: logging.Logger, level: LevelIsh) -> None:
     else:
         formatter = logzero.LogFormatter(
             fmt=_FMT_COLOR,
-            datefmt=None, # pass None to prevent logzero from messing with date format
+            datefmt=None,  # pass None to prevent logzero from messing with date format
         )
         logzero.setup_logger(logger.name, level=lvl, formatter=formatter)
 
@@ -45,12 +46,14 @@ def setup_logger(logger: logging.Logger, level: LevelIsh) -> None:
 class LazyLogger(logging.Logger):
     # TODO perhaps should use __new__?
 
-    def __new__(cls, name, level: LevelIsh = 'DEBUG'):
+    def __new__(cls, name, level: LevelIsh = "DEBUG"):
         logger = logging.getLogger(name)
         # this is called prior to all _log calls so makes sense to do it here?
-        def isEnabledFor_lazyinit(*args, logger=logger, orig=logger.isEnabledFor, **kwargs):
-            att = 'lazylogger_init_done'
-            if not getattr(logger, att, False): # init once, if necessary
+        def isEnabledFor_lazyinit(
+            *args, logger=logger, orig=logger.isEnabledFor, **kwargs
+        ):
+            att = "lazylogger_init_done"
+            if not getattr(logger, att, False):  # init once, if necessary
                 setup_logger(logger, level=level)
                 setattr(logger, att, True)
             return orig(*args, **kwargs)
@@ -60,11 +63,11 @@ class LazyLogger(logging.Logger):
 
 
 def test():
-    ll = LazyLogger('test')
-    ll.debug('THIS IS DEBUG')
-    ll.warning('THIS IS WARNING')
+    ll = LazyLogger("test")
+    ll.debug("THIS IS DEBUG")
+    ll.warning("THIS IS WARNING")
     ll.exception(RuntimeError("oops"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     test()

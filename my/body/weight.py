@@ -19,7 +19,9 @@ class weight(user_config):
 
 
 from ..core.cfg import make_config
+
 config = make_config(weight)
+
 
 class Weight(NamedTuple):
     when: datetime
@@ -33,11 +35,11 @@ def history() -> Result:
     # fails if the file doesnt exist
     yield from load_from(Weight, config.datafile)
 
+
 def stats():
     from ..core import stat
-    return {
-        **stat(history)
-    }
+
+    return {**stat(history)}
 
 
 # alias 'weight=python3 -c "from my.body.weight import prompt; prompt()"'

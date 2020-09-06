@@ -1,8 +1,8 @@
 from pathlib import Path
 from typing import Dict
 
-import PIL.Image # type: ignore
-from PIL.ExifTags import TAGS, GPSTAGS # type: ignore
+import PIL.Image  # type: ignore
+from PIL.ExifTags import TAGS, GPSTAGS  # type: ignore
 
 
 Exif = Dict
@@ -12,11 +12,11 @@ Exif = Dict
 
 class ExifTags:
     DATETIME = "DateTimeOriginal"
-    LAT      = "GPSLatitude"
-    LAT_REF  = "GPSLatitudeRef"
-    LON      = "GPSLongitude"
-    LON_REF  = "GPSLongitudeRef"
-    GPSINFO  = "GPSInfo"
+    LAT = "GPSLatitude"
+    LAT_REF = "GPSLatitudeRef"
+    LON = "GPSLongitude"
+    LON_REF = "GPSLongitudeRef"
+    GPSINFO = "GPSInfo"
 
 
 # TODO there must be something more standard for this...
@@ -65,10 +65,9 @@ def to_degree(value):
 
 def convert_ref(cstr, ref: str):
     val = to_degree(cstr)
-    if ref == 'S' or ref == 'W':
+    if ref == "S" or ref == "W":
         val = -val
     return val
-
 
 
 import re
@@ -76,7 +75,9 @@ from datetime import datetime
 from typing import Optional
 
 # TODO surely there is a library that does it??
-_DT_REGEX = re.compile(r'\D(\d{8})\D*(\d{6})\D')
+_DT_REGEX = re.compile(r"\D(\d{8})\D*(\d{6})\D")
+
+
 def dt_from_path(p: Path) -> Optional[datetime]:
     name = p.stem
     mm = _DT_REGEX.search(name)
