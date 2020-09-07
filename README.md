@@ -46,10 +46,9 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 
 ### TODO:
 
-- [ ] patch in rifle/ranger history?
+- [ ] Integrate [ttt](https://github.com/seanbreckenridge/ttt)
 - [ ] parse spotify gdpr
-- [ ] configure `my.media` (youtube history)
-- [ ] configure google takeout/mounted google drive
+- [ ] configure/parse google takeout
 - [ ] android app to track my location?
 - [ ] backup trakt? (have API access)
 - [ ] backup MAL (ugh)
