@@ -4,6 +4,7 @@
 # but I use github prety actively, so backing this up more often
 # this exports things like comments/issues/prs
 evry 3 days -ghexport && {
+	wait-for-internet
 	readonly BACKUP_DIR="${HOME}/data/github/ghexport"
 	readonly GHDIR="${REPOS}/ghexport"
 	printlog "ghexport:Running github export..."

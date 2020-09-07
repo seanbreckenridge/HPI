@@ -4,6 +4,7 @@
 # leaving this at 3 months for now, I dont use reddit as often anymore
 # can decrease if I start using it again
 evry 3 months -rexport && {
+	wait-for-internet
 	readonly BACKUP_DIR="${HOME}/data/rexport"
 	readonly GHDIR="${REPOS}/rexport"
 	printlog "rexport:Running reddit export..."
