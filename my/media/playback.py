@@ -219,7 +219,7 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
                 and media_data["playlist_pos"] == event_data
             ):
                 logger.debug(
-                    "Got same playlist position {event_data} twice. Current data: {media_data}"
+                    f"Got same playlist position {event_data} twice. Current data: {media_data}"
                 )
                 continue
             media_data["playlist_pos"] = event_data
