@@ -13,7 +13,7 @@ cd "$HPI_DIR/jobs" || {
 }
 
 declare -rx BGPROC_SLEEPTIME='10m'          # check if we should run jobs every 10 minutes
-declare -rx BGPROC_LOCKFILE='/tmp/HPI_LOCK' # specify lockfile
+declare -rx BGPROC_LOCKFILE='/tmp/hpi.lock' # use separate lockfile
 
 # declare temporary logfile for bgproc jobs
 declare -rx BGPROC_LOGFILE='/tmp/hpi_bgproc.log'
