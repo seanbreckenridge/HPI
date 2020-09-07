@@ -12,9 +12,11 @@ cd "$HPI_DIR/jobs" || {
 	exit 1
 }
 
-declare -rx BGPROC_LOCKFILE='/tmp/HPI_LOCK'
-# just printlog/log messages
-declare -rx BGPROC_LOGFILE="${HOME}/.cache/hpi_bgproc.log"
+declare -rx BGPROC_SLEEPTIME='10m'          # check if we should run jobs every 10 minutes
+declare -rx BGPROC_LOCKFILE='/tmp/HPI_LOCK' # specify lockfile
 
-# all messages, including application/job output
+# declare temporary logfile for bgproc jobs
+declare -rx BGPROC_LOGFILE='/tmp/hpi_bgproc.log'
+
+# save all messages, including application/job output
 exec bgproc 2>&1 | tee -a "${HOME}/.cache/hpi_app.log"
