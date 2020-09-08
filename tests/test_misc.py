@@ -80,6 +80,8 @@ def test_warn_if_empty() -> None:
         assert list(nonempty()) == ["a", "aba"]
         assert len(w) == 0
 
+
+    with warnings.catch_warnings(record=True) as w:
         eee = empty()
         assert eee == []
         assert len(w) == 1
