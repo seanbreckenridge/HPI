@@ -47,6 +47,7 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 
 ### TODO:
 
+- [ ] parse <https://github.com/seanbreckenridge/aw-watcher-window> output
 - [ ] parse spotify gdpr
 - [ ] configure/parse google takeout
 - [ ] android app to track my location?
