@@ -27,6 +27,7 @@ It's a Python library (named `my`), a collection of modules for:
 - `my.github`, get all github actions (comments, issues, etc.)
 - `my.reddit`, get saved posts, comments. Uses [`rexport`](https://github.com/karlicoss/rexport) to create backups of recent activity periodically, and [`pushshift`](https://github.com/seanbreckenridge/pushshift_comment_export) to get old comments.
 - `my.zsh`, access to my shell history w/ timestamps; [example usage](https://gist.github.com/seanbreckenridge/921b49da3fadf09e45a23bb5a06b030e)
+- `my.ttt`, to parse shell/system history tracked by [`ttt`](https://github.com/seanbreckenridge/ttt)
 - `my.body.weight` to track weight (with a TUI powered by [`autotui`](https://github.com/seanbreckenridge/autotui))
 - `my.coding` to track git commits across the system
 - `my.todotxt`, to track my to-do list history
@@ -46,7 +47,6 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 
 ### TODO:
 
-- [ ] Integrate [ttt](https://github.com/seanbreckenridge/ttt)
 - [ ] parse spotify gdpr
 - [ ] configure/parse google takeout
 - [ ] android app to track my location?

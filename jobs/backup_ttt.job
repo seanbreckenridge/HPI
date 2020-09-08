@@ -1,0 +1,8 @@
+#!/bin/bash
+
+evry 1 month -backup_ttt_history && {
+	readonly BACKUP_DIR="${HOME}/data/ttt"
+	readonly TTT_HISTORY="${XDG_DATA_HOME}/ttt_history.csv"
+	printlog "ttt:Backing up ttt history..."
+	cp "$TTT_HISTORY" "${BACKUP_DIR}/$(date +'%s').csv"
+}

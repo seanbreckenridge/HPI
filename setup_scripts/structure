@@ -19,7 +19,7 @@ directories=(
 	'rps_comments'
 	'ipython'
 	'old_forums'
-
+	'ttt'
 )
 declare -a files
 files=(
