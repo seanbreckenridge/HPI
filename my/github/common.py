@@ -2,7 +2,7 @@
 Github events and their metadata: comments/issues/pull requests
 """
 from datetime import datetime
-from typing import Optional, NamedTuple, Iterable, Set, Tuple
+from typing import Optional, NamedTuple, Iterator, Set, Tuple
 
 import pytz
 
@@ -19,7 +19,7 @@ class Event(NamedTuple):
     is_bot: bool = False
 
 
-Results = Iterable[Res[Event]]
+Results = Iterator[Res[Event]]
 
 
 @warn_if_empty
@@ -52,5 +52,5 @@ def parse_dt(s: str) -> datetime:
 
 
 # TODO not sure
-# def get_events() -> Iterable[Res[Event]]:
+# def get_events() -> Iterator[Res[Event]]:
 #     return sort_res_by(events(), key=lambda e: e.dt)

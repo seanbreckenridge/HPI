@@ -26,7 +26,7 @@ config = make_config(blizzard)
 import json
 from pathlib import Path
 from datetime import datetime, timezone
-from typing import NamedTuple, Iterable, Sequence, List
+from typing import NamedTuple, Iterator, Sequence, List
 from itertools import chain
 
 from ..core import get_files
@@ -42,7 +42,7 @@ class Event(NamedTuple):
     metadata: List[str]
 
 
-Results = Iterable[Event]
+Results = Iterator[Event]
 
 
 def events(from_paths=inputs) -> Results:

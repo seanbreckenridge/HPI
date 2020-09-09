@@ -37,7 +37,7 @@ config = make_config(ipython)
 
 
 from datetime import datetime
-from typing import Iterable, NamedTuple, Sequence, Callable, List
+from typing import Iterator, NamedTuple, Sequence, Callable, List
 from itertools import chain
 
 from IPython.core.history import HistoryAccessor
@@ -51,7 +51,7 @@ class Command(NamedTuple):
     command: str
 
 
-Results = Iterable[Command]
+Results = Iterator[Command]
 
 
 # Return backed up sqlite databases

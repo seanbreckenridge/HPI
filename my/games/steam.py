@@ -27,7 +27,7 @@ import json
 from functools import partial
 from pathlib import Path
 from datetime import datetime, timezone
-from typing import NamedTuple, Iterable, Sequence, Dict, List, Optional, Any
+from typing import NamedTuple, Iterator, Sequence, Dict, List, Optional, Any
 from itertools import chain
 
 from ..core import get_files
@@ -66,8 +66,8 @@ class Game(NamedTuple):
         return self.achieved / self.achievement_count
 
 
-Results = Iterable[Res[Game]]
-AchResults = Iterable[Res[Achievement]]
+Results = Iterator[Res[Game]]
+AchResults = Iterator[Res[Achievement]]
 
 # only ones I've played
 def games() -> Results:

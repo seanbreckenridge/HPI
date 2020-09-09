@@ -4,7 +4,7 @@ Weight data (manually logged)
 
 from datetime import datetime
 from dataclasses import dataclass
-from typing import NamedTuple, Iterable
+from typing import NamedTuple, Iterator
 
 from ..core import PathIsh
 
@@ -28,7 +28,7 @@ class Weight(NamedTuple):
     pounds: float
 
 
-Result = Iterable[Weight]
+Result = Iterator[Weight]
 
 
 def history() -> Result:

@@ -29,7 +29,7 @@ config = make_config(league_of_legends)
 import json
 from pathlib import Path
 from datetime import datetime, timezone
-from typing import NamedTuple, Iterable, Sequence, Dict, Union, List, Optional, Any
+from typing import NamedTuple, Iterator, Sequence, Dict, Union, List, Optional, Any
 from functools import partial
 from itertools import chain
 
@@ -76,7 +76,7 @@ class Game(NamedTuple):
         return map(lambda s: s["champion"]["name"], self.all_stats)
 
 
-Results = Iterable[Res[Game]]
+Results = Iterator[Res[Game]]
 
 
 def history(from_paths=inputs, summoner_name: Optional[str] = None) -> Results:

@@ -23,7 +23,7 @@ import json
 from datetime import date
 from pathlib import Path
 from itertools import chain
-from typing import Iterable, Dict, Any, NamedTuple, List, Set, Tuple
+from typing import Iterator, Dict, Any, NamedTuple, List, Set, Tuple
 
 from .core.error import Res
 from .core import get_files
@@ -45,8 +45,8 @@ class Playlist(NamedTuple):
     songs: List[Song]
 
 
-Playlists = Iterable[Res[Playlist]]
-Songs = Iterable[Res[Song]]
+Playlists = Iterator[Res[Playlist]]
+Songs = Iterator[Res[Song]]
 
 
 def playlists() -> Playlists:
@@ -115,7 +115,7 @@ def stats():
     }
 
 
-def _parse_playlists(d: Dict) -> Iterable[Playlist]:
+def _parse_playlists(d: Dict) -> Iterator[Playlist]:
     # parse, then filter
     # make sure this playlist has more than one artist
     # if its just one artist, its probably just an album
@@ -124,7 +124,7 @@ def _parse_playlists(d: Dict) -> Iterable[Playlist]:
     )
 
 
-def _parse_all_playlists(d: Dict) -> Iterable[Playlist]:
+def _parse_all_playlists(d: Dict) -> Iterator[Playlist]:
     for plist in d["playlists"]:
         if plist["numberOfFollowers"] > 50:
             logger.debug(

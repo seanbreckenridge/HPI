@@ -35,7 +35,7 @@ def inputs() -> Sequence[Path]:
 
 
 from datetime import datetime, timezone
-from typing import NamedTuple, Iterable
+from typing import NamedTuple, Iterator
 from itertools import chain
 
 from .core.common import LazyLogger
@@ -51,7 +51,7 @@ class Post(NamedTuple):
     forum_name: str
 
 
-Results = Iterable[Post]
+Results = Iterator[Post]
 
 
 def history(from_paths=inputs) -> Results:

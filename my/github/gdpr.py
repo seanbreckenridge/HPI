@@ -3,7 +3,7 @@ Github data (uses [[https://github.com/settings/admin][official GDPR export]])
 """
 
 import json
-from typing import Iterable, Dict, Any
+from typing import Iterator, Dict, Any
 
 from ..core.error import Res
 from ..core import get_files
@@ -30,7 +30,7 @@ from ..core.cfg import make_config
 config = make_config(github)
 
 
-def events() -> Iterable[Res[Event]]:
+def events() -> Iterator[Res[Event]]:
     # TODO FIXME allow using archive here?
     files = get_files(config.gdpr_dir, glob="*.json")
     handler_map = {

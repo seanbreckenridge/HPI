@@ -52,7 +52,7 @@ def inputs() -> Sequence[Path]:  # type: ignore
 
 
 from datetime import datetime, timezone
-from typing import NamedTuple, Iterable, Set
+from typing import NamedTuple, Iterator, Set
 from itertools import chain
 
 
@@ -64,7 +64,7 @@ class Entry(NamedTuple):
     window_title: str
 
 
-Results = Iterable[Entry]
+Results = Iterator[Entry]
 
 
 def history(from_paths=inputs) -> Results:

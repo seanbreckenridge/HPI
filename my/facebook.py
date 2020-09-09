@@ -23,7 +23,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 from itertools import chain
-from typing import Iterable, Dict, Any, NamedTuple, Union, Optional, List
+from typing import Iterator, Dict, Any, NamedTuple, Union, Optional, List
 
 from .core.error import Res
 from .core import get_files
@@ -121,8 +121,10 @@ Event = Union[
     Contact,
 ]
 
+Results = Iterator[Res[Event]]
 
-def events() -> Iterable[Res[Event]]:
+
+def events() -> Results:
     # get files 2 levels deep into the export
     gdpr_dir = str(Path(config.gdpr_dir).expanduser().absolute())  # expand path
     files = chain(*map(lambda f: f.rglob("*"), get_files(config.gdpr_dir)))
@@ -211,7 +213,7 @@ def stats():
     }
 
 
-def _parse_address_book(d: Dict) -> Iterable[Contact]:
+def _parse_address_book(d: Dict) -> Iterator[Contact]:
     # remove top-level address book name
     for addr_book_top in d.values():
         for addr_book_list in addr_book_top.values():
@@ -224,7 +226,7 @@ def _parse_address_book(d: Dict) -> Iterable[Contact]:
                 )
 
 
-def _parse_installed_apps(d: Dict) -> Iterable[Action]:
+def _parse_installed_apps(d: Dict) -> Iterator[Action]:
     for app in d["installed_apps"]:
         yield Action(
             description="{} was installed".format(app["name"]),
@@ -232,12 +234,12 @@ def _parse_installed_apps(d: Dict) -> Iterable[Action]:
         )
 
 
-def _parse_app_posts(d: Dict) -> Iterable[Action]:
+def _parse_app_posts(d: Dict) -> Iterator[Action]:
     for post in d["app_posts"]:
         yield Action(description=post["title"], at=fepoch(post["timestamp"]))
 
 
-def _parse_photo_ips(d: Dict) -> Iterable[UploadedPhoto]:
+def _parse_photo_ips(d: Dict) -> Iterator[UploadedPhoto]:
     for photo_info in d["photos"]:
         if (
             "media_metadata" in photo_info
@@ -250,7 +252,7 @@ def _parse_photo_ips(d: Dict) -> Iterable[UploadedPhoto]:
             )
 
 
-def _parse_group_comments(d: Dict) -> Iterable[Comment]:
+def _parse_group_comments(d: Dict) -> Iterator[Comment]:
     for comment in d["comments"]:
         yield Comment(
             content=comment["data"][0]["comment"]["comment"],
@@ -260,7 +262,7 @@ def _parse_group_comments(d: Dict) -> Iterable[Comment]:
         )
 
 
-def _parse_joined_events(d: Dict) -> Iterable[AcceptedEvent]:
+def _parse_joined_events(d: Dict) -> Iterator[AcceptedEvent]:
     for event in d["event_responses"]["events_joined"]:
         yield AcceptedEvent(
             name=event["name"],
@@ -269,17 +271,17 @@ def _parse_joined_events(d: Dict) -> Iterable[AcceptedEvent]:
         )
 
 
-def _parse_friends(d: Dict) -> Iterable[Friend]:
+def _parse_friends(d: Dict) -> Iterator[Friend]:
     for friend in d["friends"]:
         yield Friend(name=friend["name"], at=fepoch(friend["timestamp"]), added=True)
 
 
-def _parse_deleted_friends(d: Dict) -> Iterable[Friend]:
+def _parse_deleted_friends(d: Dict) -> Iterator[Friend]:
     for friend in d["deleted_friends"]:
         yield Friend(name=friend["name"], at=fepoch(friend["timestamp"]), added=False)
 
 
-def _parse_group_activity(d: Dict) -> Iterable[Action]:
+def _parse_group_activity(d: Dict) -> Iterator[Action]:
     for gr in d["groups_joined"]:
         yield Action(
             description=gr["title"],
@@ -287,7 +289,7 @@ def _parse_group_activity(d: Dict) -> Iterable[Action]:
         )
 
 
-def _parse_group_posts(d: Dict) -> Iterable[Union[Comment, Post]]:
+def _parse_group_posts(d: Dict) -> Iterator[Union[Comment, Post]]:
     for log_data_list in d.values():
         for comm_list in log_data_list.values():
             for comm in comm_list:
@@ -307,7 +309,7 @@ def _parse_group_posts(d: Dict) -> Iterable[Union[Comment, Post]]:
                     )
 
 
-def _parse_page_likes(d: Dict) -> Iterable[Action]:
+def _parse_page_likes(d: Dict) -> Iterator[Action]:
     for page in d["page_likes"]:
         yield Action(
             description="Liked Page {}".format(page["name"]),
@@ -315,12 +317,12 @@ def _parse_page_likes(d: Dict) -> Iterable[Action]:
         )
 
 
-def _parse_reactions(d: Dict) -> Iterable[Action]:
+def _parse_reactions(d: Dict) -> Iterator[Action]:
     for react in d["reactions"]:
         yield Action(description=react["title"], at=fepoch(react["timestamp"]))
 
 
-def _parse_search_history(d: Dict) -> Iterable[Search]:
+def _parse_search_history(d: Dict) -> Iterator[Search]:
     for search in d["searches"]:
         assert len(search["data"]) == 1
         yield Search(query=search["data"][0]["text"], at=fepoch(search["timestamp"]))
@@ -328,7 +330,7 @@ def _parse_search_history(d: Dict) -> Iterable[Search]:
 
 def _parse_conversation(
     d: Dict,
-) -> Iterable[Res[Conversation]]:  # will only return 1 convo
+) -> Iterator[Res[Conversation]]:  # will only return 1 convo
     participants: List[str] = [p["name"] for p in d["participants"]]
     messages = list(_parse_messages_in_conversation(d["messages"]))
     # propagate up exception if one exists
@@ -342,7 +344,7 @@ def _parse_conversation(
         )
 
 
-def _parse_messages_in_conversation(messages: List[Dict]) -> Iterable[Res[Message]]:
+def _parse_messages_in_conversation(messages: List[Dict]) -> Iterator[Res[Message]]:
     for m in messages:
         timestamp = fepoch(m["timestamp_ms"] / 1000)
         author = m["sender_name"]
@@ -381,7 +383,7 @@ def _parse_messages_in_conversation(messages: List[Dict]) -> Iterable[Res[Messag
 # list(filter(lambda e: isinstance(e, Exception), events())),
 # throw a 'import pdb; pdb.set_trace()' at where its throwing the error
 # and add a new case for a new type of post
-def _parse_posts(d: Dict) -> Iterable[Res[Union[Post, Action]]]:
+def _parse_posts(d: Dict) -> Iterator[Res[Union[Post, Action]]]:
     all_posts = d
     # handle both profile updates and posts
     if isinstance(all_posts, dict) and "profile_updates" in all_posts:
@@ -508,7 +510,7 @@ def _parse_posts(d: Dict) -> Iterable[Res[Union[Post, Action]]]:
             yield RuntimeError("No known way to parse post {}".format(post))
 
 
-def _parse_account_activity(d: Dict) -> Iterable[AdminAction]:
+def _parse_account_activity(d: Dict) -> Iterator[AdminAction]:
     for ac in d["account_activity"]:
         yield AdminAction(
             description=ac["action"],
@@ -518,7 +520,7 @@ def _parse_account_activity(d: Dict) -> Iterable[AdminAction]:
         )
 
 
-def _parse_authorized_logins(d: Dict) -> Iterable[AdminAction]:
+def _parse_authorized_logins(d: Dict) -> Iterator[AdminAction]:
     for ac in d["recognized_devices"]:
         metadata = {}
         if "updated_timestamp" in ac:
@@ -532,7 +534,7 @@ def _parse_authorized_logins(d: Dict) -> Iterable[AdminAction]:
         )
 
 
-def _parse_admin_records(d: Dict) -> Iterable[AdminAction]:
+def _parse_admin_records(d: Dict) -> Iterator[AdminAction]:
     for rec in d["admin_records"]:
         s = rec["session"]
         yield AdminAction(

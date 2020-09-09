@@ -39,7 +39,7 @@ def inputs() -> Sequence[Path]:
 
 
 from datetime import datetime
-from typing import Iterable
+from typing import Iterator
 from itertools import chain
 
 import dateparser
@@ -49,7 +49,7 @@ from .core.common import LazyLogger
 logger = LazyLogger(__name__)
 
 
-Results = Iterable[datetime]
+Results = Iterator[datetime]
 
 
 def timestamps(from_paths=inputs) -> Results:
