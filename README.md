@@ -55,6 +55,7 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 - [ ] backup MAL (ugh)
 - [ ] polar? some other reading system? formalize documents/configure `my.pdfs`
 - [ ] backup sms/phone calls
+- [ ] exif data from photos
 - [ ] food/tracking caloric intake?
 - [ ] generic metadata gatherer/DAL/library for URLs? would be used for a couple things (my.browsing, my.media.playback; could be plugged into another other module to get more data)
 - [ ] better [exobrain](https://github.com/seanbreckenridge/exobrain) for notes...? want:
