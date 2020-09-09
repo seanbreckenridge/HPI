@@ -41,6 +41,7 @@ It's a Python library (named `my`), a collection of modules for:
 - `my.skype` to parse a couple datetimes from the skype GDPR export
 - `my.ipython`, for timestamped python REPL history
 - `my.facebook`, to parse the GDPR export I downloaded from facebook before deleting my account
+- `my.spotify`, to parse the GDPR export from spotify, mostly for songs from my playlists from years ago
 
 See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py) for config.
 
@@ -48,7 +49,6 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 
 ### TODO:
 
-- [ ] parse spotify gdpr
 - [ ] configure/parse google takeout
 - [ ] android app to track my location?
 - [ ] backup trakt? (have API access)
