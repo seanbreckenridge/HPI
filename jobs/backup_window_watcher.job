@@ -1,0 +1,8 @@
+#!/bin/bash
+
+evry 1 week -backup_window_history && {
+	readonly BACKUP_DIR="${HOME}/data/window_watcher"
+	readonly WINDOW_EVENTS="${XDG_DATA_HOME}/window_events.csv"
+	printlog "window_watcher:Backing up history..."
+	cp "$WINDOW_EVENTS" "${BACKUP_DIR}/$(date +'%s').csv"
+}

@@ -20,6 +20,7 @@ directories=(
 	'ipython'
 	'old_forums'
 	'ttt'
+	'window_watcher'
 )
 declare -a files
 files=(
