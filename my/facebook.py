@@ -62,6 +62,11 @@ class Search(NamedTuple):
     at: datetime
 
 
+class UploadedPhoto(NamedTuple):
+    at: datetime
+    ip: str
+
+
 class Post(NamedTuple):
     content: str
     at: datetime
@@ -106,6 +111,7 @@ Event = Union[
     Contact,
     Conversation,
     Friend,
+    UploadedPhoto,
     AcceptedEvent,
     Action,
     Post,
@@ -145,7 +151,8 @@ def events() -> Iterable[Res[Event]]:
         "other_activity": None,
         "pages": None,
         "payment_history": None,
-        "photos_and_videos": None,  # pull these out in my/photos.py
+        "photos_and_videos/album": _parse_photo_ips,  # ip info for where images were uplodaed from
+        "photos_and_videos/": None,  # pull these out in my/photos.py
         "profile_information/profile_information.json": None,
         "saved_items": None,
         "stories": None,
@@ -228,6 +235,19 @@ def _parse_installed_apps(d: Dict) -> Iterable[Action]:
 def _parse_app_posts(d: Dict) -> Iterable[Action]:
     for post in d["app_posts"]:
         yield Action(description=post["title"], at=fepoch(post["timestamp"]))
+
+
+def _parse_photo_ips(d: Dict) -> Iterable[UploadedPhoto]:
+    for photo_info in d["photos"]:
+        if (
+            "media_metadata" in photo_info
+            and "photo_metadata" in photo_info["media_metadata"]
+            and "upload_ip" in photo_info["media_metadata"]["photo_metadata"]
+        ):
+            yield UploadedPhoto(
+                at=fepoch(photo_info["creation_timestamp"]),
+                ip=photo_info["media_metadata"]["photo_metadata"]["upload_ip"],
+            )
 
 
 def _parse_group_comments(d: Dict) -> Iterable[Comment]:
