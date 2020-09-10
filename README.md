@@ -35,6 +35,7 @@ It's a Python library (named `my`), a collection of modules for:
 - `my.browsing`, using my [`ffexport`](https://github.com/seanbreckenridge/ffexport) tool to backup/parse firefox history
 - `my.media.playback`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-sockets/blob/master/DAEMON.md)
 - `my.ipython`, for timestamped python REPL history
+- `my.smscalls`, exports phone/SMS history using [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore&hl=en_US)
 
 ### 'Historical' Modules
 
@@ -54,12 +55,11 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 
 ### TODO:
 
-- [ ] configure/parse google takeout
+- [ ] parse google takeout
 - [ ] android app to track my location?
 - [ ] backup trakt? (have API access)
 - [ ] backup MAL (ugh)
 - [ ] polar? some other reading system? formalize documents/configure `my.pdfs`
-- [ ] backup sms/phone calls
 - [ ] exif data from photos
 - [ ] food/tracking caloric intake?
 - [ ] generic metadata gatherer/DAL/library for URLs? would be used for a couple things (my.browsing, my.media.playback; could be plugged into another other module to get more data)
