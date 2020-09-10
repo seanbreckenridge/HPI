@@ -22,7 +22,7 @@ clone_if_not_exists() {
 
 install_hpi() {
 	echo "Installing HPI..."
-	pip install --user -e .
+	pip install -e .
 }
 
 create_data_dir() {
