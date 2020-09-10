@@ -82,7 +82,7 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 
 ---
 
-Last referenced commit hash: [`07dd61ca6ae2b6de20d6954ca1584accede8b762`](https://github.com/karlicoss/HPI/commit/07dd61ca6ae2b6de20d6954ca1584accede8b762)
+Last referenced commit hash on [karicoss/HPI](https://github.com/karlicoss/HPI): 99e50f0afedb775bcf438c4c37ede9edcad46762
 
 ---
 
