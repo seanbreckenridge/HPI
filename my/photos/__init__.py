@@ -5,6 +5,7 @@ Photos and videos on your filesystem, their GPS and timestamps
 """
 
 # reminder: facebook photos?
+# reminder: google photos?
 
 # pip install geopy magic
 

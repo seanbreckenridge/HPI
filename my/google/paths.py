@@ -3,7 +3,7 @@ Module for locating and accessing [[https://takeout.google.com][Google Takeout]]
 """
 
 from dataclasses import dataclass
-from ...core.common import Paths
+from ..core.common import Paths
 
 from my.config import google as user_config
 
@@ -13,15 +13,15 @@ class google(user_config):
     takeout_path: Paths  # path/paths/glob for the takeout zips
 
 
-from ...core.cfg import make_config
+from ..core.cfg import make_config
 
 config = make_config(google)
 
 from pathlib import Path
 from typing import Optional, Iterable
 
-from ...core.common import get_files
-from ...kython.kompress import kexists
+from ..core.common import get_files
+from ..kython.kompress import kexists
 
 """
 For now, my Google Takeout Structure looks like

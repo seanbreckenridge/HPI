@@ -12,7 +12,7 @@ from collections import OrderedDict
 from urllib.parse import unquote
 import pytz
 
-from ...core.time import abbr_to_timezone
+from ..core.time import abbr_to_timezone
 
 # Mar 8, 2018, 5:14:40 PM
 _TIME_FORMAT = "%b %d, %Y, %I:%M:%S %p"
