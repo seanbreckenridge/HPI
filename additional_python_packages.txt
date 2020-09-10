@@ -12,3 +12,4 @@ more_itertools
 pytest
 pytest-random-order
 Pillow
+lxml
