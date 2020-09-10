@@ -133,7 +133,7 @@ class TakeoutHTMLParser(HTMLParser):
 
 
 def read_html(tpath: Path, file: str) -> Iterable[Parsed]:
-    from ...kython.kompress import kopen
+    from ..kython.kompress import kopen
 
     results: List[Parsed] = []
 

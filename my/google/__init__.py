@@ -36,8 +36,9 @@ def watched() -> Iterable[Watched]:
 
 
 def stats():
-    from .core import stat
+    pass
+    # from .core import stat
 
-    #return {
+    # return {
     #    **stat(events),
-    #}
+    # }

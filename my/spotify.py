@@ -70,19 +70,16 @@ def playlists() -> Playlists:
             handler = h
             break
         else:
-            e = RuntimeError(f"Unhandled file: {f}")
-            logger.debug(str(e))
-            yield e
-            continue
+            if f.is_dir():
+                continue
+            else:
+                e = RuntimeError(f"Unhandled file: {f}")
+                logger.debug(str(e))
+                yield e
+                continue
 
         if handler is None:
             # explicitly ignored
-            continue
-
-        if f.is_dir():
-            # rglob("*") matches directories, as well as any subredirectories/json files in those
-            # this is here exclusively for the messages dir, which has a larger structure
-            # json files from inside the dirs are still picked up by rglob
             continue
 
         if f.suffix != ".json":

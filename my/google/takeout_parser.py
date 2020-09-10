@@ -2,21 +2,16 @@
 Parses a Google Takeout https://takeout.google.com/
 """
 
-from dataclasses import dataclass
-
 import os
-import json
-from datetime import datetime, timezone
 from pathlib import Path
-from itertools import chain
-from typing import Iterator, Dict, Any, NamedTuple, Union, Optional, List
+from typing import Iterator, NamedTuple, Union, Any
 
 from ..core.error import Res
-from ..core import get_files
 
 from ..core.common import LazyLogger
 
 logger = LazyLogger(__name__)
+
 
 class AppInstall(NamedTuple):
     pass
@@ -45,46 +40,46 @@ def parse_takeout(single_takeout_dir: Path) -> Results:
         "Calendar": None,  # will use google API to get events instead
         "Chrome": None,
         "Google Photos": None,  # implemented in photos.py
-        "Google Play Store/Devices": None, # not that interesting
+        "Google Play Store/Devices": None,  # not that interesting
         "archive_browser.html": None,  # description of takeout, not useful
         "Google Play Store/Installs": _parse_google_play_installs,  # TODO: parse
         "Google Play Store/Library": None,
         "Google Play Store/Purchase History": None,
         "YouTube and YouTube Music/videos": None,
-        "Contacts": None, # TODO: implement, need to parse vcf files
-        "Location History/Semantic Location History": None, # TODO: parse
-        "Location History/Location History": None, # TODO: parse
+        "Contacts": None,  # TODO: implement, need to parse vcf files
+        "Location History/Semantic Location History": None,  # TODO: parse
+        "Location History/Location History": None,  # TODO: parse
         "YouTube and YouTube Music/history/search-history": None,  # TODO: parse
-        "YouTube and YouTube Music/history/watch-history": None, # TODO: parse
-        "YouTube and YouTube Music/my-comments": None, # TODO: parse
-        "YouTube and YouTube Music/my-live-chat-messages": None, # TODO: parse
-        "YouTube and YouTube Music/playlists/likes.json": _parse_likes, # TODO: parse
-        "YouTube and YouTube Music/playlists/": None, # dicts are ordered, so the rest of the stuff is ignored
-        "YouTube and YouTube Music/subscriptions": _parse_subscriptions, # TODO: parse
+        "YouTube and YouTube Music/history/watch-history": None,  # TODO: parse
+        "YouTube and YouTube Music/my-comments": None,  # TODO: parse
+        "YouTube and YouTube Music/my-live-chat-messages": None,  # TODO: parse
+        "YouTube and YouTube Music/playlists/likes.json": _parse_likes,  # TODO: parse
+        "YouTube and YouTube Music/playlists/": None,  # dicts are ordered, so the rest of the stuff is ignored
+        "YouTube and YouTube Music/subscriptions": _parse_subscriptions,  # TODO: parse
         "My Activity/Ads": _parse_ads,  # TODO: parse
-        "My Activity/Android": None, # TODO: parse
-        "My Activity/Assistant": None, # TODO: parse
-        "My Activity/Books": None, # TODO: parse
-        "My Activity/Chrome": None, # TODO: parse
+        "My Activity/Android": None,  # TODO: parse
+        "My Activity/Assistant": None,  # TODO: parse
+        "My Activity/Books": None,  # TODO: parse
+        "My Activity/Chrome": None,  # TODO: parse
         "My Activity/Drive": None,
-        "My Activity/Developers": None, # TODO: parse
-        "My Activity/Discover": None, # TODO: parse
-        "My Activity/Discover": None, # TODO: parse
-        "My Activity/Gmail": None, # TODO: parse
-        "My Activity/Google Analytics": None, # TODO: parse
+        "My Activity/Developers": None,  # TODO: parse
+        "My Activity/Discover": None,  # TODO: parse
+        "My Activity/Discover": None,  # TODO: parse
+        "My Activity/Gmail": None,  # TODO: parse
+        "My Activity/Google Analytics": None,  # TODO: parse
         "My Activity/Google Apps": None,
-        "My Activity/Google Cloud": None, # TODO: parse
+        "My Activity/Google Cloud": None,  # TODO: parse
         "My Activity/Google Play Music": None,
-        "My Activity/Google Cloud": None, # TODO: parse
-        "My Activity/Google Play Store": None, # TODO: parse
-        "My Activity/Help": None, # TODO: parse
-        "My Activity/Image Search": None, # TODO: parse
-        "My Activity/Maps": None, # TODO: parse
-        "My Activity/News": None, # TODO: parse
-        "My Activity/Search": None, # TODO: parse
+        "My Activity/Google Cloud": None,  # TODO: parse
+        "My Activity/Google Play Store": None,  # TODO: parse
+        "My Activity/Help": None,  # TODO: parse
+        "My Activity/Image Search": None,  # TODO: parse
+        "My Activity/Maps": None,  # TODO: parse
+        "My Activity/News": None,  # TODO: parse
+        "My Activity/Search": None,  # TODO: parse
         "My Activity/Shopping": None,
-        "My Activity/Video Search": None, # TODO: parse
-        "My Activity/YouTube": None, # TODO: parse
+        "My Activity/Video Search": None,  # TODO: parse
+        "My Activity/YouTube": None,  # TODO: parse
     }
     for f in single_takeout_dir.rglob("*"):
         handler: Any
@@ -112,11 +107,14 @@ def parse_takeout(single_takeout_dir: Path) -> Results:
 def _parse_google_play_installs(f: Path) -> Iterator[AppInstall]:
     yield None
 
+
 def _parse_likes(f: Path):
     yield None
 
+
 def _parse_subscriptions(f: Path):
     yield None
+
 
 def _parse_ads(f: Path):
     yield None

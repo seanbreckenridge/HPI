@@ -198,7 +198,6 @@ def events() -> Results:
             # explicitly ignored
             continue
 
-
         if f.suffix != ".json":
             continue
 
