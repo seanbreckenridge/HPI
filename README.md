@@ -22,7 +22,7 @@ It's a Python library (named `my`), a collection of modules for:
 
 ---
 
-### Currently in-use modules
+## Currently in-use modules
 
 - `my.github`, get all github actions (comments, issues, etc.)
 - `my.reddit`, get saved posts, comments. Uses [`rexport`](https://github.com/karlicoss/rexport) to create backups of recent activity periodically, and [`pushshift`](https://github.com/seanbreckenridge/pushshift_comment_export) to get old comments.
@@ -34,12 +34,17 @@ It's a Python library (named `my`), a collection of modules for:
 - `my.todotxt`, to track my to-do list history
 - `my.browsing`, using my [`ffexport`](https://github.com/seanbreckenridge/ffexport) tool to backup/parse firefox history
 - `my.media.playback`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-sockets/blob/master/DAEMON.md)
+- `my.ipython`, for timestamped python REPL history
+
+### 'Historical' Modules
+
+These are modules to parse GDPR exports/data from services I used to use, but don't anymore. They're here to provide more context into the past.
+
 - `my.games.league`, gives league of legends game history using [`lolexport`](https://github.com/seanbreckenridge/lolexport)
 - `my.games.steam`, for steam achievement data and game playtime using [`steamscraper`](https://github.com/seanbreckenridge/steamscraper)
 - `my.games.blizzard`, for general battle.net event data [parsed from a gdpr export](https://github.com/seanbreckenridge/blizzard_gdpr_parser)
 - `my.old_forums`, random posts from forums I used to use in the past, see [`forum_parser`](https://github.com/seanbreckenridge/forum_parser)
 - `my.skype` to parse a couple datetimes from the skype GDPR export
-- `my.ipython`, for timestamped python REPL history
 - `my.facebook`, to parse the GDPR export I downloaded from facebook before deleting my account
 - `my.spotify`, to parse the GDPR export from spotify, mostly for songs from my playlists from years ago
 
