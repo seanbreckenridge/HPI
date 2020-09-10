@@ -47,13 +47,14 @@ def get_last_takeout(*, path: Optional[str] = None) -> Path:
 
 # if there are any new takeouts, warn me
 def check_for_new_takeouts():
-    new_takeouts = get_files(config.google_drive_local_path)
-    if new_takeouts:
-        # this may be temporary, once I'm confident the script works fine over
-        # some period, I'll just automate this
-        warnings.warn(
-            f"Theres a new takeout at {new_takeouts[0]}, run ./scripts/unzip_google_takeout to update the data!"
-        )
+    if config.google_drive_local_path:
+        new_takeouts = get_files(config.google_drive_local_path)
+        if new_takeouts:
+            # this may be temporary, once I'm confident the script works fine over
+            # some period, I'll just automate this
+            warnings.warn(
+                f"Theres a new takeout at {new_takeouts[0]}, run ./scripts/unzip_google_takeout to update the data!"
+            )
 
 
 # TODO might be a good idea to merge across multiple takeouts...
