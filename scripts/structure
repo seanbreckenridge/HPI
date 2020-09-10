@@ -21,6 +21,7 @@ directories=(
 	'old_forums'
 	'ttt'
 	'window_watcher'
+	'google_takeout'
 )
 declare -a files
 files=(

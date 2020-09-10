@@ -14,7 +14,7 @@ list_shell_scripts() {
 	echo lint
 	echo bgproc
 	fd '.job' jobs
-	fd . setup_scripts
+	fd . scripts
 }
 
 # call shellcheck on all the scripts

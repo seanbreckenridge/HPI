@@ -36,9 +36,22 @@ def parse_takeout(single_takeout_dir: Path) -> Results:
     # to implement one, you have to add a prefix match to the handler_map,
     # and then implement a corresponding function which recieves the filename
     # and parses it into whatever events you want.
+
+    # I select:
+    # Contacts
+    # Google Photos
+    # Google Play Store
+    # Youtube and Youtube Music (but deseleting music-library-songs, music-uploads and videos options)
+    # Location History
+    # My Activity
+    #
+    # Have to manually go to takeout.google.com once per year and select that info, and then it
+    # puts the zipped file into google drive at 2 months intervals, 6 times
+    #
+    # That gets pulled down using https://github.com/odeke-em/drive (https://sean.fish/d/housekeeping?dark)
+    # and then unzipped into my ~/data directory (by HPI/scripts/unzip_google_takeout)
+
     handler_map = {
-        "Calendar": None,  # will use google API to get events instead
-        "Chrome": None,
         "Google Photos": None,  # implemented in photos.py
         "Google Play Store/Devices": None,  # not that interesting
         "archive_browser.html": None,  # description of takeout, not useful
@@ -63,7 +76,6 @@ def parse_takeout(single_takeout_dir: Path) -> Results:
         "My Activity/Chrome": None,  # TODO: parse
         "My Activity/Drive": None,
         "My Activity/Developers": None,  # TODO: parse
-        "My Activity/Discover": None,  # TODO: parse
         "My Activity/Discover": None,  # TODO: parse
         "My Activity/Gmail": None,  # TODO: parse
         "My Activity/Google Analytics": None,  # TODO: parse

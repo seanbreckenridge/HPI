@@ -73,7 +73,7 @@ install_hpi
 install_python_extras
 
 # export specific setup
-./setup_scripts/structure
+./scripts/structure
 
-bash -x ./setup_scripts/ghexport
-bash -x ./setup_scripts/rexport
+bash -x ./scripts/setup_ghexport
+bash -x ./scripts/setup_rexport
