@@ -12,9 +12,6 @@ cd "$HPI_DIR/jobs" || {
 	exit 1
 }
 
-# creates lots of logs, but its helpful for debugging jobs
-declare -rx EVRY_DEBUG=1
-
 declare -rx BGPROC_SLEEPTIME='10m'          # check if we should run jobs every 10 minutes
 declare -rx BGPROC_LOCKFILE='/tmp/hpi.lock' # use separate lockfile
 
@@ -22,4 +19,4 @@ declare -rx BGPROC_LOCKFILE='/tmp/hpi.lock' # use separate lockfile
 declare -rx BGPROC_LOGFILE="${HOME}/.cache/hpi_bgproc.log"
 
 # save all messages, including application/job output
-exec bgproc 2>&1 | tee -a "${HOME}/.cache/hpi_app.log"
+exec bgproc "$@" 2>&1 | tee -a "${HOME}/.cache/hpi_app.log"
