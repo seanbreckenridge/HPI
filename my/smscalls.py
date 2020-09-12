@@ -40,10 +40,8 @@ class Message(NamedTuple):
 def stats():
     from .core import stat
 
-    return {
-        **stat(calls),
-        **stat(messages)
-    }
+    return {**stat(calls), **stat(messages)}
+
 
 def messages() -> Iterator[Message]:
     files = get_files(config.export_path, glob="sms-*.xml")
