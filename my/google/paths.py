@@ -48,7 +48,7 @@ def get_last_takeout(*, path: Optional[str] = None) -> Path:
 # if there are any new takeouts, warn me
 def check_for_new_takeouts():
     if config.google_drive_local_path:
-        new_takeouts = get_files(config.google_drive_local_path)
+        new_takeouts = list(Path(config.google_drive_local_path).expanduser().absolute().rglob("*"))
         if new_takeouts:
             # this may be temporary, once I'm confident the script works fine over
             # some period, I'll just automate this

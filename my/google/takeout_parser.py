@@ -58,6 +58,9 @@ def parse_takeout(single_takeout_dir: Path) -> Results:
         "Google Play Store/Installs": _parse_google_play_installs,  # TODO: parse
         "Google Play Store/Library": None,
         "Google Play Store/Purchase History": None,
+        "Google Play Store/Subscriptions": None,
+        "Google Play Store/Redemption History": None,
+        "My Activity/Takeout/MyActivity.html": None,
         "YouTube and YouTube Music/videos": None,
         "Contacts": None,  # TODO: implement, need to parse vcf files
         "Location History/Semantic Location History": None,  # TODO: parse
