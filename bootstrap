@@ -40,8 +40,15 @@ install_python_extras() {
 
 setup_arctree() {
 	if which arctree; then
-		echo "arctree is already installed"
-		return
+		# make sure its not an empty file for some reason, maybe curl failed and overwrote to nothing; have had some issues
+		ARCTREE_CONTENTS="$(wc -l <"$(which arctree)")"
+		if ((ARCTREE_CONTENTS > 20)); then
+			echo "arctree is already installed"
+			return
+		else
+			echo "Error! arctree seems to exist but the installation seems to be broken"
+			return 1
+		fi
 	fi
 	echo "Installing arctree..."
 	local INSTALL_INTO="${HOME}/.local/bin"
