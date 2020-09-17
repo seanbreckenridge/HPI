@@ -84,15 +84,27 @@ def _merge_histories(*sources: Results) -> Results:
 
 
 def _parse_file(histfile: Path) -> Results:
-    with open(histfile, "r") as f:
-        csv_reader = csv.reader(f, delimiter=",")
-        for row in csv_reader:
-            yield Entry(
-                dt=datetime.fromtimestamp(int(row[0]), tz=timezone.utc),
-                duration=int(row[1]),
-                application=row[2],
-                window_title=row[3],
-            )
+    with histfile.open("r", encoding='utf-8', newline='') as f:
+        csv_reader = csv.reader(f, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        # last_row = None
+        while True:
+            try:
+                row = next(csv_reader)
+                # last_row = row
+                yield Entry(
+                    dt=datetime.fromtimestamp(int(row[0]), tz=timezone.utc),
+                    duration=int(row[1]),
+                    application=row[2],
+                    window_title=row[3],
+                )
+            except csv.Error as e:
+                # some lines contain the NUL byte for some reason... ??
+                # seems to be x-lib/encoding errors causing malformed application/file names
+                # catch those and ignore them
+                # print(last_row)
+                pass
+            except StopIteration:
+                return
 
 
 def stats():

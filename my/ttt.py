@@ -83,8 +83,10 @@ def _merge_histories(*sources: Results) -> Results:
 
 
 def _parse_file(histfile: Path) -> Results:
-    with open(histfile, "r") as f:
-        csv_reader = csv.reader(f, delimiter=",")
+    # TODO: helper function to read 'regular' QUOTE_MINIMAL csv files
+    # without failing due to encoding errors?
+    with histfile.open("r", encoding='utf-8', newline='') as f:
+        csv_reader = csv.reader(f, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
         for row in csv_reader:
             yield Entry(
                 dt=datetime.fromtimestamp(int(row[0]), tz=timezone.utc),
