@@ -84,8 +84,31 @@ def inputs() -> Sequence[Path]:
     return get_files(config.export_path)
 
 
-def history(from_paths=inputs) -> Results:
+def all_history(from_paths=inputs) -> Results:
     yield from chain(*map(_read_event_stream, from_paths()))
+
+# filter out items I probably didn't listen to
+def history(from_paths=inputs) -> Results:
+    yield from filter(_actually_listened_to, all_history(from_paths))
+
+# use some of the context of what this piece of media
+# is to figure out if I actually watched/listened to it.
+# I may have skipped a song if it only has a couple
+# seconds between when it started/ended
+def _actually_listened_to(m: Media) -> bool:
+    listen_time: float = (m.end_time - m.start_time).total_seconds() - m.pause_duration
+    if m.is_stream:
+        # If I listened to more than 3 minutes
+        return listen_time > 180
+    else:
+        if m.media_duration is not None and m.media_duration > 0.5:
+            percentage_listened_to = listen_time / m.media_duration
+            # if I listened to more than 60% of the media duration or 10 minutes
+            return percentage_listened_to > 0.6 or listen_time > 600
+        else:
+            return listen_time > 60 # listened to more than a minute
+
+
 
 
 def _read_event_stream(p: Path) -> Results:
