@@ -63,7 +63,7 @@ def _extract_messages(path: Path) -> Iterator[Message]:
             who=mxml.get("contact_name"),
             message=mxml.get("body"),
             phone_number=mxml.get("address"),
-            from_me=mxml.get("type") == "2",  # 1 is recieved message, 2 is sent message
+            from_me=mxml.get("type") == "2",  # 1 is received message, 2 is sent message
         )
 
 
