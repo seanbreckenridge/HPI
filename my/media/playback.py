@@ -87,9 +87,11 @@ def inputs() -> Sequence[Path]:
 def all_history(from_paths=inputs) -> Results:
     yield from chain(*map(_read_event_stream, from_paths()))
 
+
 # filter out items I probably didn't listen to
 def history(from_paths=inputs) -> Results:
     yield from filter(_actually_listened_to, all_history(from_paths))
+
 
 # use some of the context of what this piece of media
 # is to figure out if I actually watched/listened to it.
@@ -106,9 +108,7 @@ def _actually_listened_to(m: Media) -> bool:
             # if I listened to more than 60% of the media duration or 10 minutes
             return percentage_listened_to > 0.6 or listen_time > 600
         else:
-            return listen_time > 60 # listened to more than a minute
-
-
+            return listen_time > 60  # listened to more than a minute
 
 
 def _read_event_stream(p: Path) -> Results:

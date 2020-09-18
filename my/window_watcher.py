@@ -84,8 +84,10 @@ def _merge_histories(*sources: Results) -> Results:
 
 
 def _parse_file(histfile: Path) -> Results:
-    with histfile.open("r", encoding='utf-8', newline='') as f:
-        csv_reader = csv.reader(f, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    with histfile.open("r", encoding="utf-8", newline="") as f:
+        csv_reader = csv.reader(
+            f, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
+        )
         # last_row = None
         while True:
             try:
