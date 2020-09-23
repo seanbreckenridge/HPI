@@ -4,7 +4,10 @@ Parses a Google Takeout https://takeout.google.com/
 
 import os
 from pathlib import Path
-from typing import Iterator, NamedTuple, Union, Any
+from typing import Iterator, Union, Any
+
+from .models import HtmlEvent
+from .html import read_html
 
 from ..core.error import Res
 
@@ -13,13 +16,7 @@ from ..core.common import LazyLogger
 logger = LazyLogger(__name__)
 
 
-class AppInstall(NamedTuple):
-    pass
-
-
-Event = Union[
-    AppInstall,
-]
+Event = Union[HtmlEvent]
 
 Results = Iterator[Res[Event]]
 
@@ -34,7 +31,7 @@ def parse_takeout(single_takeout_dir: Path) -> Results:
     # on what you choose to export. Unhandled files will be yielded as a
     # RuntimeError.
     # to implement one, you have to add a prefix match to the handler_map,
-    # and then implement a corresponding function which recieves the filename
+    # and then implement a corresponding function which receives the filename
     # and parses it into whatever events you want.
 
     # I select:
@@ -55,7 +52,7 @@ def parse_takeout(single_takeout_dir: Path) -> Results:
         "Google Photos": None,  # implemented in photos.py
         "Google Play Store/Devices": None,  # not that interesting
         "archive_browser.html": None,  # description of takeout, not useful
-        "Google Play Store/Installs": _parse_google_play_installs,  # TODO: parse
+        "Google Play Store/Installs": None,  # TODO: parse
         "Google Play Store/Library": None,
         "Google Play Store/Purchase History": None,
         "Google Play Store/Subscriptions": None,
@@ -69,37 +66,40 @@ def parse_takeout(single_takeout_dir: Path) -> Results:
         "YouTube and YouTube Music/history/watch-history": None,  # TODO: parse
         "YouTube and YouTube Music/my-comments": None,  # TODO: parse
         "YouTube and YouTube Music/my-live-chat-messages": None,  # TODO: parse
-        "YouTube and YouTube Music/playlists/likes.json": _parse_likes,  # TODO: parse
+        "YouTube and YouTube Music/playlists/likes.json": None,  # TODO: parse
         "YouTube and YouTube Music/playlists/": None,  # dicts are ordered, so the rest of the stuff is ignored
-        "YouTube and YouTube Music/subscriptions": _parse_subscriptions,  # TODO: parse
-        "My Activity/Ads": _parse_ads,  # TODO: parse
-        "My Activity/Android": None,  # TODO: parse
-        "My Activity/Assistant": None,  # TODO: parse
-        "My Activity/Books": None,  # TODO: parse
-        "My Activity/Chrome": None,  # TODO: parse
-        "My Activity/Drive": None,
-        "My Activity/Developers": None,  # TODO: parse
-        "My Activity/Discover": None,  # TODO: parse
-        "My Activity/Gmail": None,  # TODO: parse
-        "My Activity/Google Analytics": None,  # TODO: parse
-        "My Activity/Google Apps": None,
-        "My Activity/Google Cloud": None,  # TODO: parse
-        "My Activity/Google Play Music": None,
-        "My Activity/Google Cloud": None,  # TODO: parse
-        "My Activity/Google Play Store": None,  # TODO: parse
-        "My Activity/Help": None,  # TODO: parse
-        "My Activity/Image Search": None,  # TODO: parse
-        "My Activity/Maps": None,  # TODO: parse
-        "My Activity/News": None,  # TODO: parse
-        "My Activity/Search": None,  # TODO: parse
-        "My Activity/Shopping": None,
-        "My Activity/Video Search": None,  # TODO: parse
-        "My Activity/YouTube": None,  # TODO: parse
+        "YouTube and YouTube Music/subscriptions": None,  # TODO: parse
+        "My Activity/Ads": _parse_html_activity,
+        "My Activity/Android": _parse_html_activity,
+        "My Activity/Assistant": _parse_html_activity,
+        "My Activity/Books": _parse_html_activity,
+        "My Activity/Chrome": _parse_html_activity,
+        "My Activity/Drive": _parse_html_activity,
+        "My Activity/Developers": _parse_html_activity,
+        "My Activity/Discover": _parse_html_activity,
+        "My Activity/Gmail": _parse_html_activity,
+        "My Activity/Google Analytics": _parse_html_activity,
+        "My Activity/Google Apps": _parse_html_activity,
+        "My Activity/Google Cloud": _parse_html_activity,
+        "My Activity/Google Play Music": _parse_html_activity,
+        "My Activity/Google Cloud": _parse_html_activity,
+        "My Activity/Google Play Store": _parse_html_activity,
+        "My Activity/Help": _parse_html_activity,
+        "My Activity/Image Search": _parse_html_activity,
+        "My Activity/Maps": _parse_html_activity,
+        "My Activity/News": _parse_html_activity,
+        "My Activity/Search": _parse_html_activity,
+        "My Activity/Shopping": _parse_html_activity,
+        "My Activity/Video Search": _parse_html_activity,
+        "My Activity/YouTube": _parse_html_activity,
     }
     for f in single_takeout_dir.rglob("*"):
         handler: Any
         for prefix, h in handler_map.items():
-            if not str(f).startswith(os.path.join(single_takeout_dir, prefix)):
+            if (
+                not str(f).startswith(os.path.join(single_takeout_dir, prefix))
+                and f.is_file()
+            ):
                 continue
             handler = h
             break
@@ -119,17 +119,6 @@ def parse_takeout(single_takeout_dir: Path) -> Results:
         yield from handler(f)
 
 
-def _parse_google_play_installs(f: Path) -> Iterator[AppInstall]:
-    yield None
-
-
-def _parse_likes(f: Path):
-    yield None
-
-
-def _parse_subscriptions(f: Path):
-    yield None
-
-
-def _parse_ads(f: Path):
-    yield None
+# TODO: cachew
+def _parse_html_activity(p: Path) -> Iterator[HtmlEvent]:
+    yield from read_html(p)

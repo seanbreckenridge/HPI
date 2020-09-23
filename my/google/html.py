@@ -2,15 +2,18 @@
 Google Takeout exports: browsing history, search/youtube/google play activity
 """
 
-from enum import Enum
-import re
+import warnings
 from pathlib import Path
 from datetime import datetime
-from html.parser import HTMLParser
-from typing import List, Optional, Any, Callable, Iterable, Tuple
-from collections import OrderedDict
+from typing import List, Any, Iterator
 from urllib.parse import unquote
+from itertools import chain
+
+import lxml.html as lh
 import pytz
+from more_itertools import sliced
+
+from .models import Metadata, HtmlEvent
 
 from ..core.time import abbr_to_timezone
 
@@ -46,102 +49,74 @@ def test_parse_dt():
     parse_dt("Sep 10, 2019, 8:51:45 PM MSK")
 
 
-class State(Enum):
-    OUTSIDE = 0
-    INSIDE = 1
-    PARSING_LINK = 2
-    PARSING_DATE = 3
+def get_hrefs(el: lh.HtmlElement) -> Iterator[str]:
+    for a in el.findall("a"):
+        for k, v in a.items():
+            if k == "href":
+                yield v
 
 
-Url = str
-Title = str
-Parsed = Tuple[datetime, Url, Title]
-Callback = Callable[[datetime, Url, Title], None]
+def clean_latin1_chars(s: str):
+    return s.replace("\xa0", "").replace("\u2003", "")
 
 
-# would be easier to use beautiful soup, but ends up in a big memory footprint..
-class TakeoutHTMLParser(HTMLParser):
-    def __init__(self, callback: Callback) -> None:
-        super().__init__()
-        self.state: State = State.OUTSIDE
-
-        self.title_parts: List[str] = []
-        self.title: Optional[str] = None
-        self.url: Optional[str] = None
-
-        self.callback = callback
-
-    # enter content cell -> scan link -> scan date -> finish till next content cell
-    def handle_starttag(self, tag, attrs):
-        if self.state == State.INSIDE and tag == "a":
-            self.state = State.PARSING_LINK
-            attrs = OrderedDict(attrs)
-            hr = attrs["href"]
-
-            # sometimes it's starts with this prefix, it's apparently clicks from google search? or visits from chrome address line? who knows...
-            # TODO handle http?
-            prefix = r"https://www.google.com/url?q="
-            if hr.startswith(prefix + "http"):
-                hr = hr[len(prefix) :]
-                hr = unquote(hr)  # TODO not sure about that...
-            assert self.url is None
-            self.url = hr
-
-    def handle_endtag(self, tag):
-        if self.state == State.PARSING_LINK and tag == "a":
-            assert self.title is None
-            assert len(self.title_parts) > 0
-            self.title = "".join(self.title_parts)
-            self.title_parts = []
-
-            self.state = State.PARSING_DATE
-
-    # search example:
-    # Visited Emmy Noether - Wikipedia
-    # Dec 17, 2018, 8:16:18 AM UTC
-
-    # youtube example:
-    # Watched Jamie xx - Gosh
-    # JamiexxVEVO
-    # Jun 21, 2018, 5:48:34 AM
-    # Products:
-    #  YouTube
-    def handle_data(self, data):
-        if self.state == State.OUTSIDE:
-            if data[:-1].strip() in ("Watched", "Visited"):
-                self.state = State.INSIDE
-                return
-
-        if self.state == State.PARSING_LINK:
-            self.title_parts.append(data)
-            return
-
-        # TODO extracting channel as part of wereyouhere could be useful as well
-        # need to check for regex because there might be some stuff in between
-        if self.state == State.PARSING_DATE and re.search(r"\d{4}.*:.*:", data):
-            time = parse_dt(data.strip())
-            assert time.tzinfo is not None
-
-            assert self.url is not None
-            assert self.title is not None
-            self.callback(time, self.url, self.title)
-            self.url = None
-            self.title = None
-
-            self.state = State.OUTSIDE
-            return
+def itertext_range(el: lh.HtmlElement) -> Iterator[str]:
+    # \xa0 is latin1 encoded space
+    yield from map(clean_latin1_chars, el.itertext())
 
 
-def read_html(tpath: Path, file: str) -> Iterable[Parsed]:
-    from ..kython.kompress import kopen
+def itertext(el: lh.HtmlElement) -> str:
+    return " ".join(list(itertext_range(el)))
 
-    results: List[Parsed] = []
 
-    def cb(dt: datetime, url: Url, title: Title) -> None:
-        results.append((dt, url, title))
+def parse_div(div: lh.HtmlElement):
+    title = div.cssselect("p.mdl-typography--title")[0].text_content()
+    # remove text-right items, they're blank and for spaces
+    content_cells: List[lh.HtmlElement] = list(
+        filter(
+            lambda d: "mdl-typography--text-right" not in d.classes,
+            div.cssselect(".content-cell"),
+        )
+    )
+    if len(content_cells) != 2:
+        return RuntimeError(
+            "Expected 2 content divs while parsing, found {}: {}".format(
+                len(content_cells), div.text_content()
+            )
+        )
+    # describes what the action is, last item here is the date
+    content_description: List[str] = list(itertext_range(content_cells[0]))
+    # parse date
+    date = None
+    if len(content_description) > 1:
+        date = parse_dt(content_description.pop())
+    else:
+        warnings.warn(
+            f"Didn't extract more than one text node from {title} {itertext(content_cells[0])}"
+        )
+    content_desc: str = " ".join(content_description)
 
-    parser = TakeoutHTMLParser(callback=cb)
-    with kopen(tpath, file) as fo:
-        data = fo.read()
-        parser.feed(data)
-    return results
+    # split into key-value pairs of product: productname, Location: location etc.
+    captions: List[Metadata] = [tuple(key_val) for key_val in sliced(list(itertext_range(content_cells[1])), 2)]  # type: ignore
+    # note mypy cant coerce it into elements of two even though its slicing
+
+    # iterate all links
+    content_links: List[str] = [
+        unquote(ainfo[2])
+        for ainfo in chain(*map(lambda el: el.iterlinks(), content_cells))
+    ]
+
+    return HtmlEvent(
+        service=title,
+        desc=content_desc,
+        metadata=captions,
+        links=content_links,
+        at=date,
+    )
+
+
+def read_html(p: Path):
+    # this is gonna be cached behind cachew anyways
+    doc = lh.fromstring(p.read_text())
+    for outer_div in doc.cssselect("div.outer-cell"):
+        yield parse_div(outer_div)

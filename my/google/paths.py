@@ -48,15 +48,12 @@ def get_last_takeout(*, path: Optional[str] = None) -> Path:
 # if there are any new takeouts, warn me
 def check_for_new_takeouts():
     if config.google_drive_local_path:
-        new_takeouts = list(Path(config.google_drive_local_path).expanduser().absolute().rglob("*"))
+        new_takeouts = list(
+            Path(config.google_drive_local_path).expanduser().absolute().rglob("*")
+        )
         if new_takeouts:
             # this may be temporary, once I'm confident the script works fine over
             # some period, I'll just automate this
             warnings.warn(
                 f"Theres a new takeout at {new_takeouts[0]}, run ./scripts/unzip_google_takeout to update the data!"
             )
-
-
-# TODO might be a good idea to merge across multiple takeouts...
-# perhaps even a special takeout module that deals with all of this automatically?
-# e.g. accumulate, filter and maybe report useless takeouts?
