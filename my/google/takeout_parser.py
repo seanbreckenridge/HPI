@@ -120,5 +120,5 @@ def parse_takeout(single_takeout_dir: Path) -> Results:
 
 
 # TODO: cachew
-def _parse_html_activity(p: Path) -> Iterator[HtmlEvent]:
+def _parse_html_activity(p: Path) -> Iterator[Res[HtmlEvent]]:
     yield from read_html(p)

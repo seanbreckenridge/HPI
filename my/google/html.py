@@ -15,6 +15,7 @@ from more_itertools import sliced
 
 from .models import Metadata, HtmlEvent
 
+from ..core.error import Res
 from ..core.time import abbr_to_timezone
 
 # Mar 8, 2018, 5:14:40 PM
@@ -69,7 +70,7 @@ def itertext(el: lh.HtmlElement) -> str:
     return " ".join(list(itertext_range(el)))
 
 
-def parse_div(div: lh.HtmlElement):
+def parse_div(div: lh.HtmlElement) -> Res[HtmlEvent]:
     title = div.cssselect("p.mdl-typography--title")[0].text_content()
     # remove text-right items, they're blank and for spaces
     content_cells: List[lh.HtmlElement] = list(
@@ -87,9 +88,11 @@ def parse_div(div: lh.HtmlElement):
     # describes what the action is, last item here is the date
     content_description: List[str] = list(itertext_range(content_cells[0]))
     # parse date
-    date = None
     if len(content_description) > 1:
-        date = parse_dt(content_description.pop())
+        try:
+            date = parse_dt(content_description.pop())
+        except Exception as e:
+            return RuntimeError("Failure parsing date: {}".format(str(e)))
     else:
         warnings.warn(
             f"Didn't extract more than one text node from {title} {itertext(content_cells[0])}"
@@ -115,7 +118,7 @@ def parse_div(div: lh.HtmlElement):
     )
 
 
-def read_html(p: Path):
+def read_html(p: Path) -> Iterator[Res[HtmlEvent]]:
     # this is gonna be cached behind cachew anyways
     doc = lh.fromstring(p.read_text())
     for outer_div in doc.cssselect("div.outer-cell"):
