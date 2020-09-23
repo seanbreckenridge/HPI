@@ -57,6 +57,7 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 ### TODO:
 
 - [ ] connect current balance/transactions through my [mint](https://github.com/seanbreckenridge/mint)
+- [ ] apple data
 - [ ] android app to track my location?
 - [ ] backup trakt? (have API access)
 - [ ] backup MAL (ugh)
