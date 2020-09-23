@@ -4,15 +4,28 @@ cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
 
 readonly DATA_DIR="${HOME}/data"
 
-require() {
+# get the name of this script
+declare script_name
+script_name='HPI'
+
+# function to verify an external command is installed
+havecmd() {
+	local BINARY ERRMSG
+	# error if first argument isn't provided
 	BINARY="${1:?Must provide command to check}"
-	if which "$BINARY" >/dev/null 2>&1; then
+	# the commend exists, exit with 0 (success!)
+	if command -v "$BINARY" >/dev/null 2>&1; then
 		return 0
 	else
-		printf "Could not find '%s' on your \$PATH\n" "$BINARY"
+		# construct error message
+		ERRMSG="'$script_name' requires '$BINARY', could not find that on your \$PATH"
+		if [[ -n "$2" ]]; then
+			ERRMSG="$ERRMSG. $2"
+		fi
+		printf '%s\n' "$ERRMSG" 1>&2
 		return 1
 	fi
-} && export -f require
+} && export -f havecmd
 
 clone_if_not_exists() {
 	if [[ ! -d "$2" ]]; then
@@ -66,9 +79,9 @@ setup_arctree() {
 }
 
 set -e
-require bgproc            # https://github.com/seanbreckenridge/bgproc
-require wait-for-internet # https://github.com/seanbreckenridge/wait-for-internet
-require evry              # https://github.com/seanbreckenridge/evry
+havecmd bgproc "Install from https://github.com/seanbreckenridge/bgproc"
+havecmd wait-for-internet " Install from https://github.com/seanbreckenridge/wait-for-internet"
+havecmd evry "Install from https://github.com/seanbreckenridge/evry"
 set +e
 
 wait-for-internet
