@@ -99,7 +99,7 @@ def _parse_file(histfile: Path) -> Results:
                     application=row[2],
                     window_title=row[3],
                 )
-            except csv.Error as e:
+            except csv.Error:
                 # some lines contain the NUL byte for some reason... ??
                 # seems to be x-lib/encoding errors causing malformed application/file names
                 # catch those and ignore them
