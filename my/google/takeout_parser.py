@@ -3,6 +3,7 @@ Parses a Google Takeout https://takeout.google.com/
 """
 
 import os
+import string
 from pathlib import Path
 from typing import Iterator, Union, Any
 
@@ -11,7 +12,7 @@ from .html import read_html
 
 from ..core.error import Res
 
-from ..core.common import LazyLogger
+from ..core.common import LazyLogger  # , mcachew
 
 logger = LazyLogger(__name__)
 
@@ -19,6 +20,10 @@ logger = LazyLogger(__name__)
 Event = Union[HtmlEvent]
 
 Results = Iterator[Res[Event]]
+
+CACHEW_PATH = "/tmp/google_html"
+if not os.path.exists(CACHEW_PATH):
+    os.makedirs(CACHEW_PATH)
 
 # this currently only parses one takeout
 # will probably be extended to merge multiple when I
@@ -119,6 +124,12 @@ def parse_takeout(single_takeout_dir: Path) -> Results:
         yield from handler(f)
 
 
-# TODO: cachew
+def _activity_hash(p: Path) -> str:
+    full_path: str = str(p)
+    alpha_chars = "".join(filter(lambda y: y in string.ascii_letters, full_path))
+    return os.path.join(CACHEW_PATH, alpha_chars)
+
+
+# @mcachew(cache_path=_activity_hash, hashf=lambda p: str(p))
 def _parse_html_activity(p: Path) -> Iterator[Res[HtmlEvent]]:
     yield from read_html(p)
