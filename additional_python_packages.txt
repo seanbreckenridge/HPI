@@ -13,3 +13,4 @@ pytest
 pytest-random-order
 Pillow
 lxml
+magic

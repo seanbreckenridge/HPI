@@ -7,18 +7,16 @@ Photos and videos on your filesystem, their GPS and timestamps
 # reminder: facebook photos?
 # reminder: google photos?
 
-# pip install geopy magic
-
-from datetime import datetime
 import json
+from datetime import datetime
 from pathlib import Path
-from typing import Optional, NamedTuple, Iterator, Iterable, List
+from typing import Optional, NamedTuple, Iterator, Iterable, List, Callable, Tuple
 
-from geopy.geocoders import Nominatim  # type: ignore
+from ..core import PathIsh, Paths
+from ..core.common import LazyLogger, mcachew, fastermime
+from ..core.error import Res
 
-from ..common import LazyLogger, mcachew, fastermime
-from ..error import Res
-
+# see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import photos as config
 
 
@@ -53,10 +51,6 @@ class Photo(NamedTuple):
     def name(self) -> str:
         return self._basename.strip("/")
 
-    @property
-    def url(self) -> str:
-        return f"{config.base_url}{self._basename}"
-
 
 from .utils import get_exif_from_file, ExifTags, Exif, dt_from_path, convert_ref
 
@@ -64,7 +58,7 @@ Result = Res[Photo]
 
 
 def _make_photo(
-    photo: Path, mtype: str, *, parent_geo: Optional[LatLon]
+    photo: Path, mtype: str,
 ) -> Iterator[Result]:
     exif: Exif
     if any(x in mtype for x in {"image/png", "image/x-ms-bmp", "video"}):
@@ -81,7 +75,7 @@ def _make_photo(
                 lat=convert_ref(meta[ExifTags.LAT], meta[ExifTags.LAT_REF]),
                 lon=convert_ref(meta[ExifTags.LON], meta[ExifTags.LON_REF]),
             )
-        return parent_geo
+        return None
 
     # TODO aware on unaware?
     def _get_dt() -> Optional[datetime]:
@@ -94,14 +88,6 @@ def _make_photo(
                 dt = datetime.strptime(dtimes, "%Y:%m:%d %H:%M:%S")
                 # TODO timezone is local, should take into account...
                 return dt
-
-        if "Instagram/VID_" in str(photo):
-            # TODO bit random...
-            log.warning(
-                "ignoring timestamp extraction for %s, they are stupid for Instagram videos",
-                photo,
-            )
-            return None
 
         edt = dt_from_path(photo)  # ok, last try..
 
@@ -121,6 +107,19 @@ def _make_photo(
     yield Photo(str(photo), dt=dt, geo=geo)
 
 
+# the user defines a list of PathIsh things in hpi config
+# this just converts them to strings, so it can
+# be passed to the subprocess
+def _normalize_paths(paths: List[PathIsh]) -> Iterator[str]:
+    for pt in paths:
+        p = None
+        if isinstance(pt, Path):
+            p = pt
+        else:
+            p = Path(pt)
+        yield str(p.expanduser().absolute())
+
+
 # TODO exclude
 def _candidates() -> Iterable[str]:
     # TODO that could be a bit slow if there are to many extra files?
@@ -129,12 +128,12 @@ def _candidates() -> Iterable[str]:
     # TODO could extract this to common?
     with Popen(
         [
-            "fdfind",
+            "fd",
             "--follow",
             "-t",
             "file",
             ".",
-            *config.paths,
+            *_normalize_paths(config.paths),
         ],
         stdout=PIPE,
     ) as p:
@@ -160,41 +159,21 @@ def photos() -> Iterator[Result]:
     # I guess need lazy variables or something?
 
 
-# if geo information is missing from photo, you can specify it manually in geo.json file
 # TODO is there something more standard?
-@mcachew(cache_path=config.cache_path)
+# @mcachew(cache_path=config.cache_path)
 def _photos(candidates: Iterable[str]) -> Iterator[Result]:
-    geolocator = Nominatim()  # TODO does it cache??
-
-    from functools import lru_cache
-
-    @lru_cache(None)
-    def get_geo(d: Path) -> Optional[LatLon]:
-        geof = d / "geo.json"
-        if not geof.exists():
-            if d == d.parent:
-                return None
-            else:
-                return get_geo(d.parent)
-
-        j = json.loads(geof.read_text())
-        if "name" in j:
-            g = geolocator.geocode(j["name"])
-            lat = g.latitude
-            lon = g.longitude
-        else:
-            lat = j["lat"]
-            lon = j["lon"]
-        return LatLon(lat=lat, lon=lon)
 
     for path in map(Path, candidates):
         if config.ignored(path):
             log.info("ignoring %s due to config", path)
             continue
 
-        parent_geo = get_geo(path.parent)
+        print(path)
+
+        # WHY?? dont get why we're doing this
+        # parent_geo = get_geo(path.parent)
         mime = fastermime(str(path))
-        yield from _make_photo(path, mime, parent_geo=parent_geo)
+        yield from _make_photo(path, mime)
 
 
 def print_all():
