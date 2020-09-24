@@ -53,11 +53,11 @@ def test_parse_dt():
 
 
 def clean_latin1_chars(s: str):
+    # these are latin1 encoded space characters
     return s.replace("\xa0", "").replace("\u2003", "")
 
 
 def itertext_range(el: lh.HtmlElement) -> Iterator[str]:
-    # \xa0 is latin1 encoded space
     yield from map(clean_latin1_chars, el.itertext())
 
 
