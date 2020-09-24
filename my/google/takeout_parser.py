@@ -3,7 +3,6 @@ Parses a Google Takeout https://takeout.google.com/
 """
 
 import os
-import string
 import json
 from pathlib import Path
 from datetime import datetime, timezone
@@ -14,7 +13,7 @@ from .html import read_html_activity, read_html_li
 
 from ..core.error import Res
 
-from ..core.common import LazyLogger, mcachew
+from ..core.common import LazyLogger, cachewpath
 
 logger = LazyLogger(__name__, level="warning")
 
@@ -29,9 +28,6 @@ Event = Union[
 
 Results = Iterator[Res[Event]]
 
-CACHEW_PATH = "/tmp/google_html"
-if not os.path.exists(CACHEW_PATH):
-    os.makedirs(CACHEW_PATH)
 
 # this currently only parses one takeout
 # will probably be extended to merge multiple when I
@@ -168,18 +164,13 @@ def _parse_likes(p: Path) -> Iterator[LikedVideo]:
         )
 
 
-def _activity_hash(p: Path) -> str:
-    full_path: str = str(p)
-    alpha_chars = "".join(
-        filter(lambda y: y in string.ascii_letters + string.digits, full_path)
-    )
-    return os.path.join(CACHEW_PATH, alpha_chars)
-
-
 def _parse_html_chat_li(p: Path) -> Iterator[Res[HtmlEvent]]:
     yield from read_html_li(p)
 
 
-@mcachew(cache_path=_activity_hash, logger=logger, hashf=lambda p: str(p))
+CACHEW_PATH = "/tmp/google_html"
+
+
+@cachewpath(cache_path_base=CACHEW_PATH, logger=logger)
 def _parse_html_activity(p: Path) -> Iterator[Res[HtmlEvent]]:
     yield from read_html_activity(p)

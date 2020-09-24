@@ -4,12 +4,11 @@ Git commits data for repositories on your filesystem
 
 
 import os
-import string
 from pathlib import Path
 from datetime import datetime, timezone
 from typing import List, NamedTuple, Optional, Iterator, Set
 
-from ..core.common import PathIsh, LazyLogger, mcachew, get_files
+from ..core.common import PathIsh, LazyLogger, cachewpath, get_files
 from my.config import commits as config
 
 # pip3 install gitpython
@@ -186,10 +185,10 @@ def _commits(_repos: List[Path]) -> Iterator[Commit]:
         yield from _cached_commits(r)
 
 
-@mcachew(
+@cachewpath(
     hashf=_repo_hashf,
     logger=log,
-    cache_path=lambda repo_path: f'{CACHEW_PATH}/{"".join(filter(lambda c: c in string.ascii_letters + string.digits, str(repo_path)))}',
+    cache_path_base=CACHEW_PATH,
 )
 def _cached_commits(_repo: Path) -> Iterator[Commit]:
     log.info("processing %s", _repo)
