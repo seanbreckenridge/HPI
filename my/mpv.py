@@ -9,7 +9,7 @@ from my.config import mpv as user_config  # type: ignore
 
 from dataclasses import dataclass
 
-from ..core import Paths
+from .core import Paths
 
 
 @dataclass
@@ -18,7 +18,7 @@ class mpv(user_config):
     export_path: Paths
 
 
-from ..core.cfg import make_config
+from .core.cfg import make_config
 
 config = make_config(mpv)
 
@@ -32,7 +32,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterator, Sequence, NamedTuple, Set, Any, Dict, Tuple, Optional
 
-from ..core.common import get_files, LazyLogger
+from .core.common import get_files, LazyLogger
 
 logger = LazyLogger(__name__, level="INFO")
 
@@ -73,7 +73,7 @@ Results = Iterator[Media]
 
 
 def stats():
-    from ..core import stat
+    from .core import stat
 
     return {
         **stat(history),

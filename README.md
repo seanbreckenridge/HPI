@@ -33,7 +33,7 @@ It's a Python library (named `my`), a collection of modules for:
 - `my.coding` to track git commits across the system
 - `my.todotxt`, to track my to-do list history
 - `my.browsing`, using my [`ffexport`](https://github.com/seanbreckenridge/ffexport) tool to backup/parse firefox history
-- `my.media.playback`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-sockets/blob/master/DAEMON.md)
+- `my.mpv`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-sockets/blob/master/DAEMON.md)
 - `my.ipython`, for timestamped python REPL history
 - `my.smscalls`, exports phone/SMS history using [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore&hl=en_US)
 - `my.google`, parses lots of (~250,000) events (youtube, searches, phone usage, comments, location history) from [google takeouts](https://takeout.google.com/)
@@ -105,8 +105,8 @@ What websites do I visit most?
 Song I've listened to most?
 
 ```python
->>> import collections, my.media.playback
->>> collections.Counter([m.path for m in my.media.playback.history()]).most_common(1)[0]
+>>> import collections, my.mpv
+>>> collections.Counter([m.path for m in my.playback.history()]).most_common(1)[0]
 ('/home/sean/Music/Toby Fox/Toby Fox - UNDERTALE Soundtrack (2015) [V0]/085 - Fallen Down (Reprise).mp3', 8)
 ```
 
