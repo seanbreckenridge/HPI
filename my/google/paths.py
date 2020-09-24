@@ -4,9 +4,10 @@ Module for locating and accessing [[https://takeout.google.com][Google Takeout]]
 
 from dataclasses import dataclass
 from typing import Optional
-from ..core.common import Paths
 
 from my.config import google as user_config
+
+from ..core.common import Paths
 
 
 @dataclass

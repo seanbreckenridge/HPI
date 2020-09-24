@@ -4,9 +4,10 @@ Google Takeout exports: browsing history, search/youtube/google play activity
 
 import warnings
 import re
+import json
 from pathlib import Path
 from datetime import datetime, timezone
-from typing import List, Any, Iterator
+from typing import List, Any, Iterator, Optional
 from urllib.parse import unquote
 from itertools import chain
 
@@ -14,7 +15,7 @@ import lxml.html as lh
 import pytz
 from more_itertools import sliced
 
-from .models import Metadata, HtmlEvent, HtmlComment
+from .models import HtmlEvent, HtmlComment
 
 from ..core.error import Res
 from ..core.time import abbr_to_timezone
@@ -97,9 +98,18 @@ def parse_div(div: lh.HtmlElement) -> Res[HtmlEvent]:
         )
     content_desc: str = " ".join(content_description)
 
+    # TODO: parse this nicely? feels like this is good enough, especially behind cachew
     # split into key-value pairs of product: productname, Location: location etc.
-    captions: List[Metadata] = [tuple(key_val) for key_val in sliced(list(itertext_range(content_cells[1])), 2)]  # type: ignore
-    # note mypy cant coerce it into elements of two even though its slicing
+    # just extract the product name
+    kv_lists = list(sliced(list(itertext_range(content_cells[1])), 2))
+    product_name: Optional[str] = None
+    for kv in kv_lists:
+        # should be a key, like Location:, Product
+        # just grab the product name
+        if len(kv) == 2:
+            if "Products:" == kv[0]:
+                product_name = kv[1].strip()
+                break
 
     # iterate all links
     content_links: List[str] = list(chain(*map(get_links, content_cells)))
@@ -107,8 +117,8 @@ def parse_div(div: lh.HtmlElement) -> Res[HtmlEvent]:
     return HtmlEvent(
         service=title,
         desc=content_desc,
-        metadata=captions,
-        links=content_links,
+        product_name=product_name,
+        links=json.dumps(content_links),
         at=date,
     )
 
@@ -149,4 +159,6 @@ def read_html_li(p: Path) -> Iterator[Res[HtmlComment]]:
         if isinstance(parsed_date, Exception):
             yield parsed_date
         else:
-            yield HtmlComment(desc=description, links=get_links(li), at=parsed_date)
+            yield HtmlComment(
+                desc=description, links=json.dumps(get_links(li)), at=parsed_date
+            )

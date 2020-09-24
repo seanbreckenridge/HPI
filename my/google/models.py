@@ -1,28 +1,39 @@
+import json
 from datetime import datetime
-from typing import List, NamedTuple, Tuple
+from typing import Any, NamedTuple, Optional
+from dataclasses import dataclass
 
-Metadata = Tuple[str, str]  # key-value pair from html caption
+
+# to make this cachew compliant
+def _parse_json_attr(el, attr: str):
+    json_str: str = getattr(el, attr)
+    json_obj: Any = json.loads(json_str)
+    setattr(el, attr, json_obj)
 
 
-# need to do some analysis on the metadata/links once its all parsed
-# to see if it can be simplified into an ADT which doesnt have
-# variant lists
-#
-# perhaps this should be encoded into another namedtuple, becuase it takes
-# a sizable amount of time to parse the HTMl pages, would really benifit
-# from cachew
-class HtmlEvent(NamedTuple):
+@dataclass
+class HtmlEvent:
     service: str
     desc: str
-    metadata: List[Metadata]
-    links: List[str]
     at: datetime
+    product_name: Optional[str]
+    # json serialized arrays/objects
+    links: str
+
+    # called after imported into repl, to convert back to the python objects
+    def parse_json(self):
+        _parse_json_attr(self, "links")
 
 
-class HtmlComment(NamedTuple):
+@dataclass
+class HtmlComment:
     desc: str
-    links: List[str]
     at: datetime
+    # json serialized arrays
+    links: str
+
+    def parse_json(self):
+        _parse_json_attr(self, "links")
 
 
 # not sure about this namedtuple structure

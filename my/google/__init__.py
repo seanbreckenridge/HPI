@@ -40,9 +40,8 @@ def events() -> Results:
 
 
 def stats():
-    pass
-    # from .core import stat
+    from ..core import stat
 
-    # return {
-    #    **stat(events),
-    # }
+    return {
+        **stat(events),
+    }
