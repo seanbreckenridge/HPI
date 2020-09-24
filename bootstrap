@@ -97,3 +97,14 @@ install_python_extras
 
 bash -x ./scripts/setup_ghexport
 bash -x ./scripts/setup_rexport
+
+# check for some other commands used in ./lint
+set -e
+havecmd realpath
+havecmd flake8
+havecmd black
+havecmd shfmt
+havecmd shellcheck
+havecmd mypy
+havecmd pytest
+set +e

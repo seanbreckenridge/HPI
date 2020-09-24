@@ -55,9 +55,9 @@ prompt() {
 	read -r # if no variable is specified, sets the REPLY environment variable
 }
 
-custom_pyflakes() {
+custom_flake8() {
 	local FLAKE8_OUTPUT FLAKE8_OUTPUT_LENGTH
-	printf "Running pyflakes with:\nignored rules: %s\nIgnored file patterns:\n%s\n" "$FLAKE8_IGNORE" "$(tr ',' '\n' <<<"$FLAKE8_FILES_IGNORE")"
+	printf "Running flake8 with:\nignored rules: %s\nIgnored file patterns:\n%s\n" "$FLAKE8_IGNORE" "$(tr ',' '\n' <<<"$FLAKE8_FILES_IGNORE")"
 	# capture flake8 output so I can determine whether or not there were lines returned
 	# if there were return 1, so it prompts to wait while I look at the error
 	FLAKE8_OUTPUT="$(find my -iname '*.py' -exec flake8 --ignore="$FLAKE8_IGNORE" --extend-exclude="$FLAKE8_FILES_IGNORE" {} +)"
@@ -85,7 +85,7 @@ prompt_black() {
 }
 
 main() {
-	custom_pyflakes || prompt
+	custom_flake8 || prompt
 	pytest "$@" || prompt
 	cleanup_firefox
 	echo "Running mypy..."
