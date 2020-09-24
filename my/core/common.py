@@ -282,7 +282,7 @@ def cachewpath(cache_path_base: str, *args, **kwargs):
         os.makedirs(cache_path_base)
     if not os.path.isdir(cache_path_base):
         warnings.warn(
-            "Expected {} to be a directory, but is isn't".format(cache_path_base)
+            "Expected {} to be a directory, but it isn't".format(cache_path_base)
         )
 
     def _cache_path(p: Path):
