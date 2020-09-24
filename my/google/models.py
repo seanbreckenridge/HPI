@@ -11,32 +11,36 @@ def _parse_json_attr(el, attr: str):
     setattr(el, attr, json_obj)
 
 
+# shared function between Html___ classes that
+# can have one or more links
+# is converted to json string so that it can be
+# cached using cachew
+class JsonLinks:
+
+    # manually called after imported into repl, to convert back to the python objects
+    def parse_json(self):
+        _parse_json_attr(self, "links")
+
+
 @dataclass
-class HtmlEvent:
+class HtmlEvent(JsonLinks):
     service: str
     desc: str
     at: datetime
     product_name: Optional[str]
-    # json serialized arrays/objects
     links: str
-
-    # called after imported into repl, to convert back to the python objects
-    def parse_json(self):
-        _parse_json_attr(self, "links")
+    # links: List[str]
 
 
 @dataclass
-class HtmlComment:
+class HtmlComment(JsonLinks):
     desc: str
     at: datetime
-    # json serialized arrays
     links: str
-
-    def parse_json(self):
-        _parse_json_attr(self, "links")
+    # links: List[str]
 
 
-# not sure about this namedtuple structure
+# not sure about this namedtuple/dataclass structure
 # makes it nicer when Im trying to extract a particular
 # item, but harder to work with on a broad scale
 # maybe implement some @property wrappers
