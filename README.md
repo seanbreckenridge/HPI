@@ -36,7 +36,7 @@ It's a Python library (named `my`), a collection of modules for:
 - `my.media.playback`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-sockets/blob/master/DAEMON.md)
 - `my.ipython`, for timestamped python REPL history
 - `my.smscalls`, exports phone/SMS history using [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore&hl=en_US)
-- (partially) `my.google`, parses lots of (~200,000) events (youtube, searches, phone usage) from [google takeouts](https://takeout.google.com/)
+- `my.google`, parses lots of (~250,000) events (youtube, searches, phone usage, comments, location history) from [google takeouts](https://takeout.google.com/)
 
 ### 'Historical' Modules
 

@@ -4,11 +4,13 @@ Parses a Google Takeout https://takeout.google.com/
 
 import os
 import string
+import json
 from pathlib import Path
+from datetime import datetime, timezone
 from typing import Iterator, Union, Any
 
-from .models import HtmlEvent
-from .html import read_html
+from .models import HtmlEvent, HtmlComment, LikedVideo, AppInstall, Location
+from .html import read_html_activity, read_html_li
 
 from ..core.error import Res
 
@@ -17,7 +19,13 @@ from ..core.common import LazyLogger  # , mcachew
 logger = LazyLogger(__name__)
 
 
-Event = Union[HtmlEvent]
+Event = Union[
+    HtmlEvent,
+    HtmlComment,
+    LikedVideo,
+    AppInstall,
+    Location,
+]
 
 Results = Iterator[Res[Event]]
 
@@ -57,23 +65,23 @@ def parse_takeout(single_takeout_dir: Path) -> Results:
         "Google Photos": None,  # implemented in photos.py
         "Google Play Store/Devices": None,  # not that interesting
         "archive_browser.html": None,  # description of takeout, not useful
-        "Google Play Store/Installs": None,  # TODO: parse
+        "Google Play Store/Installs": _parse_app_installs,
         "Google Play Store/Library": None,
         "Google Play Store/Purchase History": None,
         "Google Play Store/Subscriptions": None,
         "Google Play Store/Redemption History": None,
         "My Activity/Takeout/MyActivity.html": None,
+        "YouTube and YouTube Music/subscriptions": None,
         "YouTube and YouTube Music/videos": None,
         "Contacts": None,  # TODO: implement, need to parse vcf files
-        "Location History/Semantic Location History": None,  # TODO: parse
-        "Location History/Location History": None,  # TODO: parse
-        "YouTube and YouTube Music/history/search-history": None,  # TODO: parse
-        "YouTube and YouTube Music/history/watch-history": None,  # TODO: parse
-        "YouTube and YouTube Music/my-comments": None,  # TODO: parse
-        "YouTube and YouTube Music/my-live-chat-messages": None,  # TODO: parse
-        "YouTube and YouTube Music/playlists/likes.json": None,  # TODO: parse
+        "Location History/Semantic Location History": None,  # not that much data here. maybe parse it?
+        "Location History/Location History": _parse_location_history,
+        "YouTube and YouTube Music/history/search-history": _parse_html_activity,
+        "YouTube and YouTube Music/history/watch-history": _parse_html_activity,
+        "YouTube and YouTube Music/my-comments": _parse_html_chat_li,
+        "YouTube and YouTube Music/my-live-chat-messages": _parse_html_chat_li,
+        "YouTube and YouTube Music/playlists/likes.json": _parse_likes,
         "YouTube and YouTube Music/playlists/": None,  # dicts are ordered, so the rest of the stuff is ignored
-        "YouTube and YouTube Music/subscriptions": None,  # TODO: parse
         "My Activity/Ads": _parse_html_activity,
         "My Activity/Android": _parse_html_activity,
         "My Activity/Assistant": _parse_html_activity,
@@ -124,6 +132,46 @@ def parse_takeout(single_takeout_dir: Path) -> Results:
         yield from handler(f)
 
 
+# TODO: enforce UTC? is this UTC?
+def _parse_json_date(sdate: str) -> datetime:
+    return datetime.strptime(sdate.split(".")[0], "%Y-%m-%dT%H:%M:%S")
+
+
+def _parse_location_history(p: Path) -> Iterator[Location]:
+    ### HMMM, seems that all the locations are right after one another. broken? May just be all the location history that google has on me
+    ### see numpy.diff(list(map(lambda yy: y.at, filter(lambda y: isinstance(Location), events()))))
+    for japp in json.loads(p.read_text())["locations"]:
+        yield Location(
+            lng=float(japp["longitudeE7"]) / 1e7,
+            lat=float(japp["latitudeE7"]) / 1e7,
+            at=datetime.fromtimestamp(int(japp["timestampMs"]) / 1000, tz=timezone.utc),
+        )
+
+
+def _parse_app_installs(p: Path) -> Iterator[AppInstall]:
+    for japp in json.loads(p.read_text()):
+        yield AppInstall(
+            title=japp["install"]["doc"]["title"],
+            at=_parse_json_date(japp["install"]["firstInstallationTime"]),
+        )
+
+
+def _parse_likes(p: Path) -> Iterator[LikedVideo]:
+    for jlike in json.loads(p.read_text()):
+        yield LikedVideo(
+            title=jlike["snippet"]["title"],
+            desc=jlike["snippet"]["description"],
+            link="https://youtube.com/watch?v={}".format(
+                jlike["contentDetails"]["videoId"]
+            ),
+            at=_parse_json_date(jlike["snippet"]["publishedAt"]),
+        )
+
+
+def _parse_html_chat_li(p: Path) -> Iterator[Res[HtmlEvent]]:
+    yield from read_html_li(p)
+
+
 def _activity_hash(p: Path) -> str:
     full_path: str = str(p)
     alpha_chars = "".join(filter(lambda y: y in string.ascii_letters, full_path))
@@ -132,4 +180,4 @@ def _activity_hash(p: Path) -> str:
 
 # @mcachew(cache_path=_activity_hash, hashf=lambda p: str(p))
 def _parse_html_activity(p: Path) -> Iterator[Res[HtmlEvent]]:
-    yield from read_html(p)
+    yield from read_html_activity(p)

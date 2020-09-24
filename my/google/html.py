@@ -3,8 +3,9 @@ Google Takeout exports: browsing history, search/youtube/google play activity
 """
 
 import warnings
+import re
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Any, Iterator
 from urllib.parse import unquote
 from itertools import chain
@@ -13,7 +14,7 @@ import lxml.html as lh
 import pytz
 from more_itertools import sliced
 
-from .models import Metadata, HtmlEvent
+from .models import Metadata, HtmlEvent, HtmlComment
 
 from ..core.error import Res
 from ..core.time import abbr_to_timezone
@@ -50,13 +51,6 @@ def test_parse_dt():
     parse_dt("Sep 10, 2019, 8:51:45 PM MSK")
 
 
-def get_hrefs(el: lh.HtmlElement) -> Iterator[str]:
-    for a in el.findall("a"):
-        for k, v in a.items():
-            if k == "href":
-                yield v
-
-
 def clean_latin1_chars(s: str):
     return s.replace("\xa0", "").replace("\u2003", "")
 
@@ -67,7 +61,11 @@ def itertext_range(el: lh.HtmlElement) -> Iterator[str]:
 
 
 def itertext(el: lh.HtmlElement) -> str:
-    return " ".join(list(itertext_range(el)))
+    return " ".join(list(map(str.strip, itertext_range(el))))
+
+
+def get_links(el: lh.HtmlElement) -> List[str]:
+    return [unquote(a_el[2]) for a_el in chain(*map(lambda e: e.iterlinks(), el))]
 
 
 def parse_div(div: lh.HtmlElement) -> Res[HtmlEvent]:
@@ -104,10 +102,7 @@ def parse_div(div: lh.HtmlElement) -> Res[HtmlEvent]:
     # note mypy cant coerce it into elements of two even though its slicing
 
     # iterate all links
-    content_links: List[str] = [
-        unquote(ainfo[2])
-        for ainfo in chain(*map(lambda el: el.iterlinks(), content_cells))
-    ]
+    content_links: List[str] = list(chain(*map(get_links, content_cells)))
 
     return HtmlEvent(
         service=title,
@@ -118,8 +113,40 @@ def parse_div(div: lh.HtmlElement) -> Res[HtmlEvent]:
     )
 
 
-def read_html(p: Path) -> Iterator[Res[HtmlEvent]]:
+def read_html_activity(p: Path) -> Iterator[Res[HtmlEvent]]:
     # this is gonna be cached behind cachew anyways
     doc = lh.fromstring(p.read_text())
     for outer_div in doc.cssselect("div.outer-cell"):
         yield parse_div(outer_div)
+
+
+# seems to always be in UTC?
+COMMENT_DATE_REGEX = re.compile(
+    r"([0-9]{4})\-([0-9]{2})\-([0-9]{2})\s*([0-9]{2})\:([0-9]{2})\:([0-9]{2})"
+)
+
+# for HtmlComment
+# can be in lots of formats
+# sent at '...'
+# on '....'
+# probably just need to use regex
+def _extract_date(comment: str) -> Res[datetime]:
+    matches = re.search(COMMENT_DATE_REGEX, comment)
+    if matches:
+        g = matches.groups()
+        year, month, day, hour, minute, second = tuple(map(int, g))
+        return datetime(year, month, day, hour, minute, second, tzinfo=timezone.utc)
+    else:
+        return RuntimeError("Couldn't parse date from {}".format(comment))
+
+
+def read_html_li(p: Path) -> Iterator[Res[HtmlComment]]:
+    doc = lh.fromstring(p.read_text())
+    for li in doc.cssselect("li"):
+        description: str = itertext(li)
+        parsed_date: Res[datetime] = _extract_date(description)
+        # TODO: remove the 'you added a comment on video' from prefix?
+        if isinstance(parsed_date, Exception):
+            yield parsed_date
+        else:
+            yield HtmlComment(desc=description, links=get_links(li), at=parsed_date)
