@@ -82,7 +82,7 @@ class RssEvent(NamedTuple):
     added: bool
 
 
-def compute_subscriptions() -> Iterator[RssEvent]:
+def events() -> Iterator[RssEvent]:
     """
     Keeps track of everything I ever subscribed to.
     In addition, keeps track of unsubscribed as well (so you'd remember when and why you unsubscribed)
@@ -113,5 +113,5 @@ def stats():
     return {
         **stat(current_subscriptions),
         **stat(subscription_history),
-        **stat(compute_subscriptions),
+        **stat(events),
     }
