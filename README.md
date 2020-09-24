@@ -106,7 +106,7 @@ Song I've listened to most?
 
 ```python
 >>> import collections, my.mpv
->>> collections.Counter([m.path for m in my.playback.history()]).most_common(1)[0]
+>>> collections.Counter([m.path for m in my.mpv()]).most_common(1)[0]
 ('/home/sean/Music/Toby Fox/Toby Fox - UNDERTALE Soundtrack (2015) [V0]/085 - Fallen Down (Reprise).mp3', 8)
 ```
 
@@ -129,7 +129,7 @@ Need to do more research/figure out
 - [ ] polar? some other reading system? formalize documents/configure `my.pdfs`
 - [ ] email?
 - [ ] food/tracking caloric intake?
-- [ ] generic metadata gatherer/DAL/library for URLs? would be used for a couple things (my.browsing, my.media.playback; could be plugged into another other module to get more data)
+- [ ] generic metadata gatherer/DAL/library for URLs? would be used for a couple things (my.browsing, my.mpv; could be plugged into another other module to get more data)
 
 ### delayed todos
 
