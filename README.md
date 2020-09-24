@@ -4,13 +4,13 @@ interacting with all of my personal data.
 
 It's a Python library (named `my`), a collection of modules for:
 
-- social networks: posts, comments, favorites
+- social networks: posts, comments, favorites, searches
 - shell/program histories (zsh, python, mpv, firefox)
 - reading: e-books and pdfs
+- programming (github/commits)
 - todos and notes
-- location
-- photos & videos
 - instant messaging
+- bank account history/transactions
 - some video game achievements/history
 
 [_Why?_](https://github.com/seanbreckenridge/HPI#why)
@@ -114,26 +114,27 @@ Song I've listened to most?
 
 ### TODO:
 
-- [ ] exif data from photos
+historical GDPR exports
+
 - [ ] apple data
-- [ ] android app to track my location?
+
+create 'export modules' which keep these up to date:
+
 - [ ] backup trakt? (have API access)
 - [ ] backup MAL (ugh)
+
+Need to do more research/figure out
+
+- [ ] android app to track my location?
 - [ ] polar? some other reading system? formalize documents/configure `my.pdfs`
 - [ ] food/tracking caloric intake?
 - [ ] generic metadata gatherer/DAL/library for URLs? would be used for a couple things (my.browsing, my.media.playback; could be plugged into another other module to get more data)
-- [ ] better [exobrain](https://github.com/seanbreckenridge/exobrain) for notes...? want:
-  - private/public notes
-  - filter by category/tag (more than just the directory)
-  - generate an RSS feed (if only so I can periodically `curl` it to track my own posts)
-  - be able to connect/reference whatever reading tool I end up using
-  - [maybe] let the inverted index connect related info automatically?
-  - `org` mode may solve most of these, but I have to learn org mode
 
 ### delayed todos
 
 - [ ] discord backups - can request [exports](https://support.discord.com/hc/en-us/articles/360004027692) once a month, write a DAL once I have access
 - [ ] configure `my.stackexchange` (isnt really documented/able to use in HPI without modifications [wait for repo](https://github.com/karlicoss/ghexport/issues/3#issuecomment-680732889))
+- [ ] exif data from photos; I don't really take lots of photos, so perhaps this isn't as useful as of right now
 
 ---
 
