@@ -73,12 +73,12 @@ custom_pyflakes() {
 
 prompt_black() {
 	# if black returns error code, prompt to autoformat
-	fd '.py$' -E setup.py -X black --check || {
+	fd '.py$' -X black --check || {
 		prompt "Run black autoformat (Y/n)? "
 		case "$REPLY" in
 		N | n) ;;
 		*)
-			fd '.py$' -E setup.py -X black
+			fd '.py$' -X black
 			;;
 		esac
 	}
