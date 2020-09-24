@@ -55,7 +55,7 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 
 ### Ad-hoc and interactive
 
-Some basic examples. Once the data is loaded into python, could do anything with it.
+Some basic examples.
 
 When was I most using reddit?
 
