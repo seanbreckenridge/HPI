@@ -38,6 +38,7 @@ It's a Python library (named `my`), a collection of modules for:
 - `my.smscalls`, exports phone/SMS history using [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore&hl=en_US)
 - `my.google`, parses lots of (~250,000) events (youtube, searches, phone usage, comments, location history) from [google takeouts](https://takeout.google.com/)
 - `my.money`, bank account transactions/balance history from [my budget tool](https://github.com/seanbreckenridge/mint)
+- `my.rss`, keeps track of when I added/removed rss feeds
 
 ### 'Historical' Modules
 
@@ -133,7 +134,6 @@ Song I've listened to most?
 
 - [ ] discord backups - can request [exports](https://support.discord.com/hc/en-us/articles/360004027692) once a month, write a DAL once I have access
 - [ ] configure `my.stackexchange` (isnt really documented/able to use in HPI without modifications [wait for repo](https://github.com/karlicoss/ghexport/issues/3#issuecomment-680732889))
-- [ ] rss - rss is continually backed up. once a good sample has been accrued, write a DAL to show when feeds were added/removed
 
 ---
 
