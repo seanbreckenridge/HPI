@@ -22,6 +22,7 @@ directories=(
 	'ttt'
 	'window_watcher'
 	'google_takeout'
+	'spotify'
 )
 declare -a files
 files=(
