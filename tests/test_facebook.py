@@ -11,6 +11,7 @@ def test_facebook_types():
             Contact,
             Action,
             AdminAction,
+            UploadedPhoto,
             Search,
             Post,
             Comment,
@@ -19,6 +20,6 @@ def test_facebook_types():
             Conversation,
         ]
     )
-    assert all_types.issubset(set(map(type, all_ev)))
+    assert all_types == set(map(type, all_ev))
     # make sure we parsed everything without errors
     assert ilen(filter(lambda e: isinstance(e, Exception), all_ev)) == 0
