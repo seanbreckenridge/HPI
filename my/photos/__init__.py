@@ -7,13 +7,12 @@ Photos and videos on your filesystem, their GPS and timestamps
 # reminder: facebook photos?
 # reminder: google photos?
 
-import json
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, NamedTuple, Iterator, Iterable, List, Callable, Tuple
+from typing import Optional, NamedTuple, Iterator, Iterable, List
 
-from ..core import PathIsh, Paths
-from ..core.common import LazyLogger, mcachew, fastermime
+from ..core import PathIsh
+from ..core.common import LazyLogger, fastermime
 from ..core.error import Res
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
@@ -58,7 +57,8 @@ Result = Res[Photo]
 
 
 def _make_photo(
-    photo: Path, mtype: str,
+    photo: Path,
+    mtype: str,
 ) -> Iterator[Result]:
     exif: Exif
     if any(x in mtype for x in {"image/png", "image/x-ms-bmp", "video"}):

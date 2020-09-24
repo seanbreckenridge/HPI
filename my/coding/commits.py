@@ -189,7 +189,7 @@ def _commits(_repos: List[Path]) -> Iterator[Commit]:
 @mcachew(
     hashf=_repo_hashf,
     logger=log,
-    cache_path=lambda repo_path: f'{CACHEW_PATH}/{"".join(filter(lambda c: c in string.ascii_letters + string.digits, str(repo_path)))}'
+    cache_path=lambda repo_path: f'{CACHEW_PATH}/{"".join(filter(lambda c: c in string.ascii_letters + string.digits, str(repo_path)))}',
 )
 def _cached_commits(_repo: Path) -> Iterator[Commit]:
     log.info("processing %s", _repo)
