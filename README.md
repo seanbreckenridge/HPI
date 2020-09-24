@@ -37,6 +37,7 @@ It's a Python library (named `my`), a collection of modules for:
 - `my.ipython`, for timestamped python REPL history
 - `my.smscalls`, exports phone/SMS history using [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore&hl=en_US)
 - `my.google`, parses lots of (~250,000) events (youtube, searches, phone usage, comments, location history) from [google takeouts](https://takeout.google.com/)
+- `my.money`, bank account transactions/balance history from [my budget tool](https://github.com/seanbreckenridge/mint)
 
 ### 'Historical' Modules
 
