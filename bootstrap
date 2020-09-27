@@ -110,4 +110,5 @@ havecmd shfmt
 havecmd shellcheck
 havecmd mypy
 havecmd pytest
+havecmd jq
 set +e
