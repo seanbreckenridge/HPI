@@ -1,0 +1,14 @@
+#!/bin/bash
+# remind me to log my weight
+
+evry 3 hours -checkbody && {
+	cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")" || {
+		send-error "Couldn't cd to current dir"
+		exit 1
+	}
+	printlog "check_weight:checking..."
+	./check_weight.py
+	# store in-case I use return code to specify what hasn't been logged
+	RET=$?
+	((RET==1)) && notify-send "havent updated weight in more than a week!"
+}

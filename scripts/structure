@@ -5,6 +5,7 @@ readonly DATA_PREFIX="${HOME}/data"
 
 declare -a directories
 directories=(
+	'body'
 	'github/gdpr'
 	'github/ghexport'
 	'zsh_history'
