@@ -8,5 +8,5 @@ LATEST_WEIGHT_KG_CALORIES="$(calories export | jq '.weights | .[] | .weight' | t
 WEIGHT_DIFF="$(printf '((%f / 2.2046) - %f) > 0.1\n' "$LATEST_WEIGHT_POUNDS_PY" "$LATEST_WEIGHT_KG_CALORIES" | bc -l)"
 if ((WEIGHT_DIFF == 1)); then
 	printlog "updating calories weight:adding $LATEST_WEIGHT_POUNDS_PY"
-  calories weight "$LATEST_WEIGHT_POUNDS_PY"
+	calories weight "$LATEST_WEIGHT_POUNDS_PY"
 fi
