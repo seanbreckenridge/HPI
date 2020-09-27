@@ -171,10 +171,10 @@ def modules_check(args):
                 tb(e)
             continue
 
-        info(f"{color.GREEN}OK{color.RESET}  : {m:<30}")
         stats = getattr(mod, "stats", None)
         if stats is None:
             continue
+        info(f"{color.GREEN}OK{color.RESET}  : {m:<30}")
         from . import common
 
         common.QUICK_STATS = False
