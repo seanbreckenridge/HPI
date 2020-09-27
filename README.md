@@ -114,6 +114,8 @@ Song I've listened to most?
 
 ### TODO:
 
+- [ ] Integrate <https://github.com/zupzup/calories>
+
 historical GDPR exports
 
 - [ ] apple data
@@ -128,7 +130,6 @@ Need to do more research/figure out
 - [ ] android app to track my location?
 - [ ] polar? some other reading system? formalize documents/configure `my.pdfs`
 - [ ] email?
-- [ ] food/tracking caloric intake?
 - [ ] generic metadata gatherer/DAL/library for URLs? would be used for a couple things (my.browsing, my.mpv; could be plugged into another other module to get more data)
 
 ### delayed todos

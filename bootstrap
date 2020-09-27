@@ -82,6 +82,8 @@ set -e
 havecmd bgproc "Install from https://github.com/seanbreckenridge/bgproc"
 havecmd wait-for-internet " Install from https://github.com/seanbreckenridge/wait-for-internet"
 havecmd evry "Install from https://github.com/seanbreckenridge/evry"
+havecmd python 'This needs python!'
+havecmd go "Requires golang for 'calories'"
 set +e
 
 wait-for-internet
@@ -91,6 +93,7 @@ wait-for-internet
 create_data_dir
 install_hpi
 install_python_extras
+go get github.com/zupzup/calories
 
 # export specific setup
 ./scripts/structure
