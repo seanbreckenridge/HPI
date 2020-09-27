@@ -1,5 +1,7 @@
+from my.mpv import history, Media
+
+
 def test_mpv():
-    from my.mpv import history, Media
 
     histoire = list(history())
     assert len(histoire) > 1

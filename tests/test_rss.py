@@ -1,5 +1,6 @@
-import my.rss
 from more_itertools import ilen
+
+import my.rss
 
 
 def test_rss() -> None:

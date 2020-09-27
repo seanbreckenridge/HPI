@@ -1,15 +1,17 @@
 from more_itertools import ilen
 
+from my.games.blizzard import events
+from my.games.league import history
+from my.games.steam import games, achievements
+
 
 def test_blizzard():
-    from my.games.blizzard import events
 
     ev = list(events())
     assert len(ev) >= 100
 
 
 def test_league():
-    from my.games.league import history
 
     gs = list(history())
     assert len(gs) > 50
@@ -17,7 +19,6 @@ def test_league():
 
 
 def test_steam():
-    from my.games.steam import games, achievements
 
     assert ilen(games()) > 10
     ach = list(achievements())

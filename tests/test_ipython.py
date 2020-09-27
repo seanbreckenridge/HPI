@@ -1,6 +1,7 @@
-def test_ipython():
-    from my.ipython import _parse_database
+from my.ipython import _parse_database
 
+
+def test_ipython():
     # use the live database in XDG_DATA_HOME
     db = list(_parse_database())
     assert len(db) > 1

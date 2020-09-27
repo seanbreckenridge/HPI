@@ -1,5 +1,6 @@
-from my.money import balances, transactions
 from more_itertools import ilen
+
+from my.money import balances, transactions
 
 
 def test_money():

@@ -1,8 +1,9 @@
 from datetime import datetime
 
+import my.skype
+
 
 def test_skype() -> None:
-    import my.skype
 
     ts = list(my.skype.timestamps())
     assert len(ts) > 1

@@ -5,9 +5,10 @@ from my.core.common import make_dict
 
 from more_itertools import ilen
 
+from my.reddit import events, inputs, saved, _dal, comments, pushshift_comments
+
 
 def test_reddit_has_data() -> None:
-    from my.reddit import events, inputs, saved, _dal, comments, pushshift_comments
 
     assert ilen(events()) > 10
     assert ilen(saved()) > 10
@@ -16,8 +17,6 @@ def test_reddit_has_data() -> None:
 
 
 def test_saves() -> None:
-    from my.reddit import events, inputs, saved
-
     # TODO not sure if this is necesasry anymore?
     saves = list(saved())
     # just check that they are unique..
