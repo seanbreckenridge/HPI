@@ -39,6 +39,7 @@ It's a Python library (named `my`), a collection of modules for:
 - `my.google`, parses lots of (~250,000) events (youtube, searches, phone usage, comments, location history) from [google takeouts](https://takeout.google.com/)
 - `my.money`, bank account transactions/balance history from [my budget tool](https://github.com/seanbreckenridge/mint)
 - `my.rss`, keeps track of when I added/removed RSS feeds
+- `my.food`, tracks calorie/water intake; imports from [`calories`](https://github.com/zupzup/calories). I use [this](https://github.com/seanbreckenridge/calories-fzf/) interface most of the time to add food I eat.
 
 ### 'Historical' Modules
 
@@ -114,7 +115,6 @@ Song I've listened to most?
 
 ### TODO:
 
-- [ ] Integrate <https://github.com/zupzup/calories>
 
 historical GDPR exports
 
