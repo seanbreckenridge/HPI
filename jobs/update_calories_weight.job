@@ -1,12 +1,28 @@
 #!/bin/bash
 # updates calories (https://github.com/zupzup/calories) weight so it can create my BMI
 # uses me reporting with my my.body weight TUI each week
+#
+# I use pounds to track in HPI
+# but need to convert to kg for calories (though I could use imperial there, choose to use metric)
 
-LATEST_WEIGHT_POUNDS_PY="$(jq '.[] | .pounds' <"${HOME}/data/body/weight.json" | tail -n1)"
-LATEST_WEIGHT_KG_CALORIES="$(calories export | jq '.weights | .[] | .weight' | tail -n1)"
+evry 1 day -update_calories && {
+	printlog "calories_weight:checking..."
 
-WEIGHT_DIFF="$(printf '((%f / 2.2046) - %f) > 0.1\n' "$LATEST_WEIGHT_POUNDS_PY" "$LATEST_WEIGHT_KG_CALORIES" | bc -l)"
-if ((WEIGHT_DIFF == 1)); then
-	printlog "updating calories weight:adding $LATEST_WEIGHT_POUNDS_PY"
-	calories weight "$LATEST_WEIGHT_POUNDS_PY"
-fi
+	# get value from HPI json and convert
+	LATEST_WEIGHT_POUNDS_PY="$(jq '.[] | .pounds' <"${HOME}/data/body/weight.json" | tail -n1)"
+	LATEST_WEIGHT_KG_PY="$(printf '%f / 2.2046\n' "$LATEST_WEIGHT_POUNDS_PY" | bc -l)"
+
+	# get values from calories export
+	LATEST_WEIGHT_KG_CALORIES="$(calories export | jq '.weights | .[] | .weight' | tail -n1)"
+
+	# compare kg
+	WEIGHT_DIFF="$(printf '(%f - %f)\n' "$LATEST_WEIGHT_KG_PY" "$LATEST_WEIGHT_KG_CALORIES" | bc -l)"
+
+	# absolute value
+	WEIGHT_ABS="${WEIGHT_DIFF#-}"
+
+	if (("$(echo "$WEIGHT_ABS > 0.1" | bc -l)" == 1)); then
+		printlog "updating calories weight:adding ${LATEST_WEIGHT_KG_PY}kg"
+		calories weight "$LATEST_WEIGHT_KG_PY"
+	fi
+}
