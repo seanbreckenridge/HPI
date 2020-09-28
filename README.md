@@ -15,7 +15,9 @@ It's a Python library (named `my`), a collection of modules for:
 
 [_Why?_](https://github.com/seanbreckenridge/HPI#why)
 
-### Modified from [`karlicoss/HPI`](https://github.com/karlicoss/HPI) to more fit my life
+---
+
+This is modified from [`karlicoss/HPI`](https://github.com/karlicoss/HPI) to more fit my life.
 
 - A lot of the documentation remains unchanged from the original.
 - _For now_, I don't expect anyone else to use this directly, the code is up here as reference.
@@ -26,31 +28,31 @@ It's a Python library (named `my`), a collection of modules for:
 
 - `my.github`, get all github actions (comments, issues, etc.)
 - `my.reddit`, get saved posts, comments. Uses [`rexport`](https://github.com/karlicoss/rexport) to create backups of recent activity periodically, and [`pushshift`](https://github.com/seanbreckenridge/pushshift_comment_export) to get old comments.
-- `my.zsh`, access to my shell history w/ timestamps; [example usage](https://gist.github.com/seanbreckenridge/921b49da3fadf09e45a23bb5a06b030e)
-- `my.ttt`, to parse shell/system history tracked by [`ttt`](https://github.com/seanbreckenridge/ttt)
-- `my.window_watcher`, to parse active window events using [`window_watcher`](https://github.com/seanbreckenridge/aw-watcher-window)
+- `my.browsing`, using my [`ffexport`](https://github.com/seanbreckenridge/ffexport) tool to backup/parse firefox history
+- `my.zsh`, access to my shell history w/ timestamps
+- `my.google`, parses lots of (~250,000) events (youtube, searches, phone usage, comments, location history) from [google takeouts](https://takeout.google.com/)
+- `my.food`, tracks calorie/water intake; imports from [`calories`](https://github.com/zupzup/calories). I use [this](https://github.com/seanbreckenridge/calories-fzf/) interface most of the time to add food I eat.
 - `my.body` to track body functionality (e.g. weight) (with a TUI using [`autotui`](https://github.com/seanbreckenridge/autotui))
 - `my.coding` to track git commits across the system
-- `my.todotxt`, to track my to-do list history
-- `my.browsing`, using my [`ffexport`](https://github.com/seanbreckenridge/ffexport) tool to backup/parse firefox history
 - `my.mpv`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-sockets/blob/master/DAEMON.md)
-- `my.ipython`, for timestamped python REPL history
-- `my.smscalls`, exports phone/SMS history using [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore&hl=en_US)
-- `my.google`, parses lots of (~250,000) events (youtube, searches, phone usage, comments, location history) from [google takeouts](https://takeout.google.com/)
 - `my.money`, bank account transactions/balance history from [my budget tool](https://github.com/seanbreckenridge/mint)
-- `my.rss`, keeps track of when I added/removed RSS feeds
-- `my.food`, tracks calorie/water intake; imports from [`calories`](https://github.com/zupzup/calories). I use [this](https://github.com/seanbreckenridge/calories-fzf/) interface most of the time to add food I eat.
+- `my.smscalls`, exports phone/SMS history using [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore&hl=en_US)
+- `my.todotxt`, to track my to-do list history
+- `my.rss`, keeps track of when I added/removed RSS feeds (for [`newsboat`](https://newsboat.org/))
+- `my.ipython`, for timestamped python REPL history
+- `my.ttt`, to parse shell/system history tracked by [`ttt`](https://github.com/seanbreckenridge/ttt)
+- `my.window_watcher`, to parse active window events using [`window_watcher`](https://github.com/seanbreckenridge/aw-watcher-window)
 
 ### 'Historical' Modules
 
 These are modules to parse GDPR exports/data from services I used to use, but don't anymore. They're here to provide more context into the past.
 
+- `my.facebook`, to parse the GDPR export I downloaded from facebook before deleting my account
 - `my.games.league`, gives league of legends game history using [`lolexport`](https://github.com/seanbreckenridge/lolexport)
 - `my.games.steam`, for steam achievement data and game playtime using [`steamscraper`](https://github.com/seanbreckenridge/steamscraper)
 - `my.games.blizzard`, for general battle.net event data [parsed from a gdpr export](https://github.com/seanbreckenridge/blizzard_gdpr_parser)
 - `my.old_forums`, random posts from forums I used to use in the past, see [`forum_parser`](https://github.com/seanbreckenridge/forum_parser)
 - `my.skype` to parse a couple datetimes from the skype GDPR export
-- `my.facebook`, to parse the GDPR export I downloaded from facebook before deleting my account
 - `my.spotify`, to parse the GDPR export from spotify, mostly for songs from my playlists from years ago
 
 See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py) for config.
