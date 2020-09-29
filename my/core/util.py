@@ -61,7 +61,6 @@ def ignored(m: str):
         "location.__main__",
         "photos.utils",
         "books",
-        "coding",
         "media",
         "reading",
         "_rss",

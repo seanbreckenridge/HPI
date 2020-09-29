@@ -7,7 +7,7 @@ cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")" || {
 }
 
 readonly FLAKE8_IGNORE='E225,E501,E302,E402,E305,E261,E265,E116,E252,E702,E266,E741,E306,E203,E731,W503'
-readonly FLAKE8_FILES_IGNORE="*polar.py,*kython*,*stackexchange.py,*core/common.py,*core/init.py,*core/__init__.py,*config.py,*food/__init__.py"
+readonly FLAKE8_FILES_IGNORE="*polar.py,*kython*,*stackexchange.py,*core/common.py,*core/init.py,*core/__init__.py,*config.py,*food/__init__.py,*coding/__init__.py"
 
 list_shell_scripts() {
 	echo bootstrap

@@ -204,13 +204,4 @@ def print_all():
         print(c)
 
 
-def stats():
-    from ..core import stat
-
-    return {
-        **stat(commits),
-        **stat(repos),
-    }
-
-
 # TODO enforce read only? although it doesn't touch index
