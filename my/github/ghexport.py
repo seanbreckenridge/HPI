@@ -84,9 +84,16 @@ def _dal() -> dal.DAL:
 
 # TODO hmm. not good, need to be lazier?...
 @mcachew(config.cache_dir, hashf=lambda dal: dal.sources)
-def events(dal=_dal()) -> Results:
+def all_events(dal=_dal()) -> Results:
     for d in dal.events():
         yield _parse_event(d)
+
+
+def events() -> Results:
+    for ev in all_events():
+        # ignore commit messages, thats picked up by `my.coding.commits`
+        if not ev.summary.splitlines()[0].endswith(": pushed"):
+            yield ev
 
 
 def stats():

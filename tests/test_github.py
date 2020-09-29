@@ -1,7 +1,7 @@
 from more_itertools import ilen
 
 import my.github.gdpr as gdpr
-from my.github.all import events
+import my.github.ghexport as ghexport
 
 # todo test against stats? not sure.. maybe both
 
@@ -11,4 +11,5 @@ def test_gdpr():
 
 
 def test_github():
-    assert ilen(events()) > 100
+    assert ilen(ghexport.events()) > 100
+    assert ilen(ghexport.all_events()) > ilen(ghexport.events())
