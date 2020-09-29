@@ -1,0 +1,9 @@
+#!/bin/bash
+# create a snapshot of the current data
+
+evry 1 week -hpidoctor && {
+	BACKUP_DIR="${HOME}/data/doctor"
+	[[ -d "$BACKUP_DIR" ]] || mkdir -p "$BACKUP_DIR"
+	arctree "${BACKUP_DIR}/{utcnow}.txt" -- sh -c "hpi doctor 2>&1 | sed 's/\x1B\[[0-9;]\+[A-Za-z]//g'"
+
+}
