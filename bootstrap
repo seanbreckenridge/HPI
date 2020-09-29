@@ -52,7 +52,7 @@ install_python_extras() {
 }
 
 setup_arctree() {
-	if which arctree; then
+	if havecmd arctree; then
 		# make sure its not an empty file for some reason, maybe curl failed and overwrote to nothing; have had some issues
 		ARCTREE_CONTENTS="$(wc -l <"$(which arctree)")"
 		if ((ARCTREE_CONTENTS > 20)); then
@@ -79,11 +79,13 @@ setup_arctree() {
 }
 
 set -e
+havecmd curl
 havecmd bgproc "Install from https://github.com/seanbreckenridge/bgproc"
 havecmd wait-for-internet " Install from https://github.com/seanbreckenridge/wait-for-internet"
 havecmd evry "Install from https://github.com/seanbreckenridge/evry"
 havecmd python 'This needs python!'
-havecmd go "Requires golang for 'calories'"
+havecmd pip
+havecmd go "Requires golang for 'https://github.com/zupzup/calories'"
 set +e
 
 wait-for-internet
