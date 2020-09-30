@@ -100,8 +100,9 @@ go get github.com/zupzup/calories
 # export specific setup
 ./scripts/structure
 
+pip3 install --user 'git+https://github.com/karlicoss/rexport'
+# temporary while I use the httpx wrapper to prevent 403s
 bash -x ./scripts/setup_ghexport
-bash -x ./scripts/setup_rexport
 
 # check for some other commands used in ./lint
 set -e

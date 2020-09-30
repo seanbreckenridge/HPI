@@ -3,11 +3,10 @@ Reddit data: saved items/comments/upvotes/etc.
 """
 REQUIRES = [
     "git+https://github.com/karlicoss/rexport",
-    "git+https://github.com/seanbreckenridge/pushshift_comment_export",
 ]
 
 from typing import Optional
-from .core.common import Paths, PathIsh
+from .core.common import Paths
 
 from types import ModuleType
 from my.config import reddit as uconfig
@@ -26,22 +25,6 @@ class reddit(uconfig):
     # path to one or more https://github.com/seanbreckenridge/pushshift_comment_export exported data
     pushshift_export_path: Paths
 
-    # path to a local clone of rexport
-    # alternatively, you can put the repository (or a symlink) in $MY_CONFIG/my/config/repos/rexport
-    rexport: Optional[PathIsh] = None
-
-    @property
-    def dal_module(self) -> ModuleType:
-        rpath = self.rexport
-        if rpath is not None:
-            from .core.common import import_dir
-
-            return import_dir(rpath, ".dal")
-        else:
-            import my.config.repos.rexport.dal as dal
-
-            return dal
-
 
 from .core.cfg import make_config, Attrs
 
@@ -58,21 +41,11 @@ def migration(attrs: Attrs) -> Attrs:
 
 config = make_config(reddit, migration=migration)
 
-###
-# TODO not sure about the laziness...
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    # TODO not sure what is the right way to handle this..
-    import my.config.repos.rexport.dal as dal
-else:
-    # TODO ugh. this would import too early
-    # but on the other hand we do want to bring the objects into the scope for easier imports, etc. ugh!
-    # ok, fair enough I suppose. It makes sense to configure something before using it. can always figure it out later..
-    # maybe, the config could dynamically detect change and reimport itself? dunno.
-    dal = config.dal_module
-###
+try:
+    from rexport import dal
+except ModuleNotFoundError as e:
+    from .core.compat import pre_pip_dal_handler
+    dal = pre_pip_dal_handler('rexport', e, config, requires=REQUIRES)
 
 ############################
 
