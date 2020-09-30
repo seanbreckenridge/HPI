@@ -115,11 +115,11 @@ def test_active_modules() -> None:
         # if both are set, enable all
         cc.disabled_modules = ["my.body.*"]
         cc.enabled_modules = ["my.body.exercise"]
-        with pytest.warns(None) as record:
-            assert cc._is_module_active("my.whatever") is None
-            assert cc._is_module_active("my.core") is None
+        assert cc._is_module_active("my.whatever") is None
+        assert cc._is_module_active("my.core") is None
+        with pytest.warns(UserWarning, match=r"conflicting regexes") as record_warnings:
             assert cc._is_module_active("my.body.exercise") is True
-        assert len(record) == 1
+        assert len(record_warnings) == 1
 
 
 ### tests end
