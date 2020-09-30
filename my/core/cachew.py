@@ -38,7 +38,8 @@ def cache_dir() -> Path:
         cache_dir = '/your/custom/cache/path'
     """
     from .core_config import config
-    cdir = config.cache_dir
+
+    common_config = config.cache_dir
 
     cdir = getattr(common_config, "cache_dir", None)
     if cdir is None:
