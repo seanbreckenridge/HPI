@@ -5,4 +5,5 @@ TARGET="${REPOS:?Repos environment variable is not set}/ghexport"
 
 clone_if_not_exists "$URL" "$TARGET"
 cd "$TARGET" || exit $?
-pip3 install -r requirements.txt
+git submodule update --init
+pip install -e .

@@ -6,7 +6,6 @@
 evry 3 days -ghexport && {
 	wait-for-internet
 	readonly BACKUP_DIR="${HOME}/data/github/ghexport"
-	readonly GHDIR="${REPOS}/ghexport"
 	printlog "ghexport:Running github export..."
-	arctree -r 3 "${BACKUP_DIR}/{utcnow}.json" -- python3 "${GHDIR}/export.py" --secrets "${XDG_CONFIG_HOME}/my/my/config/gh_secret_token.py"
+	arctree -r 3 "${BACKUP_DIR}/{utcnow}.json" -- python3 -m ghexport.export --secrets "${XDG_CONFIG_HOME}/my/my/config/gh_secret_token.py"
 }
