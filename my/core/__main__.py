@@ -260,7 +260,7 @@ def tabulate_warnings():
 
 # todo check that it finds private modules too?
 def doctor(args):
-    config_check(args)
+    # config_check(args)
     modules_check(args)
 
 
