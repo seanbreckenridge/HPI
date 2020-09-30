@@ -26,19 +26,18 @@ config = make_config(old_forums)
 import json
 from pathlib import Path
 from typing import Sequence
+from datetime import datetime
+from typing import NamedTuple, Iterator
+from itertools import chain
 
 from .core import get_files
+from .core.common import LazyLogger
+from .core.time import parse_datetime_sec
 
 
 def inputs() -> Sequence[Path]:
     return get_files(config.export_path)
 
-
-from datetime import datetime, timezone
-from typing import NamedTuple, Iterator
-from itertools import chain
-
-from .core.common import LazyLogger
 
 logger = LazyLogger(__name__)
 
@@ -62,7 +61,7 @@ def _parse_file(post_file: Path) -> Results:
     items = json.loads(post_file.read_text())
     for p in items:
         yield Post(
-            dt=datetime.fromtimestamp(p["date"], tz=timezone.utc),
+            dt=parse_datetime_sec(p["date"]),
             post_title=p["post_title"],
             post_url=p["post_url"],
             post_contents=p["contents"],

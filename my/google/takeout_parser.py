@@ -5,12 +5,13 @@ Parses a Google Takeout https://takeout.google.com/
 import os
 import json
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Iterator, Union, Any
 
 from .models import HtmlEvent, HtmlComment, LikedVideo, AppInstall, Location
 from .html import read_html_activity, read_html_li
 
+from ..core.time import parse_datetime_millis
 from ..core.error import Res
 
 from ..core.common import LazyLogger, cachewpath
@@ -140,7 +141,7 @@ def _parse_location_history(p: Path) -> Iterator[Location]:
         yield Location(
             lng=float(japp["longitudeE7"]) / 1e7,
             lat=float(japp["latitudeE7"]) / 1e7,
-            at=datetime.fromtimestamp(int(japp["timestampMs"]) / 1000, tz=timezone.utc),
+            at=parse_datetime_millis(japp["timestampMs"]),
         )
 
 

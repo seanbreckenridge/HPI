@@ -25,11 +25,12 @@ config = make_config(blizzard)
 
 import json
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import NamedTuple, Iterator, Sequence, List
 from itertools import chain
 
 from ..core import get_files
+from ..core.time import parse_datetime_sec
 
 
 def inputs() -> Sequence[Path]:
@@ -55,7 +56,7 @@ def _parse_json_file(p: Path) -> Results:
         dt, meta_tuple = e_info
         meta_tag, meta_joined = meta_tuple
         yield Event(
-            dt=datetime.fromtimestamp(dt, tz=timezone.utc),
+            dt=parse_datetime_sec(dt),
             event_tag=meta_tag,
             metadata=meta_joined.split("|"),
         )

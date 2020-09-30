@@ -26,12 +26,13 @@ config = make_config(steam)
 import json
 from functools import partial
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import NamedTuple, Iterator, Sequence, Dict, List, Optional, Any
 from itertools import chain
 
 from ..core import get_files
 from ..core.error import Res
+from ..core.time import parse_datetime_sec
 
 
 def inputs() -> Sequence[Path]:
@@ -111,7 +112,7 @@ def _parse_achievement(ach: Dict[str, Any], game_name: str) -> Achievement:
     # parse datetime if it has it
     # could possibly throw an error, but its caught above
     if achieved:
-        achieved_on = datetime.fromtimestamp(ach["progress"]["data"], tz=timezone.utc)
+        achieved_on = parse_datetime_sec(ach["progress"]["data"])
     return Achievement(
         title=ach["title"],
         description=ach["description"],

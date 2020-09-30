@@ -40,6 +40,7 @@ from typing import Sequence
 
 from .core import get_files, warn_if_empty
 from .core.common import listify
+from .core.time import parse_datetime_sec
 
 
 @listify
@@ -67,7 +68,7 @@ def inputs() -> Sequence[Path]:  # type: ignore
 
 import re
 
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import NamedTuple, Iterator, Set, Tuple
 from itertools import chain
 
@@ -201,5 +202,5 @@ def _parse_metadata(histline: str) -> Optional[Tuple[datetime, int, str]]:
     matches = PATTERN.match(histline)
     if matches:
         g = matches.groups()
-        return (datetime.fromtimestamp(int(g[0]), tz=timezone.utc), int(g[1]), g[2])
+        return (parse_datetime_sec(g[0]), int(g[1]), g[2])
     return None

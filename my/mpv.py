@@ -28,11 +28,12 @@ import os
 import re
 import json
 from itertools import chain
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 from typing import Iterator, Sequence, NamedTuple, Set, Any, Dict, Tuple, Optional
 
 from .core.common import get_files, LazyLogger
+from .core.time import parse_datetime_sec
 
 logger = LazyLogger(__name__, level="INFO")
 
@@ -129,8 +130,8 @@ def _read_event_stream(p: Path) -> Results:
         m = Media(
             path=d["path"],
             is_stream=d["is_stream"],
-            start_time=_time_to_datetime(int(d["start_time"])),
-            end_time=_time_to_datetime(int(d["end_time"])),
+            start_time=parse_datetime_sec(int(d["start_time"])),
+            end_time=parse_datetime_sec(int(d["end_time"])),
             pause_duration=d["pause_duration"],
             media_duration=d.get("duration"),
             media_title=d.get("media_title"),
@@ -162,10 +163,6 @@ def _destructure_event(d: Dict) -> Tuple[EventType, EventData]:
     di = d.items()
     assert len(di) == 1, "Event not in expected format!"
     return list(di)[0]
-
-
-def _time_to_datetime(i: int) -> datetime:
-    return datetime.fromtimestamp(i, tz=timezone.utc)
 
 
 URL_REGEX = re.compile(

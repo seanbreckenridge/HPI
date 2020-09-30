@@ -6,7 +6,7 @@ import warnings
 import re
 import json
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import List, Any, Iterator, Optional
 from urllib.parse import unquote
 from itertools import chain
@@ -145,7 +145,7 @@ def _extract_date(comment: str) -> Res[datetime]:
     if matches:
         g = matches.groups()
         year, month, day, hour, minute, second = tuple(map(int, g))
-        return datetime(year, month, day, hour, minute, second, tzinfo=timezone.utc)
+        return pytz.utc.localize(datetime(year, month, day, hour, minute, second))
     else:
         return RuntimeError("Couldn't parse date from {}".format(comment))
 

@@ -28,13 +28,14 @@ config = make_config(league_of_legends)
 
 import json
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import NamedTuple, Iterator, Sequence, Dict, Union, List, Optional, Any
 from functools import partial
 from itertools import chain
 
 from ..core import get_files
 from ..core.error import Res
+from ..core.time import parse_datetime_millis
 
 
 def inputs() -> Sequence[Path]:
@@ -106,9 +107,7 @@ def _read_parsed_json(p: Path, username: str) -> Results:
                     game["stats"],
                 )
             )[0]
-            # parse datetime
-            # assuming this is epoch ms
-            epoch_timestamp: int = int(game["gameCreation"] / 1000)
+            # assuming datetime is epoch ms
             yield Game(
                 champion_name=game["champion"]["name"],
                 game_id=game["gameId"],
@@ -116,7 +115,7 @@ def _read_parsed_json(p: Path, username: str) -> Results:
                 season=game.get("season"),
                 role=game.get("role"),
                 lane=game.get("lane"),
-                game_creation=datetime.fromtimestamp(epoch_timestamp, tz=timezone.utc),
+                game_creation=parse_datetime_millis(game["gameCreation"]),
                 game_duration=game["gameDuration"],
                 map_name=game["map"],
                 game_mode=game["gameMode"],

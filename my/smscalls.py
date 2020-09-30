@@ -7,13 +7,14 @@ Phone calls and SMS messages
 #
 # my.config.smscalls is set to that location, see: https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py
 
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 from typing import NamedTuple, Iterator, Set
 
 from lxml import etree  # type: ignore
 
 from .core.common import get_files
+from .core.time import parse_datetime_millis
 
 from my.config import smscalls as config  # type: ignore
 
@@ -59,7 +60,7 @@ def _extract_messages(path: Path) -> Iterator[Message]:
     tr = etree.parse(str(path))
     for mxml in tr.findall("sms"):
         yield Message(
-            dt=_parse_date(mxml.get("date")),
+            dt=parse_datetime_millis(mxml.get("date")),
             who=mxml.get("contact_name"),
             message=mxml.get("body"),
             phone_number=mxml.get("address"),
@@ -86,13 +87,9 @@ def _extract_calls(path: Path) -> Iterator[Call]:
         # TODO we've got local tz here, not sure if useful..
         # ok, so readable date is local datetime, cahnging throughout the backup
         yield Call(
-            dt=_parse_date(cxml.get("date")),
+            dt=parse_datetime_millis(cxml.get("date")),
             duration_s=int(cxml.get("duration")),
             phone_number=cxml.get("number"),
             who=cxml.get("contact_name")  # TODO number if contact is unavail??
             # TODO type? must be missing/outgoing/incoming
         )
-
-
-def _parse_date(date: str):
-    return datetime.fromtimestamp(int(date) / 1000, tz=timezone.utc)

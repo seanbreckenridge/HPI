@@ -20,13 +20,14 @@ config = make_config(facebook)
 
 import os
 import json
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 from itertools import chain
 from typing import Iterator, Dict, Any, NamedTuple, Union, Optional, List
 
 from .core.error import Res
 from .core import get_files
+from .core.time import parse_datetime_sec
 
 from .core.common import LazyLogger
 
@@ -221,8 +222,8 @@ def _parse_address_book(d: Dict) -> Iterator[Contact]:
                 yield Contact(
                     name=contact["name"],
                     phone_number=contact["details"][0]["contact_point"],
-                    created=fepoch(contact["created_timestamp"]),
-                    updated=fepoch(contact["updated_timestamp"]),
+                    created=parse_datetime_sec(contact["created_timestamp"]),
+                    updated=parse_datetime_sec(contact["updated_timestamp"]),
                 )
 
 
@@ -230,13 +231,15 @@ def _parse_installed_apps(d: Dict) -> Iterator[Action]:
     for app in d["installed_apps"]:
         yield Action(
             description="{} was installed".format(app["name"]),
-            at=fepoch(app["added_timestamp"]),
+            at=parse_datetime_sec(app["added_timestamp"]),
         )
 
 
 def _parse_app_posts(d: Dict) -> Iterator[Action]:
     for post in d["app_posts"]:
-        yield Action(description=post["title"], at=fepoch(post["timestamp"]))
+        yield Action(
+            description=post["title"], at=parse_datetime_sec(post["timestamp"])
+        )
 
 
 def _parse_photo_ips(d: Dict) -> Iterator[UploadedPhoto]:
@@ -247,7 +250,7 @@ def _parse_photo_ips(d: Dict) -> Iterator[UploadedPhoto]:
             and "upload_ip" in photo_info["media_metadata"]["photo_metadata"]
         ):
             yield UploadedPhoto(
-                at=fepoch(photo_info["creation_timestamp"]),
+                at=parse_datetime_sec(photo_info["creation_timestamp"]),
                 ip=photo_info["media_metadata"]["photo_metadata"]["upload_ip"],
             )
 
@@ -257,7 +260,7 @@ def _parse_group_comments(d: Dict) -> Iterator[Comment]:
         yield Comment(
             content=comment["data"][0]["comment"]["comment"],
             action=comment["title"],
-            at=fepoch(comment["timestamp"]),
+            at=parse_datetime_sec(comment["timestamp"]),
             metadata=comment["data"][0]["comment"]["group"],
         )
 
@@ -266,26 +269,30 @@ def _parse_joined_events(d: Dict) -> Iterator[AcceptedEvent]:
     for event in d["event_responses"]["events_joined"]:
         yield AcceptedEvent(
             name=event["name"],
-            starts_at=fepoch(event["start_timestamp"]),
-            ends_at=fepoch(event["end_timestamp"]),
+            starts_at=parse_datetime_sec(event["start_timestamp"]),
+            ends_at=parse_datetime_sec(event["end_timestamp"]),
         )
 
 
 def _parse_friends(d: Dict) -> Iterator[Friend]:
     for friend in d["friends"]:
-        yield Friend(name=friend["name"], at=fepoch(friend["timestamp"]), added=True)
+        yield Friend(
+            name=friend["name"], at=parse_datetime_sec(friend["timestamp"]), added=True
+        )
 
 
 def _parse_deleted_friends(d: Dict) -> Iterator[Friend]:
     for friend in d["deleted_friends"]:
-        yield Friend(name=friend["name"], at=fepoch(friend["timestamp"]), added=False)
+        yield Friend(
+            name=friend["name"], at=parse_datetime_sec(friend["timestamp"]), added=False
+        )
 
 
 def _parse_group_activity(d: Dict) -> Iterator[Action]:
     for gr in d["groups_joined"]:
         yield Action(
             description=gr["title"],
-            at=fepoch(gr["timestamp"]),
+            at=parse_datetime_sec(gr["timestamp"]),
         )
 
 
@@ -298,14 +305,14 @@ def _parse_group_posts(d: Dict) -> Iterator[Union[Comment, Post]]:
                     yield Comment(
                         content=comm["data"][0]["comment"]["comment"],
                         action=comm["title"],
-                        at=fepoch(comm["timestamp"]),
+                        at=parse_datetime_sec(comm["timestamp"]),
                         metadata=comm["data"][0]["comment"]["group"],
                     )
                 else:
                     yield Post(
                         content=comm["data"][0]["post"],
                         action=comm["title"],
-                        at=fepoch(comm["timestamp"]),
+                        at=parse_datetime_sec(comm["timestamp"]),
                     )
 
 
@@ -313,19 +320,23 @@ def _parse_page_likes(d: Dict) -> Iterator[Action]:
     for page in d["page_likes"]:
         yield Action(
             description="Liked Page {}".format(page["name"]),
-            at=fepoch(page["timestamp"]),
+            at=parse_datetime_sec(page["timestamp"]),
         )
 
 
 def _parse_reactions(d: Dict) -> Iterator[Action]:
     for react in d["reactions"]:
-        yield Action(description=react["title"], at=fepoch(react["timestamp"]))
+        yield Action(
+            description=react["title"], at=parse_datetime_sec(react["timestamp"])
+        )
 
 
 def _parse_search_history(d: Dict) -> Iterator[Search]:
     for search in d["searches"]:
         assert len(search["data"]) == 1
-        yield Search(query=search["data"][0]["text"], at=fepoch(search["timestamp"]))
+        yield Search(
+            query=search["data"][0]["text"], at=parse_datetime_sec(search["timestamp"])
+        )
 
 
 def _parse_conversation(
@@ -346,7 +357,7 @@ def _parse_conversation(
 
 def _parse_messages_in_conversation(messages: List[Dict]) -> Iterator[Res[Message]]:
     for m in messages:
-        timestamp = fepoch(m["timestamp_ms"] / 1000)
+        timestamp = parse_datetime_sec(m["timestamp_ms"] / 1000)
         author = m["sender_name"]
         if m["type"] == "Unsubscribe":
             continue
@@ -406,7 +417,7 @@ def _parse_posts(d: Dict) -> Iterator[Res[Union[Post, Action]]]:
                             if "description" in mdat:
                                 yield Action(
                                     description=mdat["description"],
-                                    at=fepoch(post["timestamp"]),
+                                    at=parse_datetime_sec(post["timestamp"]),
                                     metadata=mdat,
                                 )
                             # image when I just posted to a album
@@ -415,7 +426,7 @@ def _parse_posts(d: Dict) -> Iterator[Res[Union[Post, Action]]]:
                                     description="Posted to Album {}".format(
                                         mdat["title"]
                                     ),
-                                    at=fepoch(post["timestamp"]),
+                                    at=parse_datetime_sec(post["timestamp"]),
                                     metadata=mdat,
                                 )
                             else:
@@ -429,7 +440,7 @@ def _parse_posts(d: Dict) -> Iterator[Res[Union[Post, Action]]]:
                                     description="Visited {}".format(
                                         dat["place"]["name"]
                                     ),
-                                    at=fepoch(post["timestamp"]),
+                                    at=parse_datetime_sec(post["timestamp"]),
                                     metadata=dat,
                                 )
                             else:
@@ -443,7 +454,7 @@ def _parse_posts(d: Dict) -> Iterator[Res[Union[Post, Action]]]:
                             ddat = dat["life_event"]
                             yield Action(
                                 description=ddat["title"],
-                                at=fepoch(post["timestamp"]),
+                                at=parse_datetime_sec(post["timestamp"]),
                                 metadata=ddat,
                             )
                         # third party app event (e.g. Listened to Spotify Song)
@@ -452,7 +463,7 @@ def _parse_posts(d: Dict) -> Iterator[Res[Union[Post, Action]]]:
                                 if "title" in post:
                                     yield Action(
                                         description=post["title"],
-                                        at=fepoch(post["timestamp"]),
+                                        at=parse_datetime_sec(post["timestamp"]),
                                         metadata=dat,
                                     )
                             # seems like bad data handling on facebooks part.
@@ -462,7 +473,7 @@ def _parse_posts(d: Dict) -> Iterator[Res[Union[Post, Action]]]:
                             elif "text" in dat:
                                 yield Action(
                                     description=post["title"],
-                                    at=fepoch(post["timestamp"]),
+                                    at=parse_datetime_sec(post["timestamp"]),
                                     metadata=dat,
                                 )
                             else:
@@ -491,13 +502,13 @@ def _parse_posts(d: Dict) -> Iterator[Res[Union[Post, Action]]]:
             if "post" in dat and isinstance(dat["post"], str) and "title" in post:
                 yield Post(
                     content=dat["post"],
-                    at=fepoch(post["timestamp"]),
+                    at=parse_datetime_sec(post["timestamp"]),
                     action=post["title"],
                 )
             elif "profile_update" in dat:
                 yield Action(
                     description="Updated Profile",
-                    at=fepoch(post["timestamp"]),
+                    at=parse_datetime_sec(post["timestamp"]),
                     metadata=dat["profile_update"],
                 )
             else:
@@ -505,7 +516,9 @@ def _parse_posts(d: Dict) -> Iterator[Res[Union[Post, Action]]]:
         # post without any actual content (e.g. {'timestamp': 1334515711, 'title': 'Sean Breckenridge posted in club'})
         # treat this as an action since I have no content here
         elif set(("timestamp", "title")) == set(post.keys()):
-            yield Action(description=post["title"], at=fepoch(post["timestamp"]))
+            yield Action(
+                description=post["title"], at=parse_datetime_sec(post["timestamp"])
+            )
         else:
             yield RuntimeError("No known way to parse post {}".format(post))
 
@@ -514,7 +527,7 @@ def _parse_account_activity(d: Dict) -> Iterator[AdminAction]:
     for ac in d["account_activity"]:
         yield AdminAction(
             description=ac["action"],
-            at=fepoch(ac["timestamp"]),
+            at=parse_datetime_sec(ac["timestamp"]),
             ip=ac["ip_address"],
             user_agent=ac["user_agent"],
         )
@@ -524,10 +537,10 @@ def _parse_authorized_logins(d: Dict) -> Iterator[AdminAction]:
     for ac in d["recognized_devices"]:
         metadata = {}
         if "updated_timestamp" in ac:
-            metadata["updated_at"] = fepoch(ac["updated_timestamp"])
+            metadata["updated_at"] = parse_datetime_sec(ac["updated_timestamp"])
         yield AdminAction(
             description="Known Device: {}".format(ac["name"]),
-            at=fepoch(ac["created_timestamp"]),
+            at=parse_datetime_sec(ac["created_timestamp"]),
             ip=ac["ip_address"],
             user_agent=ac["user_agent"],
             metadata=metadata,
@@ -539,11 +552,7 @@ def _parse_admin_records(d: Dict) -> Iterator[AdminAction]:
         s = rec["session"]
         yield AdminAction(
             description=rec["event"],
-            at=fepoch(s["created_timestamp"]),
+            at=parse_datetime_sec(s["created_timestamp"]),
             ip=s["ip_address"],
             user_agent=s["user_agent"],
         )
-
-
-def fepoch(epoch_time: int) -> datetime:
-    return datetime.fromtimestamp(epoch_time, tz=timezone.utc)

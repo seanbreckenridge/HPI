@@ -33,6 +33,7 @@ from typing import Sequence
 
 from .core import get_files, warn_if_empty
 from .core.common import listify
+from .core.time import parse_datetime_sec
 
 
 @listify
@@ -51,7 +52,7 @@ def inputs() -> Sequence[Path]:  # type: ignore
             )
 
 
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import NamedTuple, Iterator, Set, Tuple
 from itertools import chain
 
@@ -91,7 +92,7 @@ def _parse_file(histfile: Path) -> Results:
         )
         for row in csv_reader:
             yield Entry(
-                dt=datetime.fromtimestamp(int(row[0]), tz=timezone.utc),
+                dt=parse_datetime_sec(row[0]),
                 command=row[2],
                 directory=None if row[1] == "-" else row[1],
             )

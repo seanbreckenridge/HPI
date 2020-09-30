@@ -51,9 +51,11 @@ def inputs() -> Sequence[Path]:  # type: ignore
             )
 
 
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import NamedTuple, Iterator, Set
 from itertools import chain
+
+from .core.time import parse_datetime_sec
 
 
 # represents one history entry (command)
@@ -94,7 +96,7 @@ def _parse_file(histfile: Path) -> Results:
                 row = next(csv_reader)
                 # last_row = row
                 yield Entry(
-                    dt=datetime.fromtimestamp(int(row[0]), tz=timezone.utc),
+                    dt=parse_datetime_sec(row[0]),
                     duration=int(row[1]),
                     application=row[2],
                     window_title=row[3],
