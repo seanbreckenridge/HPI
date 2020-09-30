@@ -309,3 +309,5 @@ def _merge_comments(*sources: Sequence[RComment]) -> Iterator[RComment]:
         yield e
         emitted.add(key)
     # logger.info(f"Ignored {ignored}...")
+    # tested 30/09/20
+    # Ignoring 997...
