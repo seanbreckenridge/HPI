@@ -3,6 +3,7 @@ Reddit data: saved items/comments/upvotes/etc.
 """
 REQUIRES = [
     "git+https://github.com/karlicoss/rexport",
+    "git+https://github.com/seanbreckenridge/pushshift_comment_export",
 ]
 
 from typing import Optional
