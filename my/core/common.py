@@ -21,6 +21,8 @@ from typing import (
 )
 import warnings
 
+from .util import __NOT_HPI_MODULE__
+
 # some helper functions
 PathIsh = Union[Path, str]
 

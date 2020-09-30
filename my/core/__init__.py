@@ -4,5 +4,6 @@ from .common import get_files
 from .common import LazyLogger
 from .common import warn_if_empty
 from .common import stat
+from .common import __NOT_HPI_MODULE__
 
 from .cfg import make_config

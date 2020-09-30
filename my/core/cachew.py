@@ -37,10 +37,9 @@ def cache_dir() -> Path:
     class config:
         cache_dir = '/your/custom/cache/path'
     """
-    import my.config as C
+    from .core_config import config
+    cdir = config.cache_dir
 
-    common_config = getattr(C, "common", object())
-    # TODO if attr is set _and_ it's none, disable cache?
     cdir = getattr(common_config, "cache_dir", None)
     if cdir is None:
         # TODO fallback to default cachew dir instead?
