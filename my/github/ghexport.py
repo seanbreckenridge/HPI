@@ -1,6 +1,9 @@
 """
 Github data: events, comments, etc. (API data)
 """
+REQUIRES = [
+    "git+https://github.com/karlicoss/ghexport",
+]
 from dataclasses import dataclass
 from typing import Optional
 
@@ -47,8 +50,12 @@ from ..core.cfg import make_config, Attrs
 
 
 def migration(attrs: Attrs) -> Attrs:
-    if "export_dir" in attrs:  # legacy name
-        attrs["export_path"] = attrs["export_dir"]
+    export_dir = "export_dir"
+    if export_dir in attrs:  # legacy name
+        attrs["export_path"] = attrs[export_dir]
+        from ..core.warnings import high
+
+        high(f'"{export_dir}" is deprecated! Please use "export_path" instead."')
     return attrs
 
 

@@ -4,7 +4,7 @@ See https://beepb00p.xyz/mypy-error-handling.html#kiss for more detail
 """
 
 from itertools import tee
-from typing import Union, TypeVar, Iterable, List, Tuple, Type
+from typing import Union, TypeVar, Iterable, List, Tuple, Type, Callable, Any
 
 
 T = TypeVar("T")
@@ -42,7 +42,7 @@ def split_errors(
     return (values, errors)
 
 
-def sort_res_by(items: Iterable[ResT], key) -> List[ResT]:
+def sort_res_by(items: Iterable[Res[T]], key: Callable[[T], Any]) -> List[Res[T]]:
     """
     The general idea is: just alaways carry errors with the entry that precedes them
     """
@@ -56,7 +56,7 @@ def sort_res_by(items: Iterable[ResT], key) -> List[ResT]:
             groups.append((i, group))
             group = []
 
-    results = []
+    results: List[Res[T]] = []
     for v, errs in sorted(groups, key=lambda p: key(p[0])):
         results.extend(errs)
         results.append(v)
