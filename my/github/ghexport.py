@@ -21,28 +21,10 @@ class github(user_config):
     # path[s]/glob to the exported JSON data
     export_path: Paths
 
-    # path to a local clone of ghexport
-    # alternatively, you can put the repository (or a symlink) in $MY_CONFIG/my/config/repos/ghexport
-    ghexport: Optional[PathIsh] = None
-
     # path to a cache directory
     # if omitted, will use /tmp
     cache_dir: Optional[PathIsh] = None
 
-    @property
-    def dal_module(self):
-        rpath = self.ghexport
-        if rpath is not None:
-            from ..core.common import import_dir
-
-            return import_dir(rpath, ".dal")
-        else:
-            import my.config.repos.ghexport.dal as dal
-
-            return dal
-
-
-###
 
 # TODO  perhaps using /tmp in case of None isn't ideal... maybe it should be treated as if cache is off
 
@@ -62,12 +44,12 @@ def migration(attrs: Attrs) -> Attrs:
 config = make_config(github, migration=migration)
 
 
-from typing import TYPE_CHECKING
+try:
+    from ghexport import dal
+except ModuleNotFoundError as e:
+    from ..core.compat import pre_pip_dal_handler
 
-if TYPE_CHECKING:
-    import my.config.repos.ghexport.dal as dal
-else:
-    dal = config.dal_module
+    dal = pre_pip_dal_handler("ghexport", e, config, requires=REQUIRES)
 
 ############################
 

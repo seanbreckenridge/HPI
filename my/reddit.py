@@ -5,10 +5,8 @@ REQUIRES = [
     "git+https://github.com/karlicoss/rexport",
 ]
 
-from typing import Optional
 from .core.common import Paths
 
-from types import ModuleType
 from my.config import reddit as uconfig
 from dataclasses import dataclass
 
@@ -45,7 +43,8 @@ try:
     from rexport import dal
 except ModuleNotFoundError as e:
     from .core.compat import pre_pip_dal_handler
-    dal = pre_pip_dal_handler('rexport', e, config, requires=REQUIRES)
+
+    dal = pre_pip_dal_handler("rexport", e, config, requires=REQUIRES)
 
 ############################
 
