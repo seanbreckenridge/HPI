@@ -30,9 +30,14 @@ import csv
 import warnings
 from pathlib import Path
 from typing import Sequence
+from datetime import datetime
+from typing import NamedTuple, Iterator, Set
+from itertools import chain
 
 from .core import get_files, warn_if_empty
 from .core.common import listify
+from .core.time import parse_datetime_sec
+from .core.file import filter_subfile_matches
 
 
 @listify
@@ -51,13 +56,6 @@ def inputs() -> Sequence[Path]:  # type: ignore[misc]
             )
 
 
-from datetime import datetime
-from typing import NamedTuple, Iterator, Set
-from itertools import chain
-
-from .core.time import parse_datetime_sec
-
-
 # represents one history entry (command)
 class Entry(NamedTuple):
     dt: datetime
@@ -70,7 +68,7 @@ Results = Iterator[Entry]
 
 
 def history(from_paths=inputs) -> Results:
-    yield from _merge_histories(*map(_parse_file, from_paths()))
+    yield from _merge_histories(*map(_parse_file, filter_subfile_matches(from_paths())))
 
 
 @warn_if_empty

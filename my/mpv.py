@@ -35,7 +35,7 @@ from typing import Iterator, Sequence, NamedTuple, Set, Any, Dict, Tuple, Option
 from .core.common import get_files, LazyLogger
 from .core.time import parse_datetime_sec
 
-logger = LazyLogger(__name__, level="INFO")
+logger = LazyLogger(__name__, level="info")
 
 EventType = str
 EventData = Any

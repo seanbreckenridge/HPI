@@ -34,6 +34,7 @@ from typing import Sequence
 from .core import get_files, warn_if_empty
 from .core.common import listify
 from .core.time import parse_datetime_sec
+from .core.file import filter_subfile_matches
 
 
 @listify
@@ -68,7 +69,7 @@ Results = Iterator[Entry]
 
 
 def history(from_paths=inputs) -> Results:
-    yield from _merge_histories(*map(_parse_file, from_paths()))
+    yield from _merge_histories(*map(_parse_file, filter_subfile_matches(from_paths())))
 
 
 @warn_if_empty
