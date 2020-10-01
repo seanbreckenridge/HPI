@@ -61,8 +61,8 @@ def weight() -> Iterator[Weight]:
 # alias 'teeth=python3 -c "from my.body import prompt, Teeth; prompt(Teeth)"'
 # alias 'shower=python3 -c "from my.body import prompt, Shower; prompt(Shower)"'
 # alias 'weight=python3 -c "from my.body import prompt, Weight; prompt(Weight)"'
-def prompt(nt: NamedTuple):  # type: ignore
-    load_prompt_and_writeback(nt, datafile(nt.__name__.casefold()))  # type: ignore
+def prompt(nt: NamedTuple):
+    load_prompt_and_writeback(nt, datafile(nt.__name__.casefold()))  # type: ignore[attr-defined]
 
 
 def stats():

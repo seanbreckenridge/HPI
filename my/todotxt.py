@@ -3,7 +3,7 @@ Parses todotxt (http://todotxt.org/) done.txt and todo.txt files
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import todotxt as user_config  # type: ignore
+from my.config import todotxt as user_config
 
 from dataclasses import dataclass
 from typing import Optional
@@ -71,7 +71,7 @@ class Todo(NamedTuple):
 
 
 @listify
-def inputs() -> Sequence[Tuple[datetime, Path]]:  # type: ignore
+def inputs() -> Sequence[Tuple[datetime, Path]]:  # type: ignore[misc]
     """Returns all todo/done.txt files"""
     dones = get_files(config.export_path)
     for todone in dones:

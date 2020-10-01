@@ -8,7 +8,7 @@ Parse Message Dates from Skypes GDPR JSON export
 # was using skype
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import skype as user_config  # type: ignore
+from my.config import skype as user_config
 
 from dataclasses import dataclass
 

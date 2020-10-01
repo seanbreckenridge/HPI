@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # see https://github.com/karlicoss/pymplate for up-to-date reference
 
-from setuptools import setup, find_namespace_packages  # type: ignore
+from setuptools import setup, find_namespace_packages  # type: ignore[import]
 
 INSTALL_REQUIRES = [
     "pytz",  # even though it's not needed by the core, it's so common anyway...

@@ -4,7 +4,7 @@ from: https://github.com/seanbreckenridge/lolexport
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import league_of_legends as user_config  # type: ignore
+from my.config import league_of_legends as user_config
 
 from dataclasses import dataclass
 

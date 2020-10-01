@@ -3,7 +3,7 @@ Parses Firefox History using http://github.com/seanbreckenridge/ffexport
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import firefox as user_config  # type: ignore
+from my.config import firefox as user_config
 
 from dataclasses import dataclass
 
@@ -42,7 +42,7 @@ from ffexport.save_hist import backup_history
 
 
 @listify
-def inputs() -> Sequence[Path]:  # type: ignore
+def inputs() -> Sequence[Path]:  # type: ignore[misc]
     """
     Returns all inputs, including old sqlite backups (from config.export_path) and the current firefox history
     """

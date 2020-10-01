@@ -11,12 +11,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import NamedTuple, Iterator, Set, Tuple
 
-from lxml import etree  # type: ignore
+from lxml import etree
 
 from .core.common import get_files
 from .core.time import parse_datetime_millis
 
-from my.config import smscalls as config  # type: ignore
+from my.config import smscalls as config
 
 
 class Call(NamedTuple):

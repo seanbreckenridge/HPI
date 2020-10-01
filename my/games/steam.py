@@ -4,7 +4,7 @@ https://github.com/seanbreckenridge/steamscraper
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import steam as user_config  # type: ignore
+from my.config import steam as user_config
 
 from dataclasses import dataclass
 

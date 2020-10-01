@@ -26,7 +26,7 @@ class Food(NamedTuple):
 
 def food() -> Iterator[Res[Food]]:
     proc: subprocess.CompletedProcess = subprocess.run(
-        [calories_path, "export"],  # type: ignore
+        [calories_path, "export"],  # type: ignore[list-item]
         encoding="utf-8",
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,

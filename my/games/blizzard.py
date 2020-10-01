@@ -4,7 +4,7 @@ from: https://github.com/seanbreckenridge/blizzard_gdpr_parser
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import blizzard as user_config  # type: ignore
+from my.config import blizzard as user_config
 
 from dataclasses import dataclass
 

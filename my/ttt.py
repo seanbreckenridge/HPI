@@ -3,7 +3,7 @@ Parses history from https://github.com/seanbreckenridge/ttt
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import ttt as user_config  # type: ignore
+from my.config import ttt as user_config
 
 from dataclasses import dataclass
 from typing import Optional
@@ -37,7 +37,7 @@ from .core.time import parse_datetime_sec
 
 
 @listify
-def inputs() -> Sequence[Path]:  # type: ignore
+def inputs() -> Sequence[Path]:  # type: ignore[misc]
     """
     Returns all inputs, including live_file if provided and backups
     """

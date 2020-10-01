@@ -10,7 +10,7 @@ Parses ZSH history (uses exports from ./job/zsh_history.job) and current zsh his
 # look at https://github.com/bamos/zsh-history-analysis
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import zsh as user_config  # type: ignore
+from my.config import zsh as user_config
 
 from dataclasses import dataclass
 from typing import Optional, List
@@ -44,7 +44,7 @@ from .core.time import parse_datetime_sec
 
 
 @listify
-def inputs() -> Sequence[Path]:  # type: ignore
+def inputs() -> Sequence[Path]:  # type: ignore[misc]
     """
     Returns all inputs, including live_file if provided and exported histories
     """
@@ -94,7 +94,7 @@ def filesize(p: Path) -> int:
 
 @lru_cache
 @listify
-def read_prefix(p: Path) -> Sequence[str]:  # type: ignore
+def read_prefix(p: Path) -> Sequence[str]:  # type: ignore[misc]
     """
     Read the first 100 lines of a file
     """
@@ -124,7 +124,7 @@ def prefix_lines_match(p1: Path, p2: Path) -> bool:
 # duplicates, instead of reading the all in (which uses regex) and
 # then removing duplicates
 @listify
-def filter_inputs(paths: Sequence[Path]) -> Sequence[Path]:  # type: ignore
+def filter_inputs(paths: Sequence[Path]) -> Sequence[Path]:  # type: ignore[misc]
     # if a history file starts with the same 100 lines as another one
     # and one file is bigger than another, keep the bigger file
     sorted_files: List[Path] = sorted(
@@ -177,8 +177,8 @@ def _parse_file(histfile: Path) -> Results:
             # yield the last command
             if dur is not None:
                 yield Entry(
-                    dt=dt,  # type: ignore
-                    duration=dur,  # type: ignore
+                    dt=dt,
+                    duration=dur,
                     command=command,
                 )
             # set 'current' dt, dur, command to matched groups
@@ -186,8 +186,8 @@ def _parse_file(histfile: Path) -> Results:
     # yield the last entry
     if command:
         yield Entry(
-            dt=dt,  # type: ignore
-            duration=dur,  # type: ignore
+            dt=dt,  # type: ignore[arg-type]
+            duration=dur,  # type: ignore[arg-type]
             command=command,
         )
 

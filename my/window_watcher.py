@@ -3,7 +3,7 @@ Parses history from https://github.com/seanbreckenridge/aw-watcher-window
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import window_watcher as user_config  # type: ignore
+from my.config import window_watcher as user_config
 
 from dataclasses import dataclass
 from typing import Optional
@@ -36,7 +36,7 @@ from .core.common import listify
 
 
 @listify
-def inputs() -> Sequence[Path]:  # type: ignore
+def inputs() -> Sequence[Path]:  # type: ignore[misc]
     """
     Returns all inputs, including live_file if provided and backups
     """

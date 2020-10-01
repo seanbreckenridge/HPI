@@ -86,7 +86,7 @@ cache = mcachew(
 
 
 @cache
-def saved() -> Iterator[Save]:  # type: ignore
+def saved() -> Iterator[Save]:
     return _dal().saved()
 
 
@@ -97,12 +97,12 @@ def comments() -> Iterator[RComment]:
 
 
 @cache
-def submissions() -> Iterator[Submission]:  # type: ignore
+def submissions() -> Iterator[Submission]:
     return _dal().submissions()
 
 
 @cache
-def upvoted() -> Iterator[Upvote]:  # type: ignore
+def upvoted() -> Iterator[Upvote]:
     return _dal().upvoted()
 
 
@@ -119,7 +119,7 @@ from multiprocessing import Pool
 
 
 class SaveWithDt(NamedTuple):
-    save: Save  # type: ignore
+    save: Save
     backup_dt: datetime
 
     def __getattr__(self, x):
@@ -163,7 +163,7 @@ def _get_state(bfile: Path) -> Dict[Sid, SaveWithDt]:
 
     saves = [SaveWithDt(save, bdt) for save in dal.DAL([bfile]).saved()]
     return make_dict(
-        sorted(saves, key=lambda p: p.save.created),  # type: ignore
+        sorted(saves, key=lambda p: p.save.created),
         key=lambda s: s.save.sid,
     )
 

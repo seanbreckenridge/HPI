@@ -5,7 +5,7 @@ https://github.com/seanbreckenridge/mpv-sockets/blob/master/DAEMON.md
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import mpv as user_config  # type: ignore
+from my.config import mpv as user_config
 
 from dataclasses import dataclass
 
@@ -299,7 +299,7 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
                     is_playing = True
                     # if we know when it was paused, add how long it was paused to pause_duration
                     if pause_start_time is not None:
-                        pause_duration = pause_duration + (dt_float - pause_start_time)  # type: ignore
+                        pause_duration = pause_duration + (dt_float - pause_start_time)
                         pause_start_time = None
                 else:
                     # logger.warning("received resumed event while already playing?")
@@ -313,7 +313,7 @@ def _reconstruct_event_stream(p: Path) -> Iterator[Dict[str, Any]]:
             # was the last item, else write out whatever
             # media_data has in the dict currently
             if not is_playing:
-                pause_duration = pause_duration + (dt_float - pause_start_time)  # type: ignore
+                pause_duration = pause_duration + (dt_float - pause_start_time)  # type: ignore[operator]
             media_data["end_time"] = dt_float
             media_data["pause_duration"] = pause_duration
             media_data["percents"] = percents

@@ -5,7 +5,7 @@ Parses backups of my newsboat rss file
 from datetime import datetime
 from typing import NamedTuple, Optional
 
-from my.config import rss as user_config  # type: ignore
+from my.config import rss as user_config
 
 from dataclasses import dataclass
 from .core import PathIsh, Paths
@@ -39,7 +39,7 @@ SubscriptionState = Tuple[datetime, Subscriptions]
 
 
 @listify
-def inputs() -> Sequence[Tuple[datetime, Path]]:  # type: ignore
+def inputs() -> Sequence[Tuple[datetime, Path]]:  # type: ignore[misc]
     """
     Returns all inputs, including live_file if provided
     """
@@ -68,7 +68,7 @@ def subscription_history() -> Iterator[SubscriptionState]:
 
 
 @listify
-def _parse_subscription_file(p: Path) -> Sequence[Subscription]:  # type: ignore
+def _parse_subscription_file(p: Path) -> Sequence[Subscription]:  # type: ignore[misc]
     for line in p.read_text().splitlines():
         ln = line.strip()
         if ln:
