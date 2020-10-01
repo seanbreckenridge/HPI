@@ -48,6 +48,7 @@ install_python_extras() {
 	pip install -r ./pypackages.txt
 	pip install git+https://github.com/seanbreckenridge/aw-watcher-window
 	pip install git+https://github.com/seanbreckenridge/pushshift_comment_export
+	pip install 'git+https://github.com/karlicoss/rexport'
 
 }
 
@@ -100,7 +101,6 @@ go get github.com/zupzup/calories
 # export specific setup
 ./scripts/structure
 
-pip3 install --user 'git+https://github.com/karlicoss/rexport'
 # temporary while I use the httpx wrapper to prevent 403s
 bash -x ./scripts/setup_ghexport
 
