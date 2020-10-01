@@ -1,4 +1,3 @@
-import os
 from more_itertools import ilen
 
 from my.todotxt import Todo, completed, events

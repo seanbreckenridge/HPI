@@ -2,7 +2,6 @@
 
 import inspect
 from pathlib import Path
-import tempfile
 
 from my.pdfs import get_annots, annotated_pdfs
 

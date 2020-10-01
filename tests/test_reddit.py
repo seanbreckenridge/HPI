@@ -1,11 +1,8 @@
-from datetime import datetime
-import pytz
-
 from my.core.common import make_dict
 
 from more_itertools import ilen
 
-from my.reddit import events, inputs, saved, _dal, comments, pushshift_comments
+from my.reddit import events, inputs, saved, _dal, pushshift_comments
 
 
 def test_reddit_has_data() -> None:

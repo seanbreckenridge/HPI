@@ -1,8 +1,5 @@
 from pathlib import Path
-from subprocess import check_call
-import gzip
 import lzma
-import io
 import zipfile
 
 import pytest
@@ -31,9 +28,6 @@ def test_cpath(tmp_path: Path) -> None:
     CPath(str(tmp_path / "file")).read_text() == "just plaintext"
     CPath(tmp_path / "file.xz").read_text() == "compressed text"
     # TODO not sure about zip files??
-
-
-import pytest  # type: ignore
 
 
 @pytest.fixture(autouse=True)

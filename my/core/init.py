@@ -30,7 +30,6 @@ del ModuleType
 def setup_config() -> None:
     import sys
     import warnings
-    from typing import Optional
 
     from .preinit import get_mycfg_dir
 

@@ -1,6 +1,18 @@
 from more_itertools import ilen
 
-from my.facebook import *
+from my.facebook import (
+    Contact,
+    events,
+    Action,
+    AdminAction,
+    UploadedPhoto,
+    Search,
+    Post,
+    Comment,
+    AcceptedEvent,
+    Friend,
+    Conversation,
+)
 
 
 def test_facebook_types():
