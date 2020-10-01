@@ -6,6 +6,7 @@ readonly DATA_PREFIX="${HOME}/data"
 declare -a directories
 directories=(
 	'body'
+	'doctor'
 	'github/gdpr'
 	'github/ghexport'
 	'zsh_history'
@@ -27,7 +28,10 @@ directories=(
 )
 declare -a files
 files=(
-	'weight.json'
+	'body/weight.json'
+	'body/teeth.json'
+	'body/shower.json'
+	'body/water.json'
 )
 
 for dir in "${directories[@]}"; do
