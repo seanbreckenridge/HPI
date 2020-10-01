@@ -1,4 +1,4 @@
-from more_itertools import ilen
+from more_itertools import ilen, last
 
 from my.browsing import inputs, history
 
@@ -7,6 +7,6 @@ def test_browsing_contents():
 
     # only test the live file
     def only_live():
-        return list(inputs())[-1]
+        return [last(inputs())]
 
-    assert ilen(history()) > 10
+    assert ilen(history(from_paths=only_live)) > 100
