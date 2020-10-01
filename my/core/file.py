@@ -43,8 +43,8 @@ def prefix_lines_match(p1: Path, p2: Path) -> bool:
 # this improves latency by about 300ms for every backup
 # if you had 10 backups, this reduces the time from
 # 4 seconds, to 500ms, by preemptively filtering
-# duplicates, instead of reading the all in (which uses regex) and
-# then removing duplicates
+# duplicates, instead of reading in data, parsing
+# and then removing duplicates
 @listify
 def filter_subfile_matches(paths: Sequence[Path]) -> Sequence[Path]:  # type: ignore[misc]
     """
