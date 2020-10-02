@@ -132,7 +132,7 @@ Need to do more research/figure out
 - [ ] android app to track my location?
 - [ ] polar? some other reading system? formalize documents/configure `my.pdfs`
 - [ ] email?
-- [ ] generic metadata gatherer/DAL/library for URLs? would be used for a couple things (my.browsing, my.mpv; could be plugged into another other module to get more data)
+- [ ] generic metadata gatherer/DAL/library for URLs? work in progress. see [here](https://github.com/seanbreckenridge/url_metadata)
 
 ### delayed todos
 
