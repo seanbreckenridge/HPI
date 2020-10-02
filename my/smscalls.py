@@ -21,6 +21,7 @@ from my.config import smscalls as config
 
 class Call(NamedTuple):
     dt: datetime
+    dt_readable: str
     duration_s: int
     who: str
     phone_number: str
@@ -50,6 +51,7 @@ def _extract_calls(path: Path) -> Iterator[Call]:
         # ok, so readable date is local datetime, cahnging throughout the backup
         yield Call(
             dt=parse_datetime_millis(cxml.get("date")),
+            dt_readable=cxml.get("readable_date"),
             duration_s=int(cxml.get("duration")),
             phone_number=cxml.get("number"),
             who=cxml.get("contact_name")  # TODO number if contact is unavail??
@@ -59,6 +61,7 @@ def _extract_calls(path: Path) -> Iterator[Call]:
 
 class Message(NamedTuple):
     dt: datetime
+    dt_readable: str
     who: str
     message: str
     phone_number: str  # phone number
@@ -83,6 +86,7 @@ def _extract_messages(path: Path) -> Iterator[Message]:
     for mxml in tr.findall("sms"):
         yield Message(
             dt=parse_datetime_millis(mxml.get("date")),
+            dt_readable=mxml.get("readable_date"),
             who=mxml.get("contact_name"),
             message=mxml.get("body"),
             phone_number=mxml.get("address"),

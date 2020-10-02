@@ -1,5 +1,5 @@
 from functools import lru_cache
-from datetime import datetime, tzinfo
+from datetime import datetime, tzinfo, timezone
 from typing import Union
 
 import pytz  # type: ignore
@@ -19,7 +19,7 @@ def abbr_to_timezone(abbr: str) -> tzinfo:
 
 
 def parse_datetime_sec(d: Union[str, float, int]) -> datetime:
-    return pytz.utc.localize(datetime.utcfromtimestamp(int(d)))
+    return datetime.fromtimestamp(int(d), tz=timezone.utc)
 
 
 def parse_datetime_millis(d: Union[str, float, int]) -> datetime:
