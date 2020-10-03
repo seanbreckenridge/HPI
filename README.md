@@ -57,6 +57,13 @@ These are modules to parse GDPR exports/data from services I used to use, but do
 
 See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py) for config.
 
+### Companion Libraries
+
+Disregarding tools which actively collect data (like [`ttt`](https://github.com/seanbreckenridge/ttt)/[`window_watcher`](https://github.com/seanbreckenridge/aw-watcher-window)), I have some other libraries I've created for this project, to provide more context to some of the data.
+
+- [`ipgeocache`](https://github.com/seanbreckenridge/ipgeocache) - for any IPs gathered from data exports, provides geolocation info, so I have location info going back to 2013 (thanks facebook)
+- [`url_metadata`](https://github.com/seanbreckenridge/url_metadata) - caches youtube subtitles, url metadata (title, description, image links), and a html/plaintext summary for any URL
+
 ### Ad-hoc and interactive
 
 Some basic examples.
@@ -132,7 +139,6 @@ Need to do more research/figure out
 - [ ] android app to track my location?
 - [ ] polar? some other reading system? formalize documents/configure `my.pdfs`
 - [ ] email?
-- [ ] generic metadata gatherer/DAL/library for URLs? work in progress. see [here](https://github.com/seanbreckenridge/url_metadata)
 
 ### delayed todos
 
