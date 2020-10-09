@@ -37,7 +37,7 @@ This is modified from [`karlicoss/HPI`](https://github.com/karlicoss/HPI) to mor
 - `my.mpv`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-sockets/blob/master/DAEMON.md)
 - `my.money`, bank account transactions/balance history from [my budget tool](https://github.com/seanbreckenridge/mint)
 - `my.smscalls`, exports call/sms history using [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore&hl=en_US)
-- `my.todotxt`, to track my to-do list history
+- `my.todotxt`, to track my to-do list history (using backups of my [`todotxt`](http://todotxt.org/) files)
 - `my.rss`, keeps track of when I added/removed RSS feeds (for [`newsboat`](https://newsboat.org/))
 - `my.ipython`, for timestamped python REPL history
 - `my.ttt`, to parse shell/system history tracked by [`ttt`](https://github.com/seanbreckenridge/ttt)
