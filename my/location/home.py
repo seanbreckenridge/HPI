@@ -56,7 +56,17 @@ def get_location(dt: datetime) -> LatLon:
     """
     Interpolates the location at dt
     """
+    if not config._past:
+        return config.current
+    prev_dt: datetime = datetime.now()
     for loc, pdt in config._past:
-        if dt <= pdt:
+        # iterating moving from today to the past,
+        # if this datetime is in between the last time reported
+        # and this one, return the location of the last time reported LatLon
+        # (prev_dt would be the next place I moved to)
+        if prev_dt >= dt and pdt < dt:
             return loc
+        prev_dt = pdt
+    from ..core.warnings import medium
+    medium("Don't have any location going back further than {}, using current location".format(prev_dt))
     return config.current
