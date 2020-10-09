@@ -131,7 +131,8 @@ def parse_takeout(single_takeout_dir: Path) -> Results:
 
 # in UTC
 def _parse_json_date(sdate: str) -> datetime:
-    return datetime.replace(datetime.strptime(sdate.split(".")[0], "%Y-%m-%dT%H:%M:%S"), tzinfo=timezone.utc)
+    return datetime.replace(datetime.fromisoformat(sdate.split(".")[0]), tzinfo=timezone.utc)
+    # return datetime.replace(datetime.strptime(sdate.split(".")[0], "%Y-%m-%dT%H:%M:%S"), tzinfo=timezone.utc)
 
 
 def _parse_location_history(p: Path) -> Iterator[Location]:
