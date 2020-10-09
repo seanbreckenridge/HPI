@@ -72,7 +72,7 @@ def _dal() -> dal.DAL:
 
 
 # TODO hmm. not good, need to be lazier?...
-@mcachew(config.cache_dir, hashf=lambda dal: dal.sources)
+@mcachew(config.cache_dir, depends_on=lambda dal: dal.sources)
 def all_events(dal=_dal()) -> Results:
     for d in dal.events():
         yield _parse_event(d)
