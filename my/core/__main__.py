@@ -175,6 +175,8 @@ def modules_check(args):
     verbose: bool = args.verbose
     quick: bool = args.quick
     module: Optional[str] = args.module
+    if module is not None:
+        verbose = True
     vw = "" if verbose else "; pass --verbose to print more information"
 
     from . import common
