@@ -265,9 +265,6 @@ def mcachew(*args, **kwargs):  # type: ignore[no-redef]
         )
         return lambda orig_func: orig_func
     else:
-        import cachew.experimental
-
-        cachew.experimental.enable_exceptions()  # TODO do it only once?
         return cachew.cachew(*args, **kwargs)
 
 
