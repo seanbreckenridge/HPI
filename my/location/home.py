@@ -1,6 +1,7 @@
 """
 Simple location provider, serving as a fallback when more detailed data isn't available
 """
+from operator import itemgetter
 from dataclasses import dataclass
 from datetime import datetime
 from functools import lru_cache
@@ -43,6 +44,7 @@ class home(user_config):
             else:
                 dt = x
             res.append((loc, dt))
+        res.sort(key=itemgetter(1)) # sort from oldest datetime to newest
         return res
 
 
@@ -56,22 +58,7 @@ def get_location(dt: datetime) -> LatLon:
     """
     Interpolates the location at dt
     """
-    if not config._past:
-        return config.current
-    prev_dt: datetime = datetime.now()
-    for loc, pdt in config._past:
-        # iterating moving from today to the past,
-        # if this datetime is in between the last time reported
-        # and this one, return the location of the last time reported LatLon
-        # (prev_dt would be the next place I moved to)
-        if prev_dt >= dt and pdt < dt:
+    for loc, pdt in config._past:  # ordered from oldest to newest
+        if dt <= pdt:
             return loc
-        prev_dt = pdt
-    from ..core.warnings import medium
-
-    medium(
-        "Don't have any location going back further than {}, using current location".format(
-            prev_dt
-        )
-    )
     return config.current
