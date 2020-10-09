@@ -81,7 +81,7 @@ def _dal() -> dal.DAL:
 
 
 cache = mcachew(
-    hashf=lambda: list(inputs()).extend(list(comment_inputs()))
+    depends_on=lambda: list(inputs()).extend(list(comment_inputs()))
 )  # depends on inputs only
 
 

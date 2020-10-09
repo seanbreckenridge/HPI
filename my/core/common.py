@@ -243,7 +243,7 @@ if TYPE_CHECKING:
             self,
             cache_path: Any = None,
             *,
-            hashf: Any = None,
+            depends_on: Any = None,
             chunk_by: int = 0,
             logger: Any = None,
         ) -> Callable[[F], F]:
@@ -266,38 +266,6 @@ def mcachew(*args, **kwargs):  # type: ignore[no-redef]
         return lambda orig_func: orig_func
     else:
         return cachew.cachew(*args, **kwargs)
-
-
-# just so I have a nicer interface to run cachew for a path, using the filename
-# as the location to store in /tmp and hashf
-# for cache_path_base, specify something like /tmp/modulename
-#
-# this handles the repetitive task of creating the sqlitedb location
-# and making sure the cache directory exists
-#
-# this uses the filename as the hash, if one isn't provided as a kwarg
-def cachewpath(cache_path_base: str, *args, **kwargs):
-    if not os.path.exists(cache_path_base):
-        os.makedirs(cache_path_base)
-    if not os.path.isdir(cache_path_base):
-        warnings.warn(
-            "Expected {} to be a directory, but it isn't".format(cache_path_base)
-        )
-
-    def _cache_path(p: Path):
-        full_path: Path = p.expanduser().absolute()
-        alpha_chars: str = "".join(
-            filter(lambda y: y in string.ascii_letters + string.digits, str(full_path))
-        )
-        return os.path.join(cache_path_base, alpha_chars)
-
-    # store at cache_path + stringified, simplified path
-    kwargs["cache_path"] = _cache_path
-    # stringify path for hash, if not provided
-    if "hashf" not in kwargs:
-        kwargs["hashf"] = lambda p: str(p)
-
-    return mcachew(*args, **kwargs)
 
 
 @functools.lru_cache(1)

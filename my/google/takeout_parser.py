@@ -8,13 +8,16 @@ from pathlib import Path
 from datetime import datetime, timezone
 from typing import Iterator, Union, Any
 
+import cachew
+
 from .models import HtmlEvent, HtmlComment, LikedVideo, AppInstall, Location
 from .html import read_html_activity, read_html_li
 
 from ..core.time import parse_datetime_millis
 from ..core.error import Res
-
-from ..core.common import LazyLogger, cachewpath
+from ..core.common import LazyLogger, mcachew
+from ..core.cachew import cache_dir
+from ..core.file import simplify_path
 
 logger = LazyLogger(__name__, level="warning")
 
@@ -131,7 +134,9 @@ def parse_takeout(single_takeout_dir: Path) -> Results:
 
 # in UTC
 def _parse_json_date(sdate: str) -> datetime:
-    return datetime.replace(datetime.fromisoformat(sdate.split(".")[0]), tzinfo=timezone.utc)
+    return datetime.replace(
+        datetime.fromisoformat(sdate.split(".")[0]), tzinfo=timezone.utc
+    )
     # return datetime.replace(datetime.strptime(sdate.split(".")[0], "%Y-%m-%dT%H:%M:%S"), tzinfo=timezone.utc)
 
 
@@ -170,9 +175,12 @@ def _parse_html_chat_li(p: Path) -> Iterator[Res[HtmlEvent]]:
     yield from read_html_li(p)
 
 
-CACHEW_PATH = "/tmp/google_html"
-
-
-@cachewpath(cache_path_base=CACHEW_PATH, logger=logger)
+@mcachew(
+    cache_path=lambda p: str(
+        cache_dir() / simplify_path(p) / cachew.cname(_parse_html_activity)
+    ),
+    force_file=True,
+    logger=logger,
+)
 def _parse_html_activity(p: Path) -> Iterator[Res[HtmlEvent]]:
     yield from read_html_activity(p)

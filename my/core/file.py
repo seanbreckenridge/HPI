@@ -1,3 +1,4 @@
+import string
 from pathlib import Path
 from functools import lru_cache
 from typing import Sequence, List
@@ -70,3 +71,14 @@ def filter_subfile_matches(paths: Sequence[Path]) -> Sequence[Path]:  # type: ig
             else:
                 unique_files.append(s)
                 yield s  # this file didnt match, so it maybe from another computer/timeframe
+
+
+def simplify_path(p: Path) -> str:
+    """
+    >>> Path("/home/sometihng/else.txt")
+    'homesomethingelsetxt'
+    """
+    full_path: Path = p.expanduser().absolute()
+    return "".join(
+        filter(lambda y: y in string.ascii_letters + string.digits, str(full_path))
+    )

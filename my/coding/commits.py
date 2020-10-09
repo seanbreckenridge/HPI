@@ -2,26 +2,23 @@
 Git commits data for repositories on your filesystem
 """
 
-
-import os
 from pathlib import Path
 from datetime import datetime, timezone
 from typing import List, NamedTuple, Optional, Iterator, Set
 
-from ..core.common import PathIsh, LazyLogger, cachewpath, get_files
 from my.config import commits as config
 
-# pip3 install gitpython
-import git  # type: ignore
-from git.repo.fun import is_git_dir  # type: ignore
+from ..core.common import PathIsh, LazyLogger, mcachew, get_files
+from ..core.cachew import cache_dir
+from ..core.file import simplify_path
+
+import cachew
+import git  # type: ignore[import]
+from git.repo.fun import is_git_dir  # type: ignore[import]
 
 
 log = LazyLogger("my.commits", level="warning")
 
-CACHEW_PATH = "/tmp/coding-cachw"
-
-# create cache path
-os.makedirs(CACHEW_PATH, exist_ok=True)
 
 # TODO: task-pool something like https://sean.fish/d/repos-pull-all?dark
 # to pull all repos?
@@ -163,7 +160,7 @@ def repos():
 
 
 # returns modification time for an index to use as hash function
-def _repo_hashf(_repo: Path) -> int:
+def _repo_depends_on(_repo: Path) -> int:
     # TODO maybe use smth from git library? ugh..
     # TODO just use anything except index? ugh.
     for pp in {
@@ -185,10 +182,13 @@ def _commits(_repos: List[Path]) -> Iterator[Commit]:
         yield from _cached_commits(r)
 
 
-@cachewpath(
-    hashf=_repo_hashf,
+@mcachew(
+    depends_on=_repo_depends_on,
+    cache_path=lambda p: str(
+        cache_dir() / simplify_path(p) / cachew.cname(_cached_commits)
+    ),
+    force_file=True,
     logger=log,
-    cache_path_base=CACHEW_PATH,
 )
 def _cached_commits(_repo: Path) -> Iterator[Commit]:
     log.info("processing %s", _repo)

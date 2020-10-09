@@ -10,6 +10,7 @@ def disable_cachew():
         return
 
     from cachew import settings
+
     settings.ENABLE = False
 
 
@@ -22,6 +23,7 @@ def disabled_cachew():
         yield
         return
     from cachew.extra import disabled_cachew
+
     with disabled_cachew():
         yield
 
@@ -40,6 +42,6 @@ def cache_dir() -> Path:
     cdir = getattr(common_config, "cache_dir", None)
     if cdir is None:
         # TODO fallback to default cachew dir instead?
-        return Path("/var/tmp/cachew")
+        return Path("/tmp/cachew")
     else:
         return Path(cdir)
