@@ -5,7 +5,7 @@ Parses a Google Takeout https://takeout.google.com/
 import os
 import json
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Iterator, Union, Any
 
 from .models import HtmlEvent, HtmlComment, LikedVideo, AppInstall, Location
@@ -129,9 +129,9 @@ def parse_takeout(single_takeout_dir: Path) -> Results:
         yield from handler(f)
 
 
-# TODO: enforce UTC? is this UTC?
+# in UTC
 def _parse_json_date(sdate: str) -> datetime:
-    return datetime.strptime(sdate.split(".")[0], "%Y-%m-%dT%H:%M:%S")
+    return datetime.replace(datetime.strptime(sdate.split(".")[0], "%Y-%m-%dT%H:%M:%S"), tzinfo=timezone.utc)
 
 
 def _parse_location_history(p: Path) -> Iterator[Location]:
