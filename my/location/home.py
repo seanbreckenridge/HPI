@@ -68,5 +68,10 @@ def get_location(dt: datetime) -> LatLon:
             return loc
         prev_dt = pdt
     from ..core.warnings import medium
-    medium("Don't have any location going back further than {}, using current location".format(prev_dt))
+
+    medium(
+        "Don't have any location going back further than {}, using current location".format(
+            prev_dt
+        )
+    )
     return config.current
