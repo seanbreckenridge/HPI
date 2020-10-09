@@ -14,3 +14,4 @@ pytest-random-order
 Pillow
 lxml
 httpx
+timezonefinder
