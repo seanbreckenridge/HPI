@@ -52,8 +52,6 @@ install_python_extras() {
 	echo "Installing extra python packages..."
 	new_pip install -r ./pypackages.txt
 	new_pip install 'git+https://github.com/seanbreckenridge/aw-watcher-window'
-	new_pip install 'git+https://github.com/seanbreckenridge/pushshift_comment_export'
-	new_pip install 'git+https://github.com/seanbreckenridge/ipgeocache'
 	new_pip install 'git+https://github.com/karlicoss/rexport'
 }
 
