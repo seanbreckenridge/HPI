@@ -39,7 +39,7 @@ def inputs() -> Sequence[Path]:
 
 
 from datetime import datetime
-from typing import Iterator
+from typing import Iterator, Optional
 from itertools import chain
 
 import dateparser
@@ -50,13 +50,16 @@ logger = LazyLogger(__name__)
 
 
 Results = Iterator[datetime]
+OptResults = Iterator[Optional[datetime]]
 
 
 def timestamps(from_paths=inputs) -> Results:
-    yield from chain(*map(_parse_file, from_paths()))
+    for d in chain(*map(_parse_file, from_paths())):
+        if d is not None:
+            yield d
 
 
-def _parse_file(post_file: Path) -> Results:
+def _parse_file(post_file: Path) -> OptResults:
     items = json.loads(post_file.read_text())
     for conv in items["conversations"]:
         for msg in conv["MessageList"]:
