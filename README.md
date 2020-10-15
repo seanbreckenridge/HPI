@@ -158,7 +158,7 @@ Need to do more research/figure out
 
 ---
 
-Last referenced commit hash on [karicoss/HPI](https://github.com/karlicoss/HPI): 90ada92110cc68d478f27a0b85bfd87f20ef1d7e
+Last referenced commit hash on [karicoss/HPI](https://github.com/karlicoss/HPI): ed47e98d5c85b3334b3be059ad31b82c6fc0d19c
 
 ---
 

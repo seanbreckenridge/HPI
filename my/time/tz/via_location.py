@@ -20,7 +20,7 @@ from ...core.common import LazyLogger, mcachew
 from ...core.cachew import cache_dir
 
 # TODO(sean): need to replace this with something else
-from ...location.google import locations
+# from ...location.google import locations
 
 
 logger = LazyLogger(__name__, level="debug")
