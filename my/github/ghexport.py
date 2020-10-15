@@ -4,6 +4,7 @@ Github data: events, comments, etc. (API data)
 REQUIRES = [
     "git+https://github.com/karlicoss/ghexport",
 ]
+
 from dataclasses import dataclass
 from typing import Optional
 
@@ -28,6 +29,7 @@ class github(user_config):
 
 # TODO  perhaps using /tmp in case of None isn't ideal... maybe it should be treated as if cache is off
 
+import os
 from ..core.cfg import make_config, Attrs
 
 
@@ -46,6 +48,11 @@ config = make_config(github, migration=migration)
 
 try:
     from ghexport import dal
+
+    # monkey patch with HPI_LOGS
+    dal.logger = dal.logging_helper.LazyLogger(
+        "ghexport", level=os.environ.get("HPI_LOGS", "WARNING")
+    )
 except ModuleNotFoundError as e:
     from ..core.compat import pre_pip_dal_handler
 
