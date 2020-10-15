@@ -13,6 +13,7 @@ pytest
 pytest-random-order
 Pillow
 lxml
+cssselect
 httpx
 timezonefinder
 ipgeocache
