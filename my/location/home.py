@@ -1,10 +1,10 @@
-'''
+"""
 Simple location provider, serving as a fallback when more detailed data isn't available
-'''
+"""
 from dataclasses import dataclass
 from datetime import datetime, date, time, timezone
 from functools import lru_cache
-from typing import Optional, Sequence, Tuple, Union, cast
+from typing import Sequence, Tuple, Union, cast
 
 from ..core.common import fromisoformat
 
@@ -16,14 +16,17 @@ DateIsh = Union[datetime, date, str]
 # todo hopefully reasonable? might be nice to add name or something too
 LatLon = Tuple[float, float]
 
+
 @dataclass
 class Config(user_config):
     home: Union[
-        LatLon,         # either single, 'current' location
-        Sequence[Tuple[ # or, a sequence of location history
-            DateIsh,    # date when you moved to
-            LatLon,     # the location
-        ]]
+        LatLon,  # either single, 'current' location
+        Sequence[
+            Tuple[  # or, a sequence of location history
+                DateIsh,  # date when you moved to
+                LatLon,  # the location
+            ]
+        ],
     ]
     # TODO could make current Optional and somehow determine from system settings?
     @property
@@ -58,14 +61,15 @@ class Config(user_config):
 
 
 from ..core.cfg import make_config
+
 config = make_config(Config)
 
 
 @lru_cache(maxsize=None)
 def get_location(dt: datetime) -> LatLon:
-    '''
+    """
     Interpolates the location at dt
-    '''
+    """
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=timezone.utc)
     hist = list(reversed(config._history))
