@@ -2,19 +2,14 @@
 Simple location provider, serving as a fallback when more detailed data isn't available
 """
 from dataclasses import dataclass
-from datetime import datetime, date, time, timezone
+from datetime import datetime, time, timezone
 from functools import lru_cache
 from typing import Sequence, Tuple, Union, cast
 
 from ..core.common import fromisoformat
+from .models import LatLon, DateIsh
 
 from my.config import location as user_config
-
-
-DateIsh = Union[datetime, date, str]
-
-# todo hopefully reasonable? might be nice to add name or something too
-LatLon = Tuple[float, float]
 
 
 @dataclass
@@ -28,6 +23,7 @@ class Config(user_config):
             ]
         ],
     ]
+
     # TODO could make current Optional and somehow determine from system settings?
     @property
     def _history(self) -> Sequence[Tuple[datetime, LatLon]]:

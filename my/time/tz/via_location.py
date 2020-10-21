@@ -1,6 +1,7 @@
 """
 Timezone data provider, useful for localizing UTC-only/timezone unaware dates.
 """
+
 REQUIRES = [
     # for determining timezone by coordinate
     "timezonefinder",
@@ -19,11 +20,13 @@ import pytz
 from ...core.common import LazyLogger, mcachew
 from ...core.cachew import cache_dir
 
-# TODO(sean): need to replace this with something else
-# from ...location.google import locations
+# sources
+from ...location.ip import ips
+from ...google import events as google_events
+from ...google.models import Location
 
 
-logger = LazyLogger(__name__, level="debug")
+logger = LazyLogger(__name__, level="warning")
 
 
 # todo should move to config? not sure
@@ -50,14 +53,31 @@ class DayWithZone(NamedTuple):
     zone: Zone
 
 
+# get location data from google exports
+def _google_locations() -> Iterator[Location]:
+    yield from filter(
+        lambda g: isinstance(g, Location),
+        google_events(),
+    )
+
+
+# TODO: remove kwargs? not used be me
 def _iter_local_dates(start=0, stop=None) -> Iterator[DayWithZone]:
+    # TODO: split this into multiple providers? and merge in main/all.py?
+    # location data from IP addresses, which return tz info
+    for ip in ips():
+        yield DayWithZone(
+            day=ip.at.date(),
+            zone=ip.tz,
+        )
+    # locations (from google), without timezone, use timezonefinder
     finder = _timezone_finder(fast=_FASTER)  # rely on the default
     pdt = None
     warnings = []
     # todo allow to skip if not noo many errors in row?
-    for l in locations(start=start, stop=stop):
+    for l in _google_locations():
         # TODO right. its _very_ slow...
-        zone = finder.timezone_at(lng=l.lon, lat=l.lat)
+        zone = finder.timezone_at(lng=l.lng, lat=l.lat)
         if zone is None:
             warnings.append(f"Couldn't figure out tz for {l}")
             continue
@@ -137,6 +157,7 @@ def _get_tz(dt: datetime) -> Optional[pytz.BaseTzInfo]:
 
 def localize(dt: datetime) -> datetime:
     # todo not sure. warn instead?
+    # TODO(sean): extend this to accept any date, and return it localized, no matter what
     assert dt.tzinfo is None, dt
     tz = _get_tz(dt)
     if tz is None:
