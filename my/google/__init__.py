@@ -33,13 +33,15 @@ keep all the takeouts (they're about 195MB each)
 from .paths import get_last_takeout
 from .takeout_parser import Results, parse_takeout
 
+from ..core import Stats
+
 
 # temporary basic entrypoint
 def events() -> Results:
     yield from parse_takeout(get_last_takeout())
 
 
-def stats():
+def stats() -> Stats:
     from ..core import stat
 
     return {

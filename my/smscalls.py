@@ -13,6 +13,7 @@ from typing import NamedTuple, Iterator, Set, Tuple
 
 from lxml import etree
 
+from .core import Stats
 from .core.common import get_files
 from .core.time import parse_datetime_millis
 
@@ -94,7 +95,7 @@ def _extract_messages(path: Path) -> Iterator[Message]:
         )
 
 
-def stats():
+def stats() -> Stats:
     from .core import stat
 
     return {**stat(calls), **stat(messages)}

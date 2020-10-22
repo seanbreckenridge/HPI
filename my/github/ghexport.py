@@ -8,7 +8,7 @@ REQUIRES = [
 from dataclasses import dataclass
 from typing import Optional
 
-from ..core import Paths, PathIsh
+from ..core import Paths, PathIsh, Stats
 
 from my.config import github as user_config
 
@@ -92,7 +92,7 @@ def events() -> Results:
             yield ev
 
 
-def stats():
+def stats() -> Stats:
     from ..core import stat
 
     return {

@@ -26,7 +26,7 @@ from itertools import chain
 from typing import Iterator, Dict, Any, NamedTuple, Union, Optional, List
 
 from .core.error import Res
-from .core import get_files
+from .core import get_files, Stats
 from .core.time import parse_datetime_sec
 
 from .core.common import LazyLogger
@@ -206,7 +206,7 @@ def events() -> Results:
         yield from handler(j)
 
 
-def stats():
+def stats() -> Stats:
     from .core import stat
 
     return {

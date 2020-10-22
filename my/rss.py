@@ -29,7 +29,7 @@ import warnings
 from typing import Tuple, Sequence, Iterator, Dict, Set
 from pathlib import Path
 
-from .core.common import listify, get_files
+from .core.common import listify, get_files, Stats
 
 Subscription = str
 Subscriptions = Sequence[str]
@@ -107,7 +107,7 @@ def events() -> Iterator[RssEvent]:
                 del current_state[sb]
 
 
-def stats():
+def stats() -> Stats:
     from .core import stat
 
     return {

@@ -12,7 +12,7 @@ from my.config import skype as user_config
 
 from dataclasses import dataclass
 
-from .core import Paths
+from .core import Paths, Stats
 
 
 @dataclass
@@ -66,7 +66,7 @@ def _parse_file(post_file: Path) -> OptResults:
             yield dateparser.parse(msg["originalarrivaltime"].rstrip("Z"))
 
 
-def stats():
+def stats() -> Stats:
     from .core import stat
 
     return {**stat(timestamps)}

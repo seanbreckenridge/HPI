@@ -29,7 +29,7 @@ from datetime import datetime
 from typing import NamedTuple, Iterator, Sequence, List
 from itertools import chain
 
-from ..core import get_files
+from ..core import get_files, Stats
 from ..core.time import parse_datetime_sec
 
 
@@ -62,7 +62,7 @@ def _parse_json_file(p: Path) -> Results:
         )
 
 
-def stats():
+def stats() -> Stats:
     from ..core import stat
 
     return {**stat(events)}

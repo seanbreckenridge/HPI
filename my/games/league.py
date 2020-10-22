@@ -33,7 +33,7 @@ from typing import NamedTuple, Iterator, Sequence, Dict, Union, List, Optional, 
 from functools import partial
 from itertools import chain
 
-from ..core import get_files
+from ..core import get_files, Stats
 from ..core.error import Res
 from ..core.time import parse_datetime_millis
 
@@ -126,7 +126,7 @@ def _read_parsed_json(p: Path, username: str) -> Results:
             )
 
 
-def stats():
+def stats() -> Stats:
     from ..core import stat
 
     return {**stat(history)}

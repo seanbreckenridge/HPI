@@ -49,7 +49,7 @@ except ModuleNotFoundError as e:
 ############################
 
 from typing import List, Sequence, Mapping, Iterator, Union
-from .core.common import mcachew, get_files, LazyLogger, make_dict, warn_if_empty
+from .core.common import mcachew, get_files, LazyLogger, make_dict, warn_if_empty, Stats
 
 # comments further back than what the reddit API (1000 results) can get
 # https://github.com/seanbreckenridge/pushshift_comment_export
@@ -231,7 +231,7 @@ def events(*args, **kwargs) -> List[Event]:
     return list(sorted(evit, key=lambda e: e.cmp_key))
 
 
-def stats():
+def stats() -> Stats:
     from .core import stat
 
     return {

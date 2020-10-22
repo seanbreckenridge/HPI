@@ -46,7 +46,7 @@ from typing import NamedTuple, Iterator, Set, List, Tuple, Sequence, Dict
 from itertools import chain
 
 
-from .core import get_files, warn_if_empty
+from .core import get_files, warn_if_empty, Stats
 from .core.common import LazyLogger, listify
 from .core.error import Res
 
@@ -178,7 +178,7 @@ def _parse_file(todofile: Path) -> Results:
             yield e
 
 
-def stats():
+def stats() -> Stats:
     from .core import stat
 
     return {

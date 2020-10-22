@@ -27,6 +27,8 @@ from typing import NamedTuple, Iterator
 
 from autotui.shortcuts import load_prompt_and_writeback, load_from
 
+from ..core import Stats
+
 
 def datafile(for_function: str) -> Path:
     return Path(config.datadir).expanduser().absolute() / f"{for_function}.json"
@@ -65,7 +67,7 @@ def prompt(nt: NamedTuple):
     load_prompt_and_writeback(nt, datafile(nt.__name__.casefold()))  # type: ignore[attr-defined]
 
 
-def stats():
+def stats() -> Stats:
     from ..core import stat
 
     return {

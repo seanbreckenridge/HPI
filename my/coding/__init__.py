@@ -1,7 +1,9 @@
+from ..core import Stats
+
 from .commits import commits, repos
 
 
-def stats():
+def stats() -> Stats:
     from ..core import stat
 
     return {

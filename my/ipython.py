@@ -42,7 +42,7 @@ from itertools import chain
 
 from IPython.core.history import HistoryAccessor
 
-from .core import get_files, warn_if_empty
+from .core import get_files, warn_if_empty, Stats
 from .core.common import listify
 
 
@@ -92,7 +92,7 @@ def _parse_database(sqlite_database: str = "") -> Results:
             yield Command(command=msg[-1], at=start_time)
 
 
-def stats():
+def stats() -> Stats:
     from .core import stat
 
     return {**stat(history)}

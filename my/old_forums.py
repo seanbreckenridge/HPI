@@ -30,7 +30,7 @@ from datetime import datetime
 from typing import NamedTuple, Iterator
 from itertools import chain
 
-from .core import get_files
+from .core import get_files, Stats
 from .core.common import LazyLogger
 from .core.time import parse_datetime_sec
 
@@ -69,7 +69,7 @@ def _parse_file(post_file: Path) -> Results:
         )
 
 
-def stats():
+def stats() -> Stats:
     from .core import stat
 
     return {**stat(history)}

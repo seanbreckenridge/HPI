@@ -8,6 +8,8 @@ from itertools import chain
 
 import ipgeocache
 
+from ..core import Stats
+
 from .models import LatLon
 from ..facebook import AdminAction, UploadedPhoto
 from ..facebook import events as facebook_events
@@ -59,3 +61,11 @@ def _from_blizzard() -> Iterator[IP]:
         lambda i: IP(at=i.dt, addr=i.metadata[-2]),
         filter(lambda e: e.event_tag == "Activity History", blizzard_events()),
     )
+
+
+def stats() -> Stats:
+    from ..core import stat
+
+    return {
+        **stat(ips),
+    }

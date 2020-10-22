@@ -32,6 +32,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Iterator, Sequence, NamedTuple, Set, Any, Dict, Tuple, Optional
 
+from .core import Stats
 from .core.common import get_files, LazyLogger
 from .core.time import parse_datetime_sec
 
@@ -73,7 +74,7 @@ class Media(NamedTuple):
 Results = Iterator[Media]
 
 
-def stats():
+def stats() -> Stats:
     from .core import stat
 
     return {

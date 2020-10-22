@@ -9,6 +9,8 @@ from functools import lru_cache
 from budget import data, Snapshot, Transaction
 from more_itertools import last
 
+from .core import Stats
+
 
 @lru_cache(1)
 def _data() -> Tuple[List[Snapshot], List[Transaction]]:
@@ -44,7 +46,7 @@ def transactions() -> List[Transaction]:
     return transactions
 
 
-def stats():
+def stats() -> Stats:
     from .core import stat
 
     return {

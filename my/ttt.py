@@ -31,7 +31,7 @@ import warnings
 from pathlib import Path
 from typing import Sequence
 
-from .core import get_files, warn_if_empty
+from .core import get_files, warn_if_empty, Stats
 from .core.common import listify
 from .core.time import parse_datetime_sec
 from .core.file import filter_subfile_matches
@@ -99,7 +99,7 @@ def _parse_file(histfile: Path) -> Results:
             )
 
 
-def stats():
+def stats() -> Stats:
     from .core import stat
 
     return {**stat(history)}

@@ -30,7 +30,7 @@ from datetime import datetime
 from typing import NamedTuple, Iterator, Sequence, Dict, List, Optional, Any
 from itertools import chain
 
-from ..core import get_files
+from ..core import get_files, Stats
 from ..core.error import Res
 from ..core.time import parse_datetime_sec
 
@@ -123,7 +123,7 @@ def _parse_achievement(ach: Dict[str, Any], game_name: str) -> Achievement:
     )
 
 
-def stats():
+def stats() -> Stats:
     from ..core import stat
 
     return {

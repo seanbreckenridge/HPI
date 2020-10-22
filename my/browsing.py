@@ -27,6 +27,7 @@ import tempfile
 from pathlib import Path
 from typing import Iterator, Sequence
 
+from .core import Stats
 from .core.common import listify, get_files
 
 
@@ -69,7 +70,7 @@ def history(from_paths=inputs) -> Results:
     yield from read_and_merge(*from_paths())
 
 
-def stats():
+def stats() -> Stats:
     from .core import stat
 
     return {**stat(history)}

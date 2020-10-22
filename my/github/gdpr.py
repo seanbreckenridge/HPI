@@ -14,7 +14,7 @@ from .common import Event, parse_dt
 from my.config import github as user_config
 
 from dataclasses import dataclass
-from ..core import PathIsh
+from ..core import PathIsh, Stats
 
 
 @dataclass
@@ -69,7 +69,7 @@ def events() -> Iterator[Res[Event]]:
                 yield e
 
 
-def stats():
+def stats() -> Stats:
     from ..core import stat
 
     return {

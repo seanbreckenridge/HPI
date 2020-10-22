@@ -6,7 +6,7 @@ Parses the spotify GPDR Export
 from my.config import spotify as user_config
 
 from dataclasses import dataclass
-from .core import PathIsh
+from .core import PathIsh, Stats
 
 
 @dataclass
@@ -103,7 +103,7 @@ def songs() -> Songs:
         emitted.add(key)
 
 
-def stats():
+def stats() -> Stats:
     from .core import stat
 
     return {
