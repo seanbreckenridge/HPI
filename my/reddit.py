@@ -5,6 +5,7 @@ REQUIRES = [
     "git+https://github.com/karlicoss/rexport",
 ]
 
+import os
 from .core.common import Paths
 
 from my.config import reddit as uconfig
@@ -41,6 +42,11 @@ config = make_config(reddit, migration=migration)
 
 try:
     from rexport import dal
+
+    # monkey patch with HPI_LOGS
+    dal.get_logger = lambda: dal.logging_helper.LazyLogger(
+        "rexport", level=os.environ.get("HPI_LOGS", "WARNING")
+    )
 except ModuleNotFoundError as e:
     from .core.compat import pre_pip_dal_handler
 
