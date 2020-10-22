@@ -243,7 +243,9 @@ if TYPE_CHECKING:
             self,
             cache_path: Any = None,
             *,
+            hashf: Any = None,  # todo deprecate
             depends_on: Any = None,
+            force_file: bool = False,
             chunk_by: int = 0,
             logger: Any = None,
         ) -> Callable[[F], F]:
