@@ -111,14 +111,14 @@ What websites do I visit most?
  ('duckduckgo.com', 10146),
  ('www.youtube.com', 10126),
  ('discord.com', 8425),
- ('stackoverflow.com', 2906),
+ ('stackoverflow.com', 2906)]
 ```
 
 Song I've listened to most?
 
 ```python
 >>> import collections, my.mpv
->>> collections.Counter([m.path for m in my.mpv()]).most_common(1)[0]
+>>> collections.Counter([m.path for m in my.mpv.history()]).most_common(1)[0]
 ('/home/sean/Music/Toby Fox/Toby Fox - UNDERTALE Soundtrack (2015) [V0]/085 - Fallen Down (Reprise).mp3', 8)
 ```
 

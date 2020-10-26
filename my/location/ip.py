@@ -4,7 +4,6 @@ Uses IP address data from other exports to get location data
 
 from typing import NamedTuple, Iterator
 from datetime import datetime
-from itertools import chain
 
 import ipgeocache
 
@@ -37,13 +36,8 @@ class IP(NamedTuple):
 
 
 def ips() -> Iterator[IP]:
-    yield from sorted(
-        chain(
-            _from_facebook(),
-            _from_blizzard(),
-        ),
-        key=lambda i: i.at,
-    )
+    yield from _from_facebook()
+    yield from _from_blizzard()
 
 
 def _from_facebook() -> Iterator[IP]:
