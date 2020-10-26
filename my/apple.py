@@ -22,14 +22,13 @@ import os
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from itertools import chain
 from typing import Iterator, Dict, Any, NamedTuple, Union, Optional
 
 from lxml import etree
 from more_itertools import sliced, first
 
 from .core.error import Res
-from .core import get_files, Stats
+from .core import Stats
 
 from .core.common import LazyLogger
 
@@ -81,11 +80,7 @@ Results = Iterator[Res[Event]]
 
 
 def events() -> Results:
-    gdpr_dir = str(Path(config.gdpr_dir).expanduser().absolute())  # expand path
-    # get files 2 levels deep into the export
-    files = list(chain(*map(lambda f: f.rglob("*"), get_files(config.gdpr_dir))))
-    # add xml files at the top level
-    files = files + list(filter(lambda f: f.is_file(), get_files(config.gdpr_dir)))
+    gdpr_dir = Path(config.gdpr_dir).expanduser().absolute()  # expand path
     handler_map = {
         "Game Center/Game Center Data.json": _parse_game_center,
         "iCloud Notes": None,
@@ -96,7 +91,7 @@ def events() -> Results:
         "Locations.xml": _parse_locations,
         "Recents.xml": _parse_recents,
     }
-    for f in files:
+    for f in gdpr_dir.rglob("*"):
         handler: Any
         for prefix, h in handler_map.items():
             if not str(f).startswith(os.path.join(gdpr_dir, prefix)):
@@ -105,9 +100,7 @@ def events() -> Results:
             break
         else:
             if f.is_dir():
-                # rglob("*") matches directories, as well as any subredirectories/json files in those
-                # this is here exclusively for the messages dir, which has a larger structure
-                # json files from inside the dirs are still picked up by rglob
+                # rglob("*") matches directories, ignore those
                 continue
             else:
                 e = RuntimeError(f"Unhandled file: {f}")
