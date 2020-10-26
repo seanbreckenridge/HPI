@@ -47,6 +47,7 @@ This is modified from [`karlicoss/HPI`](https://github.com/karlicoss/HPI) to mor
 
 These are modules to parse GDPR exports/data from services I used to use, but don't anymore. They're here to provide more context into the past.
 
+- `my.apple`, parses game center and location data from the apple GDPR export
 - `my.facebook`, to parse the GDPR export I downloaded from facebook before deleting my account
 - `my.games.league`, gives league of legends game history using [`lolexport`](https://github.com/seanbreckenridge/lolexport)
 - `my.games.steam`, for steam achievement data and game playtime using [`steamscraper`](https://github.com/seanbreckenridge/steamscraper)
@@ -127,8 +128,6 @@ Song I've listened to most?
 - [ ] [gpslogger](https://github.com/mendhak/gpslogger) module
 
 historical GDPR exports
-
-- [ ] apple data
 
 create 'export modules' which keep these up to date:
 
