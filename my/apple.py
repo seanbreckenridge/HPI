@@ -144,7 +144,7 @@ def _parse_game_center(
                     game_name=gme["game_name"],
                     title=lb_inf["leaderboard_title"],
                     rank=lb_val["rank"],
-                    dt=lb_val["submitted_time_utc"],
+                    dt=_parse_apple_utc_date(lb_val["submitted_time_utc"]),
                 )
         for ach_info in gme["achievements"]:
             yield GameAchievement(
