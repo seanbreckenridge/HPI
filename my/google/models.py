@@ -65,7 +65,3 @@ class Location(NamedTuple):
     lng: float
     lat: float
     at: datetime
-
-    @property
-    def dt(self) -> datetime:
-        return self.at

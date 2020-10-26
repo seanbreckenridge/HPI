@@ -22,8 +22,7 @@ from ...core.cachew import cache_dir
 
 # sources
 from ...location.ip import ips
-from ...google import events as google_events
-from ...google.models import Location
+from ...location.all import basic_locations
 
 
 logger = LazyLogger(__name__, level="warning")
@@ -53,14 +52,6 @@ class DayWithZone(NamedTuple):
     zone: Zone
 
 
-# get location data from google exports
-def _google_locations() -> Iterator[Location]:
-    yield from filter(
-        lambda g: isinstance(g, Location),
-        google_events(),
-    )
-
-
 # TODO: remove kwargs? not used be me
 def _iter_local_dates(start=0, stop=None) -> Iterator[DayWithZone]:
     # TODO: split this into multiple providers? and merge in main/all.py?
@@ -75,7 +66,7 @@ def _iter_local_dates(start=0, stop=None) -> Iterator[DayWithZone]:
     pdt = None
     warnings = []
     # todo allow to skip if not noo many errors in row?
-    for l in _google_locations():
+    for l in basic_locations():
         # TODO right. its _very_ slow...
         zone = finder.timezone_at(lng=l.lng, lat=l.lat)
         if zone is None:
@@ -99,6 +90,10 @@ def most_common(l):
     return res
 
 
+# TODO(sean): better depends_on function?
+# its a bit complicated as this is pulling from multiple data sources
+# maybe create a utility func in my.location.all that returns a list of
+# all source filepaths?
 @mcachew(cache_path=cache_dir())
 def _iter_tzs() -> Iterator[DayWithZone]:
     for d, gr in groupby(_iter_local_dates(), key=lambda p: p.day):

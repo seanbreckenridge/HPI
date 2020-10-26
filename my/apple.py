@@ -63,7 +63,7 @@ class GameAchievement(NamedTuple):
 
 
 class Location(NamedTuple):
-    lon: float
+    lng: float
     lat: float
     dt: datetime
     name: str
@@ -162,8 +162,8 @@ def _parse_locations(f: Path) -> Iterator[Location]:
         if "t" in loc_data:
             for tstamp in loc_data["t"]:
                 yield Location(
-                    lon=loc_data["map location"]["longitude"],
-                    lat=loc_data["map location"]["longitude"],
+                    lng=loc_data["map location"]["longitude"],
+                    lat=loc_data["map location"]["latitude"],
                     name=loc_data["display name"],
                     address=loc_data["address"],
                     dt=tstamp,
@@ -178,8 +178,8 @@ def _parse_recents(f: Path) -> Iterator[Location]:
             if "t" in loc_data:
                 for tstamp in loc_data["t"]:
                     yield Location(
-                        lon=loc_data["map location"]["longitude"],
-                        lat=loc_data["map location"]["longitude"],
+                        lng=loc_data["map location"]["longitude"],
+                        lat=loc_data["map location"]["latitude"],
                         name=loc_data["display name"],
                         address=first(loc_data.get("addressArray", []), None),
                         dt=tstamp,
