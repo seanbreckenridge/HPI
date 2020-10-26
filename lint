@@ -36,7 +36,7 @@ shfmt_scripts_in_place() {
 	local COUNT=0
 	while IFS=$'\n' read -r shell_script; do
 		((COUNT++))
-		shfmt "${shell_script}" >/tmp/shfmt-temp && cat /tmp/shfmt-temp >"$shell_script"
+		shfmt -w "${shell_script}"
 	done < <(list_shell_scripts)
 	echo "$(tput setaf 2)Ran shfmt on ${COUNT} files$(tput sgr0)"
 }
