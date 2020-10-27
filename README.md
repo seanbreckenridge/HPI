@@ -43,7 +43,7 @@ This is modified from [`karlicoss/HPI`](https://github.com/karlicoss/HPI) to mor
 - `my.ipython`, for timestamped python REPL history
 - `my.ttt`, to parse shell/system history tracked by [`ttt`](https://github.com/seanbreckenridge/ttt)
 - `my.window_watcher`, to parse active window events using [`window_watcher`](https://github.com/seanbreckenridge/aw-watcher-window)
-- `my.location`, merges data from `apple`, `google`, `games.blizzard`, and `facebook` to provide location data (goes back ~10 years)
+- `my.location`, merges data from `apple`, `google`, `discord`, `games.blizzard`, and `facebook` to provide location data (goes back ~10 years)
 
 ### 'Historical' Modules
 
