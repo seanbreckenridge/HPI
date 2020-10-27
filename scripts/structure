@@ -13,7 +13,7 @@ directories=(
 	'rexport'
 	'todotxt'
 	'rss'
-	'firefox/dbs'
+	'firefox'
 	'mpv'
 	'blizzard'
 	'facebook_gdpr'
