@@ -11,3 +11,6 @@ class Location(NamedTuple):
     lng: float
     lat: float
     dt: datetime
+    # approximate accuracy
+    # true means exact, false means its based on ip/auxillary info
+    accuracy: bool

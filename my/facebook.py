@@ -25,13 +25,13 @@ from pathlib import Path
 from itertools import chain
 from typing import Iterator, Dict, Any, NamedTuple, Union, Optional, List
 
-from .core.error import Res
 from .core import get_files, Stats
+from .core.error import Res
 from .core.time import parse_datetime_sec
-
 from .core.common import LazyLogger
 
-logger = LazyLogger(__name__)
+
+logger = LazyLogger(__name__, level="warning")
 
 Json = Dict[str, Any]
 

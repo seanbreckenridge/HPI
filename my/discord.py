@@ -29,6 +29,7 @@ config = make_config(discord)
 
 
 from typing import Iterator
+from datetime import datetime, timezone
 from .core.common import get_files, LazyLogger, Stats
 
 from discord_data import parse_activity, parse_messages
@@ -48,6 +49,13 @@ def messages() -> Iterator[Message]:
 
 def activity() -> Iterator[Json]:
     yield from parse_activity(config.latest / "activity", logger=logger)
+
+
+def parse_activity_date(s: str) -> datetime:
+    # assuming this is UTC
+    return datetime.astimezone(
+        datetime.fromisoformat(s.strip('"').rstrip("Z")), tz=timezone.utc
+    )
 
 
 def stats() -> Stats:

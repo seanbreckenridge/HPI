@@ -30,9 +30,10 @@ from more_itertools import sliced, first
 from .core.error import Res
 from .core import Stats
 
-from .core.common import LazyLogger
+from .core.common import LazyLogger, mcachew
+from .core.cachew import cache_dir
 
-logger = LazyLogger(__name__)
+logger = LazyLogger(__name__, level="warning")
 
 Json = Dict[str, Any]
 
@@ -79,6 +80,11 @@ Event = Union[
 Results = Iterator[Res[Event]]
 
 
+@mcachew(
+    cache_path=cache_dir(),
+    depends_on=lambda: list(map(str, Path(config.gdpr_dir).rglob("*"))),
+    logger=logger,
+)
 def events() -> Results:
     gdpr_dir = Path(config.gdpr_dir).expanduser().absolute()  # expand path
     handler_map = {

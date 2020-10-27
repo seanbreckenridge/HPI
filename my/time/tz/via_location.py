@@ -22,7 +22,7 @@ from ...core.cachew import cache_dir
 
 # sources
 from ...location.ip import ips
-from ...location.all import basic_locations
+from ...location.all import exact_locations
 
 
 logger = LazyLogger(__name__, level="warning")
@@ -66,7 +66,7 @@ def _iter_local_dates(start=0, stop=None) -> Iterator[DayWithZone]:
     pdt = None
     warnings = []
     # todo allow to skip if not noo many errors in row?
-    for l in basic_locations():
+    for l in exact_locations():
         # TODO right. its _very_ slow...
         zone = finder.timezone_at(lng=l.lng, lat=l.lat)
         if zone is None:
@@ -174,6 +174,7 @@ def stats() -> Stats:
         last = datetime.now().year + 2
         # note: deliberately take + 2 years, so the iterator exhausts. otherwise stuff might never get cached
         # need to think about it...
+        # TODO: based on age?
         for Y in range(1990, last):
             dt = fromisoformat(f"{Y}-01-01 01:01:01")
             yield localize(dt)
