@@ -35,6 +35,7 @@ This is modified from [`karlicoss/HPI`](https://github.com/karlicoss/HPI) to mor
 - `my.body` to track body functionality (e.g. weight) (with a TUI using [`autotui`](https://github.com/seanbreckenridge/autotui))
 - `my.coding` to track git commits across the system
 - `my.mpv`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-sockets/blob/master/DAEMON.md)
+- `my.discord`, parses ~1,000,000 messages/events from the discord GDPR export, parser [here](https://github.com/seanbreckenridge/discord_data)
 - `my.money`, bank account transactions/balance history from [my budget tool](https://github.com/seanbreckenridge/mint)
 - `my.smscalls`, exports call/sms history using [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore&hl=en_US)
 - `my.todotxt`, to track my to-do list history (using backups of my [`todotxt`](http://todotxt.org/) files)
@@ -143,7 +144,6 @@ Need to do more research/figure out
 
 ### delayed todos
 
-- [ ] discord backups - can request [exports](https://support.discord.com/hc/en-us/articles/360004027692) once a month, write a DAL once I have access
 - [ ] configure `my.stackexchange` (isnt really documented/able to use in HPI without modifications [wait for repo](https://github.com/karlicoss/ghexport/issues/3#issuecomment-680732889))
 - [ ] exif data from photos; I don't really take lots of photos, so perhaps this isn't as useful as of right now
 
