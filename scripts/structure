@@ -17,7 +17,6 @@ directories=(
 	'mpv'
 	'blizzard'
 	'facebook_gdpr'
-	'league_of_legends'
 	'rps_comments'
 	'ipython'
 	'old_forums'
@@ -25,7 +24,11 @@ directories=(
 	'window_watcher'
 	'google_takeout'
 	'spotify'
+	'apple'
+	'discord'
+	'league_of_legends'
 )
+
 declare -a files
 files=(
 	'body/weight.json'
