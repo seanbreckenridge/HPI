@@ -9,6 +9,8 @@ from .core.common import PathIsh
 
 from my.config import discord as uconfig
 from dataclasses import dataclass
+from pathlib import Path
+from functools import lru_cache
 
 
 @dataclass
@@ -18,8 +20,9 @@ class discord(uconfig):
     export_path: PathIsh
 
     @property
-    def latest(self):
-        return get_files(self.export_path)[-1]
+    def latest(self) -> Path:
+        non_hidden = [p for p in get_files(self.export_path) if not p.name.startswith(".")]
+        return sorted(non_hidden, key=lambda p: p.stat().st_ctime)[-1]
 
 
 from .core.cfg import make_config
@@ -30,7 +33,8 @@ config = make_config(discord)
 
 from typing import Iterator
 from datetime import datetime, timezone
-from .core.common import get_files, LazyLogger, Stats
+from .core.common import get_files, LazyLogger, Stats, mcachew
+from .core.cachew import cache_dir
 
 from discord_data import parse_activity, parse_messages
 from discord_data.model import Message, Json
@@ -39,14 +43,13 @@ from discord_data.model import Message, Json
 logger = LazyLogger(__name__, level="warning")
 
 
-# cache = mcachew(depends_on=lambda: list(get_files(config.export_path)), cache_path=cache_dir())
-# @cache()
-
-
+# reduces time by half, after cache is created
+@mcachew(depends_on=lambda: config.latest, cache_path=cache_dir(), logger=logger)
 def messages() -> Iterator[Message]:
     yield from parse_messages(config.latest / "messages")
 
 
+# not worth putting behind cachew, just loading Json
 def activity() -> Iterator[Json]:
     yield from parse_activity(config.latest / "activity", logger=logger)
 
