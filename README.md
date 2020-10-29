@@ -119,8 +119,8 @@ Song I've listened to most?
 
 ```python
 >>> import collections, my.mpv
->>> collections.Counter([m.path for m in my.mpv.history()]).most_common(1)[0]
-('/home/sean/Music/Toby Fox/Toby Fox - UNDERTALE Soundtrack (2015) [V0]/085 - Fallen Down (Reprise).mp3', 8)
+>>> collections.Counter([m.path for m in my.mpv.history()]).most_common(1)[0][0]
+'/home/sean/Music/Toby Fox/Toby Fox - UNDERTALE Soundtrack (2015) [V0]/085 - Fallen Down (Reprise).mp3'
 ```
 
 ---
