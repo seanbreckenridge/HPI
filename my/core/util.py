@@ -25,7 +25,6 @@ def ignored(m: str) -> bool:
         "core.*",
         "config.*",
         ## todo move these to core
-        "kython.*",
         "mycfg_stub",
         ##
     ]

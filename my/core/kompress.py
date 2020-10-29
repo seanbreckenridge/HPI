@@ -30,7 +30,7 @@ def kopen(path: PathIsh, *args, mode: str = "rt", **kwargs) -> IO[str]:
     if suf in {".xz"}:
         import lzma
 
-        return lzma.open(pp, mode, *args, **kwargs)
+        return lzma.open(pp, mode, *args, **kwargs)  # type: ignore[return-value]
     elif suf in {".zip"}:
         # eh. this behaviour is a bit dodgy...
         from zipfile import ZipFile

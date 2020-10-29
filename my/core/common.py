@@ -142,7 +142,7 @@ def listify(fn=None, wrapper=list):
 #     return listify(fn=fn, wrapper=md)
 
 
-from ..kython.klogging import setup_logger, LazyLogger
+from .logging import setup_logger, LazyLogger
 
 
 Paths = Union[Sequence[PathIsh], PathIsh]
@@ -222,7 +222,7 @@ def get_files(
         traceback.print_stack()
 
     if guess_compression:
-        from ..kython.kompress import CPath  # todo move to core?
+        from .kompress import CPath  # todo move to core?
 
         paths = [CPath(p) if _is_compressed(p) else p for p in paths]
     return tuple(paths)

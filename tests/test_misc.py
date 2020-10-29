@@ -4,7 +4,7 @@ import zipfile
 
 import pytest
 
-from my.kython.kompress import kopen, kexists, CPath
+from my.core.kompress import kopen, kexists, CPath
 
 
 def test_kopen(tmp_path: Path) -> None:

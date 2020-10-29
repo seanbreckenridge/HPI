@@ -32,7 +32,7 @@ from typing import Iterable
 from more_itertools import last
 
 from ..core.common import get_files
-from ..kython.kompress import kexists
+from ..core.kompress import kexists
 
 
 def get_takeouts(*, path: Optional[str] = None) -> Iterable[Path]:

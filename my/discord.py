@@ -10,7 +10,6 @@ from .core.common import PathIsh
 from my.config import discord as uconfig
 from dataclasses import dataclass
 from pathlib import Path
-from functools import lru_cache
 
 
 @dataclass
@@ -21,7 +20,9 @@ class discord(uconfig):
 
     @property
     def latest(self) -> Path:
-        non_hidden = [p for p in get_files(self.export_path) if not p.name.startswith(".")]
+        non_hidden = [
+            p for p in get_files(self.export_path) if not p.name.startswith(".")
+        ]
         return sorted(non_hidden, key=lambda p: p.stat().st_ctime)[-1]
 
 

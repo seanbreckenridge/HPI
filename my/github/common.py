@@ -24,7 +24,7 @@ Results = Iterator[Res[Event]]
 
 @warn_if_empty
 def merge_events(*sources: Results) -> Results:
-    from ..kython.klogging import LazyLogger
+    from ..core import LazyLogger
 
     logger = LazyLogger(__name__)
     from itertools import chain
