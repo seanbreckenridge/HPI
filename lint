@@ -1,5 +1,5 @@
 #!/bin/bash
-# Wrapper around mypy/pytest/flake8 for python, and shellcheck/shfmt for bash
+# wrapper around linter/formatters
 # pauses at each step if there are errors
 cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")" || {
 	echo "Couldn't cd to current dir"
@@ -9,36 +9,9 @@ cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")" || {
 readonly FLAKE8_IGNORE='E225,E501,E302,E402,E305,E261,E265,E116,E252,E702,E266,E741,E306,E203,E731,W503'
 readonly FLAKE8_FILES_IGNORE="*polar.py,*core/cachew.py,*konsume*,*stackexchange.py,*core/common.py,*core/init.py,*core/__init__.py,*config.py,*food/__init__.py,*coding/__init__.py"
 
-list_shell_scripts() {
-	echo bootstrap
-	echo lint
-	echo bgproc
-	fd '\.job$' jobs
-	fd . scripts
-}
-
 # call shellcheck on all the scripts
 shellcheck_scripts() {
-	local SUCCESS='true'
-	while IFS=$'\n' read -r shell_script; do
-		shellcheck "${shell_script}" || SUCCESS='false'
-	done < <(list_shell_scripts)
-	# If all the shellchecks succeeded
-	if [[ "${SUCCESS}" == 'true' ]]; then
-		shfmt_scripts_in_place
-	else
-		echo "One or more shellcheck invocations returned false, skipping shfmt..."
-	fi
-}
-
-# call shfmt on multiple files
-shfmt_scripts_in_place() {
-	local COUNT=0
-	while IFS=$'\n' read -r shell_script; do
-		((COUNT++))
-		shfmt -w "${shell_script}"
-	done < <(list_shell_scripts)
-	echo "$(tput setaf 2)Ran shfmt on ${COUNT} files$(tput sgr0)"
+	git ls-files | rifleman - -a lint -j | jq -r 'to_entries[] | select(.key|startswith("shellcheck")) | .value | .[]' | xargs shellcheck
 }
 
 # remove temporary firefox dbs from previous runs
@@ -50,7 +23,8 @@ cleanup_firefox() {
 
 prompt() {
 	local MESSAGE
-	MESSAGE="${1:-Hit enter to continue > }"
+	MESSAGE='Hit enter to continue > '
+	[[ -n "$1" ]] && MESSAGE="$1"
 	echo -en "$(tput setaf 1)${MESSAGE}$(tput sgr0)"
 	read -r # if no variable is specified, sets the REPLY environment variable
 }
@@ -71,29 +45,16 @@ custom_flake8() {
 	fi
 }
 
-prompt_black() {
-	# if black returns error code, prompt to autoformat
-	fd '\.py$' -X black --check || {
-		prompt "Run black autoformat (Y/n)? "
-		case "${REPLY}" in
-		N | n) ;;
-		*)
-			fd '\.py$' -X black
-			;;
-		esac
-	}
-}
-
 main() {
-	custom_flake8 || prompt
-	pytest "$@" || prompt
+	custom_flake8 || prompt ''
+	pytest "$@" || prompt ''
 	cleanup_firefox
 	echo "Running mypy..."
-	mypy --color-output --ignore-missing-imports ./my || prompt
-	echo "Checking python formatting..."
-	prompt_black
+	mypy --color-output --ignore-missing-imports ./my || prompt ''
 	echo "Running shellcheck..."
 	shellcheck_scripts
+	# format everything in the repo
+	git ls-files | rifleman -
 	echo -e "$(tput setaf 2)Done!$(tput sgr0)"
 	git status
 }

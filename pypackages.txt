@@ -19,3 +19,4 @@ timezonefinder
 ipgeocache
 pushshift_comment_export
 url_metadata
+rifleman
