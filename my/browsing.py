@@ -33,9 +33,10 @@ from .core.common import listify, get_files
 
 # monkey patch ffexport logs
 if "HPI_LOGS" in os.environ:
-    from .kython.klogging import mklevel
-
-    os.environ["FFEXPORT_LOGS"] = str(mklevel(os.environ["HPI_LOGS"]))
+    from logzero import setup_logger
+    from .core.logging import mklevel
+    import ffexport.log
+    ffexport.log.logger = setup_logger(name="ffexport", level=mklevel(os.environ["HPI_LOGS"]))
 
 
 from ffexport import read_and_merge, Visit
