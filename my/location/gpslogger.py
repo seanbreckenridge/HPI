@@ -2,7 +2,7 @@
 Parse gpslogger https://github.com/mendhak/gpslogger .gpx (xml) files
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from dataclasses import dataclass
 from pathlib import Path
 from typing import NamedTuple, Iterator, Set, Dict
@@ -66,7 +66,10 @@ def _extract_locations(path: Path) -> Iterator[Res[Location]]:
                         # believe this is UTC, since gpx times start at 8AM and I'm in PST
                         if child.tag.endswith("time"):
                             yield Location(
-                                dt=datetime.fromisoformat(child.text.rstrip("Z")),
+                                dt=datetime.astimezone(
+                                    datetime.fromisoformat(child.text.rstrip("Z")),
+                                    tz=timezone.utc,
+                                ),
                                 lat=float(latlon_dict["lat"]),
                                 lng=float(latlon_dict["lon"]),
                             )
