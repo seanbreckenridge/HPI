@@ -43,7 +43,7 @@ This is modified from [`karlicoss/HPI`](https://github.com/karlicoss/HPI) to mor
 - `my.ipython`, for timestamped python REPL history
 - `my.ttt`, to parse shell/system history tracked by [`ttt`](https://github.com/seanbreckenridge/ttt)
 - `my.window_watcher`, to parse active window events using [`window_watcher`](https://github.com/seanbreckenridge/aw-watcher-window)
-- `my.location`, merges data from `apple`, `google`, `discord`, `games.blizzard`, and `facebook` to provide location data (goes back ~10 years)
+- `my.location`, merges data from [`gpslogger`](https://github.com/mendhak/gpslogger), `apple`, `google`, `discord`, `games.blizzard`, and `facebook` to provide location data (goes back ~10 years)
 
 ### 'Historical' Modules
 
@@ -127,10 +127,6 @@ Song I've listened to most?
 
 ### TODO:
 
-- [ ] [gpslogger](https://github.com/mendhak/gpslogger) module
-
-historical GDPR exports
-
 create 'export modules' which keep these up to date:
 
 - [ ] backup trakt? (have API access)
@@ -138,7 +134,6 @@ create 'export modules' which keep these up to date:
 
 Need to do more research/figure out
 
-- [ ] android app to track my location?
 - [ ] polar? some other reading system? formalize documents/configure `my.pdfs`
 - [ ] email?
 
