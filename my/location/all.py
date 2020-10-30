@@ -4,7 +4,7 @@ Merges location data from multiple sources
 
 from typing import Iterator
 
-from ..core import Stats, LazyLogger, get_files
+from ..core import Stats, LazyLogger
 from ..core.common import mcachew
 from ..core.cachew import cache_dir
 from .models import Location
@@ -12,7 +12,6 @@ from .models import Location
 # sources
 from .ip import ips
 from .gpslogger import history as gpslogger_history
-from .gpslogger import config as gpsloggerconfig
 from ..google import events as google_events, get_last_takeout
 from ..google.models import Location as GoogleLocation
 from ..apple import events as apple_events
@@ -20,7 +19,6 @@ from ..apple import Location as AppleLocation
 
 
 logger = LazyLogger(__name__, level="warning")
-
 
 # merges basic location data from multiple sources
 # this excludes ip location data which has timezones
@@ -62,11 +60,6 @@ def _apple_locations() -> Iterator[Location]:
     )
 
 
-@mcachew(
-    cache_path=cache_dir(),
-    depends_on=lambda: list(map(str, get_files(gpsloggerconfig.export_path))),
-    logger=logger,
-)
 def _gpslogger_locations() -> Iterator[Location]:
     for gl in gpslogger_history():
         if isinstance(gl, Exception):

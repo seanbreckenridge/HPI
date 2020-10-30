@@ -9,12 +9,16 @@ from typing import NamedTuple, Iterator, Set, Dict
 
 from lxml import etree
 
-from ..core import Stats, Paths
+from ..core import Stats, Paths, LazyLogger
 from ..core.error import Res
-from ..core.common import get_files, warn_if_empty
+from ..core.common import get_files, warn_if_empty, mcachew
+from ..core.cachew import cache_dir
 
 # For config, see: https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py
 from my.config import gpslogger as user_config
+
+
+logger = LazyLogger(__name__, level="warning")
 
 
 @dataclass
@@ -34,6 +38,11 @@ class Location(NamedTuple):
     lng: float
 
 
+@mcachew(
+    cache_path=cache_dir(),
+    depends_on=lambda: list(map(str, get_files(config.export_path))),
+    logger=logger,
+)
 def history() -> Iterator[Res[Location]]:
     files = get_files(config.export_path, glob="*.gpx")
 
@@ -46,8 +55,30 @@ def history() -> Iterator[Res[Location]]:
             yield l
 
 
-@warn_if_empty
 def _extract_locations(path: Path) -> Iterator[Res[Location]]:
+    try:
+        import gpxpy
+
+        with path.open("r") as gf:
+            gpx_obj = gpxpy.parse(gf)
+            for track in gpx_obj.tracks:
+                for segment in track.segments:
+                    for point in segment.points:
+                        # TODO: use elevation?
+                        yield Location(
+                            lat=point.latitude,
+                            lng=point.longitude,
+                            dt=datetime.replace(point.time, tzinfo=timezone.utc),
+                        )
+    except ImportError:
+        logger.warning(
+            "Should install 'gpxpy' to parse .gpx files, falling back to basic XML parsing"
+        )
+        yield from _extract_xml_locations(path)
+
+
+@warn_if_empty
+def _extract_xml_locations(path: Path) -> Iterator[Res[Location]]:
     # the tags are sort of strange here, becuase they include the
     # input format (URL). cant use findall easily, have to loop through
     # and find substrings of the matching tags
