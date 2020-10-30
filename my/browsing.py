@@ -36,7 +36,10 @@ if "HPI_LOGS" in os.environ:
     from logzero import setup_logger
     from .core.logging import mklevel
     import ffexport.log
-    ffexport.log.logger = setup_logger(name="ffexport", level=mklevel(os.environ["HPI_LOGS"]))
+
+    ffexport.log.logger = setup_logger(
+        name="ffexport", level=mklevel(os.environ["HPI_LOGS"])
+    )
 
 
 from ffexport import read_and_merge, Visit
