@@ -13,6 +13,8 @@ from my.config import skype as user_config
 from dataclasses import dataclass
 
 from .core import Paths, Stats
+from .core.common import mcachew
+from .core.cachew import cache_dir
 
 
 @dataclass
@@ -46,13 +48,18 @@ import dateparser
 
 from .core.common import LazyLogger
 
-logger = LazyLogger(__name__)
+logger = LazyLogger(__name__, level="warning")
 
 
 Results = Iterator[datetime]
 OptResults = Iterator[Optional[datetime]]
 
 
+@mcachew(
+    cache_path=cache_dir(),
+    depends_on=lambda: list(map(str, inputs())),
+    logger=logger,
+)
 def timestamps(from_paths=inputs) -> Results:
     for d in chain(*map(_parse_file, from_paths())):
         if d is not None:
