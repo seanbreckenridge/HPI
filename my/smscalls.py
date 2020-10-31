@@ -7,6 +7,24 @@ Phone calls and SMS messages
 #
 # my.config.smscalls is set to that location, see: https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py
 
+from dataclasses import dataclass
+
+from .core import PathIsh
+
+from my.config import smscalls as user_config
+
+
+@dataclass
+class smscalls(user_config):
+    # directory that SMSBackupRestore saves xml files
+    export_path: PathIsh
+
+
+from .core.cfg import make_config
+
+config = make_config(smscalls)
+
+
 from datetime import datetime
 from pathlib import Path
 from typing import NamedTuple, Iterator, Set, Tuple
@@ -16,8 +34,6 @@ from lxml import etree
 from .core import Stats
 from .core.common import get_files
 from .core.time import parse_datetime_millis
-
-from my.config import smscalls as config
 
 
 class Call(NamedTuple):
