@@ -141,19 +141,22 @@ def config_check(args):
     except Exception as e:
         error("failed to import the config")
         tb(e)
-        sys.exit(1) # todo yield exception here? so it doesn't fail immediately..
+        sys.exit(1)  # todo yield exception here? so it doesn't fail immediately..
 
-    cfg_path = cfg.__file__# todo might be better to use __path__?
+    cfg_path = cfg.__file__  # todo might be better to use __path__?
     info(f"config file: {cfg_path}")
 
     import my.core as core
+
     try:
-        core_pkg_path = str(Path(core.__path__[0]).parent) # type: ignore[attr-defined]
+        core_pkg_path = str(Path(core.__path__[0]).parent)  # type: ignore[attr-defined]
         if cfg_path.startswith(core_pkg_path):
-            error(f'''
+            error(
+                f"""
             Seems that the default config is used ({cfg_path}).
             See https://github.com/karlicoss/HPI/blob/master/doc/SETUP.org#setting-up-modules for more information
-            '''.strip())
+            """.strip()
+            )
     except Exception as e:
         tb(e)
 
@@ -231,7 +234,7 @@ def modules_check(args):
 
         try:
             res = stats()
-            assert res is not None, 'stats() returned None'
+            assert res is not None, "stats() returned None"
         except Exception as ee:
             warning(
                 f"     - {color.RED}stats:{color.RESET}                      computing failed{vw}"
