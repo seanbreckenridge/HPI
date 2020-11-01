@@ -448,6 +448,12 @@ def warn_if_empty(f):
 QUICK_STATS = False
 
 
+# TODO(sean): seems to have diverged from upstream since
+# I'm not as interested in pandas interop at this location,
+# plan to do that in my dashboard
+# maybe add this warning?:
+# https://github.com/karlicoss/HPI/commit/ed4b6c409f19e67ec8e9d0b3f1090aa170ea3fea#diff-4acacefcca43f16ca8dff03f8f591b991c25f8326576c2767f18a7ad2a126a80R434-R437
+
 C = TypeVar("C")
 Stats = Dict[str, Any]
 # todo not sure about return type...
@@ -455,10 +461,11 @@ def stat(func: Callable[[], Iterable[C]]) -> Stats:
     from more_itertools import ilen, take, first
 
     # todo not sure if there is something in more_itertools to compute this?
+    total = 0
     errors = 0
     # last = None
     def funcit():
-        nonlocal errors  # , last
+        nonlocal errors, total
         for x in func():
             if isinstance(x, Exception):
                 errors += 1
