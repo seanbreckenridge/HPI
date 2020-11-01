@@ -3,6 +3,8 @@ Gets Transactions/Historical account balance (banking/finances) using
 https://github.com/seanbreckenridge/mint
 """
 
+import os
+import logging
 from typing import Tuple, List
 from functools import lru_cache
 
@@ -11,6 +13,7 @@ from budget.analyze import cleaned_snapshots, Snapshot, Transaction
 from more_itertools import last
 
 from .core import Stats
+from .core.logging import mklevel
 
 
 @lru_cache(1)
@@ -19,7 +22,11 @@ def _data() -> Tuple[List[Snapshot], List[Transaction]]:
     Get data from the budget module (data is handled by that/environment variables)
     see https://github.com/seanbreckenridge/mint
     """
-    return data()
+    debug: bool = False
+    if "HPI_LOGS" in os.environ:
+        if mklevel(os.environ["HPI_LOGS"]) == logging.DEBUG:
+            debug = True
+    return data(debug=debug)
 
 
 def balances() -> List[Snapshot]:
