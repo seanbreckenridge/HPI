@@ -10,6 +10,7 @@ tz_lookup = {
     for x in pytz.all_timezones
 }
 tz_lookup["UTC"] = pytz.utc  # ugh. otherwise it'z Zulu...
+tz_lookup["PDT"] = tz_lookup["PST"]
 
 
 # TODO dammit, lru_cache interferes with mypy?
