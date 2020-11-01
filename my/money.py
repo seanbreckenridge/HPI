@@ -6,7 +6,8 @@ https://github.com/seanbreckenridge/mint
 from typing import Tuple, List
 from functools import lru_cache
 
-from budget import data, Snapshot, Transaction
+from budget import data
+from budget.analyze import cleaned_snapshots, Snapshot, Transaction
 from more_itertools import last
 
 from .core import Stats
@@ -27,7 +28,7 @@ def balances() -> List[Snapshot]:
     """
     bal_snapshots, _ = _data()
     bal_snapshots.sort(key=lambda t: t.at)
-    return bal_snapshots
+    return list(cleaned_snapshots(sorted_snapshots=bal_snapshots))
 
 
 def balance() -> Snapshot:
