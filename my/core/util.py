@@ -24,8 +24,6 @@ def ignored(m: str) -> bool:
     excluded = [
         "core.*",
         "config.*",
-        ## todo move these to core
-        "mycfg_stub",
         ##
     ]
     exs = "|".join(excluded)
