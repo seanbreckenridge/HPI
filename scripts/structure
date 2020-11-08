@@ -32,7 +32,6 @@ directories=(
 declare -a files
 files=(
 	'body/weight.json'
-	'body/teeth.json'
 	'body/shower.json'
 	'body/water.json'
 )
