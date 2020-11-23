@@ -1,5 +1,5 @@
 # alias 'water=python3 -c "from my.food import prompt, Water; prompt(Water)"'
-# alias 'water_now=python3 -c "from my.food.water import water_now; water_now()"'
+# alias 'water-now=python3 -c "from my.food.water import water_now; water_now()"'
 
 from datetime import datetime
 from pathlib import Path
