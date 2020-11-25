@@ -101,6 +101,10 @@ def history(from_paths=inputs) -> Results:
 # seconds between when it started/ended
 def _actually_listened_to(m: Media) -> bool:
     listen_time: float = (m.end_time - m.start_time).total_seconds() - m.pause_duration
+    # if this is mpv streaming something from /dev/
+    # (like my camera), ignore
+    if not m.is_stream and m.path.startswith("/dev/"):
+        return False
     if m.is_stream:
         # If I listened to more than 3 minutes
         return listen_time > 180
