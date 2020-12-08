@@ -33,14 +33,9 @@ clone_if_not_exists() {
 	fi
 } && export -f clone_if_not_exists
 
-new_pip() {
-	pip --use-feature=2020-resolver "$@"
-	return $?
-}
-
 install_hpi() {
 	echo "Installing HPI..."
-	new_pip install -e .
+	pip install -e .
 }
 
 create_data_dir() {
@@ -50,10 +45,10 @@ create_data_dir() {
 
 install_python_extras() {
 	echo "Installing extra python packages..."
-	new_pip install -r ./pypackages.txt
-	new_pip install 'git+https://github.com/seanbreckenridge/aw-watcher-window'
-	new_pip install 'git+https://github.com/seanbreckenridge/discord_data'
-	new_pip install 'git+https://github.com/karlicoss/rexport'
+	pip install -r ./pypackages.txt
+	pip install 'git+https://github.com/seanbreckenridge/aw-watcher-window'
+	pip install 'git+https://github.com/seanbreckenridge/discord_data'
+	pip install 'git+https://github.com/karlicoss/rexport'
 }
 
 setup_arctree() {
