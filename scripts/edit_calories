@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+# edits the calorie value for some food
+# https://github.com/zupzup/calories
+# calories export > ./data.json
+# ./edit_calories ./data.json 'name of food' new value
+# ./edit_calories ./data.json 'sandwich melt' 450
+# check the file to make sure its still fine
+# calories import --f=updated.json
+
+import sys
+import os
+import json
+from pathlib import Path
+
+dirname: str = os.path.dirname(os.path.abspath(__file__))
+dump_to: str = os.path.join(dirname, "updated.json")
+
+try:
+    jfile: Path = Path(sys.argv[1])
+    assert jfile.exists()
+    food_name: str = sys.argv[2].strip()
+    cal_value: int = int(sys.argv[3])
+except Exception as e:
+    print("Error: ", str(e), file=sys.stderr)
+    print("Provide args like: ./edit_calories ./data.json 'sandwich melt' 450")
+    sys.exit(1)
+
+data = json.loads(jfile.read_text())
+new_entries = []
+for entry in data["entries"]:
+    if entry["food"] == food_name:
+        entry["calories"] = cal_value
+    new_entries.append(entry)
+data["entries"] = new_entries
+with open(dump_to, "w") as f:
+    json.dump(data, f)
