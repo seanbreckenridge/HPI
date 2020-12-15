@@ -1,6 +1,6 @@
 # import pytest # type: ignore[import]
 
-# TODO(sean): disabled this for now, just becuase the google parsing
+# TODO(sean): disabled this for now, just because the google parsing
 # makes this take ages if this isnt disabled
 
 # I guess makes sense by default

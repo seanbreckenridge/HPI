@@ -79,7 +79,7 @@ def _extract_locations(path: Path) -> Iterator[Res[Location]]:
 
 @warn_if_empty
 def _extract_xml_locations(path: Path) -> Iterator[Res[Location]]:
-    # the tags are sort of strange here, becuase they include the
+    # the tags are sort of strange here, because they include the
     # input format (URL). cant use findall easily, have to loop through
     # and find substrings of the matching tags
     tr = etree.parse(str(path))
