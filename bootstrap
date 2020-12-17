@@ -45,7 +45,7 @@ create_data_dir() {
 
 install_python_extras() {
 	echo "Installing extra python packages..."
-	pip install -r ./pypackages.txt
+	pip install -r ./requirements.txt
 	pip install 'git+https://github.com/seanbreckenridge/aw-watcher-window'
 	pip install 'git+https://github.com/seanbreckenridge/discord_data'
 	pip install 'git+https://github.com/karlicoss/rexport'
