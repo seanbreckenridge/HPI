@@ -1,4 +1,5 @@
 # type: ignore
+# NOTE(seanbreckenridge): very out of date compared to upstream
 
 """
 Photos and videos on your filesystem, their GPS and timestamps

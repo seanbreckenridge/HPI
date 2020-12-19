@@ -1,13 +1,47 @@
 # type: ignore
-
 """
-Stackexchange data
+Stackexchange data (uses API via [[https://github.com/karlicoss/stexport][stexport]])
 """
+REQUIRES = [
+    "git+https://github.com/karlicoss/stexport",
+]
 
-# import my.config.repos.stexport.model as stexport
-# from my.config import stackexchange as config
+### config
+from my.config import stackexchange as user_config
+from ..core import dataclass, PathIsh, make_config
 
 
-def get_data():
-    sources = [max(config.export_dir.glob("*.json"))]
-    return stexport.Model(sources).site_model("stackoverflow")
+@dataclass
+class stackexchange(user_config):
+    """
+    Uses [[https://github.com/karlicoss/stexport][stexport]] outputs
+    """
+
+    export_path: PathIsh  # path to GDPR zip file
+
+
+config = make_config(stackexchange)
+###
+
+from stexport import dal
+
+
+# todo lru cache?
+def _dal() -> dal.DAL:
+    from ..core import get_files
+
+    inputs = get_files(config.export_path)
+    return dal.DAL(inputs)
+
+
+# TODO not sure if should keep the sites separate.. probably easier to filter after than merge
+def site(name: str) -> dal.SiteDAL:
+    return _dal().site_dal(name)
+
+
+from ..core import stat, Stats
+
+
+def stats() -> Stats:
+    s = site("stackoverflow")
+    return stat(s.questions)

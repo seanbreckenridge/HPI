@@ -20,6 +20,7 @@ from typing import (
     TYPE_CHECKING,
 )
 import warnings
+from . import warnings as core_warnings
 
 from .util import __NOT_HPI_MODULE__
 
@@ -154,7 +155,6 @@ def _is_compressed(p: Path) -> bool:
     return p.suffix in {".xz", ".lz4", ".zstd"}
 
 
-# TODO support '' for empty path
 DEFAULT_GLOB = "*"
 
 
@@ -213,12 +213,13 @@ def get_files(
 
     if len(paths) == 0:
         # todo make it conditionally defensive based on some global settings
-        # TODO not sure about using warnings module for this
+        core_warnings.high(
+            f"""
+{caller()}: no paths were matched against {pp}. This might result in missing data. Likely, the directory you passed is empty.
+""".strip()
+        )
         import traceback
 
-        warnings.warn(
-            f"{caller()}: no paths were matched against {paths}. This might result in missing data."
-        )
         traceback.print_stack()
 
     if guess_compression:

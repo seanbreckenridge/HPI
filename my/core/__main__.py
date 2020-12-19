@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import sys
 from subprocess import run, PIPE
-from typing import Optional, Sequence, Iterable
+from typing import Optional, Sequence, Iterable, List
 import importlib
 import traceback
 
@@ -112,7 +112,7 @@ class color:
     RESET = "\033[0m"
 
 
-def config_create(args):
+def config_create(args) -> None:
     from .preinit import get_mycfg_dir
 
     mycfg_dir = get_mycfg_dir()
@@ -129,16 +129,23 @@ def config_create(args):
     else:
         error(f"config directory '{mycfg_dir}' already exists, skipping creation")
 
-    config_check(args)
-    if not created:
+    checked_passed = config_ok(args)
+    if not created or not checked_passed:
         sys.exit(1)
 
 
+def config_check_cli(args) -> None:
+    ok = config_ok(args)
+    sys.exit(0 if ok else False)
+
+
 # TODO return the config as a result?
-def config_check(args):
+def config_ok(args):
+    errors: List[Exception] = []
     try:
         import my.config as cfg
     except Exception as e:
+        errors.append(e)
         error("failed to import the config")
         tb(e)
         sys.exit(1)  # todo yield exception here? so it doesn't fail immediately..
@@ -158,6 +165,7 @@ def config_check(args):
             """.strip()
             )
     except Exception as e:
+        errors.append(e)
         tb(e)
 
     mres = run_mypy(cfg)
@@ -170,6 +178,12 @@ def config_check(args):
         error("mypy config check: failed")
         sys.stderr.write(indent(mres.stderr.decode("utf8")))
     sys.stderr.write(indent(mres.stdout.decode("utf8")))
+    if len(errors) > 0:
+        error(f"config check: {len(errors)} errors")
+        return False
+    else:
+        info("config check: success!")
+        return True
 
 
 def _modules(all=False):
@@ -187,7 +201,7 @@ def _modules(all=False):
         )
 
 
-def modules_check(args):
+def modules_check(args) -> None:
     verbose: bool = args.verbose
     quick: bool = args.quick
     module: Optional[str] = args.module
@@ -262,7 +276,7 @@ def list_modules(args) -> None:
         print(f"{pre} {m:50}{suf}")
 
 
-def tabulate_warnings():
+def tabulate_warnings() -> None:
     """
     Helper to avoid visual noise in hpi modules/doctor
     """
@@ -279,8 +293,8 @@ def tabulate_warnings():
 
 
 # todo check that it finds private modules too?
-def doctor(args):
-    # config_check(args)
+def doctor(args) -> None:
+    # ok = config_ok(args)
     modules_check(args)
 
 
@@ -315,7 +329,7 @@ Work in progress, will be used for config management, troubleshooting & introspe
     scp = cp.add_subparsers(dest="mode")
     if True:
         ccp = scp.add_parser("check", help="Check config")
-        ccp.set_defaults(func=config_check)
+        ccp.set_defaults(func=config_check_cli)
 
         icp = scp.add_parser("create", help="Create user config")
         icp.set_defaults(func=config_create)

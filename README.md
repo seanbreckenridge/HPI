@@ -127,6 +127,10 @@ Song I've listened to most?
 
 ### TODO:
 
+setup from upstream
+
+- [ ] configure `my.stackexchange` API tokens: https://github.com/karlicoss/stexport
+
 create 'export modules' which keep these up to date:
 
 - [ ] backup trakt? (have API access)
@@ -139,7 +143,6 @@ Need to do more research/figure out
 
 ### delayed todos
 
-- [ ] configure `my.stackexchange` (isnt really documented/able to use in HPI without modifications [wait for repo](https://github.com/karlicoss/ghexport/issues/3#issuecomment-680732889))
 - [ ] exif data from photos; I don't really take lots of photos, so perhaps this isn't as useful as of right now
 
 ---
@@ -153,7 +156,7 @@ Need to do more research/figure out
 
 ---
 
-Last referenced commit hash on [karicoss/HPI](https://github.com/karlicoss/HPI): a6e5908e6de034ff16bfd808425fcb9f941be9cc
+Last referenced commit hash on [karicoss/HPI](https://github.com/karlicoss/HPI): e81dddddf083ffd81aa7e2b715bd34f59949479c
 
 ---
 
