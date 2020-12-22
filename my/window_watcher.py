@@ -29,9 +29,8 @@ config = make_config(window_watcher)
 import csv
 import warnings
 from pathlib import Path
-from typing import Sequence
 from datetime import datetime
-from typing import NamedTuple, Iterator, Set
+from typing import NamedTuple, Iterator, Set, Sequence
 from itertools import chain
 
 from .core import get_files, warn_if_empty, Stats
@@ -68,7 +67,10 @@ Results = Iterator[Entry]
 
 
 def history(from_paths=inputs) -> Results:
-    yield from _merge_histories(*map(_parse_file, filter_subfile_matches(from_paths())))
+    yield from filter(
+        _is_unlikely,
+        _merge_histories(*map(_parse_file, filter_subfile_matches(from_paths()))),
+    )
 
 
 @warn_if_empty
@@ -81,6 +83,24 @@ def _merge_histories(*sources: Results) -> Results:
             continue
         yield e
         emitted.add(key)
+
+
+unlikely_duration: int = 3600
+for_applications: Set[str] = set(["firefoxdeveloperedition", "Alacritty"])
+
+very_unlikey_duration: int = unlikely_duration * 2
+
+
+# this probably didnt happen, was either 'unknown' or me leaving
+# a tab open for a *long* time while AFK
+def _is_unlikely(e: Entry) -> bool:
+    if e.window_title == "unknown" and e.application == "unknown":
+        return False
+    if e.duration > very_unlikey_duration:
+        return False
+    if e.duration > unlikely_duration and e.application in for_applications:
+        return False
+    return True
 
 
 def _parse_file(histfile: Path) -> Results:
