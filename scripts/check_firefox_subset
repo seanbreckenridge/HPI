@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+# prints older firefox sqlite exports
+# that can be deleted, since newer ones
+# are complete supersets
+
+"""
+Seems that none of these can really be deleted, as visits are slowly removed over time, as demonstrated by this script:
+If loading visits takes exceedingly long after dozens of databases have been exported, may be worth putting it behind cachew, or optimizing the queries in ffexport
+
+# of Visits in /home/sean/data/firefox/places-20201121031143.sqlite 3 but not in /home/sean/data/firefox/places-20201212031157.sqlite 4: 164
+# of Visits in /home/sean/data/firefox/places-20201212031157.sqlite 4 but not in /home/sean/data/firefox/places-20201121031143.sqlite 3: 19210
+# of Visits in /home/sean/data/firefox/places-20201031031121.sqlite 2 but not in /home/sean/data/firefox/places-20201212031157.sqlite 4: 1129
+# of Visits in /home/sean/data/firefox/places-20201212031157.sqlite 4 but not in /home/sean/data/firefox/places-20201031031121.sqlite 2: 39713
+# of Visits in /home/sean/data/firefox/places-20201031031121.sqlite 2 but not in /home/sean/data/firefox/places-20201121031143.sqlite 3: 965
+# of Visits in /home/sean/data/firefox/places-20201121031143.sqlite 3 but not in /home/sean/data/firefox/places-20201031031121.sqlite 2: 20503
+# of Visits in /home/sean/data/firefox/places-20201010031025.sqlite 1 but not in /home/sean/data/firefox/places-20201212031157.sqlite 4: 1222
+# of Visits in /home/sean/data/firefox/places-20201212031157.sqlite 4 but not in /home/sean/data/firefox/places-20201010031025.sqlite 1: 60734
+# of Visits in /home/sean/data/firefox/places-20201010031025.sqlite 1 but not in /home/sean/data/firefox/places-20201121031143.sqlite 3: 1059
+# of Visits in /home/sean/data/firefox/places-20201121031143.sqlite 3 but not in /home/sean/data/firefox/places-20201010031025.sqlite 1: 41525
+# of Visits in /home/sean/data/firefox/places-20201010031025.sqlite 1 but not in /home/sean/data/firefox/places-20201031031121.sqlite 2: 134
+# of Visits in /home/sean/data/firefox/places-20201031031121.sqlite 2 but not in /home/sean/data/firefox/places-20201010031025.sqlite 1: 21062
+# of Visits in /home/sean/data/firefox/places-20200828223058.sqlite 0 but not in /home/sean/data/firefox/places-20201212031157.sqlite 4: 954
+# of Visits in /home/sean/data/firefox/places-20201212031157.sqlite 4 but not in /home/sean/data/firefox/places-20200828223058.sqlite 0: 98346
+# of Visits in /home/sean/data/firefox/places-20200828223058.sqlite 0 but not in /home/sean/data/firefox/places-20201121031143.sqlite 3: 954
+# of Visits in /home/sean/data/firefox/places-20201121031143.sqlite 3 but not in /home/sean/data/firefox/places-20200828223058.sqlite 0: 79300
+# of Visits in /home/sean/data/firefox/places-20200828223058.sqlite 0 but not in /home/sean/data/firefox/places-20201031031121.sqlite 2: 954
+# of Visits in /home/sean/data/firefox/places-20201031031121.sqlite 2 but not in /home/sean/data/firefox/places-20200828223058.sqlite 0: 59762
+# of Visits in /home/sean/data/firefox/places-20200828223058.sqlite 0 but not in /home/sean/data/firefox/places-20201010031025.sqlite 1: 846
+# of Visits in /home/sean/data/firefox/places-20201010031025.sqlite 1 but not in /home/sean/data/firefox/places-20200828223058.sqlite 0: 38726
+"""
+
+from functools import lru_cache
+from pathlib import Path
+from datetime import datetime
+from typing import List, Set, Tuple
+
+from ffexport.parse_db import read_visits
+from my.browsing import config
+from my.core import get_files
+
+@lru_cache(maxsize=None)
+def visit_set(p: Path) -> Set[Tuple[str, datetime]]:
+    return set([(v.url, v.visit_date) for v in read_visits(p)])
+
+
+def main():
+    exported_files: List[Path] = sorted(get_files(config.export_path), key=lambda p: p.lstat().st_mtime)
+    for i in reversed(range(len(exported_files))):
+        for j in reversed(range(i, len(exported_files))):
+            if i == j:
+                continue
+            newer = visit_set(exported_files[j])
+            older = visit_set(exported_files[i])
+            print(f"# of Visits in {exported_files[i]} {i} but not in {exported_files[j]} {j}:", len(older - newer))
+            print(f"# of Visits in {exported_files[j]} {j} but not in {exported_files[i]} {i}:", len(newer - older))
+            if older.issubset(newer):
+                print(f"{exported_files[i]} {i} ({len(older)}) is a subset of {exported_files[j]} {j} ({len(newer)})")
+
+if __name__ == "__main__":
+    main()
