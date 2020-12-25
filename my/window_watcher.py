@@ -88,7 +88,7 @@ def _merge_histories(*sources: Results) -> Results:
 unlikely_duration: int = 3600
 for_applications: Set[str] = set(["firefoxdeveloperedition", "Alacritty"])
 
-very_unlikey_duration: int = unlikely_duration * 2
+very_unlikely_duration: int = unlikely_duration * 2
 
 
 # this probably didnt happen, was either 'unknown' or me leaving
@@ -96,7 +96,7 @@ very_unlikey_duration: int = unlikely_duration * 2
 def _is_unlikely(e: Entry) -> bool:
     if e.window_title == "unknown" and e.application == "unknown":
         return False
-    if e.duration > very_unlikey_duration:
+    if e.duration > very_unlikely_duration:
         return False
     if e.duration > unlikely_duration and e.application in for_applications:
         return False
