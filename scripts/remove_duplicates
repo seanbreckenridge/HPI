@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+# removes todotxt and rss files that
+# are the same across consecutive days
+
+from datetime import datetime
+from pathlib import Path
+from typing import List, Tuple, Optional
+
+from my.todotxt import inputs as todotxtinputs
+from my.rss import inputs as rssinputs
+
+TimePath = Tuple[datetime, Path]
+TimePaths = List[TimePath]
+
+
+def remove_consecutive(inps: TimePaths) -> None:
+    contents: Optional[str] = None
+    for (dt, p) in inps:
+        file_contents: str = p.read_text().strip()
+        if contents is None:
+            contents = p.read_text().strip()
+        else:
+            if contents == file_contents:
+                print("Current file {} matches previous day, removing...".format(p))
+                p.unlink()
+            else:
+                print("File {} is different!".format(p))
+            contents = file_contents
+
+
+def main() -> None:
+
+    todo_files: TimePaths = []
+    completed_todos: TimePaths = []
+    rss_files: TimePaths = []
+
+    for (dt, p) in todotxtinputs():
+        if "-done" in str(p):
+            completed_todos.append((dt, p))
+        else:
+            todo_files.append((dt, p))
+
+    todo_files = sorted(todo_files, key=lambda tp_tup: tp_tup[0])
+    completed_todos = sorted(completed_todos, key=lambda tp_tup: tp_tup[0])
+
+    # remove live_file from inputs, sort by datetime
+    rss_files = sorted(
+        [r for r in rssinputs() if ".config" not in str(r[1])],
+        key=lambda rss_tup: rss_tup[0],
+    )
+
+    remove_consecutive(todo_files)
+    remove_consecutive(completed_todos)
+    remove_consecutive(rss_files)
+
+
+if __name__ == "__main__":
+    main()
