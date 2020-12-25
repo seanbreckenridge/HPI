@@ -1,7 +1,7 @@
 #!/bin/bash
 # backup todo.txt
 
-evry 1 day -backup_todotxt && {
+evry 6 hours -backup_todotxt && {
 	readonly TODOTXT_DIR="${XDG_CONFIG_HOME}/todo"
 	readonly BACKUP_DIR="${HOME}/data/todotxt"
 	printlog "todotxt:backing up..."
