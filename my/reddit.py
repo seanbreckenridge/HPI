@@ -276,16 +276,16 @@ def pushshift_comments() -> Iterator[PComment]:
 # a lot of the major ones are the same though
 @warn_if_empty
 def _merge_comments(*sources: Sequence[RComment]) -> Iterator[RComment]:
-    # ignored = 0
+    ignored = 0
     emitted: Set[int] = set()
     for e in chain(*sources):
         key = int(e.raw["created_utc"])
         if key in emitted:
-            # ignored += 1
+            ignored += 1
             # logger.info('ignoring %s: %s', key, e)
             continue
         yield e
         emitted.add(key)
-    # logger.info(f"Ignored {ignored}...")
+    logger.info(f"Ignored {ignored} comments...")
     # tested 30/09/20
     # Ignoring 997...
