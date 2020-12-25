@@ -111,8 +111,13 @@ def _actually_listened_to(m: Media) -> bool:
     else:
         if m.media_duration is not None and m.media_duration > 0.5:
             percentage_listened_to = listen_time / m.media_duration
-            # if I listened to more than 60% of the media duration or 10 minutes
-            return percentage_listened_to > 0.6 or listen_time > 600
+            # if under 10 minutes (probably a song?), if I listened to at least 60%
+            # if over, if I listened to at least 50%
+            if m.media_duration < 600:
+                return percentage_listened_to > 0.6
+            else:
+                # if I listened to more than 50% of the media duration or 30 minutes
+                return listen_time > 1800 or percentage_listened_to > 0.5
         else:
             return listen_time > 60  # listened to more than a minute
 
