@@ -40,7 +40,7 @@ class Location(NamedTuple):
 
 @mcachew(
     cache_path=cache_dir(),
-    depends_on=lambda: list(map(str, get_files(config.export_path))),
+    depends_on=lambda: list(map(lambda p: p.lstat().st_mtime, get_files(config.export_path))),
     logger=logger,
 )
 def history() -> Iterator[Res[Location]]:
