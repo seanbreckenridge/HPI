@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+
+from typing import Optional, Union
+from datetime import timedelta, datetime
+
+import click
+
+from my.core.serialize import dumps
+from my.core.query import find_hpi_function, most_recent, QueryException
+
+
+@click.command(name="hpi_query")
+@click.option(
+    "--days",
+    type=int,
+    help="Only return events within this time range",
+    required=False,
+)
+@click.option(
+    "--count", type=int, help="Only return this number of events", required=False
+)
+@click.argument("HPI_MODULE")
+@click.argument("FUNCTION_NAME")
+def main(
+    hpi_module: str,
+    function_name: str,
+    days: Optional[int] = None,
+    count: Optional[int] = None,
+):
+    """
+    Query recent events from some HPI function, print results to STDOUT as JSON
+
+    For example, to get any zsh commands run in the last day:
+    hpi_query my.zsh history --days 1
+
+    If no options are provided, lists all items
+    """
+    ddays: Union[bool, timedelta] = True if days is None else timedelta(days=days)
+    cevents: Union[bool, int] = True if count is None else count
+    try:
+        func = find_hpi_function(hpi_module, function_name)
+    except QueryException as qe:
+        click.secho(str(qe).strip("'"), err=True, fg="red")
+        raise SystemExit(1)
+    click.echo(dumps(list(most_recent(func(), events=cevents, time_range=ddays))))
+
+
+if __name__ == "__main__":
+    main()

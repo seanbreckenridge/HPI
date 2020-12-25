@@ -26,7 +26,7 @@ def test_get_recent():
     recent_events = list(most_recent(zsh_hist(), events=5))
     assert len(recent_events) == 5
 
-    recent_events = list(most_recent(zsh_hist(), time_range=timedelta(days=10000)))
+    recent_events = list(most_recent(zsh_hist(), time_range=True))  # default 250
     assert len(recent_events) == 250
 
     # find most recent zsh history event 'manually'

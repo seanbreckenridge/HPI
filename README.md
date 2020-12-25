@@ -180,6 +180,13 @@ Need to do more research/figure out
 ]
 ```
 
+That info is also available as a CLI interface, which I use to grab recent events so I can populate that info into my dashboard/menu bar. For example, to quickly grab how much water I've drunk in the last day:
+
+```
+$ ./scripts/hpi_query my.food water --days 1 | jq '.[] | .glasses' | datamash sum 1
+4.5
+```
+
 ---
 
 Last referenced commit hash on [karicoss/HPI](https://github.com/karlicoss/HPI): e81dddddf083ffd81aa7e2b715bd34f59949479c

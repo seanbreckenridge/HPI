@@ -79,17 +79,24 @@ def within_range(
     return current_secs - event_secs < time_secs
 
 
-# retrieve the most recent 'n' events or within the
-# timerange given
-# Lets me grab events very easily:
-# import my.core.query as qr
-#   list(qr.most_recent(qr.find_hpi_function("my.food", "food")()))
-#   list(qr.most_recent(qr.find_hpi_function("my.zsh", "history")()))
 def most_recent(
     res: Iterator[T],
-    events: int = 250,
-    time_range: datetime.timedelta = datetime.timedelta(days=30),
+    events: Union[int, bool] = 250,
+    time_range: Union[datetime.timedelta, bool] = datetime.timedelta(days=30),
 ) -> Iterator[T]:
+    """
+    retrieve the most recent 'n' events or within the
+    timerange given
+    Lets me grab events very easily:
+    import my.core.query as qr
+      list(qr.most_recent(qr.find_hpi_function("my.food", "food")()))
+      list(qr.most_recent(qr.find_hpi_function("my.zsh", "history")()))
+    If 'True' is provided as events or time_range, acts as infinite
+    """
+    # special case, to avoid all the computation
+    if events is True and time_range is True:
+        yield from res
+        return
 
     count: int = 0
     res = peekable(res)
@@ -100,10 +107,16 @@ def most_recent(
     current: datetime.datetime = datetime.datetime.now()
 
     for evnt in order_by_date(res, reverse=True, dfunc=dfunc):
-        if within_range(current, dfunc(evnt), time_range):
+        if time_range is True or (
+            isinstance(time_range, datetime.timedelta)
+            and within_range(current, dfunc(evnt), time_range)
+        ):
             yield evnt
         else:
             break
-        count += 1
-        if count >= events:
-            break
+        if events is True:
+            continue
+        else:
+            count += 1
+            if count >= events:
+                break
