@@ -34,7 +34,8 @@ def water_now():
     except IndexError:
         pass
     except ValueError:
-        print("Could not convert {} to a float".format(sys.argv[1]), file=sys.stderr)
+        print("Could not convert '{}' to a float".format(sys.argv[1]), file=sys.stderr)
+        raise SystemExit(1)
 
     # load water
     water_f: Path = datafile("water")
