@@ -95,7 +95,7 @@ def most_recent(
     """
     # special case, to avoid all the computation
     if events is True and time_range is True:
-        yield from res
+        yield from order_by_date(res, reverse=True)
         return
 
     count: int = 0
