@@ -2,7 +2,7 @@ from typing import List, Any
 
 from more_itertools import ilen
 
-from my.window_watcher import history, Entry
+from my.window_watcher import history
 
 
 def unknown(e: Any) -> bool:
@@ -10,8 +10,7 @@ def unknown(e: Any) -> bool:
 
 
 def test_window_watcher():
-    items: List[Entry] = list(history())
+    items = list(history())
     assert len(items) > 5
-    assert isinstance(items[0], Entry)
     # make sure there are no "unknown" items
     assert ilen(filter(unknown, items)) == 0

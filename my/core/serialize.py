@@ -18,6 +18,8 @@ def default_encoder(o: Any) -> Any:
     elif isinstance(o, datetime.date):
         # encode to a simpleish to parse datetime
         return ["_DATE_", o.strftime("%Y/%m/%d")]
+    elif isinstance(o, datetime.timedelta):
+        return int(o.total_seconds())
     elif isinstance(o, uuid.UUID):
         return str(o)
     elif dataclasses.is_dataclass(o):
