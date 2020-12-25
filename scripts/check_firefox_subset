@@ -38,23 +38,35 @@ from ffexport.parse_db import read_visits
 from my.browsing import config
 from my.core import get_files
 
+
 @lru_cache(maxsize=None)
 def visit_set(p: Path) -> Set[Tuple[str, datetime]]:
     return set([(v.url, v.visit_date) for v in read_visits(p)])
 
 
 def main():
-    exported_files: List[Path] = sorted(get_files(config.export_path), key=lambda p: p.lstat().st_mtime)
+    exported_files: List[Path] = sorted(
+        get_files(config.export_path), key=lambda p: p.lstat().st_mtime
+    )
     for i in reversed(range(len(exported_files))):
         for j in reversed(range(i, len(exported_files))):
             if i == j:
                 continue
             newer = visit_set(exported_files[j])
             older = visit_set(exported_files[i])
-            print(f"# of Visits in {exported_files[i]} {i} but not in {exported_files[j]} {j}:", len(older - newer))
-            print(f"# of Visits in {exported_files[j]} {j} but not in {exported_files[i]} {i}:", len(newer - older))
+            print(
+                f"# of Visits in {exported_files[i]} {i} but not in {exported_files[j]} {j}:",
+                len(older - newer),
+            )
+            print(
+                f"# of Visits in {exported_files[j]} {j} but not in {exported_files[i]} {i}:",
+                len(newer - older),
+            )
             if older.issubset(newer):
-                print(f"{exported_files[i]} {i} ({len(older)}) is a subset of {exported_files[j]} {j} ({len(newer)})")
+                print(
+                    f"{exported_files[i]} {i} ({len(older)}) is a subset of {exported_files[j]} {j} ({len(newer)})"
+                )
+
 
 if __name__ == "__main__":
     main()
