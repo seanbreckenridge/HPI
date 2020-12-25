@@ -18,10 +18,16 @@ if calories_path is None:
 Json = Dict[str, Any]
 
 
+# on is the date which this entry is for, added_on is a timestamp which matches
+# exactly when I added it
 class Food(NamedTuple):
     on: date
+    added_on: datetime
     calories: float
     name: str
+
+
+# TODO: parse AMR? (number of calories my body should burn each day)
 
 
 def food() -> Iterator[Res[Food]]:
@@ -44,6 +50,24 @@ def food() -> Iterator[Res[Food]]:
     for cal in json_cals["entries"]:
         yield Food(
             on=datetime.strptime(cal["entryDate"], "%d.%m.%Y").date(),
+            added_on=_truncate_iso_date(cal["created"]),
             calories=float(cal["calories"]),
             name=cal["food"].strip(),
         )
+
+
+def _truncate_iso_date(dstr: str) -> datetime:
+    """
+    Remove the decimal points 'manually' and then parse using fromisoformat
+    2020-12-25T07:44:14.32152639-08:00 -> 2020-12-25T07:44:14-08:00 -> fromisoformat -> datetime obj
+    """
+    buf = ""
+    incl = True
+    for c in dstr:
+        if c == ".":
+            incl = False
+        if c == "-":
+            incl = True
+        if incl:
+            buf += c
+    return datetime.fromisoformat(buf)
