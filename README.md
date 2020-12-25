@@ -180,7 +180,7 @@ Need to do more research/figure out
 ]
 ```
 
-That info is also available as a CLI interface, which I use to grab recent events so I can populate that info into my dashboard/menu bar. For example, to quickly grab how much water I've drunk in the last day:
+That info is also available as a CLI interface, which I use to grab recent events so I can populate that info into my dashboard/menu bar. For example, to quickly grab how much water I've drank in the last day:
 
 ```
 $ ./scripts/hpi_query my.food water --days 1 | jq '.[] | .glasses' | datamash sum 1
