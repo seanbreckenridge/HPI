@@ -145,6 +145,7 @@ Need to do more research/figure out
 ### delayed todos
 
 - [ ] exif data from photos; I don't really take lots of photos, so perhaps this isn't as useful as of right now
+- [ ] Create a 'battery' module, to read info from https://sean.fish/d/.config/i3blocks/blocks/battery
 
 ---
 
