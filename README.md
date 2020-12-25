@@ -154,6 +154,31 @@ Need to do more research/figure out
 - [`jobs`](./jobs) contains anacron-like jobs that are run periodically, using [`bgproc`](https://github.com/seanbreckenridge/bgproc) and [`evry`](https://github.com/seanbreckenridge/evry). So, this repo has both the [DAL](https://beepb00p.xyz/exports.html#dal) and the scripts to backup the data.
 - `HPI_LOGS` controls the `kython` logging verbosity across the entire package mostly for running `HPI_LOGS=debug hpi doctor`
 - Modified lots of the tests that run with pytest. A lot of them just do basic tests to check if data exists on the system, it doesnt mock unit test data. Is just to run after making changes to make sure I didn't break anything that was already working. The `./lint` script wraps `mypy`, `pytest` and `flake8`, to check for typing, tests, and syntax/formatting errors. It also wraps `shellcheck` and `shfmt` to check shell scripts for syntax errors; autoformats if there are no errors. I use [`black`](https://black.readthedocs.io/en/stable/) to autoformat python
+- Added some modules to core, like `file`, `query` and `serialize`, to do some type introspection to query/order functions/events based on datetime, and to dump any of the computed events to JSON. It includes some helpers to serialize NamedTuple/dataclass and date-like objects:
+
+```python
+>>> from my.core.serialize import dumps
+>>> from my.core.query import most_recent, find_hpi_function
+>>> print(dumps(list(most_recent(find_hpi_function("my.zsh", "history")(), events=2)), indent=2))
+[
+  {
+    "dt": [
+      "_TIME_",
+      1608904505
+    ],
+    "duration": 0,
+    "command": "cd HPI"
+  },
+  {
+    "dt": [
+      "_TIME_",
+      1608904505
+    ],
+    "duration": 0,
+    "command": "ls"
+  }
+]
+```
 
 ---
 
