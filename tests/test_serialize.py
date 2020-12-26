@@ -14,7 +14,7 @@ def test_serialize_succeeds():
     item = Entry(dt=dt, command="something", duration=2)
     sitem = dumps(item)  # encode
     decoded = json.loads(sitem)  # then decode back
-    assert decoded["dt"] == ["_TIME_", int(dt.timestamp())]
+    assert decoded["dt"] == int(dt.timestamp())
     assert decoded["command"] == "something"
     assert decoded["duration"] == 2
 
