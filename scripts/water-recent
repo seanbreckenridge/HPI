@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+# print water I've drank recently
+
+import sys
+
+import my.core.query as qr
+
+count: int = 10
+try:
+    count = int(sys.argv[1])
+except IndexError:
+    pass
+except ValueError:
+    print("Could not convert '{}' to a float".format(sys.argv[1]), file=sys.stderr)
+    raise SystemExit(1)
+
+for gl in qr.most_recent(qr.find_hpi_function("my.food", "water")(), events=count):
+    # convert to epoch and back so it uses naive time (local timezone)
+    print("{}\t{}".format(gl.glasses, datetime.fromtimestamp(gl.when.timestamp())))
