@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import NamedTuple, Iterator, List
 
 from autotui.shortcuts import load_from, dump_to
+from bash_like import S, SO
 
 # just re-use the datadir info from the my.body module
 from ..body import datafile
@@ -28,13 +29,10 @@ def water_now():
     """
     import sys
 
-    glasses_count: float = 1.0
     try:
-        glasses_count = float(sys.argv[1])
-    except IndexError:
-        pass
+        glasses_count: float = float(SO - (1, 1.0))
     except ValueError:
-        print("Could not convert '{}' to a float".format(sys.argv[1]), file=sys.stderr)
+        S(f"Could not convert '{sys.argv[1]}' to a float\n") > 2
         raise SystemExit(1)
 
     # load water

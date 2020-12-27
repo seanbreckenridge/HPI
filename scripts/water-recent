@@ -4,15 +4,14 @@
 import sys
 from datetime import datetime
 
+from bash_like import S, SO
+
 import my.core.query as qr
 
-count: int = 10
 try:
-    count = int(sys.argv[1])
-except IndexError:
-    pass
+    count: int = int(SO - (1, 10))
 except ValueError:
-    print("Could not convert '{}' to a float".format(sys.argv[1]), file=sys.stderr)
+    S(f"Could not convert '{sys.argv[1]}' to a float\n") > 2
     raise SystemExit(1)
 
 for gl in qr.most_recent(qr.find_hpi_function("my.food", "water")(), events=count):
