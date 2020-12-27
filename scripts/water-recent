@@ -2,6 +2,7 @@
 # print water I've drank recently
 
 import sys
+from datetime import datetime
 
 import my.core.query as qr
 
