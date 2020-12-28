@@ -163,18 +163,12 @@ Need to do more research/figure out
 >>> print(dumps(list(most_recent(find_hpi_function("my.zsh", "history")(), events=2)), indent=2))
 [
   {
-    "dt": [
-      "_TIME_",
-      1608904505
-    ],
+    "dt": 1609195654,
     "duration": 0,
-    "command": "cd HPI"
+    "command": "ls"
   },
   {
-    "dt": [
-      "_TIME_",
-      1608904505
-    ],
+    "dt": 1609195491,
     "duration": 0,
     "command": "ls"
   }
