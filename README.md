@@ -42,7 +42,8 @@ This is modified from [`karlicoss/HPI`](https://github.com/karlicoss/HPI) to mor
 - `my.rss`, keeps track of when I added/removed RSS feeds (for [`newsboat`](https://newsboat.org/))
 - `my.ipython`, for timestamped python REPL history
 - `my.ttt`, to parse shell/system history tracked by [`ttt`](https://github.com/seanbreckenridge/ttt)
-- `my.window_watcher`, to parse active window events using [`window_watcher`](https://github.com/seanbreckenridge/aw-watcher-window)
+- `my.battery`, to parse basic battery percentage over time on my laptop
+- `my.window_watcher`, to parse active window events (what application I'm using/what the window title is) using [`window_watcher`](https://github.com/seanbreckenridge/aw-watcher-window)
 - `my.location`, merges data from [`gpslogger`](https://github.com/mendhak/gpslogger), `apple`, `google`, `discord`, `games.blizzard`, and `facebook` to provide location data (goes back ~10 years)
 
 ### 'Historical' Modules
@@ -145,7 +146,6 @@ Need to do more research/figure out
 ### delayed todos
 
 - [ ] exif data from photos; I don't really take lots of photos, so perhaps this isn't as useful as of right now
-- [ ] Create a 'battery' module, to read info from https://sean.fish/d/.config/i3blocks/blocks/battery
 
 ---
 
