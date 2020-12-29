@@ -12,7 +12,7 @@ from my.core.query import find_hpi_function, most_recent, QueryException
 @click.command(name="hpi_query")
 @click.option(
     "--days",
-    type=int,
+    type=float,
     help="Only return events within this time range",
     required=False,
 )
@@ -24,7 +24,7 @@ from my.core.query import find_hpi_function, most_recent, QueryException
 def main(
     hpi_module: str,
     function_name: str,
-    days: Optional[int] = None,
+    days: Optional[float] = None,
     count: Optional[int] = None,
 ):
     """
