@@ -1,0 +1,8 @@
+#!/bin/bash
+# fuzzy search all my history (with descriptions, to help match what I'm looking for)
+
+THIS_DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+cd "${THIS_DIR}" || exit $?
+
+CHOSEN="$(./history_fzf_py 2>/dev/null | fzf +m --tac)" || exit $?
+cut -d'\' -f1- <<<"${CHOSEN}" | openurl

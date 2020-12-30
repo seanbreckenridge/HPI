@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+# helper script for history_fzf,
+# to print unique results from my browsing
+
+from typing import Set
+
+from my.browsing import history
+
+emitted: Set[str] = set()
+for visit in history():
+    if visit.url in emitted:
+        continue
+    emitted.add(visit.url)
+    desc = ""
+    if visit.description is not None:
+        desc = visit.description.replace('\n', '')
+    print("{}\{}".format(visit.url, desc))
