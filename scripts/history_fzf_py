@@ -13,5 +13,5 @@ for visit in history():
     emitted.add(visit.url)
     desc = ""
     if visit.description is not None:
-        desc = visit.description.replace('\n', '')
+        desc = visit.description.replace("\n", "")
     print("{}\{}".format(visit.url, desc))
