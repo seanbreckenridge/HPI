@@ -41,7 +41,7 @@ def inputs() -> Sequence[Path]:  # type: ignore[misc]
 
 
 from datetime import datetime
-from typing import NamedTuple, Iterator, Set, Tuple
+from typing import NamedTuple, Iterator, Set, Tuple, List
 from itertools import chain
 
 
@@ -56,7 +56,11 @@ Results = Iterator[Entry]
 
 
 def history(from_paths=inputs) -> Results:
-    yield from _merge_histories(*map(_parse_file, filter_subfile_matches(from_paths())))
+    datafiles: List[Path] = list(from_paths())
+    if len(datafiles) == 1:
+        yield from _parse_file(datafiles[0])
+    else:
+        yield from _merge_histories(*map(_parse_file, filter_subfile_matches(from_paths())))
 
 
 @warn_if_empty
