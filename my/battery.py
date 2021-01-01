@@ -60,7 +60,9 @@ def history(from_paths=inputs) -> Results:
     if len(datafiles) == 1:
         yield from _parse_file(datafiles[0])
     else:
-        yield from _merge_histories(*map(_parse_file, filter_subfile_matches(from_paths())))
+        yield from _merge_histories(
+            *map(_parse_file, filter_subfile_matches(from_paths()))
+        )
 
 
 @warn_if_empty

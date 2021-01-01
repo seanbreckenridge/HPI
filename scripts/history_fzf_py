@@ -14,4 +14,4 @@ for visit in history():
     desc = ""
     if visit.description is not None:
         desc = visit.description.replace("\n", "")
-    print("{}\{}".format(visit.url, desc))
+    print("{}|{}".format(visit.url, desc))
