@@ -29,33 +29,40 @@ DateLike = Union[datetime.datetime, datetime.date]
 DateFunc = Callable[[T], DateLike]
 
 
-def datefunc(obj: T) -> Optional[DateFunc]:
+def datefunc(obj: T, key: Optional[str] = None) -> Optional[DateFunc]:
     """
     Accepts an object T. Attempts to find a date-like value on the object,
     using some getattr/dict checks. Returns a function which when called with
     this object returns the date
+
+    If a key is given, tries to find that key on the object
     """
     if isinstance(obj, dict):
-        for key, val in obj.items():
-            if isinstance(val, datetime.datetime) or isinstance(val, datetime.date):
-                return lambda o: o[key]  # type: ignore[index]
-        else:
-            return None
+        for dkey, dval in obj.items():
+            if key is not None and dkey != key:
+                continue
+            if isinstance(dval, datetime.datetime) or isinstance(dval, datetime.date):
+                return lambda o: o[dkey]  # type: ignore[index]
     # if not dict, try to use getattr
-    for key in [x for x in dir(obj) if not x.startswith("_")]:
-        attrval: Any = getattr(obj, key)
+    for akey in [x for x in dir(obj) if not x.startswith("_")]:
+        if key is not None and akey != key:
+            continue
+        attrval: Any = getattr(obj, akey)
         if isinstance(attrval, datetime.datetime) or isinstance(attrval, datetime.date):
-            return lambda o: getattr(o, key)
+            return lambda o: getattr(o, akey)
     return None
 
 
 # given any stream of events, order it by date
 def order_by_date(
-    res: Iterator[T], reverse: bool = False, dfunc: Optional[DateFunc] = None
+    res: Iterator[T],
+    reverse: bool = False,
+    dfunc: Optional[DateFunc] = None,
+    key: Optional[str] = None,
 ) -> Iterator[T]:
     if dfunc is None:
         res = peekable(res)
-        dfunc = datefunc(res.peek())
+        dfunc = datefunc(res.peek(), key=key)
     if dfunc is None:
         return
     yield from sorted(res, key=dfunc, reverse=reverse)
@@ -83,6 +90,7 @@ def most_recent(
     res: Iterator[T],
     events: Union[int, bool] = 250,
     time_range: Union[datetime.timedelta, bool] = datetime.timedelta(days=30),
+    key: Optional[str] = None,
 ) -> Iterator[T]:
     """
     retrieve the most recent 'n' events or within the
@@ -100,7 +108,7 @@ def most_recent(
 
     count: int = 0
     res = peekable(res)
-    dfunc: Optional[DateFunc] = datefunc(res.peek())
+    dfunc: Optional[DateFunc] = datefunc(res.peek(), key=key)
     if dfunc is None:
         return
 

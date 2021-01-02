@@ -19,6 +19,12 @@ from my.core.query import find_hpi_function, most_recent, QueryException
 @click.option(
     "--count", type=int, help="Only return this number of events", required=False
 )
+@click.option(
+    "--key",
+    type=str,
+    help="Sepcify the attribute on the object to get the datetime",
+    required=False,
+)
 @click.argument("HPI_MODULE")
 @click.argument("FUNCTION_NAME")
 def main(
@@ -26,6 +32,7 @@ def main(
     function_name: str,
     days: Optional[float] = None,
     count: Optional[int] = None,
+    key: Optional[str] = None,
 ):
     """
     Query recent events from some HPI function, print results to STDOUT as JSON
@@ -42,7 +49,9 @@ def main(
     except QueryException as qe:
         click.secho(str(qe).strip("'"), err=True, fg="red")
         raise SystemExit(1)
-    click.echo(dumps(list(most_recent(func(), events=cevents, time_range=ddays))))
+    click.echo(
+        dumps(list(most_recent(func(), events=cevents, time_range=ddays, key=key)))
+    )
 
 
 if __name__ == "__main__":
