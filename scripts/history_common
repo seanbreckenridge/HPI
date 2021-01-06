@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+# print the most common netlocs from my browsing history
+# ./history_common 500 to print the top 500
+
+from typing import List
+from collections import Counter
+from urllib.parse import urlparse
+
+from my.browsing import history, Visit
+from bash_like import SO
+
+
+def netloc(v: Visit) -> str:
+    nl: str = urlparse(v.url).netloc
+    if nl.startswith("www."):
+        return nl.lstrip("www.")
+    return nl
+
+
+def main():
+    count = int(SO - (1, 250))
+    for site, scount in Counter(filter(len, map(netloc, history()))).most_common(count):
+        print(site, scount)
+
+
+if __name__ == "__main__":
+    main()
