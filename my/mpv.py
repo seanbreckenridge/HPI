@@ -70,6 +70,10 @@ class Media(NamedTuple):
         sc = sc + int(len(self.percents) / 8)
         return float(sc)
 
+    @property
+    def listen_time(self) -> float:
+        return (self.end_time - self.start_time).total_seconds() - self.pause_duration
+
 
 Results = Iterator[Media]
 
@@ -100,7 +104,7 @@ def history(from_paths=inputs) -> Results:
 # I may have skipped a song if it only has a couple
 # seconds between when it started/ended
 def _actually_listened_to(m: Media) -> bool:
-    listen_time: float = (m.end_time - m.start_time).total_seconds() - m.pause_duration
+    listen_time: float = m.listen_time
     # if this is mpv streaming something from /dev/
     # (like my camera), ignore
     if not m.is_stream and m.path.startswith("/dev/"):
@@ -148,6 +152,21 @@ def _read_event_stream(p: Path) -> Results:
             percents=d["percents"],
             metadata=d.get("metadata", {}),
         )
+        # if percentage seems off, left hanging socket?? (not sure), skip
+        if (
+            m.is_stream is False
+            and m.media_duration is not None
+            and m.media_duration != 0
+            and not m.path.startswith("/dev/")
+        ):
+            percentage_listened_to = m.listen_time / m.media_duration
+            if percentage_listened_to > 5:
+                logger.debug(
+                    "Percentage listened to is larger than 500%, skipping {} {}".format(
+                        m.path, m.start_time
+                    )
+                )
+                continue
         key = m.path
         if key not in items:
             items[key] = m
