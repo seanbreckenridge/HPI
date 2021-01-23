@@ -7,8 +7,6 @@ evry 3 hours -checkbody && {
 		exit 1
 	}
 	printlog "check_weight:checking..."
-	./check_body.py
 	# store in-case I use return code to specify what hasn't been logged
-	RET=$?
-	((RET == 1)) && notify-send "havent updated weight in more than a week!"
+	./check_body.py || notify-send "havent updated weight in more than a week!"
 }
