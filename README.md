@@ -184,7 +184,7 @@ $ ./scripts/hpi_query my.food water --days 1 | jq '.[] | .glasses' | datamash su
 
 ---
 
-Last referenced commit hash on [karicoss/HPI](https://github.com/karlicoss/HPI): e81dddddf083ffd81aa7e2b715bd34f59949479c
+Last referenced commit hash on [karicoss/HPI](https://github.com/karlicoss/HPI): 5b501d156266ca8e185d681fab6bc3ee156498a6
 
 ---
 
