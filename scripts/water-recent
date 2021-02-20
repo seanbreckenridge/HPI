@@ -11,9 +11,9 @@ import my.core.query as qr
 try:
     count: int = int(SO - (1, 10))
 except ValueError:
-    S(f"Could not convert '{sys.argv[1]}' to a float\n") > 2
+    S(f"Could not convert '{sys.argv[1]}' to a integer\n") > 2
     raise SystemExit(1)
 
 for gl in qr.most_recent(qr.find_hpi_function("my.food", "water")(), events=count):
     # convert to epoch and back so it uses naive time (local timezone)
-    print("{}\t{}".format(gl.glasses, datetime.fromtimestamp(gl.when.timestamp())))
+    S("{}\t{}\n".format(gl.glasses, datetime.fromtimestamp(gl.when.timestamp()))) > 1
