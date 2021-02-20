@@ -28,6 +28,12 @@ from dataclasses import dataclass
 
 @dataclass
 class Config(user_config):
+    # allow me to select a 'profile', so that computers can have
+    # distinct filenames for similar usage. As an example, this is used
+    # in my.body, to determine the filename to store water
+    # This allows me to sync files back and forth (using syncthing)
+    # across computers without worrying about files being overwritten
+    profile: Optional[str]
     # TODO if attr is set _and_ it's none, disable cache?
     # todo or empty string?
     # I guess flip the switch at some point when I'm confident in cachew
@@ -41,6 +47,10 @@ class Config(user_config):
     # list of regexes/globs
     # None means 'rely on enabled_modules'
     disabled_modules: Optional[Sequence[str]] = None  # type: ignore[assignment]
+
+    @property
+    def active_profile(self) -> str:
+        return self.profile or ""
 
     def _is_module_active(self, module: str) -> Optional[bool]:
         # None means the config doesn't specify anything

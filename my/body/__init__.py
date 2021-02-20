@@ -23,15 +23,25 @@ from ..core.cfg import make_config
 config = make_config(upkeep)
 
 from datetime import datetime
-from typing import NamedTuple, Iterator
+from typing import NamedTuple, Iterator, Sequence
 
 from autotui.shortcuts import load_prompt_and_writeback, load_from
 
-from ..core import Stats
+from ..core import Stats, get_files
+from ..core.core_config import config as core_conf
 
 
+# creates unique datafiles for each profile (i.e. computer)
 def datafile(for_function: str) -> Path:
-    return Path(config.datadir).expanduser().absolute() / f"{for_function}.json"
+    profile: str = core_conf.active_profile
+    basepath: str = for_function + (f"-{profile}" if profile else "") + ".json"
+    return Path(config.datadir).expanduser().absolute() / basepath
+
+
+# globs all datafiles for every profile for some prefix (for_function)
+def glob_json_datafiles(for_function: str) -> Sequence[Path]:
+    glob_str = for_function + "*.json"
+    return get_files(Path(config.datadir).expanduser().absolute() / glob_str)
 
 
 class Shower(NamedTuple):
@@ -47,11 +57,11 @@ class Weight(NamedTuple):
 
 
 def shower() -> Iterator[Shower]:
-    yield from load_from(Shower, datafile("shower"))
+    yield from map(lambda p: load_from(Shower, p), glob_json_datafiles("shower"))
 
 
 def weight() -> Iterator[Weight]:
-    yield from load_from(Weight, datafile("weight"))
+    yield from map(lambda p: load_from(Weight, p), glob_json_datafiles("weight"))
 
 
 # alias 'shower=python3 -c "from my.body import prompt, Shower; prompt(Shower)"'
