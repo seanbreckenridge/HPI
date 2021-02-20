@@ -4,7 +4,9 @@ Human function things
 Interactive prompts to log random things, like my current weight
 """
 
+import os
 from pathlib import Path
+from itertools import chain
 from dataclasses import dataclass
 
 from ..core import PathIsh
@@ -41,7 +43,7 @@ def datafile(for_function: str) -> Path:
 # globs all datafiles for every profile for some prefix (for_function)
 def glob_json_datafiles(for_function: str) -> Sequence[Path]:
     glob_str = for_function + "*.json"
-    return get_files(Path(config.datadir).expanduser().absolute() / glob_str)
+    return get_files(os.path.expanduser(os.path.join(config.datadir, glob_str)))
 
 
 class Shower(NamedTuple):
@@ -57,11 +59,11 @@ class Weight(NamedTuple):
 
 
 def shower() -> Iterator[Shower]:
-    yield from map(lambda p: load_from(Shower, p), glob_json_datafiles("shower"))
+    yield from chain(*map(lambda p: load_from(Shower, p), glob_json_datafiles("shower")))
 
 
 def weight() -> Iterator[Weight]:
-    yield from map(lambda p: load_from(Weight, p), glob_json_datafiles("weight"))
+    yield from chain(*map(lambda p: load_from(Weight, p), glob_json_datafiles("weight")))
 
 
 # alias 'shower=python3 -c "from my.body import prompt, Shower; prompt(Shower)"'

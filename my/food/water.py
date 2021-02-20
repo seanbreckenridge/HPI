@@ -9,7 +9,7 @@ from autotui.shortcuts import load_from, dump_to
 from bash_like import S, SO
 
 # just re-use the datadir info from the my.body module
-from ..body import datafile, glob_json_datafiles
+from ..body import datafile, glob_json_datafiles, chain
 
 
 class Water(NamedTuple):
@@ -18,7 +18,7 @@ class Water(NamedTuple):
 
 
 def water() -> Iterator[Water]:
-    yield from map(lambda p: load_from(Water, p), glob_json_datafiles("water"))
+    yield from chain(*map(lambda p: load_from(Water, p), glob_json_datafiles("water")))
 
 
 def water_now():
