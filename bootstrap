@@ -35,7 +35,7 @@ clone_if_not_exists() {
 
 install_hpi() {
 	echo "Installing HPI..."
-	python -m pip install --user -e .
+	python3 -m pip install --user -e .
 }
 
 create_data_dir() {
@@ -45,10 +45,10 @@ create_data_dir() {
 
 install_python_extras() {
 	echo "Installing extra python packages..."
-	python -m pip install --user -r ./requirements.txt
-	python -m pip install --user 'git+https://github.com/seanbreckenridge/aw-watcher-window'
-	python -m pip install --user 'git+https://github.com/seanbreckenridge/discord_data'
-	python -m pip install --user 'git+https://github.com/karlicoss/rexport'
+	python3 -m pip install --user -r ./requirements.txt
+	python3 -m pip install --user 'git+https://github.com/seanbreckenridge/aw-watcher-window'
+	python3 -m pip install --user 'git+https://github.com/seanbreckenridge/discord_data'
+	python3 -m pip install --user 'git+https://github.com/karlicoss/rexport'
 }
 
 setup_arctree() {
@@ -83,7 +83,7 @@ havecmd curl
 havecmd bgproc "Install from https://github.com/seanbreckenridge/bgproc"
 havecmd wait-for-internet " Install from https://github.com/seanbreckenridge/wait-for-internet"
 havecmd evry "Install from https://github.com/seanbreckenridge/evry"
-havecmd python 'This needs python!'
+havecmd python3 'This needs python!'
 havecmd go "Requires golang for 'https://github.com/zupzup/calories'"
 set +e
 
