@@ -6,4 +6,4 @@ TARGET="${REPOS:?Repos environment variable is not set}/ghexport"
 clone_if_not_exists "$URL" "$TARGET"
 cd "$TARGET" || exit $?
 git submodule update --init
-pip install -e .
+python -m pip install -e .
