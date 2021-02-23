@@ -59,11 +59,15 @@ class Weight(NamedTuple):
 
 
 def shower() -> Iterator[Shower]:
-    yield from chain(*map(lambda p: load_from(Shower, p), glob_json_datafiles("shower")))
+    yield from chain(
+        *map(lambda p: load_from(Shower, p), glob_json_datafiles("shower"))
+    )
 
 
 def weight() -> Iterator[Weight]:
-    yield from chain(*map(lambda p: load_from(Weight, p), glob_json_datafiles("weight")))
+    yield from chain(
+        *map(lambda p: load_from(Weight, p), glob_json_datafiles("weight"))
+    )
 
 
 # alias 'shower=python3 -c "from my.body import prompt, Shower; prompt(Shower)"'
