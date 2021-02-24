@@ -13,7 +13,7 @@ from ..core import Paths
 
 @dataclass
 class league_of_legends(user_config):
-    # path to the exported data
+    # path[s]/glob to the exported data. These are the resulting json file from 'lolexport parse'
     export_path: Paths
 
     # leauge of legends username
@@ -29,7 +29,7 @@ config = make_config(league_of_legends)
 import json
 from pathlib import Path
 from datetime import datetime
-from typing import NamedTuple, Iterator, Sequence, Dict, Union, List, Optional, Any
+from typing import NamedTuple, Iterator, Sequence, Dict, Union, List, Optional, Any, Set
 from functools import partial
 from itertools import chain
 
@@ -87,7 +87,16 @@ def history(from_paths=inputs, summoner_name: Optional[str] = None) -> Results:
         else:
             summoner_name = config.username
     _read_parsed_json_for_user = partial(_read_parsed_json, username=summoner_name)
-    yield from chain(*map(_read_parsed_json_for_user, from_paths()))
+    yield from _merge_histories(*map(_read_parsed_json_for_user, from_paths()))
+
+def _merge_histories(*sources: Results) -> Results:
+    emitted: Set[int] = set()
+    for g in chain(*sources):
+        if g.game_id in emitted:
+            continue
+        yield g
+        emitted.add(g.game_id)
+
 
 
 def _read_parsed_json(p: Path, username: str) -> Results:
