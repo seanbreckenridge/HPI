@@ -89,6 +89,7 @@ def history(from_paths=inputs, summoner_name: Optional[str] = None) -> Results:
     _read_parsed_json_for_user = partial(_read_parsed_json, username=summoner_name)
     yield from _merge_histories(*map(_read_parsed_json_for_user, from_paths()))
 
+
 def _merge_histories(*sources: Results) -> Results:
     emitted: Set[int] = set()
     for g in chain(*sources):
@@ -96,7 +97,6 @@ def _merge_histories(*sources: Results) -> Results:
             continue
         yield g
         emitted.add(g.game_id)
-
 
 
 def _read_parsed_json(p: Path, username: str) -> Results:
