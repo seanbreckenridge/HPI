@@ -74,9 +74,7 @@ def _merge_histories(*sources: Sequence[str]) -> Results:
 
 
 def _parse_database(sqlite_database: str = "") -> Results:
-    """
-    If empty string is provided as sqlite database, uses the live ipython database file instead
-    """
+    # If empty string is provided as sqlite database, uses the live ipython database file instead
     hist = HistoryAccessor(hist_file=sqlite_database)
     total_sessions = hist.get_last_session_id()
     for sess in range(1, total_sessions):
