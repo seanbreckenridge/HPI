@@ -29,23 +29,9 @@ directories=(
 	'league_of_legends'
 )
 
-declare -a files
-files=(
-	'body/weight.json'
-	'body/shower.json'
-	'body/water.json'
-)
-
 for dir in "${directories[@]}"; do
 	ddir="${DATA_PREFIX}/${dir}"
 	if [[ ! -d "${ddir}" ]]; then
 		mkdir -p "${ddir}"
-	fi
-done
-
-for file in "${files[@]}"; do
-	dfile="${DATA_PREFIX}/${file}"
-	if [[ ! -e "${dfile}" ]]; then
-		touch "${dfile}"
 	fi
 done
