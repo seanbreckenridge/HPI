@@ -45,7 +45,7 @@ This is modified from [`karlicoss/HPI`](https://github.com/karlicoss/HPI) to mor
 - `my.battery`, to parse basic battery percentage over time on my laptop
 - `my.window_watcher`, to parse active window events (what application I'm using/what the window title is) using [`window_watcher`](https://github.com/seanbreckenridge/aw-watcher-window)
 - `my.location`, merges data from [`gpslogger`](https://github.com/mendhak/gpslogger), `apple`, `google`, `discord`, `games.blizzard`, and `facebook` to provide location data (goes back ~10 years)
-- `my.games.chess`, to track my chess.com games, using [`chessdotcom_export`](https://github.com/seanbreckenridge/chessdotcom_export)
+- `my.games.chess`, to track my [chess.com](https://www.chess.com) games, using [`chessdotcom_export`](https://github.com/seanbreckenridge/chessdotcom_export)
 
 ### 'Historical' Modules
 
