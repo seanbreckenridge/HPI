@@ -24,3 +24,4 @@ gpxpy
 simplejson
 click
 bash_like
+chessdotcom_export
