@@ -9,6 +9,7 @@ directories=(
 	'doctor'
 	'github/gdpr'
 	'github/ghexport'
+	'thyme'
 	'zsh_history'
 	'rexport'
 	'todotxt'
