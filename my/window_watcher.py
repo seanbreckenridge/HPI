@@ -31,6 +31,7 @@ config = make_config(window_watcher)
 
 import csv
 import warnings
+from io import StringIO
 from pathlib import Path
 from datetime import datetime, timedelta
 from typing import NamedTuple, Iterator, Tuple, Dict, Set, Sequence
@@ -171,25 +172,28 @@ def _is_unlikely(e: LinearResult) -> bool:
 
 def _parse_file(histfile: Path) -> LinearResults:
     with histfile.open("r", encoding="utf-8", newline="") as f:
-        csv_reader = csv.reader(
-            f, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
-        )
-        while True:
-            try:
-                row = next(csv_reader)
-                yield LinearResult(
-                    dt=parse_datetime_sec(row[0]),
-                    duration=int(row[1]),
-                    application=row[2],
-                    window_title=row[3],
-                )
-            except csv.Error:
-                # some lines contain the NUL byte for some reason... ??
-                # seems to be x-lib/encoding errors causing malformed application/file names
-                # catch those and ignore them
-                pass
-            except StopIteration:
-                return
+        contents = f.read()
+    # convert line breaks to unix style; i.e. broken ^M characters
+    buf = StringIO(contents.replace("\r", ""))
+    csv_reader = csv.reader(
+        buf, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
+    )
+    while True:
+        try:
+            row = next(csv_reader)
+            yield LinearResult(
+                dt=parse_datetime_sec(row[0]),
+                duration=int(row[1]),
+                application=row[2],
+                window_title=row[3],
+            )
+        except csv.Error:
+            # some lines contain the NUL byte for some reason... ??
+            # seems to be x-lib/encoding errors causing malformed application/file names
+            # catch those and ignore them
+            pass
+        except StopIteration:
+            return
 
 
 def stats() -> Stats:
