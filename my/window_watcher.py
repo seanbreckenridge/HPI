@@ -91,11 +91,18 @@ def history(from_paths=inputs) -> Results:
 
 
 def _construct_stream(
-    res: LinearResults, exit_when: timedelta = timedelta(hours=2)
+    res: LinearResults, exit_when: timedelta = timedelta(hours=6)
 ) -> Results:
     """
+    Combines a bunch of individual events into groups. I.e.
+    if I had one webpage I switched back and forth from for
+    a few hours, it combines all those LinearResults into
+    one, listing the timestamps/duration for each visit.
+
     exit_when describes when an item should exit recent_cache
     """
+
+    # uses the [application, window_title] tuple as the key
     recent_cache: Dict[Tuple[str, str], DurInfo] = {}
     fset: Set[str] = set(config.force_individual)
     exit_secs = int(exit_when.total_seconds())
@@ -111,7 +118,7 @@ def _construct_stream(
             )
             continue
         if key in recent_cache:
-            # exit if more than 2 hours ago
+            # exit if more than 6 hours ago
             val: DurInfo = recent_cache[key]
             (lval, ldur) = val[-1]
             # when this 'row' ended
@@ -124,13 +131,14 @@ def _construct_stream(
                     application=item.application,
                     window_title=item.window_title,
                 )
-                # re-add this item to cache
+                # item was ejected from cache because its been too long, add this item into the cache
                 recent_cache[key] = [(item.dt, timedelta(seconds=item.duration))]
             else:
                 val.append((item.dt, timedelta(seconds=item.duration)))
         else:
             # key not in cache
             recent_cache[key] = [(item.dt, timedelta(seconds=item.duration))]
+    # yield all the leftover items from cache
     for (appname, window_title), val in recent_cache.items():
         yield Result(
             start_time=val[0][0],
@@ -153,7 +161,7 @@ def _merge_histories(*sources: LinearResults) -> LinearResults:
 
 
 unlikely_duration: int = 3600
-for_applications: Set[str] = set(["firefoxdeveloperedition", "Alacritty"])
+for_applications: Set[str] = set(["firefoxdeveloperedition", "firefox", "Alacritty"])
 
 very_unlikely_duration: int = unlikely_duration * 2
 
