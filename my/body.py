@@ -9,7 +9,7 @@ from pathlib import Path
 from itertools import chain
 from dataclasses import dataclass
 
-from ..core import PathIsh
+from .core import PathIsh
 
 # https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py
 from my.config import body as user_config
@@ -20,7 +20,7 @@ class upkeep(user_config):
     datadir: PathIsh
 
 
-from ..core.cfg import make_config
+from .core.cfg import make_config
 
 config = make_config(upkeep)
 
@@ -29,8 +29,8 @@ from typing import NamedTuple, Iterator, Sequence
 
 from autotui.shortcuts import load_prompt_and_writeback, load_from
 
-from ..core import Stats, get_files
-from ..core.core_config import config as core_conf
+from .core import Stats, get_files
+from .core.core_config import config as core_conf
 
 
 # creates unique datafiles for each profile (i.e. computer)
@@ -77,7 +77,7 @@ def prompt(nt: NamedTuple):
 
 
 def stats() -> Stats:
-    from ..core import stat
+    from .core import stat
 
     return {
         **stat(shower),
