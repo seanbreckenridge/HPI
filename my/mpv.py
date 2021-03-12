@@ -23,11 +23,11 @@ from .core.cfg import make_config
 config = make_config(mpv)
 
 import os
-from itertools import chain
 from pathlib import Path
-from typing import Iterator, Sequence, NamedTuple, Set, Any, Dict, Tuple, Optional
+from typing import Iterator, Sequence
 
 import mpv_history_daemon.events
+from mpv_history_daemon.events import Media
 
 from .core.common import get_files, Stats
 
@@ -39,7 +39,7 @@ if "HPI_LOGS" in os.environ:
         name="mpv_history_events", level=mklevel(os.environ["HPI_LOGS"])
     )
 
-Results = Iterator[mpv_history_daemon.events.Media]
+Results = Iterator[Media]
 
 
 def stats() -> Stats:
