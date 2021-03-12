@@ -31,6 +31,7 @@ from mpv_history_daemon.events import Media
 
 from .core.common import get_files, Stats
 
+# monkey patch logs
 if "HPI_LOGS" in os.environ:
     from logzero import setup_logger
     from .core.logging import mklevel
