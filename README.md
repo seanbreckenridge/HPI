@@ -34,7 +34,7 @@ This is modified from [`karlicoss/HPI`](https://github.com/karlicoss/HPI) to mor
 - `my.food`, tracks calorie/water intake; imports from [`calories`](https://github.com/zupzup/calories). I use [this](https://github.com/seanbreckenridge/calories-fzf/) interface most of the time to add food I eat.
 - `my.body` to track body functionality (e.g. weight) (with a TUI using [`autotui`](https://github.com/seanbreckenridge/autotui))
 - `my.coding` to track git commits across the system
-- `my.mpv`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-sockets/blob/master/DAEMON.md)
+- `my.mpv`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-history-daemon)
 - `my.discord`, parses ~1,000,000 messages/events from the discord GDPR export, parser [here](https://github.com/seanbreckenridge/discord_data)
 - `my.money`, bank account transactions/balance history from [my budget tool](https://github.com/seanbreckenridge/mint)
 - `my.smscalls`, exports call/sms history using [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore&hl=en_US)
