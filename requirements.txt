@@ -25,3 +25,5 @@ simplejson
 click
 bash_like
 chessdotcom_export
+mpv-history-daemon
+lolexport
