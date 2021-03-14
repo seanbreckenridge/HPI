@@ -1,3 +1,6 @@
+Note: This is currently going through a major restructure as I'm syncing
+back to master and using this repo as a subpackage
+
 **TLDR**: I'm using [HPI](https://github.com/seanbreckenridge/HPI) (Human
 Programming Interface) package as a means of unifying, accessing and
 interacting with all of my personal data.
@@ -182,10 +185,6 @@ That info is also available as a CLI interface, which I use to grab recent event
 $ ./scripts/hpi_query my.food water --days 1 | jq '.[] | .glasses' | datamash sum 1
 4.5
 ```
-
----
-
-Last referenced commit hash on [karicoss/HPI](https://github.com/karlicoss/HPI): 5b501d156266ca8e185d681fab6bc3ee156498a6
 
 ---
 

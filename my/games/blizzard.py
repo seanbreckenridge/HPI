@@ -30,7 +30,7 @@ from typing import NamedTuple, Iterator, Sequence, List
 from itertools import chain
 
 from ..core import get_files, Stats
-from ..core.time import parse_datetime_sec
+from ..utils.time import parse_datetime_sec
 
 
 def inputs() -> Sequence[Path]:

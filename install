@@ -1,0 +1,29 @@
+#!/bin/bash -e
+
+# make sure we're in this directory
+THIS_DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+cd "$THIS_DIR"
+
+# the name of my fork close to karlicoss/HPI, since HPI is this repo
+FORK_ABBREV='HPI-to-master'
+
+UPSTREAM_URL='https://github.com/karlicoss/HPI'
+FORK_URL="https://github.com/seanbreckenridge/${FORK_ABBREV}"
+
+FORK_TARGET="$(realpath "../${FORK_ABBREV}")"
+
+# clone my fork one level up from here if it doesnt exist
+set -x
+if [[ ! -e "${FORK_TARGET}" ]]; then
+  git clone "${FORK_URL}" "${FORK_TARGET}"
+  cd "${FORK_TARGET}"
+  git remote add upstream "${UPSTREAM_URL}"
+  pip install -e "${FORK_TARGET}"
+else
+  echo "Path already exists, skipping setting up fork..."
+fi
+
+# cd back to here, to pip install this
+cd "${THIS_DIR}" || exit $?
+pip install -e "${THIS_DIR}"
+# TODO: re-order easy-install.path?

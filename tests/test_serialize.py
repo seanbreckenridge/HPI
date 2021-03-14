@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 
 from my.zsh import history, Entry
-from my.core.serialize import dumps
+from my.utils.serialize import dumps
 
 from more_itertools import take
 

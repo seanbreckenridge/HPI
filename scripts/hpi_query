@@ -5,8 +5,8 @@ from datetime import timedelta
 
 import click
 
-from my.core.serialize import dumps
-from my.core.query import find_hpi_function, most_recent, QueryException
+from my.utils.serialize import dumps
+from my.utils.query import find_hpi_function, most_recent, QueryException
 
 
 @click.command(name="hpi_query")

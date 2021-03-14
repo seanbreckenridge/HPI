@@ -27,7 +27,7 @@ from typing import Iterator, Dict, Any, NamedTuple, Union, Optional, List
 
 from .core import get_files, Stats
 from .core.error import Res
-from .core.time import parse_datetime_sec
+from .utils.time import parse_datetime_sec
 from .core.common import LazyLogger
 
 

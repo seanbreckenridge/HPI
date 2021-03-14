@@ -1,6 +1,6 @@
 from more_itertools import ilen
 
-import my.rss
+import my.newsboat
 
 
 def test_rss() -> None:

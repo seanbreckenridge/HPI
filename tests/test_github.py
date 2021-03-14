@@ -12,4 +12,3 @@ def test_gdpr():
 
 def test_github():
     assert ilen(ghexport.events()) > 100
-    assert ilen(ghexport.all_events()) > ilen(ghexport.events())

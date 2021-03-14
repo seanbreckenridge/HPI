@@ -6,7 +6,7 @@ from datetime import datetime
 
 from bash_like import S, SO
 
-import my.core.query as qr
+import my.utils.query as qr
 
 try:
     count: int = int(SO - (1, 10))
