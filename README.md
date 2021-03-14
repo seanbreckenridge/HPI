@@ -1,8 +1,7 @@
 Note: This is currently going through a restructure as I'm syncing
 back to master and using this repo as a namespace subpackage
 
-**TLDR**: I'm using [HPI](https://github.com/seanbreckenridge/HPI) (Human
-Programming Interface) package as a means of unifying, accessing and
+**TLDR**: I'm using `HPI`(Human Programming Interface) package as a means of unifying, accessing and
 interacting with all of my personal data.
 
 It's a Python library (named `my`), a collection of modules for:
@@ -18,7 +17,7 @@ It's a Python library (named `my`), a collection of modules for:
 
 [_Why?_](https://github.com/karlicoss/HPI#why)
 
-## My Modules
+### My Modules
 
 - `my.browsing`, using my [`ffexport`](https://github.com/seanbreckenridge/ffexport) tool to backup/parse firefox history
 - `my.zsh`, access to my shell history w/ timestamps
@@ -52,7 +51,7 @@ These are modules to parse GDPR exports/data from services I used to use, but do
 
 See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py) for config.
 
-## In-use from [karlicoss-HPI](https://github.com/karlicoss/HPI)
+### In-use from [karlicoss/HPI](https://github.com/karlicoss/HPI)
 
 - `my.coding` to track git commits across the system
 - `my.github` to track github events/commits and parse the GDPR export, using [`ghexport`](https://github.com/karlicoss/ghexport)
