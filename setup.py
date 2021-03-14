@@ -25,7 +25,7 @@ setup(
     zip_safe=False,
     packages=list(subpackages()),
     url="https://github.com/seanbreckenridge/HPI",
-    author="Sean Breckenridge Gerasimov",
+    author="Sean Breckenridge",
     author_email="seanbrecke@gmail.com",
     description="A Python interface to my life",
     python_requires=">=3.6",
