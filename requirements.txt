@@ -1,3 +1,4 @@
+geopy
 logzero
 atomicwrites
 backoff
@@ -27,3 +28,7 @@ bash_like
 chessdotcom_export
 mpv-history-daemon
 lolexport
+mypy
+pandas
+appdirs
+decorator

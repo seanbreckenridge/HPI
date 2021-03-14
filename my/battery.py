@@ -30,8 +30,7 @@ from pathlib import Path
 
 from .core import get_files, warn_if_empty, Stats
 from .core.common import listify
-from .core.time import parse_datetime_sec
-from .core.file import filter_subfile_matches
+from .utils.time import parse_datetime_sec
 
 
 @listify
@@ -60,9 +59,7 @@ def history(from_paths=inputs) -> Results:
     if len(datafiles) == 1:
         yield from _parse_file(datafiles[0])
     else:
-        yield from _merge_histories(
-            *map(_parse_file, filter_subfile_matches(from_paths()))
-        )
+        yield from _merge_histories(*map(_parse_file, from_paths()))
 
 
 @warn_if_empty

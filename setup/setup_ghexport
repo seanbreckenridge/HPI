@@ -1,6 +1,6 @@
 #!/bin/bash
 
-URL='https://github.com/karlicoss/ghexport'
+URL='https://github.com/seanbreckenridge/ghexport'
 TARGET="${REPOS:?Repos environment variable is not set}/ghexport"
 
 clone_if_not_exists "$URL" "$TARGET"

@@ -1,6 +1,6 @@
 from ..core import Stats
 
-from ..body import prompt
+from ..body_log import prompt
 from .water import Water, water
 from .calories import food, Food
 

@@ -1,6 +1,6 @@
 from more_itertools import ilen
 
-from my.body import weight, shower
+from my.body_log import weight, shower
 
 
 def test_body() -> None:

@@ -8,8 +8,8 @@ from typing import NamedTuple, Iterator, List
 from autotui.shortcuts import load_from, dump_to
 from bash_like import S, SO
 
-# just re-use the datadir info from the my.body module
-from ..body import datafile, glob_json_datafiles, chain
+# just re-use the datadir info from the my.body_log module
+from ..body_log import datafile, glob_json_datafiles, chain
 
 
 class Water(NamedTuple):

@@ -4,6 +4,7 @@ Parses a Google Takeout https://takeout.google.com/
 
 import os
 import json
+import string
 from pathlib import Path
 from datetime import datetime, timezone
 from typing import Iterator, Union, Any
@@ -13,11 +14,22 @@ import cachew
 from .models import HtmlEvent, HtmlComment, LikedVideo, AppInstall, Location
 from .html import read_html_activity, read_html_li
 
-from ..core.time import parse_datetime_millis
+from ..utils.time import parse_datetime_millis
 from ..core.error import Res
 from ..core.common import LazyLogger, mcachew
 from ..core.cachew import cache_dir
-from ..core.file import simplify_path
+
+
+def simplify_path(p: Path) -> str:
+    """
+    >>> Path("/home/sometihng/else.txt")
+    'homesomethingelsetxt'
+    """
+    full_path: Path = p.expanduser().absolute()
+    return "".join(
+        filter(lambda y: y in string.ascii_letters + string.digits, str(full_path))
+    )
+
 
 logger = LazyLogger(__name__, level="warning")
 

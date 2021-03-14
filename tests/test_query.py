@@ -3,7 +3,7 @@ from datetime import timedelta
 import pytest
 
 from my.zsh import history
-from my.core.query import find_hpi_function, QueryException, most_recent, order_by_date
+from my.utils.query import find_hpi_function, QueryException, most_recent, order_by_date
 
 
 def test_query_succeeds():

@@ -35,7 +35,7 @@ from itertools import chain
 
 from ..core import get_files, Stats
 from ..core.error import Res
-from ..core.time import parse_datetime_millis
+from ..utils.time import parse_datetime_millis
 
 
 def inputs() -> Sequence[Path]:
