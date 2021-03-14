@@ -17,6 +17,8 @@ It's a Python library (named `my`), a collection of modules for:
 
 [_Why?_](https://github.com/karlicoss/HPI#why)
 
+This is built on top of and uses lots of the machinery from [`karlicoss/HPI`](https://github.com/karlicoss/HPI)
+
 ### My Modules
 
 - `my.browsing`, using my [`ffexport`](https://github.com/seanbreckenridge/ffexport) tool to backup/parse firefox history
