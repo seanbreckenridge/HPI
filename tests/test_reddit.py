@@ -6,7 +6,7 @@ from my.reddit import events, inputs, saved, _dal, pushshift_comments
 
 
 def test_reddit_has_data() -> None:
-
+    assert ilen(events(parallel=False)) > 10
     assert ilen(saved()) > 10
     assert ilen(inputs()) >= 1
     assert ilen(pushshift_comments()) > ilen(_dal().comments())
