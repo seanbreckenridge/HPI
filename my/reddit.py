@@ -176,7 +176,7 @@ def _get_state(bfile: Path) -> Dict[Sid, SaveWithDt]:
 
 # TODO hmm. think about it.. if we set default backups=inputs()
 # it's called early so it ends up as a global variable that we can't monkey patch easily
-@mcachew
+@mcachew()
 def _get_events(backups: Sequence[Path], parallel: bool = True) -> Iterator[Event]:
     # TODO cachew: let it transform return type? so you don't have to write a wrapper for lists?
 
@@ -233,7 +233,7 @@ def events(*args, **kwargs) -> List[Event]:
     inp = inputs()
     # 2.2s for 300 files without cachew
     # 0.2s for 300 files with cachew
-    evit = _get_events(inp, *args, **kwargs, parallel=False)
+    evit = _get_events(inp, *args, **kwargs)
     return list(sorted(evit, key=lambda e: e.cmp_key))
 
 
