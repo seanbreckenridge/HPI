@@ -104,5 +104,5 @@ havecmd shellcheck
 havecmd mypy
 havecmd pytest
 havecmd jq
-havecmd fd  # requird for my.coding.commits
+havecmd fd # requird for my.coding.commits
 set +e

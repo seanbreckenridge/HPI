@@ -14,12 +14,12 @@ FORK_TARGET="$(realpath "../${FORK_ABBREV}")"
 # clone my fork one level up from here if it doesnt exist
 set -x
 if [[ ! -e "${FORK_TARGET}" ]]; then
-  git clone "${FORK_URL}" "${FORK_TARGET}"
-  cd "${FORK_TARGET}"
-  git remote add upstream "${UPSTREAM_URL}"
-  pip install -e "${FORK_TARGET}"
+	git clone "${FORK_URL}" "${FORK_TARGET}"
+	cd "${FORK_TARGET}"
+	git remote add upstream "${UPSTREAM_URL}"
+	pip install -e "${FORK_TARGET}"
 else
-  echo "Path already exists, skipping setting up fork..."
+	echo "Path already exists, skipping setting up fork..."
 fi
 
 # cd back to here, to pip install this
