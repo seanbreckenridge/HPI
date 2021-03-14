@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 # TODO: maybe this should be PR'd to master/put into
 # my.time.tz/utils?
 
+
 def parse_datetime_sec(d: Union[str, float, int]) -> datetime:
     return datetime.fromtimestamp(int(d), tz=timezone.utc)
 

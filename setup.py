@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# see https://github.com/karlicoss/pymplate for up-to-date reference
-
 from pathlib import Path
 from setuptools import setup, find_namespace_packages  # type: ignore[import]
 
@@ -18,8 +15,6 @@ reqs = Path("requirements.txt").read_text().strip().splitlines()
 setup(
     name="HPI-additions",  # use a different name from karlicoss/HPI, for confusion regarding egg-link reasons
     use_scm_version={
-        # TODO eh? not sure if I should just rely on proper tag naming and use use_scm_version=True
-        # 'version_scheme': 'python-simplified-semver',
         "local_scheme": "dirty-tag",
     },
     zip_safe=False,
@@ -29,5 +24,5 @@ setup(
     author_email="seanbrecke@gmail.com",
     description="A Python interface to my life",
     python_requires=">=3.6",
-    install_requires=reqs
+    install_requires=reqs,
 )

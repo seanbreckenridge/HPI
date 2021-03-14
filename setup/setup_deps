@@ -33,19 +33,12 @@ clone_if_not_exists() {
 	fi
 } && export -f clone_if_not_exists
 
-install_hpi() {
-	echo "Installing HPI..."
-	python3 -m pip install --user -e .
-}
-
 create_data_dir() {
 	echo "Creating data dir..."
 	[[ ! -d "$DATA_DIR" ]] && mkdir -p "$DATA_DIR"
 }
 
 install_python_extras() {
-	echo "Installing extra python packages..."
-	python3 -m pip install --user -r ./requirements.txt
 	python3 -m pip install --user 'git+https://github.com/seanbreckenridge/aw-watcher-window'
 	python3 -m pip install --user 'git+https://github.com/seanbreckenridge/discord_data'
 	python3 -m pip install --user 'git+https://github.com/karlicoss/rexport'
@@ -92,17 +85,16 @@ wait-for-internet
 # HPI global setup
 (setup_arctree) || exit $? # run in subshell to not 'cd' in current process
 create_data_dir
-install_hpi
 install_python_extras
 go get github.com/zupzup/calories
 
 # export specific setup
-./scripts/structure
+./structure
 
 # temporary while I use the httpx wrapper to prevent 403s
-bash -x ./scripts/setup_ghexport
+bash -x ./setup_ghexport
 
-# check for some other commands used in ./lint
+# check for some other commands used in ./lint/HPI
 set -e
 havecmd realpath
 havecmd flake8
@@ -112,4 +104,5 @@ havecmd shellcheck
 havecmd mypy
 havecmd pytest
 havecmd jq
+havecmd fd  # requird for my.coding.commits
 set +e

@@ -40,8 +40,9 @@ cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")" || {
 	exit 1
 }
 
-readonly FLAKE8_IGNORE='E225,E501,E302,E402,E305,E261,E265,E116,E252,E702,E266,E741,E306,E203,E731,W503'
-readonly FLAKE8_FILES_IGNORE="*polar.py,*core/cachew.py,*konsume*,*stackexchange.py,*core/common.py,*core/init.py,*core/__init__.py,*config.py,*food/__init__.py,*coding/__init__.py"
+# E225,E501,E302,E402,E305,E261,E265,E116,E252,E702,E266,E741,E306,E203,E731,W503
+readonly FLAKE8_IGNORE='E402,E501,E741,W503,E266,E302,E305,E203'
+readonly FLAKE8_FILES_IGNORE="*food/__init__.py"
 
 # call shellcheck on all the scripts
 shellcheck_scripts() {

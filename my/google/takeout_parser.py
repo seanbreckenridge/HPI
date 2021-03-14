@@ -30,6 +30,7 @@ def simplify_path(p: Path) -> str:
         filter(lambda y: y in string.ascii_letters + string.digits, str(full_path))
     )
 
+
 logger = LazyLogger(__name__, level="warning")
 
 
