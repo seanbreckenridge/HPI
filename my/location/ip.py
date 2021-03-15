@@ -69,12 +69,9 @@ def ips() -> Iterator[IP]:
 )
 def _from_facebook() -> Iterator[IP]:
     for e in facebook_events():
-        if (
-            isinstance(e, AdminAction)
-            or isinstance(e, UploadedPhoto)
-            and not isinstance(e, Exception)
-        ):
-            yield IP(at=e.at, addr=e.ip)
+        if isinstance(e, AdminAction) or isinstance(e, UploadedPhoto):
+            if not isinstance(e, Exception):
+                yield IP(at=e.at, addr=e.ip)
 
 
 @mcachew(cache_path=cache_dir(), logger=logger)
@@ -86,7 +83,7 @@ def _from_blizzard() -> Iterator[IP]:
 
 
 @mcachew(
-    cache_path=cache_dir(), depends_on=lambda: discord_config.latest, logger=logger
+    cache_path=cache_dir(), depends_on=lambda: discord_config.latest(), logger=logger
 )
 def _from_discord() -> Iterator[IP]:
     for a in activity():
