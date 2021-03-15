@@ -17,14 +17,14 @@ if [[ ! -e "${FORK_TARGET}" ]]; then
 	git clone "${FORK_URL}" "${FORK_TARGET}"
 	cd "${FORK_TARGET}"
 	git remote add upstream "${UPSTREAM_URL}"
-	pip install -e "${FORK_TARGET}"
+	python3 -m pip install -e "${FORK_TARGET}"
 else
 	echo "Path already exists, skipping setting up fork..."
 fi
 
 # cd back to here, to pip install this
 cd "${BASE_DIR}" || exit $?
-pip install -e .
+python3 -m pip install -e .
 # TODO: re-order easy-install.path?
 
 # we're still in $BASE_DIR, specify relative path from there
