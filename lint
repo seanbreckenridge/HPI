@@ -89,7 +89,7 @@ update_fork() {
 }
 
 main() {
-	(update_fork)  # cd in subshell
+	(update_fork) # cd in subshell
 	custom_flake8 || prompt ''
 	pytest "$@" || prompt ''
 	cleanup_firefox
