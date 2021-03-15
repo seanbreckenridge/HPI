@@ -133,8 +133,8 @@ Song I've listened to most?
 - Added a little query interface to `my.utils`: to do some type introspection to query/order functions/events based on datetime, and to dump any of the computed events to JSON. It includes some helpers to serialize NamedTuple/dataclass and date-like objects:
 
 ```python
->>> from my.core.serialize import dumps
->>> from my.core.query import most_recent, find_hpi_function
+>>> from my.utils.serialize import dumps
+>>> from my.utils.query import most_recent, find_hpi_function
 >>> print(dumps(list(most_recent(find_hpi_function("my.zsh", "history")(), events=2)), indent=2))
 [
   {
@@ -156,10 +156,6 @@ That info is also available as a CLI interface, which I use to grab recent event
 $ ./scripts/hpi_query my.food water --days 1 | jq '.[] | .glasses' | datamash sum 1
 4.5
 ```
-
-For more information on `HPI`, see [`karlicoss/HPI`](https://github.com/karlicoss/HPI#why)
-
----
 
 ### TODO:
 
