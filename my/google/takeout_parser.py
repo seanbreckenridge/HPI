@@ -157,7 +157,7 @@ def _parse_location_history(p: Path) -> Iterator[Location]:
         yield Location(
             lng=float(japp["longitudeE7"]) / 1e7,
             lat=float(japp["latitudeE7"]) / 1e7,
-            at=parse_datetime_millis(japp["timestampMs"]),
+            dt=parse_datetime_millis(japp["timestampMs"]),
         )
 
 
@@ -165,7 +165,7 @@ def _parse_app_installs(p: Path) -> Iterator[AppInstall]:
     for japp in json.loads(p.read_text()):
         yield AppInstall(
             title=japp["install"]["doc"]["title"],
-            at=_parse_json_date(japp["install"]["firstInstallationTime"]),
+            dt=_parse_json_date(japp["install"]["firstInstallationTime"]),
         )
 
 
@@ -177,7 +177,7 @@ def _parse_likes(p: Path) -> Iterator[LikedVideo]:
             link="https://youtube.com/watch?v={}".format(
                 jlike["contentDetails"]["videoId"]
             ),
-            at=_parse_json_date(jlike["snippet"]["publishedAt"]),
+            dt=_parse_json_date(jlike["snippet"]["publishedAt"]),
         )
 
 

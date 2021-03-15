@@ -40,7 +40,7 @@ from my.core.common import listify
 
 
 class Command(NamedTuple):
-    at: datetime
+    dt: datetime
     command: str
 
 
@@ -80,7 +80,7 @@ def _parse_database(sqlite_database: str = "") -> Results:
         for msg in hist.get_range(sess).fetchall():  # sqlite cursor
             assert len(msg) == 3
             assert isinstance(msg[-1], str)
-            yield Command(command=msg[-1], at=start_time)
+            yield Command(command=msg[-1], dt=start_time)
 
 
 def stats() -> Stats:

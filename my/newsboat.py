@@ -68,7 +68,7 @@ def _parse_subscription_file(p: Path) -> Sequence[Subscription]:  # type: ignore
 
 class RssEvent(NamedTuple):
     url: Subscription
-    at: datetime
+    dt: datetime
     # type/false for added/removed
     added: bool
 
@@ -89,12 +89,12 @@ def events() -> Iterator[RssEvent]:
             if sb in current_state:
                 continue
             current_state[sb] = dt
-            yield RssEvent(url=sb, at=dt, added=True)
+            yield RssEvent(url=sb, dt=dt, added=True)
 
         # check if any were removed
         for sb in list(current_state):
             if sb not in subset:
-                yield RssEvent(url=sb, at=dt, added=False)
+                yield RssEvent(url=sb, dt=dt, added=False)
                 del current_state[sb]
 
 

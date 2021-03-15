@@ -58,7 +58,7 @@ def _iter_local_dates(start=0, stop=None) -> Iterator[DayWithZone]:
     # location data from IP addresses, which return tz info
     for ip in ips():
         yield DayWithZone(
-            day=ip.at.date(),
+            day=ip.dt.date(),
             zone=ip.tz,
         )
     # locations (from google), without timezone, use timezonefinder

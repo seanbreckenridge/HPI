@@ -116,7 +116,7 @@ def _merge_histories(*sources: Results) -> Results:
 
 class TodoEvent(NamedTuple):
     todo: Todo
-    at: datetime
+    dt: datetime
     # type/false for added/completed
     added: bool
 
@@ -150,12 +150,12 @@ def events() -> Iterator[TodoEvent]:
             if td in current_state:
                 continue
             current_state[td] = dt
-            yield TodoEvent(todo=td, at=dt, added=True)
+            yield TodoEvent(todo=td, dt=dt, added=True)
 
         # check if any were removed
         for td in list(current_state):
             if td not in tset:
-                yield TodoEvent(todo=td, at=dt, added=False)
+                yield TodoEvent(todo=td, dt=dt, added=False)
                 del current_state[td]
 
 

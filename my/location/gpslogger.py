@@ -22,7 +22,7 @@ from lxml import etree  # type: ignore[import]
 from my.core import Stats, LazyLogger, Res
 from my.core.common import get_files, warn_if_empty, mcachew
 from my.core.cachew import cache_dir
-from my.core.logging import high
+from my.core.warnings import high
 
 
 logger = LazyLogger(__name__, level="warning")

@@ -45,7 +45,7 @@ def locations() -> Iterator[Location]:
 def _google_locations() -> Iterator[Location]:
     for g in google_events():
         if isinstance(g, GoogleLocation) and not isinstance(g, Exception):
-            yield Location(lng=g.lng, lat=g.lat, dt=g.at, accuracy=True)
+            yield Location(lng=g.lng, lat=g.lat, dt=g.dt, accuracy=True)
 
 
 # cachew is handled in apple_events, I think this is fast enough

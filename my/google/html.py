@@ -119,7 +119,7 @@ def parse_div(div: lh.HtmlElement) -> Res[HtmlEvent]:
         desc=content_desc,
         product_name=product_name,
         links=json.dumps(content_links),
-        at=date,
+        dt=date,
     )
 
 
@@ -160,5 +160,5 @@ def read_html_li(p: Path) -> Iterator[Res[HtmlComment]]:
             yield parsed_date
         else:
             yield HtmlComment(
-                desc=description, links=json.dumps(get_links(li)), at=parsed_date
+                desc=description, links=json.dumps(get_links(li)), dt=parsed_date
             )

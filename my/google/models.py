@@ -26,7 +26,7 @@ class JsonLinks:
 class HtmlEvent(JsonLinks):
     service: str
     desc: str
-    at: datetime
+    dt: datetime
     product_name: Optional[str]
     links: str
     # links: List[str]
@@ -35,7 +35,7 @@ class HtmlEvent(JsonLinks):
 @dataclass
 class HtmlComment(JsonLinks):
     desc: str
-    at: datetime
+    dt: datetime
     links: str
     # links: List[str]
 
@@ -53,15 +53,15 @@ class LikedVideo(NamedTuple):
     title: str
     desc: str
     link: str
-    at: datetime
+    dt: datetime
 
 
 class AppInstall(NamedTuple):
     title: str
-    at: datetime
+    dt: datetime
 
 
 class Location(NamedTuple):
     lng: float
     lat: float
-    at: datetime
+    dt: datetime
