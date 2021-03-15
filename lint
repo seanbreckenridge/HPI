@@ -80,7 +80,16 @@ custom_flake8() {
 	fi
 }
 
+update_fork() {
+	local FORK_LOCATION
+	FORK_LOCATION="$(realpath ../HPI-to-master/)"
+	cd "${FORK_LOCATION}" || return $?
+	git checkout master
+	git pull upstream master
+}
+
 main() {
+	(update_fork)  # cd in subshell
 	custom_flake8 || prompt ''
 	pytest "$@" || prompt ''
 	cleanup_firefox
