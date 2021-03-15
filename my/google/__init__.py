@@ -31,7 +31,6 @@ keep all the takeouts (they're about 195MB each)
 # e.g. accumulate, filter and maybe report useless takeouts?
 
 from .paths import get_last_takeout
-from .models import JsonLinks
 from .takeout_parser import Results, parse_takeout
 
 from ..core import Stats
@@ -40,13 +39,12 @@ from ..core import Stats
 # temporary basic entrypoint
 def events() -> Results:
     # this seems to break cachew...?
-    #for e in parse_takeout(get_last_takeout()):
-        # fix the links attribute on JsonLinks events
-        #if isinstance(e, JsonLinks):
-        #    e.parse_json()
+    # for e in parse_takeout(get_last_takeout()):
+    # fix the links attribute on JsonLinks events
+    # if isinstance(e, JsonLinks):
+    #    e.parse_json()
     #    yield e
     yield from parse_takeout(get_last_takeout())
-
 
 
 def stats() -> Stats:
