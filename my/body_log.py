@@ -5,6 +5,7 @@ Interactive prompts to log random things, like my current weight
 """
 
 import os
+import sys
 from pathlib import Path
 from itertools import chain
 from dataclasses import dataclass
@@ -33,9 +34,9 @@ from .core import Stats, get_files
 from .core.core_config import config as core_conf
 
 
-# creates unique datafiles for each profile (i.e. computer)
+# creates unique datafiles for each platform
 def datafile(for_function: str) -> Path:
-    profile: str = core_conf.active_profile
+    profile: str = sys.platform.casefold()
     basepath: str = for_function + (f"-{profile}" if profile else "") + ".json"
     return Path(config.datadir).expanduser().absolute() / basepath
 
