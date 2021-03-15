@@ -22,6 +22,7 @@ from lxml import etree  # type: ignore[import]
 from my.core import Stats, LazyLogger, Res
 from my.core.common import get_files, warn_if_empty, mcachew
 from my.core.cachew import cache_dir
+from my.core.logging import high
 
 
 logger = LazyLogger(__name__, level="warning")
@@ -71,7 +72,7 @@ def _extract_locations(path: Path) -> Iterator[Res[Location]]:
                             dt=datetime.replace(point.time, tzinfo=timezone.utc),
                         )
     except ImportError:
-        logger.warning(
+        high(
             "Should install 'gpxpy' to parse .gpx files, falling back to basic XML parsing"
         )
         yield from _extract_xml_locations(path)
