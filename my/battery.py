@@ -5,31 +5,22 @@ https://sean.fish/d/.config/i3blocks/blocks/battery
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import battery as user_config
-
-from dataclasses import dataclass
-
-from .core import Paths
+from my.config import battery as user_config  # type: ignore[attr-defined]
+from my.core import Paths, dataclass
 
 
 @dataclass
-class battery(user_config):
+class config(user_config):
     # path/glob to the battery logfile
     export_path: Paths
 
-
-from .core.cfg import make_config
-
-config = make_config(battery)
-
-#######
 
 import csv
 from typing import Sequence
 from pathlib import Path
 
-from .core import get_files, warn_if_empty, Stats
-from .core.common import listify
+from my.core import get_files, warn_if_empty, Stats
+from my.core.common import listify
 from .utils.time import parse_datetime_sec
 
 
@@ -85,6 +76,6 @@ def _parse_file(histfile: Path) -> Results:
 
 
 def stats() -> Stats:
-    from .core import stat
+    from my.core import stat
 
     return {**stat(history)}

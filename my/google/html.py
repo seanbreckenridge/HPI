@@ -11,14 +11,14 @@ from typing import List, Any, Iterator, Optional
 from urllib.parse import unquote
 from itertools import chain
 
-import lxml.html as lh
+import lxml.html as lh  # type: ignore[import]
 import pytz
 from more_itertools import sliced
 
 from .models import HtmlEvent, HtmlComment
 
-from ..core.error import Res
-from ..core.time import abbr_to_timezone
+from my.core import Res
+from my.core.time import abbr_to_timezone
 
 # Mar 8, 2018, 5:14:40 PM
 _TIME_FORMAT = "%b %d, %Y, %I:%M:%S %p"

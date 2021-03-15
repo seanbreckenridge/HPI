@@ -5,14 +5,12 @@ Parses backups of my newsboat rss file
 from datetime import datetime
 from typing import NamedTuple, Optional
 
-from my.config import rss as user_config
-
-from dataclasses import dataclass
-from .core import PathIsh, Paths
+from my.core import PathIsh, Paths, dataclass
+from my.config import newsboat as user_config  # type: ignore[attr-defined]
 
 
 @dataclass
-class rss(user_config):
+class config(user_config):
     # path[s]/glob to the backed up newsboat rss files
     export_path: Paths
 
@@ -20,16 +18,11 @@ class rss(user_config):
     live_file: Optional[PathIsh] = None
 
 
-from .core.cfg import make_config
-
-config = make_config(rss)
-
-
-import warnings
 from typing import Tuple, Sequence, Iterator, Dict, Set
 from pathlib import Path
 
-from .core.common import listify, get_files, Stats
+from my.core.common import listify, get_files, Stats
+from my.core.warnings import low
 
 Subscription = str
 Subscriptions = Sequence[str]
@@ -52,9 +45,7 @@ def inputs() -> Sequence[Tuple[datetime, Path]]:  # type: ignore[misc]
         if p.exists():
             yield (datetime.now(), p)
         else:
-            warnings.warn(
-                f"'live_file' provided {config.live_file} but that file doesn't exist."
-            )
+            low(f"'live_file' provided {config.live_file} but that file doesn't exist.")
 
 
 def current_subscriptions() -> Subscriptions:
@@ -108,7 +99,7 @@ def events() -> Iterator[RssEvent]:
 
 
 def stats() -> Stats:
-    from .core import stat
+    from my.core import stat
 
     return {
         **stat(current_subscriptions),

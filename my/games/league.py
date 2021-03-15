@@ -4,15 +4,12 @@ from: https://github.com/seanbreckenridge/lolexport
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import league_of_legends as user_config
-
-from dataclasses import dataclass
-
-from ..core import Paths
+from my.config import league_of_legends as user_config  # type: ignore[attr-defined]
+from my.core import Paths, dataclass
 
 
 @dataclass
-class league_of_legends(user_config):
+class config(user_config):
     # path[s]/glob to the exported data. These are the resulting json file from 'lolexport parse'
     export_path: Paths
 
@@ -20,21 +17,14 @@ class league_of_legends(user_config):
     username: str
 
 
-from ..core.cfg import make_config
-
-config = make_config(league_of_legends)
-
-#######
-
 import json
 from pathlib import Path
 from datetime import datetime
-from typing import NamedTuple, Iterator, Sequence, Dict, Union, List, Optional, Any, Set
+from typing import NamedTuple, Iterator, Sequence, Dict, Union, List, Optional, Set
 from functools import partial
 from itertools import chain
 
-from ..core import get_files, Stats
-from ..core.error import Res
+from my.core import get_files, Stats, Res, Json
 from ..utils.time import parse_datetime_millis
 
 
@@ -48,7 +38,6 @@ def inputs() -> Sequence[Path]:
 
 ChampionInfo = Dict[str, Union[str, List[str]]]
 Metadata = Optional[str]
-Json = Dict[str, Any]
 Players = List[str]
 
 # represents one League of Legends game
@@ -93,10 +82,13 @@ def history(from_paths=inputs, summoner_name: Optional[str] = None) -> Results:
 def _merge_histories(*sources: Results) -> Results:
     emitted: Set[int] = set()
     for g in chain(*sources):
-        if g.game_id in emitted:
-            continue
-        yield g
-        emitted.add(g.game_id)
+        if isinstance(g, Exception):
+            yield g
+        else:
+            if g.game_id in emitted:
+                continue
+            emitted.add(g.game_id)
+            yield g
 
 
 def _read_parsed_json(p: Path, username: str) -> Results:
@@ -136,6 +128,6 @@ def _read_parsed_json(p: Path, username: str) -> Results:
 
 
 def stats() -> Stats:
-    from ..core import stat
+    from my.core import stat
 
     return {**stat(history)}

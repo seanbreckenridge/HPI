@@ -12,8 +12,8 @@ from budget import data
 from budget.analyze import cleaned_snapshots, Snapshot, Transaction
 from more_itertools import last
 
-from .core import Stats
-from .core.logging import mklevel
+from my.core import Stats
+from my.core.logging import mklevel
 
 
 @lru_cache(1)
@@ -55,7 +55,7 @@ def transactions() -> List[Transaction]:
 
 
 def stats() -> Stats:
-    from .core import stat
+    from my.core import stat
 
     return {
         **stat(balances),

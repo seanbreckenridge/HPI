@@ -85,7 +85,7 @@ main() {
 	pytest "$@" || prompt ''
 	cleanup_firefox
 	echo "Running mypy..."
-	mypy --color-output --ignore-missing-imports ./my || prompt ''
+	mypy --color-output --ignore-missing-imports -p my || prompt ''
 	echo "Running shellcheck..."
 	shellcheck_scripts
 	# format everything in the repo

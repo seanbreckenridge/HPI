@@ -4,9 +4,9 @@ Merges location data from multiple sources
 
 from typing import Iterator
 
-from ..core import Stats, LazyLogger
-from ..core.common import mcachew
-from ..core.cachew import cache_dir
+from my.core import Stats, LazyLogger
+from my.core.common import mcachew
+from my.core.cachew import cache_dir
 from .models import Location
 
 # sources
@@ -43,21 +43,16 @@ def locations() -> Iterator[Location]:
     logger=logger,
 )
 def _google_locations() -> Iterator[Location]:
-    yield from map(
-        lambda gl: Location(lng=gl.lng, lat=gl.lat, dt=gl.at, accuracy=True),
-        filter(
-            lambda g: isinstance(g, GoogleLocation),
-            google_events(),
-        ),
-    )
+    for g in google_events():
+        if isinstance(g, GoogleLocation) and not isinstance(g, Exception):
+            yield Location(lng=g.lng, lat=g.lat, dt=g.at, accuracy=True)
 
 
 # cachew is handled in apple_events, I think this is fast enough
 def _apple_locations() -> Iterator[Location]:
-    yield from map(
-        lambda al: Location(lng=al.lng, lat=al.lat, dt=al.dt, accuracy=True),
-        filter(lambda a: isinstance(a, AppleLocation), apple_events()),
-    )
+    for a in apple_events():
+        if isinstance(a, AppleLocation) and not isinstance(a, Exception):
+            yield Location(lng=a.lng, lat=a.lat, dt=a.dt, accuracy=True)
 
 
 def _gpslogger_locations() -> Iterator[Location]:
@@ -74,7 +69,7 @@ def _gpslogger_locations() -> Iterator[Location]:
 
 
 def stats() -> Stats:
-    from ..core import stat
+    from my.core import stat
 
     return {
         **stat(locations),

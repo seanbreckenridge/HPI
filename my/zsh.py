@@ -9,17 +9,15 @@ Parses ZSH history (uses exports from ./job/zsh_history.job) and current zsh his
 
 # look at https://github.com/bamos/zsh-history-analysis
 
-# see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import zsh as user_config
-
-from dataclasses import dataclass
 from typing import Optional
 
-from .core import PathIsh, Paths
+# see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
+from my.config import zsh as user_config  # type: ignore[attr-defined]
+from my.core import PathIsh, Paths, dataclass
 
 
 @dataclass
-class zsh(user_config):
+class config(user_config):
     # path[s]/glob to the exported zsh history files
     export_path: Paths
 
@@ -27,18 +25,12 @@ class zsh(user_config):
     live_file: Optional[PathIsh] = None
 
 
-from .core.cfg import make_config
-
-config = make_config(zsh)
-
-#######
-
-import warnings
 from pathlib import Path
 from typing import Sequence
 
-from .core import get_files, warn_if_empty, Stats
-from .core.common import listify
+from my.core import get_files, warn_if_empty, Stats
+from my.core.common import listify
+from my.core.warnings import low
 from .utils.time import parse_datetime_sec
 
 
@@ -53,9 +45,7 @@ def inputs() -> Sequence[Path]:  # type: ignore[misc]
         if p.exists():
             yield p
         else:
-            warnings.warn(
-                f"'live_file' provided {config.live_file} but that file doesn't exist."
-            )
+            low(f"'live_file' provided {config.live_file} but that file doesn't exist.")
 
 
 ### This parses the zsh format I've configured, zsh is heavily configurable
@@ -84,12 +74,6 @@ Results = Iterator[Entry]
 
 def history(from_paths=inputs) -> Results:
     yield from _merge_histories(*map(_parse_file, from_paths()))
-
-
-def stats() -> Stats:
-    from .core import stat
-
-    return {**stat(history)}
 
 
 @warn_if_empty
@@ -145,3 +129,9 @@ def _parse_metadata(histline: str) -> Optional[Tuple[datetime, int, str]]:
         g = matches.groups()
         return (parse_datetime_sec(g[0]), int(g[1]), g[2])
     return None
+
+
+def stats() -> Stats:
+    from my.core import stat
+
+    return {**stat(history)}

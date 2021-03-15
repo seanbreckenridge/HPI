@@ -3,16 +3,15 @@ Parses history from https://github.com/seanbreckenridge/ttt
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import ttt as user_config
+from my.config import ttt as user_config  # type: ignore[attr-defined]
 
-from dataclasses import dataclass
 from typing import Optional
 
-from .core import PathIsh, Paths
+from my.core import PathIsh, Paths, dataclass
 
 
 @dataclass
-class ttt(user_config):
+class config(user_config):
     # path[s]/glob to the backed up ttt history files
     export_path: Paths
 
@@ -20,19 +19,13 @@ class ttt(user_config):
     live_file: Optional[PathIsh] = None
 
 
-from .core.cfg import make_config
-
-config = make_config(ttt)
-
-#######
-
 import csv
-import warnings
 from pathlib import Path
 from typing import Sequence
 
-from .core import get_files, warn_if_empty, Stats
-from .core.common import listify
+from my.core import get_files, warn_if_empty, Stats
+from my.core.common import listify
+from my.core.warnings import low
 from .utils.time import parse_datetime_sec
 
 
@@ -47,9 +40,7 @@ def inputs() -> Sequence[Path]:  # type: ignore[misc]
         if p.exists():
             yield p
         else:
-            warnings.warn(
-                f"'live_file' provided {config.live_file} but that file doesn't exist."
-            )
+            low(f"'live_file' provided {config.live_file} but that file doesn't exist.")
 
 
 from datetime import datetime
@@ -99,6 +90,6 @@ def _parse_file(histfile: Path) -> Results:
 
 
 def stats() -> Stats:
-    from .core import stat
+    from my.core import stat
 
     return {**stat(history)}

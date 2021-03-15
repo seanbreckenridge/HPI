@@ -18,32 +18,25 @@ python3() {
 
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import ipython as user_config
+from my.config import ipython as user_config  # type: ignore[attr-defined]
 
-from dataclasses import dataclass
-
-from .core import Paths
+from my.core import Paths, dataclass
 
 
 @dataclass
-class ipython(user_config):
+class config(user_config):
     # path[s]/glob to the exported ipython sqlite databases
     export_path: Paths
-
-
-from .core.cfg import make_config
-
-config = make_config(ipython)
 
 
 from datetime import datetime
 from typing import Iterator, NamedTuple, Sequence, Callable, List
 from itertools import chain
 
-from IPython.core.history import HistoryAccessor
+from IPython.core.history import HistoryAccessor  # type: ignore[import]
 
-from .core import get_files, warn_if_empty, Stats
-from .core.common import listify
+from my.core import get_files, warn_if_empty, Stats
+from my.core.common import listify
 
 
 class Command(NamedTuple):
@@ -91,6 +84,6 @@ def _parse_database(sqlite_database: str = "") -> Results:
 
 
 def stats() -> Stats:
-    from .core import stat
+    from my.core import stat
 
     return {**stat(history)}

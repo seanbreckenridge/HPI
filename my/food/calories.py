@@ -7,15 +7,13 @@ import shutil
 import subprocess
 
 from datetime import datetime, date
-from typing import NamedTuple, Iterator, Optional, Dict, Any
+from typing import NamedTuple, Iterator, Optional
 
-from ..core.error import Res
+from my.core import Res, Json
 
 calories_path: Optional[str] = shutil.which("calories")
 if calories_path is None:
     raise RuntimeError("Couldn't find 'calories' on your $PATH")
-
-Json = Dict[str, Any]
 
 
 # on is the date which this entry is for, added_on is a timestamp which matches

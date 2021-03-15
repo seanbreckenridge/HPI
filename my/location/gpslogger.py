@@ -2,34 +2,29 @@
 Parse gpslogger https://github.com/mendhak/gpslogger .gpx (xml) files
 """
 
-from datetime import datetime, timezone
-from dataclasses import dataclass
-from pathlib import Path
-from typing import NamedTuple, Iterator, Set, Dict
-
-from lxml import etree
-
-from ..core import Stats, Paths, LazyLogger
-from ..core.error import Res
-from ..core.common import get_files, warn_if_empty, mcachew
-from ..core.cachew import cache_dir
-
 # For config, see: https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py
-from my.config import gpslogger as user_config
-
-
-logger = LazyLogger(__name__, level="warning")
+from my.config import gpslogger as user_config  # type: ignore[attr-defined]
+from my.core import Paths, dataclass
 
 
 @dataclass
-class gpslogger(user_config):
+class config(user_config):
     # path[s]/glob to the synced gpx (XML) files
     export_path: Paths
 
 
-from ..core.cfg import make_config
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import NamedTuple, Iterator, Set, Dict
 
-config = make_config(gpslogger)
+from lxml import etree  # type: ignore[import]
+
+from my.core import Stats, LazyLogger, Res
+from my.core.common import get_files, warn_if_empty, mcachew
+from my.core.cachew import cache_dir
+
+
+logger = LazyLogger(__name__, level="warning")
 
 
 class Location(NamedTuple):
@@ -51,6 +46,9 @@ def history() -> Iterator[Res[Location]]:
     emitted: Set[datetime] = set()
     for p in files:
         for l in _extract_locations(p):
+            if isinstance(l, Exception):
+                yield l
+                continue
             if l.dt in emitted:
                 continue
             emitted.add(l.dt)
@@ -59,7 +57,7 @@ def history() -> Iterator[Res[Location]]:
 
 def _extract_locations(path: Path) -> Iterator[Res[Location]]:
     try:
-        import gpxpy
+        import gpxpy  # type: ignore[import]
 
         with path.open("r") as gf:
             gpx_obj = gpxpy.parse(gf)
@@ -111,6 +109,6 @@ def _extract_xml_locations(path: Path) -> Iterator[Res[Location]]:
 
 
 def stats() -> Stats:
-    from ..core import stat
+    from my.core import stat
 
     return {**stat(history)}

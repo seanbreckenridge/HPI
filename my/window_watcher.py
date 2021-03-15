@@ -2,17 +2,15 @@
 Parses history from https://github.com/seanbreckenridge/aw-watcher-window
 """
 
-# see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import window_watcher as user_config
-
-from dataclasses import dataclass
 from typing import Optional, List
 
-from .core import PathIsh, Paths
+# see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
+from my.config import window_watcher as user_config  # type: ignore[attr-defined]
+from my.core import PathIsh, Paths, dataclass
 
 
 @dataclass
-class window_watcher(user_config):
+class config(user_config):
     # path[s]/glob to the backed up window_watcher history files
     export_path: Paths
 
@@ -23,22 +21,16 @@ class window_watcher(user_config):
     live_file: Optional[PathIsh] = None
 
 
-from .core.cfg import make_config
-
-config = make_config(window_watcher)
-
-#######
-
 import csv
-import warnings
 from io import StringIO
 from pathlib import Path
 from datetime import datetime, timedelta
 from typing import NamedTuple, Iterator, Tuple, Dict, Set, Sequence
 from itertools import chain
 
-from .core import get_files, warn_if_empty, Stats
-from .core.common import listify
+from my.core import get_files, warn_if_empty, Stats
+from my.core.common import listify
+from my.core.warnings import low
 from .utils.time import parse_datetime_sec
 
 
@@ -53,9 +45,7 @@ def inputs() -> Sequence[Path]:  # type: ignore[misc]
         if p.exists():
             yield p
         else:
-            warnings.warn(
-                f"'live_file' provided {config.live_file} but that file doesn't exist."
-            )
+            low(f"'live_file' provided {config.live_file} but that file doesn't exist.")
 
 
 # represents one history entry
@@ -103,7 +93,7 @@ def _construct_stream(
 
     # uses the [application, window_title] tuple as the key
     recent_cache: Dict[Tuple[str, str], DurInfo] = {}
-    fset: Set[str] = set(config.force_individual)
+    fset: Set[str] = set(config.force_individual or [])
     exit_secs = int(exit_when.total_seconds())
     for item in res:
         key: Tuple[str, str] = (item.application, item.window_title)
@@ -204,6 +194,6 @@ def _parse_file(histfile: Path) -> LinearResults:
 
 
 def stats() -> Stats:
-    from .core import stat
+    from my.core import stat
 
     return {**stat(history)}

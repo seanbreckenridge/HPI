@@ -3,20 +3,15 @@ Parses the apple GPDR Export
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import apple as user_config
-
-from dataclasses import dataclass
-from .core import PathIsh
+from my.config import apple as user_config  # type: ignore[attr-defined]
+from my.core import PathIsh, dataclass
 
 
 @dataclass
-class apple(user_config):
-    gdpr_dir: PathIsh  # path to unpacked GDPR archive
+class config(user_config):
+    # path to unpacked GDPR archive
+    gdpr_dir: PathIsh
 
-
-from .core.cfg import make_config
-
-config = make_config(apple)
 
 import os
 import json
@@ -24,18 +19,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterator, Dict, Any, NamedTuple, Union, Optional
 
-from lxml import etree
+from lxml import etree  # type: ignore[import]
 from more_itertools import sliced, first
 
-from .core.error import Res
-from .core import Stats
+from my.core import Stats, Res, LazyLogger
+from my.core.common import mcachew
+from my.core.cachew import cache_dir
 
-from .core.common import LazyLogger, mcachew
-from .core.cachew import cache_dir
 
 logger = LazyLogger(__name__, level="warning")
-
-Json = Dict[str, Any]
 
 
 class Game(NamedTuple):
@@ -122,7 +114,7 @@ def events() -> Results:
 
 
 def stats() -> Stats:
-    from .core import stat
+    from my.core import stat
 
     return {
         **stat(events),

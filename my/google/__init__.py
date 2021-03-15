@@ -30,10 +30,10 @@ keep all the takeouts (they're about 195MB each)
 # perhaps even a special takeout module that deals with all of this automatically?
 # e.g. accumulate, filter and maybe report useless takeouts?
 
+from my.core import Stats
+
 from .paths import get_last_takeout
 from .takeout_parser import Results, parse_takeout
-
-from ..core import Stats
 
 
 # temporary basic entrypoint
@@ -48,7 +48,7 @@ def events() -> Results:
 
 
 def stats() -> Stats:
-    from ..core import stat
+    from my.core import stat
 
     return {
         **stat(events),

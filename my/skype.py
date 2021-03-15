@@ -8,51 +8,38 @@ Parse Message Dates from Skypes GDPR JSON export
 # was using skype
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import skype as user_config
+from my.config import skype as user_config  # type: ignore[attr-defined]
 
-from dataclasses import dataclass
-
-from .core import Paths, Stats
-from .core.common import mcachew
-from .core.cachew import cache_dir
+from my.core import Paths, Stats, dataclass
+from my.core.common import mcachew
+from my.core.cachew import cache_dir
 
 
 @dataclass
-class skype(user_config):
+class config(user_config):
     # path[s]/glob to the skype JSON files
     export_path: Paths
 
 
-from .core.cfg import make_config
-
-config = make_config(skype)
-
-#######
-
 import json
 from pathlib import Path
-from typing import Sequence
-
-from .core import get_files
-
-
-def inputs() -> Sequence[Path]:
-    return get_files(config.export_path)
-
-
 from datetime import datetime
-from typing import Iterator, Optional
+from typing import Iterator, Optional, Sequence
 from itertools import chain
 
 import dateparser
 
-from .core.common import LazyLogger
+from my.core import get_files, LazyLogger
 
 logger = LazyLogger(__name__, level="warning")
 
 
 Results = Iterator[datetime]
 OptResults = Iterator[Optional[datetime]]
+
+
+def inputs() -> Sequence[Path]:
+    return get_files(config.export_path)
 
 
 @mcachew(
@@ -74,6 +61,6 @@ def _parse_file(post_file: Path) -> OptResults:
 
 
 def stats() -> Stats:
-    from .core import stat
+    from my.core import stat
 
     return {**stat(timestamps)}

@@ -4,24 +4,15 @@ from: https://github.com/seanbreckenridge/blizzard_gdpr_parser
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import blizzard as user_config
-
-from dataclasses import dataclass
-
-from ..core import Paths
+from my.config import blizzard as user_config  # type: ignore[attr-defined]
+from my.core import Paths, dataclass
 
 
 @dataclass
-class blizzard(user_config):
+class config(user_config):
     # path to the exported data
     export_path: Paths
 
-
-from ..core.cfg import make_config
-
-config = make_config(blizzard)
-
-#######
 
 import json
 from pathlib import Path
@@ -29,7 +20,7 @@ from datetime import datetime
 from typing import NamedTuple, Iterator, Sequence, List
 from itertools import chain
 
-from ..core import get_files, Stats
+from my.core import get_files, Stats
 from ..utils.time import parse_datetime_sec
 
 
@@ -63,6 +54,6 @@ def _parse_json_file(p: Path) -> Results:
 
 
 def stats() -> Stats:
-    from ..core import stat
+    from my.core import stat
 
     return {**stat(events)}

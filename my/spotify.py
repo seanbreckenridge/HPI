@@ -3,32 +3,23 @@ Parses the spotify GPDR Export
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import spotify as user_config
+from my.config import spotify as user_config  # type: ignore[attr-defined]
 
-from dataclasses import dataclass
-from .core import PathIsh, Stats
+from my.core import PathIsh, Stats, dataclass
 
 
 @dataclass
-class spotify(user_config):
+class config(user_config):
     gdpr_dir: PathIsh  # path to unpacked GDPR archive
 
-
-from .core.cfg import make_config
-
-config = make_config(spotify)
 
 import os
 import json
 from datetime import date
 from pathlib import Path
-from itertools import chain
 from typing import Iterator, Dict, Any, NamedTuple, List, Set, Tuple
 
-from .core.error import Res
-from .core import get_files
-
-from .core.common import LazyLogger
+from my.core import Res, get_files, LazyLogger
 
 logger = LazyLogger(__name__)
 
@@ -91,20 +82,24 @@ def playlists() -> Playlists:
 
 def songs() -> Songs:
     emitted: Set[Tuple[str, str, str]] = set()
-    for e in chain(*map(lambda p: p.songs, playlists())):
-        if isinstance(e, Exception):
-            yield e
+    for p in playlists():
+        if isinstance(p, Exception):
+            yield p
             continue
-        key = (e.name, e.artist, e.album)
-        if key in emitted:
-            # logger.debug('ignoring %s: %s', key, e)
-            continue
-        yield e
-        emitted.add(key)
+        for s in p.songs:
+            if isinstance(s, Exception):
+                yield s
+                continue
+            key = (s.name, s.artist, s.album)
+            if key in emitted:
+                # logger.debug('ignoring %s: %s', key, s)
+                continue
+            yield s
+            emitted.add(key)
 
 
 def stats() -> Stats:
-    from .core import stat
+    from my.core import stat
 
     return {
         **stat(playlists),

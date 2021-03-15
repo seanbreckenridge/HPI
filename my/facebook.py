@@ -3,20 +3,14 @@ Parses the facebook GPDR Export
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import facebook as user_config
-
-from dataclasses import dataclass
-from .core import PathIsh
+from my.config import facebook as user_config  # type: ignore[attr-defined]
+from my.core import PathIsh, dataclass
 
 
 @dataclass
-class facebook(user_config):
+class config(user_config):
     gdpr_dir: PathIsh  # path to unpacked GDPR archive
 
-
-from .core.cfg import make_config
-
-config = make_config(facebook)
 
 import os
 import json
@@ -26,15 +20,11 @@ from itertools import chain
 from typing import Iterator, Dict, Any, NamedTuple, Union, Optional, List
 
 
-from .core import get_files, Stats
-from .core.error import Res
+from my.core import get_files, Stats, Res, Json, LazyLogger
 from .utils.time import parse_datetime_sec
-from .core.common import LazyLogger
 
 
 logger = LazyLogger(__name__, level="warning")
-
-Json = Dict[str, Any]
 
 
 class Contact(NamedTuple):
@@ -207,14 +197,6 @@ def events() -> Results:
         yield from handler(j)
 
 
-def stats() -> Stats:
-    from .core import stat
-
-    return {
-        **stat(events),
-    }
-
-
 def _parse_address_book(d: Dict) -> Iterator[Contact]:
     # remove top-level address book name
     for addr_book_top in d.values():
@@ -344,16 +326,18 @@ def _parse_conversation(
     d: Dict,
 ) -> Iterator[Res[Conversation]]:  # will only return 1 convo
     participants: List[str] = [p["name"] for p in d["participants"]]
-    messages = list(_parse_messages_in_conversation(d["messages"]))
-    # propagate up exception if one exists
-    try:
-        yield next(filter(lambda m: isinstance(m, Exception), messages))
-    except StopIteration:  # there was no error found out
-        yield Conversation(
-            participants=participants,
-            title=d["title"],
-            messages=messages,
-        )
+    good_messages: List[Message] = []
+    for m in _parse_messages_in_conversation(d["messages"]):
+        # propagate up exception if one exists
+        if isinstance(m, Exception):
+            yield m
+        else:
+            good_messages.append(m)
+    yield Conversation(
+        participants=participants,
+        title=d["title"],
+        messages=good_messages,
+    )
 
 
 def _parse_messages_in_conversation(messages: List[Dict]) -> Iterator[Res[Message]]:
@@ -557,3 +541,11 @@ def _parse_admin_records(d: Dict) -> Iterator[AdminAction]:
             ip=s["ip_address"],
             user_agent=s["user_agent"],
         )
+
+
+def stats() -> Stats:
+    from my.core import stat
+
+    return {
+        **stat(events),
+    }

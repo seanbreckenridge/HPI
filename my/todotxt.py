@@ -2,13 +2,11 @@
 Parses todotxt (http://todotxt.org/) done.txt and todo.txt files
 """
 
-# see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import todotxt as user_config
-
-from dataclasses import dataclass
 from typing import Optional
 
-from .core import PathIsh, Paths
+# see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
+from my.config import todotxt as user_config  # type: ignore[attr-defined]
+from my.core import PathIsh, Paths, dataclass
 
 
 # TODO: do something with the todo.txt files?
@@ -20,7 +18,7 @@ from .core import PathIsh, Paths
 
 
 @dataclass
-class todotxt(user_config):
+class config(user_config):
     # path[s]/glob to the exported zsh history files
     # expects files like:
     # 20200827T192309Z-done.txt
@@ -33,12 +31,6 @@ class todotxt(user_config):
     live_file: Optional[PathIsh]
 
 
-from .core.cfg import make_config
-
-config = make_config(todotxt)
-
-#######
-
 import warnings
 from pathlib import Path
 from datetime import datetime
@@ -46,12 +38,11 @@ from typing import NamedTuple, Iterator, Set, List, Tuple, Sequence, Dict
 from itertools import chain
 
 
-from .core import get_files, warn_if_empty, Stats
-from .core.common import LazyLogger, listify
-from .core.error import Res
+from my.core import get_files, warn_if_empty, Stats, LazyLogger, Res
+from my.core.common import listify
 
 # pip3 install topydo
-from topydo.lib.TodoParser import parse_line
+from topydo.lib.TodoParser import parse_line  # type: ignore[import]
 
 logger = LazyLogger(__name__)
 
@@ -86,10 +77,12 @@ def completed(from_paths=inputs) -> Results:
     """
     Merges all todo.txt/done.txt files and filters to return the history of todos I've completed
     """
-    yield from filter(
-        lambda td: td.completed,
-        _merge_histories(*map(_parse_file, map(lambda r: r[1], from_paths()))),
-    )
+    for td in _merge_histories(*map(_parse_file, map(lambda r: r[1], from_paths()))):
+        if isinstance(td, Exception):
+            yield td
+        else:
+            if td.completed:
+                yield td
 
 
 def todos(from_file: Optional[PathIsh] = config.live_file) -> Results:
@@ -144,9 +137,15 @@ def events() -> Iterator[TodoEvent]:
     todo_snapshots.sort(key=lambda tsnap: tsnap[0])
 
     for dt, tlist in todo_snapshots:
+        # ignore exceptions while computing events
+        if isinstance(tlist, Exception):
+            continue
         tset: Set[Todo] = set()
         # for each todo
         for td in tlist:
+            if isinstance(td, Exception):
+                # ignore exceptions while computing events
+                continue
             tset.add(td)
             if td in current_state:
                 continue
@@ -179,7 +178,7 @@ def _parse_file(todofile: Path) -> Results:
 
 
 def stats() -> Stats:
-    from .core import stat
+    from my.core import stat
 
     return {
         **stat(todos),

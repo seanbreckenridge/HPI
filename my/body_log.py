@@ -4,33 +4,26 @@ Human function things
 Interactive prompts to log random things, like my current weight
 """
 
+# https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py
+from my.config import body as user_config  # type: ignore[attr-defined]
+from my.core import PathIsh, dataclass
+
+
+@dataclass
+class config(user_config):
+    datadir: PathIsh
+
+
 import os
 import sys
 from pathlib import Path
 from itertools import chain
-from dataclasses import dataclass
-
-from .core import PathIsh
-
-# https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py
-from my.config import body as user_config
-
-
-@dataclass
-class upkeep(user_config):
-    datadir: PathIsh
-
-
-from .core.cfg import make_config
-
-config = make_config(upkeep)
-
 from datetime import datetime
 from typing import NamedTuple, Iterator, Sequence
 
 from autotui.shortcuts import load_prompt_and_writeback, load_from
 
-from .core import Stats, get_files
+from my.core import Stats, get_files
 
 
 # creates unique datafiles for each platform
@@ -77,7 +70,7 @@ def prompt(nt: NamedTuple):
 
 
 def stats() -> Stats:
-    from .core import stat
+    from my.core import stat
 
     return {
         **stat(shower),

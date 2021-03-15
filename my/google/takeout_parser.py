@@ -9,15 +9,13 @@ from pathlib import Path
 from datetime import datetime, timezone
 from typing import Iterator, Union, Any
 
-import cachew
+from my.core.error import Res
+from my.core.common import LazyLogger, mcachew
+from my.core.cachew import cache_dir
 
 from .models import HtmlEvent, HtmlComment, LikedVideo, AppInstall, Location
 from .html import read_html_activity, read_html_li
-
 from ..utils.time import parse_datetime_millis
-from ..core.error import Res
-from ..core.common import LazyLogger, mcachew
-from ..core.cachew import cache_dir
 
 
 def simplify_path(p: Path) -> str:
@@ -183,14 +181,12 @@ def _parse_likes(p: Path) -> Iterator[LikedVideo]:
         )
 
 
-def _parse_html_chat_li(p: Path) -> Iterator[Res[HtmlEvent]]:
+def _parse_html_chat_li(p: Path) -> Iterator[Res[HtmlComment]]:
     yield from read_html_li(p)
 
 
 @mcachew(
-    cache_path=lambda p: str(
-        cache_dir() / simplify_path(p) / cachew.cname(_parse_html_activity)
-    ),
+    cache_path=lambda p: str(cache_dir() / "_parse_html_activity" / simplify_path(p)),
     force_file=True,
     logger=logger,
 )

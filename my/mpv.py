@@ -5,22 +5,16 @@ https://github.com/seanbreckenridge/mpv-history-daemon
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import mpv as user_config
+from my.config import mpv as user_config  # type: ignore[attr-defined]
 
-from dataclasses import dataclass
-
-from .core import Paths
+from my.core import Paths, dataclass
 
 
 @dataclass
-class mpv(user_config):
+class config(user_config):
     # glob to the JSON files that the daemon writes whenever Im using mpv
     export_path: Paths
 
-
-from .core.cfg import make_config
-
-config = make_config(mpv)
 
 import os
 from pathlib import Path
@@ -29,12 +23,12 @@ from typing import Iterator, Sequence
 import mpv_history_daemon.events
 from mpv_history_daemon.events import Media
 
-from .core.common import get_files, Stats
+from my.core import get_files, Stats
 
 # monkey patch logs
 if "HPI_LOGS" in os.environ:
-    from logzero import setup_logger
-    from .core.logging import mklevel
+    from logzero import setup_logger  # type: ignore[import]
+    from my.core.logging import mklevel
 
     mpv_history_daemon.events.logger = setup_logger(
         name="mpv_history_events", level=mklevel(os.environ["HPI_LOGS"])
@@ -44,7 +38,7 @@ Results = Iterator[Media]
 
 
 def stats() -> Stats:
-    from .core import stat
+    from my.core import stat
 
     return {
         **stat(history),

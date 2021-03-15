@@ -4,24 +4,15 @@ https://github.com/seanbreckenridge/steamscraper
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import steam as user_config
-
-from dataclasses import dataclass
-
-from ..core import Paths
+from my.config import steam as user_config  # type: ignore[attr-defined]
+from my.core import Paths, dataclass
 
 
 @dataclass
-class steam(user_config):
+class config(user_config):
     # path to the exported data
     export_path: Paths
 
-
-from ..core.cfg import make_config
-
-config = make_config(steam)
-
-#######
 
 import json
 from functools import partial
@@ -30,8 +21,7 @@ from datetime import datetime
 from typing import NamedTuple, Iterator, Sequence, Dict, List, Optional, Any
 from itertools import chain
 
-from ..core import get_files, Stats
-from ..core.error import Res
+from my.core import get_files, Stats, Res
 from ..utils.time import parse_datetime_sec
 
 
@@ -72,7 +62,12 @@ AchResults = Iterator[Res[Achievement]]
 
 # only ones I've played
 def games() -> Results:
-    yield from filter(lambda g: g.hours_played > 0.0, all_games())
+    for game in all_games():
+        if isinstance(game, Exception):
+            yield game
+        else:
+            if game.hours_played > 0.0:
+                yield game
 
 
 def all_games(from_paths=inputs) -> Results:
@@ -82,12 +77,21 @@ def all_games(from_paths=inputs) -> Results:
 
 # only ones which Ive actually achieved
 def achievements() -> AchResults:
-    yield from filter(lambda a: a.achieved, all_achievements())
+    for ach in all_achievements():
+        if isinstance(ach, Exception):
+            yield ach
+        else:
+            if ach.achieved:
+                yield ach
 
 
 def all_achievements(from_paths=inputs) -> AchResults:
     # combine the results from multiple achievement lists
-    yield from chain(*map(lambda g: g.achievements, all_games(from_paths)))
+    for game in all_games(from_paths):
+        if isinstance(game, Exception):
+            yield game
+        else:
+            yield from game.achievements
 
 
 def _read_parsed_json(p: Path) -> Results:
@@ -124,7 +128,7 @@ def _parse_achievement(ach: Dict[str, Any], game_name: str) -> Achievement:
 
 
 def stats() -> Stats:
-    from ..core import stat
+    from my.core import stat
 
     return {
         **stat(games),

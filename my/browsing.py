@@ -3,38 +3,30 @@ Parses Firefox History using http://github.com/seanbreckenridge/ffexport
 """
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import firefox as user_config
+from my.config import firefox as user_config  # type: ignore[attr-defined]
 
-from dataclasses import dataclass
-
-from .core import Paths
+from my.core import Paths, dataclass
 
 
 @dataclass
-class firefox(user_config):
+class config(user_config):
     # path[s]/glob to the exported firefox history sqlite files
     export_path: Paths
 
-
-from .core.cfg import make_config
-
-config = make_config(firefox)
-
-#######
 
 import os
 import tempfile
 from pathlib import Path
 from typing import Iterator, Sequence, Optional
 
-from .core import Stats
-from .core.common import listify, get_files
+from my.core import Stats, get_files
+from my.core.common import listify
 
 
 # monkey patch ffexport logs
 if "HPI_LOGS" in os.environ:
-    from logzero import setup_logger
-    from .core.logging import mklevel
+    from logzero import setup_logger  # type: ignore[import]
+    from my.core.logging import mklevel
     import ffexport.log
 
     ffexport.log.logger = setup_logger(
@@ -79,6 +71,6 @@ def history(from_paths=inputs, tmp_dir: Optional[str] = None) -> Results:
 
 
 def stats() -> Stats:
-    from .core import stat
+    from my.core import stat
 
     return {**stat(history)}

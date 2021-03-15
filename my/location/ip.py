@@ -10,10 +10,11 @@ from functools import lru_cache
 
 import ipgeocache
 
-from ..core.common import Stats, mcachew, LazyLogger
-from ..core.cachew import cache_dir
 
 from .models import Location
+
+from my.core.common import Stats, mcachew, LazyLogger
+from my.core.cachew import cache_dir
 
 from ..facebook import AdminAction, UploadedPhoto
 from ..facebook import events as facebook_events
@@ -67,13 +68,13 @@ def ips() -> Iterator[IP]:
     logger=logger,
 )
 def _from_facebook() -> Iterator[IP]:
-    yield from map(
-        lambda i: IP(at=i.at, addr=i.ip),
-        filter(
-            lambda e: isinstance(e, AdminAction) or isinstance(e, UploadedPhoto),
-            facebook_events(),
-        ),
-    )
+    for e in facebook_events():
+        if (
+            isinstance(e, AdminAction)
+            or isinstance(e, UploadedPhoto)
+            and not isinstance(e, Exception)
+        ):
+            yield IP(at=e.at, addr=e.ip)
 
 
 @mcachew(cache_path=cache_dir(), logger=logger)
@@ -96,7 +97,7 @@ def _from_discord() -> Iterator[IP]:
 
 
 def stats() -> Stats:
-    from ..core import stat
+    from my.core import stat
 
     return {
         **stat(ips),
