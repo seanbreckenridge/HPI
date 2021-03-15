@@ -31,7 +31,6 @@ from typing import NamedTuple, Iterator, Sequence
 from autotui.shortcuts import load_prompt_and_writeback, load_from
 
 from .core import Stats, get_files
-from .core.core_config import config as core_conf
 
 
 # creates unique datafiles for each platform
