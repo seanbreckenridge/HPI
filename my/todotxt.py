@@ -85,6 +85,8 @@ def completed(from_paths=inputs) -> Results:
                 yield td
 
 
+# Note: if you don't have a todo.txt file on your system,
+# this just returns an empty list
 def todos(from_file: Optional[PathIsh] = config.live_file) -> Results:
     """
     Parses the currently in use todo.txt file (returns my current todos)
