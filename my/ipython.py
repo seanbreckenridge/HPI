@@ -71,9 +71,8 @@ def _parse_database(sqlite_database: str = "") -> Results:
     hist = HistoryAccessor(hist_file=sqlite_database)
     total_sessions = hist.get_last_session_id()
     for sess in range(1, total_sessions):
-        session_info = hist.get_session_info(
-            sess
-        )  # get when this session started, use that as timestamp
+        # get when this session started, use that as timestamp
+        session_info = hist.get_session_info(sess)
         assert len(session_info) == 5  # sanity checks
         start_time = session_info[1]
         assert isinstance(start_time, datetime)
