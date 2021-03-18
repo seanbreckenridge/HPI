@@ -19,7 +19,7 @@ class config(user_config):
 
 import json
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import NamedTuple, Iterator, Sequence, Dict, Union, List, Optional, Set
 from functools import partial
 from itertools import chain
@@ -38,19 +38,19 @@ def inputs() -> Sequence[Path]:
 
 ChampionInfo = Dict[str, Union[str, List[str]]]
 Metadata = Optional[str]
-Players = List[str]
+Names = List[str]
 
 # represents one League of Legends game
 class Game(NamedTuple):
     champion_name: str
     game_id: int
     season: int
-    game_creation: datetime
-    game_duration: int
-    players: Players
+    game_started: datetime
+    game_duration: timedelta
+    players: Names
     my_stats: Json  # just my characters' stats, though all are in the JSON dump
     all_stats: List[Json]
-    queue: Metadata
+    queue: Optional[Dict[str, str]]
     role: Metadata
     lane: Metadata
     map_name: Metadata
@@ -58,25 +58,27 @@ class Game(NamedTuple):
     game_type: Metadata
 
     @property
-    def won(self):
+    def won(self) -> bool:
         return self.my_stats["win"]
 
     @property
-    def champions(self):
-        return map(lambda s: s["champion"]["name"], self.all_stats)
+    def champions(self) -> Names:
+        return list(map(lambda s: s["champion"]["name"], self.all_stats))
+
+    @property
+    def game_ended(self) -> datetime:
+        return self.game_started + self.game_duration
 
 
 Results = Iterator[Res[Game]]
 
 
 def history(from_paths=inputs, summoner_name: Optional[str] = None) -> Results:
-    if summoner_name is None:
-        if config.username is None:
-            raise RuntimeError("No league of legends username received!")
-        else:
-            summoner_name = config.username
-    _read_parsed_json_for_user = partial(_read_parsed_json, username=summoner_name)
-    yield from _merge_histories(*map(_read_parsed_json_for_user, from_paths()))
+    sname: Optional[str] = summoner_name or config.username
+    if sname is None:
+        raise RuntimeError("No league of legends username received!")
+    _json_for_user = partial(_read_parsed_json, username=sname)
+    yield from _merge_histories(*map(_json_for_user, from_paths()))
 
 
 def _merge_histories(*sources: Results) -> Results:
@@ -94,37 +96,54 @@ def _merge_histories(*sources: Results) -> Results:
 def _read_parsed_json(p: Path, username: str) -> Results:
     items = json.loads(p.read_text())
     for game in items:
-        # get my stats
-        participant_id = [k for k, v in game["playerNames"].items() if v == username]
-        if len(participant_id) != 1:
-            yield RuntimeError(
-                f"Couldn't extract id for {username} from {game['playerNames']}"
+        playerNames: Dict[int, str] = {
+            int(uid): name for uid, name in game["playerNames"].items()
+        }
+        # get my participant_id from the playerNames
+        try:
+            participant_id: int = next(
+                (k for k, v in playerNames.items() if v == username)
             )
-        else:
-            my_stats = list(
+        except StopIteration:
+            yield RuntimeError(f"Couldn't extract id for {username} from {playerNames}")
+            continue
+        # get my stats
+        try:
+            my_stats = next(
                 filter(
-                    lambda user_stats: int(user_stats["participantId"])
-                    == int(participant_id[0]),
+                    lambda ustats: int(ustats["participantId"]) == participant_id,
                     game["stats"],
                 )
-            )[0]
+            )
+        except StopIteration:
+            yield RuntimeError(f"Couldn't extract stats for game {game['gameId']}")
+            continue
+        else:
+            # if try try block didn't error, use my_stats
             # assuming datetime is epoch ms
             yield Game(
                 champion_name=game["champion"]["name"],
                 game_id=game["gameId"],
                 queue=game.get("queue"),
                 season=game.get("season"),
-                role=game.get("role"),
-                lane=game.get("lane"),
-                game_creation=parse_datetime_millis(game["gameCreation"]),
-                game_duration=game["gameDuration"],
+                role=_remove_none(game.get("role")),
+                lane=_remove_none(game.get("lane")),
+                game_started=parse_datetime_millis(game["gameCreation"]),
+                game_duration=timedelta(seconds=game["gameDuration"]),
                 map_name=game["map"],
                 game_mode=game["gameMode"],
                 game_type=game["gameType"],
-                players=list(game["playerNames"].values()),
+                players=list(playerNames.values()),
                 my_stats=my_stats,
                 all_stats=game["stats"],
             )
+
+
+# convert the 'NONE' string to a None object
+def _remove_none(m: Optional[str]) -> Optional[str]:
+    if m is not None and m.upper() == "NONE":
+        return None
+    return m
 
 
 def stats() -> Stats:
