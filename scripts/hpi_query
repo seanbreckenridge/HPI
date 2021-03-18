@@ -5,7 +5,7 @@ from datetime import timedelta
 
 import click
 
-from my.utils.serialize import dumps
+from my.core.serialize import dumps
 from my.utils.query import find_hpi_function, most_recent, QueryException
 
 
