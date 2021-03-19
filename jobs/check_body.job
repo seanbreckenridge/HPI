@@ -11,7 +11,7 @@ evry 3 hours -checkbody && {
 	./check_body.py
 	RES=$?
 	# cross platform script that sends notifications
-	# https://sean.fish/d/.local/scripts/cross-platform/notify
+	# https://sean.fish/d/cross-platform/notify
 	case "$RES" in
 	1)
 		notify "error running check body script"
