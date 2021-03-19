@@ -32,3 +32,4 @@ mypy
 pandas
 appdirs
 decorator
+orjson
