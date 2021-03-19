@@ -2,7 +2,7 @@
 
 """
 If last body weight entry was reported more than a week ago, returncode=1
-Used in ./prompt_body.job
+Used in ./check_body.job
 """
 
 import sys
@@ -15,4 +15,4 @@ last_logged_at = list(weight())[-1].when
 
 # if its been more than 7 days since I logged my weight
 if datetime.now(tz=timezone.utc) - last_logged_at > timedelta(days=7):
-    sys.exit(1)
+    sys.exit(2)

@@ -8,5 +8,18 @@ evry 3 hours -checkbody && {
 	}
 	printlog "check_weight:checking..."
 	# store in-case I use return code to specify what hasn't been logged
-	./check_body.py || notify-send "havent updated weight in more than a week!"
+	./check_body.py
+	RES=$?
+	# cross platform script that sends notifications
+	# https://sean.fish/d/.local/scripts/cross-platform/notify
+	case "$RES" in
+	1)
+		notify "error running check body script"
+		;;
+	2)
+		notify "havent updated weight in more than a week!"
+		;;
+	*) ;;
+
+	esac
 }
