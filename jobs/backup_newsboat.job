@@ -4,6 +4,7 @@
 evry 1 day -backup_rss && {
 	readonly RSS_FILE="${XDG_CONFIG_HOME}/newsboat/urls"
 	readonly BACKUP_DIR="${HOME}/data/rss"
+	[[ -z "$ONLINUX" ]] && exit 0
 	printlog "rss:backing up..."
 	arctree "${BACKUP_DIR}/{utcnow}.txt" -- cat "${RSS_FILE}"
 }
