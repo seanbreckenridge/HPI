@@ -12,7 +12,7 @@ directories=(
 	'zsh_history'
 	'rexport'
 	'todotxt'
-	'rss'
+	'newsboat'
 	'firefox'
 	'mpv'
 	'blizzard'
