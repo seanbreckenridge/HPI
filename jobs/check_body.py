@@ -9,7 +9,7 @@ import sys
 
 from datetime import datetime, timedelta, timezone
 
-from my.body_log import weight
+from my.body import weight
 
 last_logged_at = list(weight())[-1].when
 

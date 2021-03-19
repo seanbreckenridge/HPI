@@ -1,6 +1,6 @@
 from my.core import Stats
 
-from ..body_log import prompt
+# TODO: remove this file, move to their individual modules
 from .water import Water, water
 from .calories import food, Food
 
