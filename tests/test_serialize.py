@@ -3,9 +3,10 @@ import json
 from datetime import datetime
 
 from my.zsh import history, Entry
-from my.utils.serialize import dumps
+from my.core.serialize import dumps
 
 from more_itertools import take
+import orjson
 
 
 def test_serialize_succeeds():
@@ -14,7 +15,7 @@ def test_serialize_succeeds():
     item = Entry(dt=dt, command="something", duration=2)
     sitem = dumps(item)  # encode
     decoded = json.loads(sitem)  # then decode back
-    assert decoded["dt"] == int(dt.timestamp())
+    assert decoded["dt"] == orjson.dumps(dt).decode("utf-8").strip('"')
     assert decoded["command"] == "something"
     assert decoded["duration"] == 2
 

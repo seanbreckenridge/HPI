@@ -20,7 +20,7 @@ from ..facebook import AdminAction, UploadedPhoto
 from ..facebook import events as facebook_events
 from ..facebook import config as facebook_config
 from ..games.blizzard import events as blizzard_events
-from ..discord import activity, parse_activity_date
+from ..discord import activity
 from ..discord import config as discord_config
 
 
@@ -86,10 +86,11 @@ def _from_blizzard() -> Iterator[IP]:
 )
 def _from_discord() -> Iterator[IP]:
     for a in activity():
-        if "ip" in a:
+        discord_ip = a.fingerprint.ip
+        if discord_ip is not None:
             # for some reason returns some IPs that are using the private address space??
-            if not ipaddress.ip_address(a["ip"]).is_private:
-                yield IP(dt=parse_activity_date(a["timestamp"]), addr=a["ip"])
+            if not ipaddress.ip_address(discord_ip).is_private:
+                yield IP(dt=a.timestamp, addr=discord_ip)
 
 
 def stats() -> Stats:

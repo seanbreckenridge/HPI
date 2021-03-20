@@ -1,6 +1,6 @@
 from more_itertools import ilen
 
-from my.discord import messages, activity
+from my.discord import messages, activity, Activity
 
 
 def test_discord() -> None:
@@ -9,7 +9,7 @@ def test_discord() -> None:
     # get at least 100 activity events
     i: int = 0
     for event in activity():
-        assert isinstance(event, dict)
+        assert isinstance(event, Activity)
         i += 1
         if i > 100:
             break
