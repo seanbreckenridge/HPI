@@ -32,3 +32,5 @@ pandas
 appdirs
 decorator
 orjson
+cffi
+ijson
