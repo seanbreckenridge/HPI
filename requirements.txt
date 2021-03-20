@@ -22,7 +22,6 @@ pushshift_comment_export
 url_metadata
 rifleman
 gpxpy
-simplejson
 click
 bash_like
 chessdotcom_export
