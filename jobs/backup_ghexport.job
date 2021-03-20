@@ -1,11 +1,13 @@
 #!/bin/bash
-
 # expires at a rate of 300 events or 90 days
 # but I use github prety actively, so backing this up more often
 # this exports things like comments/issues/prs
+
 evry 3 days -ghexport && {
 	wait-for-internet
 	readonly BACKUP_DIR="${HOME}/data/github/ghexport"
+	# exit if not on my linux machine
+	[[ "$(uname -s)" == "Linux" ]] || exit 0
 	printlog "ghexport:Running github export..."
 	arctree -r 3 "${BACKUP_DIR}/{utcnow}.json" -- python3 -m ghexport.export --secrets "${XDG_CONFIG_HOME}/my/my/config/gh_secret_token.py"
 }
