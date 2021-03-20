@@ -1,5 +1,5 @@
 from typing import Iterator
-from tupletally.models import Water
+from tupletally.config import Water  # type: ignore[attr-defined]
 
 # reuse config from my.body
 from ..body import glob_namedtuple_with_config

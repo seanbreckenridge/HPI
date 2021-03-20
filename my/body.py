@@ -26,8 +26,8 @@ class config(user_config):
 
 from typing import Iterator
 from functools import partial
-from tupletally.models import Weight, Shower
 from tupletally.autotui_ext import glob_namedtuple
+from tupletally.config import Weight, Shower  # type: ignore[attr-defined]
 
 glob_namedtuple_with_config = partial(glob_namedtuple, in_dir=config.abs())
 
