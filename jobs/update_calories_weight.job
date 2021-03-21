@@ -9,7 +9,7 @@ evry 1 day -update_calories && {
 	printlog "calories_weight:checking..."
 
 	# get value from HPI json and convert
-	LATEST_WEIGHT_POUNDS_PY="$(jq '.[] | .pounds' <"${HOME}/data/body/weight.json" | tail -n1)"
+	LATEST_WEIGHT_POUNDS_PY="$("$REPOS/HPI/scripts/hpi_query" my.body weight --count 1 | jq -r '.[] | .pounds')"
 	LATEST_WEIGHT_KG_PY="$(printf '%f / 2.2046\n' "$LATEST_WEIGHT_POUNDS_PY" | bc -l)"
 
 	# get values from calories export
