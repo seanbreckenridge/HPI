@@ -9,7 +9,7 @@ import subprocess
 from datetime import datetime, date
 from typing import NamedTuple, Iterator, Optional
 
-from my.core import Res, Json
+from my.core import Res, Json, Stats
 
 calories_path: Optional[str] = shutil.which("calories")
 if calories_path is None:
@@ -69,3 +69,9 @@ def _truncate_iso_date(dstr: str) -> datetime:
         if incl:
             buf += c
     return datetime.fromisoformat(buf)
+
+
+def stats() -> Stats:
+    from my.core import stat
+
+    return {**stat(food)}

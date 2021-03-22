@@ -1,6 +1,7 @@
 from more_itertools import ilen
 
-from my.food import water, food
+from my.calories import food
+from my.water import water
 
 
 def test_water() -> None:
