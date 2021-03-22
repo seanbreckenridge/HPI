@@ -21,8 +21,7 @@ from itertools import chain
 
 from my.core import get_files, Stats
 
-from chessdotcom_export import from_export
-from chessdotcom_export.model import Game
+from chessdotcom_export import from_export, Game
 
 
 def inputs() -> Sequence[Path]:

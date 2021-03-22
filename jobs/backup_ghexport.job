@@ -3,7 +3,7 @@
 # but I use github prety actively, so backing this up more often
 # this exports things like comments/issues/prs
 
-evry 3 days -ghexport && {
+evry 3 days -backup_ghexport && {
 	wait-for-internet
 	readonly BACKUP_DIR="${HOME}/data/github/ghexport"
 	# exit if not on my linux machine
