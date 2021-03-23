@@ -22,7 +22,7 @@ class config(user_config):
     export_path: Paths
 
     # path to current zsh history (i.e. the live file)
-    live_file: Optional[PathIsh] = None
+    live_file: Optional[PathIsh]
 
 
 from pathlib import Path

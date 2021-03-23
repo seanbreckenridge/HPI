@@ -17,9 +17,6 @@ class config(user_config):
     # force individual events for these applications
     force_individual: Optional[List[str]] = None
 
-    # path to current window_watcher history (i.e. the live file)
-    live_file: Optional[PathIsh] = None
-
 
 import csv
 from io import StringIO

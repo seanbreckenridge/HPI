@@ -15,7 +15,7 @@ class config(user_config):
     export_path: Paths
 
     # path to current newsboat rss file
-    live_file: Optional[PathIsh] = None
+    live_file: Optional[PathIsh]
 
 
 from typing import Tuple, Sequence, Iterator, Dict, Set
