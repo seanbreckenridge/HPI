@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# an adaption of https://github.com/seanbreckenridge/calories-scripts
+# to work on my own calories system
+# prompts me with fzf to pick something,
+# to generate a JSON blob which https://github.com/seanbreckenridge/tupletally
+# can save to the current JSON file
+
+main() {
+	local SELECTED JSON_DATA
+	local -a CHOSEN
+	SELECTED="$("$REPOS/HPI/scripts/hpi_query" my.body food | jq -r '.[] | "\(.calories)|\(.food)"' | sort -u |
+		fzf -q "$*" --header="What to add to calories?")" || {
+		echo "Didn't select anything to add to calories..." 1>&2
+		return 1
+	}
+	# split into array
+	readarray -d "|" -t CHOSEN <<<"${SELECTED}"
+	if [[ "${#CHOSEN[@]}" != 2 ]]; then
+		printf "Error splitting '%s' into two elements, food description can't contain the pipe '|' character\n" "$SELECTED" 1>&2
+		return 1
+	fi
+	JSON_DATA="$(jq -n \
+		--arg TIMESTAMP "$(date '+%s')" \
+		--arg CALORIES "${CHOSEN[0]}" \
+		--arg FOODNAME "${CHOSEN[1]/$'\n'/}" \
+		'[{"when":$TIMESTAMP | tonumber, "food": $FOODNAME, "calories": $CALORIES | tonumber}]')" || return $?
+	printf '%s' "$JSON_DATA" | python3 -m tupletally from-json food
+	python3 -m tupletally recent food
+}
+
+main "$@" || exit $?
