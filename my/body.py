@@ -27,7 +27,9 @@ class config(user_config):
 from typing import Iterator
 from functools import partial
 from tupletally.autotui_ext import glob_namedtuple
-from tupletally.config import Weight, Shower  # type: ignore[attr-defined]
+
+# for definitions see https://sean.fish/d/tupletally.py
+from tupletally.config import Weight, Shower, Food, Water  # type: ignore[attr-defined]
 
 glob_namedtuple_with_config = partial(glob_namedtuple, in_dir=config.abs())
 
@@ -40,10 +42,20 @@ def shower() -> Iterator[Shower]:
     yield from glob_namedtuple_with_config(Shower)
 
 
+def water() -> Iterator[Water]:
+    yield from glob_namedtuple_with_config(Water)
+
+
+def food() -> Iterator[Water]:
+    yield from glob_namedtuple_with_config(Food)
+
+
 def stats() -> Stats:
     from my.core import stat
 
     return {
         **stat(shower),
         **stat(weight),
+        **stat(food),
+        **stat(water),
     }
