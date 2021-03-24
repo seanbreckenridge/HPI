@@ -7,6 +7,7 @@ REQUIRES = [
 
 
 from pathlib import Path
+from typing import List
 
 from my.config import discord as user_config  # type: ignore[attr-defined]
 from my.core import PathIsh, dataclass
@@ -15,38 +16,39 @@ from my.core import PathIsh, dataclass
 @dataclass
 class config(user_config):
 
-    # path[s]/glob to the exported JSON data
+    # path to the top level discord export directory
+    # see https://github.com/seanbreckenridge/discord_data for more info
     export_path: PathIsh
 
-    # TODO: replace with inputs()?
+    # property? functools.cached_property?
     @classmethod
-    def latest(cls) -> Path:
-        non_hidden = [
-            p for p in get_files(cls.export_path) if not p.name.startswith(".")
-        ]
-        return sorted(non_hidden, key=lambda p: p.stat().st_ctime)[-1]
+    def _abs_export_path(cls) -> Path:
+        return Path(cls.export_path).expanduser().absolute()
 
 
 from typing import Iterator
-from my.core.common import get_files, LazyLogger, Stats, mcachew
+from my.core.common import LazyLogger, Stats, mcachew
 from my.core.cachew import cache_dir
 
-from discord_data import parse_activity, parse_messages
-from discord_data.model import Message, Activity
+from discord_data import merge_messages, merge_activity, Message, Activity
 
 
 logger = LazyLogger(__name__, level="warning")
 
 
+def _cachew_depends_on() -> List[str]:
+    return list(map(str, config._abs_export_path().iterdir()))
+
+
 # reduces time by half, after cache is created
-@mcachew(depends_on=lambda: config.latest(), cache_path=cache_dir(), logger=logger)
+@mcachew(depends_on=_cachew_depends_on, cache_path=cache_dir(), logger=logger)
 def messages() -> Iterator[Message]:
-    yield from parse_messages(config.latest() / "messages")
+    yield from merge_messages(export_dir=config._abs_export_path())
 
 
-@mcachew(depends_on=lambda: config.latest(), cache_path=cache_dir(), logger=logger)
+@mcachew(depends_on=_cachew_depends_on, cache_path=cache_dir(), logger=logger)
 def activity() -> Iterator[Activity]:
-    yield from parse_activity(config.latest() / "activity", logger=logger)
+    yield from merge_activity(export_dir=config._abs_export_path())
 
 
 def stats() -> Stats:
