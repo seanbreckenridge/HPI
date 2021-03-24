@@ -13,7 +13,15 @@ from my.core.error import Res
 from my.core.common import LazyLogger, mcachew
 from my.core.cachew import cache_dir
 
-from .models import HtmlEvent, HtmlComment, LikedVideo, AppInstall, Location
+from .models import (
+    HtmlEventLinks,
+    HtmlCommentLinks,
+    LikedVideo,
+    AppInstall,
+    Location,
+    HtmlEvent,
+    HtmlComment,
+)
 from .html import read_html_activity, read_html_li
 from ..utils.time import parse_datetime_millis
 
@@ -32,13 +40,18 @@ def simplify_path(p: Path) -> str:
 logger = LazyLogger(__name__, level="warning")
 
 
-Event = Union[
-    HtmlEvent,
-    HtmlComment,
+RawEvent = Union[
+    HtmlEventLinks,
+    HtmlCommentLinks,
     LikedVideo,
     AppInstall,
     Location,
 ]
+
+
+RawResults = Iterator[Res[RawEvent]]
+
+Event = Union[HtmlEvent, HtmlComment, LikedVideo, AppInstall, Location]
 
 Results = Iterator[Res[Event]]
 
@@ -46,7 +59,7 @@ Results = Iterator[Res[Event]]
 # this currently only parses one takeout
 # will probably be extended to merge multiple when I
 # actually have multiple google takeouts
-def parse_takeout(single_takeout_dir: Path) -> Results:
+def parse_takeout(single_takeout_dir: Path) -> RawResults:
 
     # NOTE
     # this is super specific, and it doesnt handle all cases.
@@ -181,7 +194,7 @@ def _parse_likes(p: Path) -> Iterator[LikedVideo]:
         )
 
 
-def _parse_html_chat_li(p: Path) -> Iterator[Res[HtmlComment]]:
+def _parse_html_chat_li(p: Path) -> Iterator[Res[HtmlCommentLinks]]:
     yield from read_html_li(p)
 
 
@@ -190,5 +203,5 @@ def _parse_html_chat_li(p: Path) -> Iterator[Res[HtmlComment]]:
     force_file=True,
     logger=logger,
 )
-def _parse_html_activity(p: Path) -> Iterator[Res[HtmlEvent]]:
+def _parse_html_activity(p: Path) -> Iterator[Res[HtmlEventLinks]]:
     yield from read_html_activity(p)

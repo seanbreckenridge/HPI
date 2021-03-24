@@ -6,7 +6,7 @@ from typing import Optional, List
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import window_watcher as user_config  # type: ignore[attr-defined]
-from my.core import PathIsh, Paths, dataclass
+from my.core import Paths, dataclass
 
 
 @dataclass
@@ -27,22 +27,12 @@ from itertools import chain
 
 from my.core import get_files, warn_if_empty, Stats
 from my.core.common import listify
-from my.core.warnings import low
 from .utils.time import parse_datetime_sec
 
 
 @listify
 def inputs() -> Sequence[Path]:  # type: ignore[misc]
-    """
-    Returns all inputs, including live_file if provided and backups
-    """
     yield from get_files(config.export_path)
-    if config.live_file is not None:
-        p: Path = Path(config.live_file).expanduser().absolute()
-        if p.exists():
-            yield p
-        else:
-            low(f"'live_file' provided {config.live_file} but that file doesn't exist.")
 
 
 # represents one history entry

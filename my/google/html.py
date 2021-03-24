@@ -15,7 +15,7 @@ import lxml.html as lh  # type: ignore[import]
 import pytz
 from more_itertools import sliced
 
-from .models import HtmlEvent, HtmlComment
+from .models import HtmlEventLinks, HtmlCommentLinks
 
 from my.core import Res
 from my.core.time import abbr_to_timezone
@@ -69,7 +69,7 @@ def get_links(el: lh.HtmlElement) -> List[str]:
     return [unquote(a_el[2]) for a_el in chain(*map(lambda e: e.iterlinks(), el))]
 
 
-def parse_div(div: lh.HtmlElement) -> Res[HtmlEvent]:
+def parse_div(div: lh.HtmlElement) -> Res[HtmlEventLinks]:
     title = div.cssselect("p.mdl-typography--title")[0].text_content()
     # remove text-right items, they're blank and for spaces
     content_cells: List[lh.HtmlElement] = list(
@@ -114,7 +114,7 @@ def parse_div(div: lh.HtmlElement) -> Res[HtmlEvent]:
     # iterate all links
     content_links: List[str] = list(chain(*map(get_links, content_cells)))
 
-    return HtmlEvent(
+    return HtmlEventLinks(
         service=title,
         desc=content_desc,
         product_name=product_name,
@@ -123,7 +123,7 @@ def parse_div(div: lh.HtmlElement) -> Res[HtmlEvent]:
     )
 
 
-def read_html_activity(p: Path) -> Iterator[Res[HtmlEvent]]:
+def read_html_activity(p: Path) -> Iterator[Res[HtmlEventLinks]]:
     # this is gonna be cached behind cachew anyways
     doc = lh.fromstring(p.read_text())
     for outer_div in doc.cssselect("div.outer-cell"):
@@ -150,7 +150,7 @@ def _extract_date(comment: str) -> Res[datetime]:
         return RuntimeError("Couldn't parse date from {}".format(comment))
 
 
-def read_html_li(p: Path) -> Iterator[Res[HtmlComment]]:
+def read_html_li(p: Path) -> Iterator[Res[HtmlCommentLinks]]:
     doc = lh.fromstring(p.read_text())
     for li in doc.cssselect("li"):
         description: str = itertext(li)
@@ -159,6 +159,6 @@ def read_html_li(p: Path) -> Iterator[Res[HtmlComment]]:
         if isinstance(parsed_date, Exception):
             yield parsed_date
         else:
-            yield HtmlComment(
+            yield HtmlCommentLinks(
                 desc=description, links=json.dumps(get_links(li)), dt=parsed_date
             )

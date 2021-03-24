@@ -2,7 +2,6 @@
 # print the most common netlocs from my browsing history
 # ./history_common 500 to print the top 500
 
-from typing import List
 from collections import Counter
 from urllib.parse import urlparse
 

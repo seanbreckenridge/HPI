@@ -33,17 +33,19 @@ keep all the takeouts (they're about 195MB each)
 from my.core import Stats
 
 from .paths import get_last_takeout
-from .takeout_parser import Results, parse_takeout
+from .takeout_parser import Results, RawResults, parse_takeout
+
+
+def events() -> Results:
+    for e in raw_events():
+        if hasattr(e, "parse_links"):
+            yield e.parse_links()  # type: ignore[union-attr]
+        else:
+            yield e  # type: ignore[misc]
 
 
 # temporary basic entrypoint
-def events() -> Results:
-    # this seems to break cachew...?
-    # for e in parse_takeout(get_last_takeout()):
-    # fix the links attribute on JsonLinks events
-    # if isinstance(e, JsonLinks):
-    #    e.parse_json()
-    #    yield e
+def raw_events() -> RawResults:
     yield from parse_takeout(get_last_takeout())
 
 

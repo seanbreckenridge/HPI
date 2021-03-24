@@ -1,43 +1,50 @@
 import json
 from datetime import datetime
-from typing import Any, NamedTuple, Optional
-from dataclasses import dataclass
+from typing import NamedTuple, Optional, List
 
 
-# to make this cachew compliant
-def _parse_json_attr(el, attr: str):
-    json_str: str = getattr(el, attr)
-    json_obj: Any = json.loads(json_str)
-    setattr(el, attr, json_obj)
+class HtmlEvent(NamedTuple):
+    service: str
+    desc: str
+    dt: datetime
+    product_name: Optional[str]
+    links: List[str]
 
 
-# shared function between Html___ classes that
-# can have one or more links
-# is converted to json string so that it can be
-# cached using cachew
-class JsonLinks:
-
-    # manually called after imported into repl, to convert back to the python objects
-    def parse_json(self):
-        _parse_json_attr(self, "links")
+class HtmlComment(NamedTuple):
+    desc: str
+    dt: datetime
+    links: List[str]
 
 
-@dataclass
-class HtmlEvent(JsonLinks):
+class HtmlEventLinks(NamedTuple):
     service: str
     desc: str
     dt: datetime
     product_name: Optional[str]
     links: str
-    # links: List[str]
+
+    def parse_links(self) -> HtmlEvent:
+        return HtmlEvent(
+            service=self.service,
+            desc=self.desc,
+            dt=self.dt,
+            product_name=self.product_name,
+            links=json.loads(self.links),
+        )
 
 
-@dataclass
-class HtmlComment(JsonLinks):
+class HtmlCommentLinks(NamedTuple):
     desc: str
     dt: datetime
     links: str
-    # links: List[str]
+
+    def parse_links(self) -> HtmlComment:
+        return HtmlComment(
+            desc=self.desc,
+            dt=self.dt,
+            links=json.loads(self.links),
+        )
 
 
 # not sure about this namedtuple/dataclass structure
