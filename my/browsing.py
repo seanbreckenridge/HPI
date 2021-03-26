@@ -2,6 +2,8 @@
 Parses Firefox History using http://github.com/seanbreckenridge/ffexport
 """
 
+REQUIRES = ["git+http://github.com/seanbreckenridge/ffexport"]
+
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import firefox as user_config  # type: ignore[attr-defined]
 
@@ -19,8 +21,8 @@ import tempfile
 from pathlib import Path
 from typing import Iterator, Sequence, Optional
 
-from my.core import Stats, get_files
-from my.core.common import listify
+from my.core import Stats, get_files, LazyLogger
+from my.core.common import mcachew
 
 
 # monkey patch ffexport logs
@@ -33,17 +35,21 @@ if "HPI_LOGS" in os.environ:
         name="ffexport", level=mklevel(os.environ["HPI_LOGS"])
     )
 
+# not the ffexport logger, used for cachew info
+logger = LazyLogger(__name__, level="warning")
+
 
 from ffexport import read_and_merge, Visit
+from ffexport.merge_db import merge_visits, read_visits
 from ffexport.save_hist import backup_history
 
 
-@listify
-def inputs(tmp_dir: Optional[str] = None) -> Sequence[Path]:  # type: ignore[misc]
-    """
-    Returns all inputs, including old sqlite backups (from config.export_path) and the current firefox history
-    """
-    yield from get_files(config.export_path)
+def backup_inputs() -> Sequence[Path]:
+    """Returns all backed up ffexport databases"""
+    return list(get_files(config.export_path))
+
+
+def _copy_live_database(tmp_dir: Optional[str] = None) -> Path:
     # get the live file from ~/.mozilla/.... (see ffexport.save_hist)
     # warning: could run out of space on /tmp if your computer is up *forever*, or youre running pytest a bunch
     if tmp_dir is None:
@@ -51,23 +57,24 @@ def inputs(tmp_dir: Optional[str] = None) -> Sequence[Path]:  # type: ignore[mis
     # I only use the one profile, so profile defaults to *
     backup_history(browser="firefox", to=Path(tmp_dir))
     live_copy: Sequence[Path] = get_files(tmp_dir, glob="*.sqlite")
-    assert len(live_copy) >= 1, f"Couldn't find live history backup in {tmp_dir}"
-    yield sorted(live_copy, key=lambda p: p.stat().st_mtime)[-1]
+    assert len(live_copy) == 1, f"Couldn't find live history backup in {tmp_dir}"
+    return live_copy[0]
 
 
 Results = Iterator[Visit]
 
 
-def history(from_paths=inputs, tmp_dir: Optional[str] = None) -> Results:
-    """
-    used like:
-    import my.browsing
-    visits = list(my.browsing.history())
-    """
-    if hash(from_paths) == hash(inputs):
-        yield from read_and_merge(*from_paths(tmp_dir=tmp_dir))
-    else:
-        yield from read_and_merge(*from_paths())
+# don't put this behind cachew, since the history database
+# is constantly copied when this is called, so the path is different/
+# there may be new visits from the active firefox browser
+def history(tmp_dir: Optional[str] = None) -> Results:
+    live_visits: Results = read_visits(_copy_live_database(tmp_dir))
+    yield from merge_visits(_history_from_backups(), live_visits)
+
+
+@mcachew(depends_on=lambda: list(sorted(map(str, backup_inputs()))), logger=logger)
+def _history_from_backups() -> Results:
+    yield from read_and_merge(*backup_inputs())
 
 
 def stats() -> Stats:
