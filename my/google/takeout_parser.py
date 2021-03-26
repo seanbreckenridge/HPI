@@ -23,6 +23,7 @@ from .models import (
     HtmlComment,
 )
 from .html import read_html_activity, read_html_li
+from .json import read_youtube_json_history
 from ..utils.time import parse_datetime_millis
 
 
@@ -93,6 +94,7 @@ def parse_takeout(single_takeout_dir: Path) -> RawResults:
         "Google Play Store/Purchase History": None,
         "Google Play Store/Subscriptions": None,
         "Google Play Store/Redemption History": None,
+        "Google Play Store/Promotion History": None,
         "My Activity/Takeout/MyActivity.html": None,
         "YouTube and YouTube Music/subscriptions": None,
         "YouTube and YouTube Music/videos": None,
@@ -100,6 +102,8 @@ def parse_takeout(single_takeout_dir: Path) -> RawResults:
         "Location History/Location History": _parse_location_history,
         "YouTube and YouTube Music/history/search-history.html": _parse_html_activity,
         "YouTube and YouTube Music/history/watch-history.html": _parse_html_activity,
+        "YouTube and YouTube Music/history/search-history.json": _parse_json_youtube_history,
+        "YouTube and YouTube Music/history/watch-history.json": _parse_json_youtube_history,
         "YouTube and YouTube Music/my-comments": _parse_html_chat_li,
         "YouTube and YouTube Music/my-live-chat-messages": _parse_html_chat_li,
         "YouTube and YouTube Music/playlists/likes.json": _parse_likes,
@@ -119,6 +123,8 @@ def parse_takeout(single_takeout_dir: Path) -> RawResults:
         "My Activity/Google Play Music": _parse_html_activity,
         "My Activity/Google Cloud": _parse_html_activity,
         "My Activity/Google Play Store": _parse_html_activity,
+        "My Activity/Google Translate": _parse_html_activity,
+        "My Activity/Podcasts": _parse_html_activity,
         "My Activity/Help": _parse_html_activity,
         "My Activity/Image Search": _parse_html_activity,
         "My Activity/Maps": _parse_html_activity,
@@ -204,3 +210,14 @@ def _parse_html_chat_li(p: Path) -> Iterator[Res[HtmlCommentLinks]]:
 )
 def _parse_html_activity(p: Path) -> Iterator[Res[HtmlEventLinks]]:
     yield from read_html_activity(p)
+
+
+@mcachew(
+    cache_path=lambda p: str(
+        cache_dir() / "_parse_json_youtube_history" / simplify_path(p)
+    ),
+    force_file=True,
+    logger=logger,
+)
+def _parse_json_youtube_history(p: Path) -> Iterator[HtmlEventLinks]:
+    yield from read_youtube_json_history(p)

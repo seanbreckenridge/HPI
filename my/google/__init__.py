@@ -1,52 +1,53 @@
 #!/usr/bin/env python3
 
-"""
-my comment:
-Need to develop a strategy for removing intermediate takeout
-exports?
-
-since a lot of the data is repeated, we don't need *all*
-the takeouts, just need enough to merge data from old
-ones and new ones, without taking up tons of space
-on disk
-
-perhaps keep the 3 most recent takeouts, the first takeout
-and then intermediate takeouts going back at 6 month intervals
-
-oldest takeout
-2 takeouts from 2019
-2 takeouts from 2020
-2 takeouts from 2021
-....
-....
-3 most recent takeouts
-
-*maaybe* this isn't needed at all, and I should just
-keep all the takeouts (they're about 195MB each)
-"""
-
 # karlicoss comment:
 # TODO might be a good idea to merge across multiple takeouts...
 # perhaps even a special takeout module that deals with all of this automatically?
 # e.g. accumulate, filter and maybe report useless takeouts?
 
-from my.core import Stats
+from itertools import chain
+from typing import Set
 
-from .paths import get_last_takeout
+from my.core.common import Stats, LazyLogger, mcachew
+from my.core.cachew import cache_dir
+
+from .paths import takeout_input_directories
 from .takeout_parser import Results, RawResults, parse_takeout
+
+logger = LazyLogger(__name__, level="warning")
 
 
 def events() -> Results:
-    for e in raw_events():
-        if hasattr(e, "parse_links"):
-            yield e.parse_links()  # type: ignore[union-attr]
+    # parse the list of links (serialized to JSON so cachew can store it)
+    # back into a list
+    for event in raw_events():
+        if hasattr(event, "parse_links"):
+            yield event.parse_links()  # type: ignore[union-attr]
         else:
-            yield e  # type: ignore[misc]
+            yield event  # type: ignore[misc]
 
 
-# temporary basic entrypoint
+@mcachew(
+    cache_path=lambda: str(cache_dir() / "_merged_google_events"),
+    depends_on=lambda: list(sorted(takeout_input_directories())),
+    force_file=True,
+    logger=logger,
+)
 def raw_events() -> RawResults:
-    yield from parse_takeout(get_last_takeout())
+    yield from merge_events(*map(parse_takeout, takeout_input_directories()))
+
+
+def merge_events(*sources: RawResults) -> RawResults:
+    emitted: Set[int] = set()
+    for event in chain(*sources):
+        if isinstance(event, Exception):
+            yield event
+            continue
+        key: int = int(event.dt.timestamp())
+        if key in emitted:
+            continue
+        emitted.add(key)
+        yield event
 
 
 def stats() -> Stats:

@@ -26,24 +26,15 @@ from my.core.cfg import make_config
 config = make_config(google)
 
 from pathlib import Path
-from typing import Iterable, List
-
-from more_itertools import last
+from typing import Iterator, List
 
 from my.core import get_files
 from my.core.warnings import low
-from my.core.kompress import kexists
 
 
-def get_takeouts(*, path: Optional[str] = None) -> Iterable[Path]:
+def takeout_input_directories() -> Iterator[Path]:
     check_for_new_takeouts()
-    for takeout in get_files(config.takeout_path):
-        if path is None or kexists(takeout, path):
-            yield takeout
-
-
-def get_last_takeout(*, path: Optional[str] = None) -> Path:
-    return last(get_takeouts(path=path))
+    yield from get_files(config.takeout_path)
 
 
 # if there are any new takeouts, warn me

@@ -17,6 +17,7 @@ class HtmlComment(NamedTuple):
     links: List[str]
 
 
+# so that cachew can serialize the links (a list serialized to JSON) into cachew rows
 class HtmlEventLinks(NamedTuple):
     service: str
     desc: str

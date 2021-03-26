@@ -11,7 +11,7 @@ from .models import Location
 # sources
 from .ip import ips
 from .gpslogger import history as gpslogger_history
-from ..google import events as google_events, get_last_takeout
+from ..google import events as google_events, takeout_input_directories
 from ..google.models import Location as GoogleLocation
 from ..apple import events as apple_events
 from ..apple import Location as AppleLocation
@@ -37,7 +37,7 @@ def locations() -> Iterator[Location]:
 
 # get location data from google exports
 @mcachew(
-    depends_on=lambda: str(get_last_takeout()),
+    depends_on=lambda: list(sorted(takeout_input_directories())),
     logger=logger,
 )
 def _google_locations() -> Iterator[Location]:
