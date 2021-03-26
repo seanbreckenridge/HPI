@@ -28,7 +28,6 @@ class config(user_config):
 
 from typing import Iterator
 from my.core.common import LazyLogger, Stats, mcachew
-from my.core.cachew import cache_dir
 
 from discord_data import merge_messages, merge_activity, Message, Activity
 
@@ -41,12 +40,12 @@ def _cachew_depends_on() -> List[str]:
 
 
 # reduces time by half, after cache is created
-@mcachew(depends_on=_cachew_depends_on, cache_path=cache_dir(), logger=logger)
+@mcachew(depends_on=_cachew_depends_on, logger=logger)
 def messages() -> Iterator[Message]:
     yield from merge_messages(export_dir=config._abs_export_path())
 
 
-@mcachew(depends_on=_cachew_depends_on, cache_path=cache_dir(), logger=logger)
+@mcachew(depends_on=_cachew_depends_on, logger=logger)
 def activity() -> Iterator[Activity]:
     yield from merge_activity(export_dir=config._abs_export_path())
 

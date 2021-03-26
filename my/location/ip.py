@@ -12,7 +12,6 @@ import ipgeocache
 
 from my.core import Json
 from my.core.common import Stats, mcachew, LazyLogger
-from my.core.cachew import cache_dir
 
 from .models import Location
 
@@ -62,7 +61,6 @@ def ips() -> Iterator[IP]:
 
 
 @mcachew(
-    cache_path=cache_dir(),
     depends_on=lambda: list(map(str, Path(facebook_config.gdpr_dir).rglob("*"))),
     logger=logger,
 )
@@ -73,14 +71,14 @@ def _from_facebook() -> Iterator[IP]:
                 yield IP(dt=e.dt, addr=e.ip)
 
 
-@mcachew(cache_path=cache_dir(), logger=logger)
+@mcachew(logger=logger)
 def _from_blizzard() -> Iterator[IP]:
     for e in blizzard_events():
         if e.event_tag == "Activity History":
             yield IP(dt=e.dt, addr=e.metadata[-2])
 
 
-@mcachew(cache_path=cache_dir(), depends_on=_cachew_depends_on, logger=logger)
+@mcachew(depends_on=_cachew_depends_on, logger=logger)
 def _from_discord() -> Iterator[IP]:
     for a in activity():
         if a.fingerprint.ip is not None:

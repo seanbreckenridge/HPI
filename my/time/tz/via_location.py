@@ -18,7 +18,6 @@ from more_itertools import seekable
 import pytz
 
 from ...core.common import LazyLogger, mcachew, tzdatetime
-from ...core.cachew import cache_dir
 
 # sources
 from ...location.ip import ips
@@ -94,7 +93,7 @@ def most_common(l):
 # its a bit complicated as this is pulling from multiple data sources
 # maybe create a utility func in my.location.all that returns a list of
 # all source filepaths?
-@mcachew(cache_path=cache_dir())
+@mcachew()
 def _iter_tzs() -> Iterator[DayWithZone]:
     for d, gr in groupby(_iter_local_dates(), key=lambda p: p.day):
         logger.info("processed %s", d)

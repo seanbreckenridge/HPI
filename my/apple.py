@@ -24,7 +24,6 @@ from more_itertools import sliced, first
 
 from my.core import Stats, Res, LazyLogger
 from my.core.common import mcachew
-from my.core.cachew import cache_dir
 
 
 logger = LazyLogger(__name__, level="warning")
@@ -73,7 +72,6 @@ Results = Iterator[Res[Event]]
 
 
 @mcachew(
-    cache_path=cache_dir(),
     depends_on=lambda: list(map(str, Path(config.gdpr_dir).rglob("*"))),
     logger=logger,
 )

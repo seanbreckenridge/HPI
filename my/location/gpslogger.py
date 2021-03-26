@@ -21,7 +21,6 @@ from lxml import etree  # type: ignore[import]
 
 from my.core import Stats, LazyLogger, Res
 from my.core.common import get_files, warn_if_empty, mcachew
-from my.core.cachew import cache_dir
 from my.core.warnings import high
 
 
@@ -35,7 +34,6 @@ class Location(NamedTuple):
 
 
 @mcachew(
-    cache_path=cache_dir(),
     depends_on=lambda: list(
         map(lambda p: p.lstat().st_mtime, get_files(config.export_path))
     ),

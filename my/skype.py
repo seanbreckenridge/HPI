@@ -12,7 +12,6 @@ from my.config import skype as user_config  # type: ignore[attr-defined]
 
 from my.core import Paths, Stats, dataclass
 from my.core.common import mcachew
-from my.core.cachew import cache_dir
 
 
 @dataclass
@@ -43,7 +42,6 @@ def inputs() -> Sequence[Path]:
 
 
 @mcachew(
-    cache_path=cache_dir(),
     depends_on=lambda: list(map(str, inputs())),
     logger=logger,
 )

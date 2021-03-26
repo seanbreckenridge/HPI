@@ -6,7 +6,6 @@ from typing import Iterator
 
 from my.core import Stats, LazyLogger
 from my.core.common import mcachew
-from my.core.cachew import cache_dir
 from .models import Location
 
 # sources
@@ -38,7 +37,6 @@ def locations() -> Iterator[Location]:
 
 # get location data from google exports
 @mcachew(
-    cache_path=cache_dir(),
     depends_on=lambda: str(get_last_takeout()),
     logger=logger,
 )
