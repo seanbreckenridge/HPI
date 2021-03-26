@@ -24,7 +24,7 @@ main() {
 		--arg CALORIES "${CHOSEN[0]}" \
 		--arg FOODNAME "${CHOSEN[1]/$'\n'/}" \
 		'[{"when":$TIMESTAMP | tonumber, "food": $FOODNAME, "calories": $CALORIES | tonumber}]')" || return $?
-	printf '%s' "$JSON_DATA" | python3 -m tupletally from-json food
+	python3 -m tupletally from-json food <<<"${JSON_DATA}"
 	python3 -m tupletally recent food
 }
 
