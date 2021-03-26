@@ -20,8 +20,7 @@ from ..facebook import AdminAction, UploadedPhoto
 from ..facebook import events as facebook_events
 from ..facebook import config as facebook_config
 from ..games.blizzard import events as blizzard_events
-from ..discord import activity
-from ..discord import config as discord_config
+from ..discord import activity, _cachew_depends_on
 
 
 logger = LazyLogger(__name__, level="warning")
@@ -81,16 +80,13 @@ def _from_blizzard() -> Iterator[IP]:
             yield IP(dt=e.dt, addr=e.metadata[-2])
 
 
-@mcachew(
-    cache_path=cache_dir(), depends_on=lambda: discord_config.latest(), logger=logger
-)
+@mcachew(cache_path=cache_dir(), depends_on=_cachew_depends_on, logger=logger)
 def _from_discord() -> Iterator[IP]:
     for a in activity():
-        discord_ip = a.fingerprint.ip
-        if discord_ip is not None:
+        if a.fingerprint.ip is not None:
             # for some reason returns some IPs that are using the private address space??
-            if not ipaddress.ip_address(discord_ip).is_private:
-                yield IP(dt=a.timestamp, addr=discord_ip)
+            if not ipaddress.ip_address(a.fingerprint.ip).is_private:
+                yield IP(dt=a.timestamp, addr=a.fingerprint.ip)
 
 
 def stats() -> Stats:
