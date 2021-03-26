@@ -71,12 +71,10 @@ def parse_takeout(single_takeout_dir: Path) -> RawResults:
     # and parses it into whatever events you want.
 
     # I select:
-    # Contacts
-    # Google Photos
     # Google Play Store
-    # Youtube and Youtube Music (but deseleting music-library-songs, music-uploads and videos options)
     # Location History
     # My Activity
+    # Youtube and Youtube Music (but deseleting music-library-songs, music-uploads and videos options)
     #
     # Have to manually go to takeout.google.com once per year and select that info, and then it
     # puts the zipped file into google drive at 2 months intervals, 6 times
@@ -85,7 +83,7 @@ def parse_takeout(single_takeout_dir: Path) -> RawResults:
     # and then unzipped into my ~/data directory (by HPI/scripts/unzip_google_takeout)
 
     handler_map = {
-        "Google Photos": None,  # implemented in photos.py
+        "Google Photos": None,  # some of my old takeouts have this, dont use it anymore
         "Google Play Store/Devices": None,  # not that interesting
         "archive_browser.html": None,  # description of takeout, not useful
         "Google Play Store/Installs": _parse_app_installs,
@@ -96,7 +94,6 @@ def parse_takeout(single_takeout_dir: Path) -> RawResults:
         "My Activity/Takeout/MyActivity.html": None,
         "YouTube and YouTube Music/subscriptions": None,
         "YouTube and YouTube Music/videos": None,
-        "Contacts": None,  # TODO: implement, need to parse vcf files
         "Location History/Semantic Location History": None,  # not that much data here. maybe parse it?
         "Location History/Location History": _parse_location_history,
         "YouTube and YouTube Music/history/search-history": _parse_html_activity,
