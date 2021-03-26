@@ -74,7 +74,9 @@ def parse_takeout(single_takeout_dir: Path) -> RawResults:
     # Google Play Store
     # Location History
     # My Activity
-    # Youtube and Youtube Music (but deseleting music-library-songs, music-uploads and videos options)
+    # Youtube and Youtube Music
+    #   - go to options and select JSON instead of HTML
+    #   - deselect music-library-songs, music-uploads and videos options)
     #
     # Have to manually go to takeout.google.com once per year and select that info, and then it
     # puts the zipped file into google drive at 2 months intervals, 6 times
@@ -96,8 +98,8 @@ def parse_takeout(single_takeout_dir: Path) -> RawResults:
         "YouTube and YouTube Music/videos": None,
         "Location History/Semantic Location History": None,  # not that much data here. maybe parse it?
         "Location History/Location History": _parse_location_history,
-        "YouTube and YouTube Music/history/search-history": _parse_html_activity,
-        "YouTube and YouTube Music/history/watch-history": _parse_html_activity,
+        "YouTube and YouTube Music/history/search-history.html": _parse_html_activity,
+        "YouTube and YouTube Music/history/watch-history.html": _parse_html_activity,
         "YouTube and YouTube Music/my-comments": _parse_html_chat_li,
         "YouTube and YouTube Music/my-live-chat-messages": _parse_html_chat_li,
         "YouTube and YouTube Music/playlists/likes.json": _parse_likes,
