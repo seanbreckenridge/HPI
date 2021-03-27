@@ -32,5 +32,4 @@ pandas
 appdirs
 decorator
 orjson
-cffi
-ijson
+traktexport

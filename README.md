@@ -36,6 +36,7 @@ This is built on top of and uses lots of the machinery from [`karlicoss/HPI`](ht
 - `my.window_watcher`, to parse active window events (what application I'm using/what the window title is) using [`window_watcher`](https://github.com/seanbreckenridge/aw-watcher-window)
 - `my.location`, merges data from [`gpslogger`](https://github.com/mendhak/gpslogger), `apple`, `google`, `discord`, `games.blizzard`, and `facebook` to provide location data (goes back ~10 years)
 - `my.games.chess`, to track my [chess.com](https://www.chess.com) games, using [`chessdotcom_export`](https://github.com/seanbreckenridge/chessdotcom_export)
+- `my.trakt`, providing me a history/my ratings for Movies/TV Show (episodes) using [`traktexport`](https://github.com/seanbreckenridge/traktexport)
 
 ### 'Historical' Modules
 
@@ -123,7 +124,13 @@ Song I've listened to most?
 '/home/sean/Music/Toby Fox/Toby Fox - UNDERTALE Soundtrack (2015) [V0]/085 - Fallen Down (Reprise).mp3'
 ```
 
----
+Movie I've watched most?
+
+```python
+>>> import my.trakt, from collections import Counter
+>>> Counter(e.media_data.title for e in my.trakt.history()).most_common(1)
+[('Up', 92)]  # (the pixar movie)
+```
 
 ### Other Changes
 
@@ -163,7 +170,6 @@ $ ./scripts/hpi_query my.body water --days 1 | jq '.[] | .glasses' | datamash su
 
 create 'export modules' which keep these up to date:
 
-- [ ] backup trakt? (have API access)
 - [ ] backup MAL (ugh)
 
 Need to do more research/figure out

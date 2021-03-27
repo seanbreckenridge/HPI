@@ -29,6 +29,7 @@ directories=(
 	'discord'
 	'league_of_legends'
 	'chessdotcom'
+	'trakt'
 )
 
 for dir in "${directories[@]}"; do
