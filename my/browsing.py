@@ -74,7 +74,8 @@ def history(tmp_dir: Optional[str] = None) -> Results:
 
 @mcachew(depends_on=lambda: list(sorted(map(str, backup_inputs()))), logger=logger)
 def _history_from_backups() -> Results:
-    yield from read_and_merge(*backup_inputs())
+    # not sure how to type this properly?
+    yield from read_and_merge(*backup_inputs())  # type: ignore[arg-type]
 
 
 def stats() -> Stats:
