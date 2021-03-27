@@ -48,7 +48,8 @@ def _read_trakt_export(p: Path) -> D.TraktExport:
 
 
 def profile_stats() -> Dict[str, Any]:
-    return _read_trakt_export(_latest_trakt_dump()).stats
+    # read the 'stats' key directly from the JSON file
+    return D._read_unparsed(_latest_trakt_dump())["stats"]
 
 
 @mcachew(depends_on=lambda: _latest_trakt_dump(), logger=logger)
