@@ -19,21 +19,22 @@ from datetime import datetime
 from typing import Iterator, Sequence, Set
 from itertools import chain
 
-from my.core import get_files, Stats
+from my.core import get_files, Stats, LazyLogger
+from my.core.common import mcachew
 
 from chessdotcom_export import from_export, Game
 
+logger = LazyLogger(__name__, level="warning")
+
 
 def inputs() -> Sequence[Path]:
-    """
-    Get the exported chess.com dumps
-    """
     return get_files(config.export_path)
 
 
 Results = Iterator[Game]
 
 
+@mcachew(depends_on=lambda: list(sorted(inputs())), logger=logger)
 def history(from_paths=inputs) -> Results:
     yield from _merge_histories(chain(*map(from_export, from_paths())))
 

@@ -49,8 +49,7 @@ def history(from_paths=inputs) -> Results:
 
 
 def _parse_file(post_file: Path) -> Results:
-    items = json.loads(post_file.read_text())
-    for p in items:
+    for p in json.loads(post_file.read_text()):
         yield Post(
             dt=parse_datetime_sec(p["date"]),
             post_title=p["post_title"],

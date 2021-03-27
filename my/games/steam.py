@@ -106,7 +106,7 @@ def _read_parsed_json(p: Path) -> Results:
                 achievements=list(map(ach_lambda, game["achievements"])),
             )
         except TypeError as te:
-            # error createing datetime?
+            # error creating datetime?
             yield te
 
 
