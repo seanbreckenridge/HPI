@@ -17,37 +17,6 @@ class HtmlComment(NamedTuple):
     links: List[str]
 
 
-# so that cachew can serialize the links (a list serialized to JSON) into cachew rows
-class HtmlEventLinks(NamedTuple):
-    service: str
-    desc: str
-    dt: datetime
-    product_name: Optional[str]
-    links: str
-
-    def parse_links(self) -> HtmlEvent:
-        return HtmlEvent(
-            service=self.service,
-            desc=self.desc,
-            dt=self.dt,
-            product_name=self.product_name,
-            links=json.loads(self.links),
-        )
-
-
-class HtmlCommentLinks(NamedTuple):
-    desc: str
-    dt: datetime
-    links: str
-
-    def parse_links(self) -> HtmlComment:
-        return HtmlComment(
-            desc=self.desc,
-            dt=self.dt,
-            links=json.loads(self.links),
-        )
-
-
 # not sure about this namedtuple/dataclass structure
 # makes it nicer when Im trying to extract a particular
 # item, but harder to work with on a broad scale

@@ -12,19 +12,9 @@ from my.core.common import Stats, LazyLogger, mcachew
 from my.core.cachew import cache_dir
 
 from .paths import takeout_input_directories
-from .takeout_parser import Results, RawResults, parse_takeout
+from .takeout_parser import Results, parse_takeout
 
 logger = LazyLogger(__name__, level="warning")
-
-
-def events() -> Results:
-    # parse the list of links (serialized to JSON so cachew can store it)
-    # back into a list
-    for event in raw_events():
-        if hasattr(event, "parse_links"):
-            yield event.parse_links()  # type: ignore[union-attr]
-        else:
-            yield event  # type: ignore[misc]
 
 
 @mcachew(
@@ -33,11 +23,11 @@ def events() -> Results:
     force_file=True,
     logger=logger,
 )
-def raw_events() -> RawResults:
+def events() -> Results:
     yield from merge_events(*map(parse_takeout, takeout_input_directories()))
 
 
-def merge_events(*sources: RawResults) -> RawResults:
+def merge_events(*sources: Results) -> Results:
     emitted: Set[int] = set()
     for event in chain(*sources):
         if isinstance(event, Exception):

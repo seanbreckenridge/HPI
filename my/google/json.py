@@ -3,21 +3,21 @@ from pathlib import Path
 from datetime import datetime, timezone
 from typing import Iterator
 
-from .models import HtmlEventLinks
+from .models import HtmlEvent
 
 
 # doesnt have extra links like 'My Activity', doesn't need to have 'links'
-def read_youtube_json_history(p: Path) -> Iterator[HtmlEventLinks]:
+def read_youtube_json_history(p: Path) -> Iterator[HtmlEvent]:
     for blob in json.loads(p.read_text()):
         links = []
         if "titleUrl" in blob:
             links.append(blob["titleUrl"])
-        yield HtmlEventLinks(
+        yield HtmlEvent(
             service="Youtube",
             product_name="Youtube",
             desc=blob["title"],
             dt=_parse_utc_date(blob["time"]),
-            links=json.dumps(links),
+            links=links,
         )
 
 
