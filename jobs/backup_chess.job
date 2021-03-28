@@ -6,6 +6,6 @@ evry 1 week -backup_chess && {
 	readonly BACKUP_DIR="${HOME}/data/chessdotcom"
 	# exit if not on my linux machine
 	[[ "$(uname -s)" == "Linux" ]] || exit 0
-	printlog "chessdotcom:Running export"
+	printlog "chessdotcom:Running export..."
 	arctee -r 3 "${BACKUP_DIR}/{utcnow}.json" -- python3 -m chessdotcom_export export seanbreckenridge
 }
