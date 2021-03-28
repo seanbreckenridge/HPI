@@ -43,11 +43,16 @@ def _albums_cached() -> Iterator[Album]:
     return read_dump(_current_albums_export_path())
 
 
-# TODO: add item for things I've actually listened to/other helpers?
+@mcachew(depends_on=_cachew_depends_on, logger=logger)
+def history() -> Iterator[Album]:
+    """Only return items I've listened to, where the score is not null"""
+    yield from filter(lambda a: a.score is not None, _albums_cached())
 
 
-def albums() -> Iterator[Album]:
-    yield from _albums_cached()
+@mcachew(depends_on=_cachew_depends_on, logger=logger)
+def to_listen() -> Iterator[Album]:
+    """Items I have yet to listen to"""
+    yield from filter(lambda a: a.score is None, _albums_cached())
 
 
 def stats() -> Stats:

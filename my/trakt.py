@@ -30,10 +30,8 @@ import traktexport.dal as D
 logger = LazyLogger(__name__, level="warning")
 
 
-def _latest_trakt_dump() -> Path:
-    """
-    Since the exports are complete exports, can just use the most recent export
-    """
+def _latest_input() -> Path:
+    """Since the exports are complete exports, can just use the most recent export"""
     return last(sorted(get_files(config.export_path)))
 
 
@@ -49,32 +47,32 @@ def _read_trakt_export(p: Path) -> D.TraktExport:
 
 def profile_stats() -> Dict[str, Any]:
     # read the 'stats' key directly from the JSON file
-    return D._read_unparsed(_latest_trakt_dump())["stats"]
+    return D._read_unparsed(_latest_input())["stats"]
 
 
-@mcachew(depends_on=lambda: _latest_trakt_dump(), logger=logger)
+@mcachew(depends_on=_latest_input, logger=logger)
 def followers() -> Iterator[D.Follow]:
-    yield from _read_trakt_export(_latest_trakt_dump()).followers
+    yield from _read_trakt_export(_latest_input()).followers
 
 
-@mcachew(depends_on=lambda: _latest_trakt_dump(), logger=logger)
+@mcachew(depends_on=_latest_input, logger=logger)
 def likes() -> Iterator[D.Like]:
-    yield from _read_trakt_export(_latest_trakt_dump()).likes
+    yield from _read_trakt_export(_latest_input()).likes
 
 
-@mcachew(depends_on=lambda: _latest_trakt_dump(), logger=logger)
+@mcachew(depends_on=_latest_input, logger=logger)
 def watchlist() -> Iterator[D.WatchListEntry]:
-    yield from _read_trakt_export(_latest_trakt_dump()).watchlist
+    yield from _read_trakt_export(_latest_input()).watchlist
 
 
-@mcachew(depends_on=lambda: _latest_trakt_dump(), logger=logger)
+@mcachew(depends_on=_latest_input, logger=logger)
 def ratings() -> Iterator[D.Rating]:
-    yield from _read_trakt_export(_latest_trakt_dump()).ratings
+    yield from _read_trakt_export(_latest_input()).ratings
 
 
-@mcachew(depends_on=lambda: _latest_trakt_dump(), logger=logger)
+@mcachew(depends_on=_latest_input, logger=logger)
 def history() -> Iterator[D.HistoryEntry]:
-    yield from _read_trakt_export(_latest_trakt_dump()).history
+    yield from _read_trakt_export(_latest_input()).history
 
 
 def stats() -> Stats:
