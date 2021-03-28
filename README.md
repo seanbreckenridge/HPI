@@ -164,6 +164,7 @@ $ ./scripts/hpi_query my.body water --days 1 | jq '.[] | .glasses' | datamash su
 
 - [ ] create HPI example namespace package
 - [ ] configure `my.stackexchange` API tokens: https://github.com/karlicoss/stexport
+- [ ] add https://github.com/seanbreckenridge/albums
 
 create 'export modules' which keep these up to date:
 
