@@ -1,6 +1,3 @@
-Note: This is currently going through a restructure as I'm syncing
-back to master and using this repo as a namespace subpackage
-
 **TLDR**: I'm using `HPI`(Human Programming Interface) package as a means of unifying, accessing and
 interacting with all of my personal data.
 
