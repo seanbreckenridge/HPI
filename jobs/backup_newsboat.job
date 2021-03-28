@@ -7,5 +7,5 @@ evry 1 day -backup_rss && {
 	# exit if not on my linux machine
 	[[ "$(uname -s)" == "Linux" ]] || exit 0
 	printlog "rss:backing up..."
-	arctree "${BACKUP_DIR}/{utcnow}.txt" -- cat "${RSS_FILE}"
+	arctee "${BACKUP_DIR}/{utcnow}.txt" -- cat "${RSS_FILE}"
 }

@@ -6,6 +6,6 @@ evry 6 hours -backup_todotxt && {
 	# exit if not on my linux machine
 	[[ "$(uname -s)" == "Linux" ]] || exit 0
 	printlog "todotxt:backing up..."
-	arctree "${BACKUP_DIR}/{utcnow}-todo.txt" -- cat "${TODOTXT_DIR}/todo.txt"
-	arctree "${BACKUP_DIR}/{utcnow}-done.txt" -- cat "${TODOTXT_DIR}/done.txt"
+	arctee "${BACKUP_DIR}/{utcnow}-todo.txt" -- cat "${TODOTXT_DIR}/todo.txt"
+	arctee "${BACKUP_DIR}/{utcnow}-done.txt" -- cat "${TODOTXT_DIR}/done.txt"
 }

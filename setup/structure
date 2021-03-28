@@ -5,7 +5,6 @@ readonly DATA_PREFIX="${HOME}/data"
 
 declare -a directories
 directories=(
-	'arbtt'
 	'tupletally'
 	'doctor'
 	'github/gdpr'

@@ -6,7 +6,7 @@ evry 1 day -backup_albums && {
 	# exit if not on my linux machine
 	[[ "$(uname -s)" == "Linux" ]] || exit 0
 	printlog "albums:Running nextalbums export"
-	# arctree doesnt overwrite if this fails
+	# arctee doesnt overwrite if this fails
 	# dont save incremental backups, just the current data
-	arctree -r 3 "${BACKUP_DIR}/albums.json" -- python3 -m nextalbums export
+	arctee -r 3 "${BACKUP_DIR}/albums.json" -- python3 -m nextalbums export
 }

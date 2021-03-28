@@ -45,29 +45,29 @@ install_python_extras() {
 	python3 -m pip install --user 'git+https://github.com/karlicoss/rexport'
 }
 
-setup_arctree() {
-	if havecmd arctree; then
+setup_arctee() {
+	if havecmd arctee; then
 		# make sure its not an empty file for some reason, maybe curl failed and overwrote to nothing; have had some issues
-		ARCTREE_CONTENTS="$(wc -l <"$(which arctree)")"
-		if ((ARCTREE_CONTENTS > 20)); then
-			echo "arctree is already installed"
+		ARCTEE_CONTENTS="$(wc -l <"$(which arctee)")"
+		if ((ARCTEE_CONTENTS > 20)); then
+			echo "arctee is already installed"
 			return
 		else
-			echo "Error! arctree seems to exist but the installation seems to be broken"
+			echo "Error! arctee seems to exist but the installation seems to be broken"
 			return 1
 		fi
 	fi
-	echo "Installing arctree..."
+	echo "Installing arctee.."
 	local INSTALL_INTO="${HOME}/.local/bin"
 	if [[ ! -d "$INSTALL_INTO" ]]; then
-		printf '%s does not exist, not sure where to install arctree\n' "$INSTALL_INTO" >&2
+		printf '%s does not exist, not sure where to install arctee' "$INSTALL_INTO" >&2
 		exit 1
 	fi
 	cd "$INSTALL_INTO" || {
 		printf 'Could not cd into %s\n' "$INSTALL_INTO"
 		exit 1
 	}
-	local TARGET="./arctree"
+	local TARGET="./arctee"
 	curl -s 'https://raw.githubusercontent.com/karlicoss/arctee/master/arctee.py' >"$TARGET" || exit $?
 	chmod +x "$TARGET"
 }
@@ -84,7 +84,7 @@ set +e
 wait-for-internet
 
 # HPI global setup
-(setup_arctree) || exit $? # run in subshell to not 'cd' in current process
+(setup_arctee) || exit $? # run in subshell to not 'cd' in current process
 create_data_dir
 install_python_extras
 go get github.com/zupzup/calories

@@ -5,5 +5,5 @@ evry 1 week -backup_ipython && {
 	readonly IPYTHON_DB="${XDG_DATA_HOME}/ipython/profile_default/history.sqlite"
 	readonly BACKUP_DIR="${HOME}/data/ipython"
 	printlog "ipython:backing up history database..."
-	cp "$IPYTHON_DB" "${BACKUP_DIR}/$(date +"%s").sqlite"
+	arctee "${BACKUP_DIR}/{utcnow}-{hostname}-{platform}.sqlite" -- cat "$IPYTHON_DB"
 }
