@@ -34,6 +34,7 @@ This is built on top of and uses lots of the machinery from [`karlicoss/HPI`](ht
 - `my.location`, merges data from [`gpslogger`](https://github.com/mendhak/gpslogger), `apple`, `google`, `discord`, `games.blizzard`, and `facebook` to provide location data (goes back ~10 years)
 - `my.games.chess`, to track my [chess.com](https://www.chess.com) games, using [`chessdotcom_export`](https://github.com/seanbreckenridge/chessdotcom_export)
 - `my.trakt`, providing me a history/my ratings for Movies/TV Show (episodes) using [`traktexport`](https://github.com/seanbreckenridge/traktexport)
+- `my.albums`, grabbing when I listened to music albums/my ratings using my [giant spreadsheet](https://docs.google.com/spreadsheets/d/12htSAMg67czl8cpkj1mX0TuAFvqL_PJLI4hv1arG5-M/edit#gid=1451660661). Handled by [`nextalbums export`](https://github.com/seanbreckenridge/albums)
 
 ### 'Historical' Modules
 
@@ -164,7 +165,6 @@ $ ./scripts/hpi_query my.body water --days 1 | jq '.[] | .glasses' | datamash su
 
 - [ ] create HPI example namespace package
 - [ ] configure `my.stackexchange` API tokens: https://github.com/karlicoss/stexport
-- [ ] add https://github.com/seanbreckenridge/albums
 
 create 'export modules' which keep these up to date:
 
