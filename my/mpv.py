@@ -18,21 +18,29 @@ class config(user_config):
 
 import os
 from pathlib import Path
-from typing import Iterator, Sequence
+from typing import Iterator, Sequence, List
 
-import mpv_history_daemon.events
-from mpv_history_daemon.events import Media
+from mpv_history_daemon.events import (
+    Media,
+    all_history as M_all_history,
+    _actually_listened_to,
+)
 
-from my.core import get_files, Stats
+from my.core import get_files, Stats, LazyLogger
+from my.core.common import mcachew
 
 # monkey patch logs
 if "HPI_LOGS" in os.environ:
     from logzero import setup_logger  # type: ignore[import]
     from my.core.logging import mklevel
+    import mpv_history_daemon.events
 
     mpv_history_daemon.events.logger = setup_logger(
         name="mpv_history_events", level=mklevel(os.environ["HPI_LOGS"])
     )
+
+
+logger = LazyLogger(__name__, level="warning")
 
 Results = Iterator[Media]
 
@@ -49,10 +57,16 @@ def inputs() -> Sequence[Path]:
     return get_files(config.export_path)
 
 
-def all_history(from_paths=inputs) -> Results:
-    yield from mpv_history_daemon.events.all_history(from_paths())
+def _cachew_depends_on() -> List[float]:
+    return [p.stat().st_mtime for p in sorted(inputs())]
+
+
+@mcachew(depends_on=_cachew_depends_on, logger=logger)
+def all_history() -> Results:
+    yield from M_all_history(inputs())
 
 
 # filter out items I probably didn't listen to
-def history(from_paths=inputs) -> Results:
-    yield from mpv_history_daemon.events.history(from_paths())
+@mcachew(depends_on=_cachew_depends_on, logger=logger)
+def history() -> Results:
+    yield from filter(_actually_listened_to, all_history())
