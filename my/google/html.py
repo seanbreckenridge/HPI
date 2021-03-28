@@ -3,7 +3,6 @@ Google Takeout exports: browsing history, search/youtube/google play activity
 """
 
 import re
-import json
 import warnings
 from pathlib import Path
 from datetime import datetime

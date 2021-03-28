@@ -19,8 +19,6 @@ from .models import (
     LikedVideo,
     AppInstall,
     Location,
-    HtmlEvent,
-    HtmlComment,
 )
 from .html import read_html_activity, read_html_li
 from .json import read_youtube_json_history
