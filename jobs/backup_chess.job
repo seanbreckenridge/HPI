@@ -1,6 +1,6 @@
 #!/bin/bash
-
 # should never really expire, so just to track new games
+
 evry 1 week -backup_chess && {
 	wait-for-internet
 	readonly BACKUP_DIR="${HOME}/data/chessdotcom"
