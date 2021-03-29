@@ -59,5 +59,6 @@ def stats() -> Stats:
     from my.core import stat
 
     return {
-        **stat(albums),
+        **stat(history),
+        **stat(to_listen),
     }

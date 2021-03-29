@@ -4,8 +4,6 @@ Parses ZSH history (uses exports from ./job/zsh_history.job) and current zsh his
 
 # if on multiple computers, the zsh histories can be copied into the zsh.export_path
 # and it will merge everything without duplicates
-# note: the first 100 lines of the zsh history should be different (even if only by one line), since this
-# removes duplicate histories by matching the first 100 lines (see filter_inputs below)
 
 # look at https://github.com/bamos/zsh-history-analysis
 
@@ -27,25 +25,32 @@ class config(user_config):
 
 from pathlib import Path
 from typing import Sequence
+from functools import lru_cache
 
-from my.core import get_files, warn_if_empty, Stats
-from my.core.common import listify
+from my.core import get_files, warn_if_empty, Stats, LazyLogger
+from my.core.common import mcachew
 from my.core.warnings import low
 from .utils.time import parse_datetime_sec
+from .utils.common import InputSource
 
 
-@listify
-def inputs() -> Sequence[Path]:  # type: ignore[misc]
-    """
-    Returns all inputs, including live_file if provided and exported histories
-    """
-    yield from get_files(config.export_path, glob="*.zsh")
+logger = LazyLogger(__name__, level="warning")
+
+
+def backup_inputs() -> Sequence[Path]:
+    return list(get_files(config.export_path))
+
+
+@lru_cache(1)
+def _live_file() -> Optional[Path]:
     if config.live_file is not None:
         p: Path = Path(config.live_file).expanduser().absolute()
         if p.exists():
-            yield p
+            return p
         else:
             low(f"'live_file' provided {config.live_file} but that file doesn't exist.")
+            return None
+    return None
 
 
 ### This parses the zsh format I've configured, zsh is heavily configurable
@@ -72,7 +77,24 @@ class Entry(NamedTuple):
 Results = Iterator[Entry]
 
 
-def history(from_paths=inputs) -> Results:
+def history(from_paths: InputSource = backup_inputs) -> Results:
+    # if user has specified some other function as input
+    if hash(from_paths) != hash(backup_inputs):
+        yield from _merge_histories(*map(_parse_file, from_paths()))
+        return
+    live_history: Results = iter([])
+    lf = _live_file()
+    if lf is not None:
+        live_history = _parse_file(lf)
+        yield from _merge_histories(_history_from_backups(from_paths), live_history)
+    else:
+        # if we're not merging the live history file
+        # dont ned to spend the time doing the additional _merge_histories
+        yield from _history_from_backups(from_paths)
+
+
+@mcachew(depends_on=lambda p: list(sorted(p())), logger=logger)
+def _history_from_backups(from_paths: InputSource) -> Results:
     yield from _merge_histories(*map(_parse_file, from_paths()))
 
 

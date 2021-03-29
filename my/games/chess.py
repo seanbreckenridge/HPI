@@ -19,8 +19,9 @@ from datetime import datetime
 from typing import Iterator, Sequence, Set
 from itertools import chain
 
-from my.core import get_files, Stats, LazyLogger
+from my.core import get_files, Stats, LazyLogger, warn_if_empty
 from my.core.common import mcachew
+from ..utils.common import InputSource
 
 from chessdotcom_export import from_export, Game
 
@@ -35,10 +36,11 @@ Results = Iterator[Game]
 
 
 @mcachew(depends_on=lambda: list(sorted(inputs())), logger=logger)
-def history(from_paths=inputs) -> Results:
-    yield from _merge_histories(chain(*map(from_export, from_paths())))
+def history(from_paths: InputSource = inputs) -> Results:
+    yield from _merge_histories(*[from_export(str(p)) for p in from_paths()])
 
 
+@warn_if_empty
 def _merge_histories(*sources: Results) -> Results:
     emitted: Set[datetime] = set()
     for g in chain(*sources):

@@ -34,12 +34,11 @@ class config(user_config):
 import warnings
 from pathlib import Path
 from datetime import datetime
-from typing import NamedTuple, Iterator, Set, List, Tuple, Sequence, Dict
+from typing import NamedTuple, Iterator, Set, List, Tuple, Dict, Callable, Iterable
 from itertools import chain
 
 
 from my.core import get_files, warn_if_empty, Stats, LazyLogger, Res
-from my.core.common import listify
 
 # pip3 install topydo
 from topydo.lib.TodoParser import parse_line  # type: ignore[import]
@@ -61,23 +60,26 @@ class Todo(NamedTuple):
         return hash(self.text)
 
 
-@listify
-def inputs() -> Sequence[Tuple[datetime, Path]]:  # type: ignore[misc]
+def inputs() -> Iterable[Tuple[datetime, Path]]:
     """Returns all todo/done.txt files"""
     dones = get_files(config.export_path)
+    res: List[Tuple[datetime, Path]] = []
     for todone in dones:
         dt = datetime.strptime(todone.stem.split("-")[0], "%Y%m%dT%H%M%SZ")
-        yield (dt, todone)
+        res.append((dt, todone))
+    return res
 
 
 Results = Iterator[Res[Todo]]
 
 
-def completed(from_paths=inputs) -> Results:
+def completed(
+    from_paths: Callable[[], Iterable[Tuple[datetime, Path]]] = inputs
+) -> Results:
     """
     Merges all todo.txt/done.txt files and filters to return the history of todos I've completed
     """
-    for td in _merge_histories(*map(_parse_file, map(lambda r: r[1], from_paths()))):
+    for td in _merge_histories(*map(_parse_file, [p for (dt, p) in from_paths()])):
         if isinstance(td, Exception):
             yield td
         else:

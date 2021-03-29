@@ -17,7 +17,7 @@ import os
 import json
 from datetime import date
 from pathlib import Path
-from typing import Iterator, Dict, Any, NamedTuple, List, Set, Tuple
+from typing import Iterator, Dict, Any, NamedTuple, List, Set, Tuple, Sequence, Optional
 
 from my.core import Res, get_files, LazyLogger
 
@@ -40,15 +40,20 @@ Playlists = Iterator[Res[Playlist]]
 Songs = Iterator[Res[Song]]
 
 
+def inputs(gdpr_dir: Optional[PathIsh] = None) -> Sequence[Path]:
+    chosen: PathIsh = gdpr_dir if gdpr_dir is not None else config.gdpr_dir
+    echosen = Path(chosen).expanduser().absolute()
+    return get_files(echosen, glob="*.json")
+
+
 def playlists() -> Playlists:
-    # get files 2 levels deep into the export
     gdpr_dir = str(Path(config.gdpr_dir).expanduser().absolute())  # expand path
-    files = get_files(config.gdpr_dir, glob="*.json")
+    files = inputs(gdpr_dir)
     handler_map = {
         "Follow": None,
         "Inferences": None,
         "Payments": None,
-        "Playlist": _parse_playlists,
+        "Playlist": _filter_playlists,
         "StreamingHistory": None,  # doesnt save any of the old play history, not worth parsing
         "Userdata": None,
         "YourLibrary": None,
@@ -86,15 +91,15 @@ def songs() -> Songs:
         if isinstance(p, Exception):
             yield p
             continue
-        for s in p.songs:
-            if isinstance(s, Exception):
-                yield s
+        for song in p.songs:
+            if isinstance(song, Exception):
+                yield song
                 continue
-            key = (s.name, s.artist, s.album)
+            key = (song.name, song.artist, song.album)
             if key in emitted:
                 # logger.debug('ignoring %s: %s', key, s)
                 continue
-            yield s
+            yield song
             emitted.add(key)
 
 
@@ -107,13 +112,14 @@ def stats() -> Stats:
     }
 
 
-def _parse_playlists(d: Dict) -> Iterator[Playlist]:
+def _filter_playlists(d: Dict) -> Iterator[Playlist]:
     # parse, then filter
     # make sure this playlist has more than one artist
     # if its just one artist, its probably just an album
-    yield from filter(
-        lambda p: len(set([s.artist for s in p.songs])) > 1, _parse_all_playlists(d)
-    )
+    # thats been classified as a playlist
+    for p in _parse_all_playlists(d):
+        if len(set([s.artist for s in p.songs])) > 1:
+            yield p
 
 
 def _parse_all_playlists(d: Dict) -> Iterator[Playlist]:
@@ -123,10 +129,11 @@ def _parse_all_playlists(d: Dict) -> Iterator[Playlist]:
                 f"Ignoring playlist: {plist['name']}, too many followers to be one of my playlists"
             )
             continue
+        songs: List[Song] = [_parse_song(b) for b in plist["items"]]
         yield Playlist(
             name=plist["name"],
             last_modified=_parse_date(plist["lastModifiedDate"]),
-            songs=list(map(_parse_song, plist["items"])),
+            songs=songs,
         )
 
 

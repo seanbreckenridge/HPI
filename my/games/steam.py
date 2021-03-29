@@ -23,6 +23,7 @@ from itertools import chain
 
 from my.core import get_files, Stats, Res
 from ..utils.time import parse_datetime_sec
+from ..utils.common import InputSource
 
 
 def inputs() -> Sequence[Path]:
@@ -58,11 +59,11 @@ class Game(NamedTuple):
 
 
 Results = Iterator[Res[Game]]
-AchResults = Iterator[Res[Achievement]]
+AchievementResults = Iterator[Res[Achievement]]
 
 # only ones I've played
-def games() -> Results:
-    for game in all_games():
+def games(from_paths: InputSource = inputs) -> Results:
+    for game in all_games(from_paths):
         if isinstance(game, Exception):
             yield game
         else:
@@ -70,14 +71,14 @@ def games() -> Results:
                 yield game
 
 
-def all_games(from_paths=inputs) -> Results:
+def all_games(from_paths: InputSource = inputs) -> Results:
     # combine the results from multiple files
     yield from chain(*map(_read_parsed_json, from_paths()))
 
 
 # only ones which Ive actually achieved
-def achievements() -> AchResults:
-    for ach in all_achievements():
+def achievements(from_paths: InputSource = inputs) -> AchievementResults:
+    for ach in all_achievements(from_paths):
         if isinstance(ach, Exception):
             yield ach
         else:
@@ -85,7 +86,7 @@ def achievements() -> AchResults:
                 yield ach
 
 
-def all_achievements(from_paths=inputs) -> AchResults:
+def all_achievements(from_paths: InputSource = inputs) -> AchievementResults:
     # combine the results from multiple achievement lists
     for game in all_games(from_paths):
         if isinstance(game, Exception):

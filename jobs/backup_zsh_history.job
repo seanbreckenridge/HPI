@@ -1,6 +1,6 @@
 #!/bin/bash
 
-evry 1 week -backup_zsh_history && {
+evry 2 days -backup_zsh_history && {
 	readonly BACKUP_DIR="${HOME}/data/zsh_history"
 	readonly ZSH_HIST_FILE="${ZDOTDIR:?ZDOTDIR environment variable not set}/.zsh_history"
 	printlog "zsh_history:Backing up zsh history..."

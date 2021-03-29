@@ -22,6 +22,7 @@ from pathlib import Path
 from my.core import get_files, warn_if_empty, Stats
 from my.core.common import listify
 from .utils.time import parse_datetime_sec
+from .utils.common import InputSource
 
 
 @listify
@@ -45,7 +46,7 @@ class Entry(NamedTuple):
 Results = Iterator[Entry]
 
 
-def history(from_paths=inputs) -> Results:
+def history(from_paths: InputSource = inputs) -> Results:
     datafiles: List[Path] = list(from_paths())
     if len(datafiles) == 1:
         yield from _parse_file(datafiles[0])

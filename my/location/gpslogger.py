@@ -13,15 +13,17 @@ class config(user_config):
     export_path: Paths
 
 
+from itertools import chain
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import NamedTuple, Iterator, Set, Dict
+from typing import NamedTuple, Iterator, Set, Dict, Sequence, List
 
 from lxml import etree  # type: ignore[import]
 
 from my.core import Stats, LazyLogger, Res
 from my.core.common import get_files, warn_if_empty, mcachew
 from my.core.warnings import high
+from ..utils.common import InputSource
 
 
 logger = LazyLogger(__name__, level="warning")
@@ -33,25 +35,33 @@ class Location(NamedTuple):
     lng: float
 
 
-@mcachew(
-    depends_on=lambda: list(
-        map(lambda p: p.lstat().st_mtime, get_files(config.export_path))
-    ),
-    logger=logger,
-)
-def history() -> Iterator[Res[Location]]:
-    files = get_files(config.export_path, glob="*.gpx")
+Results = Iterator[Res[Location]]
 
+
+def inputs() -> Sequence[Path]:
+    return get_files(config.export_path, glob="*.gpx")
+
+
+def _cachew_depends_on(from_paths: InputSource) -> List[float]:
+    return [p.stat().st_mtime for p in sorted(from_paths())]
+
+
+@mcachew(depends_on=_cachew_depends_on, logger=logger)
+def history(from_paths: InputSource = inputs) -> Results:
+    yield from _merge_histories(*map(_extract_locations, from_paths()))
+
+
+@warn_if_empty
+def _merge_histories(*sources: Results) -> Results:
     emitted: Set[datetime] = set()
-    for p in files:
-        for l in _extract_locations(p):
-            if isinstance(l, Exception):
-                yield l
-                continue
-            if l.dt in emitted:
-                continue
-            emitted.add(l.dt)
+    for l in chain(*sources):
+        if isinstance(l, Exception):
             yield l
+            continue
+        if l.dt in emitted:
+            continue
+        emitted.add(l.dt)
+        yield l
 
 
 def _extract_locations(path: Path) -> Iterator[Res[Location]]:
@@ -76,7 +86,6 @@ def _extract_locations(path: Path) -> Iterator[Res[Location]]:
         yield from _extract_xml_locations(path)
 
 
-@warn_if_empty
 def _extract_xml_locations(path: Path) -> Iterator[Res[Location]]:
     # the tags are sort of strange here, because they include the
     # input format (URL). cant use findall easily, have to loop through

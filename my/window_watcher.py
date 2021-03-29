@@ -28,6 +28,7 @@ from itertools import chain
 from my.core import get_files, warn_if_empty, Stats
 from my.core.common import listify
 from .utils.time import parse_datetime_sec
+from .utils.common import InputSource
 
 
 @listify
@@ -57,7 +58,7 @@ Results = Iterator[Result]
 LinearResults = Iterator[LinearResult]
 
 
-def history(from_paths=inputs) -> Results:
+def history(from_paths: InputSource = inputs) -> Results:
     yield from _construct_stream(
         filter(
             _is_unlikely,

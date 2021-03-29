@@ -8,7 +8,7 @@
 from itertools import chain
 from typing import Set
 
-from my.core.common import Stats, LazyLogger, mcachew
+from my.core.common import Stats, LazyLogger, mcachew, warn_if_empty
 from my.core.cachew import cache_dir
 
 from .paths import takeout_input_directories
@@ -27,6 +27,7 @@ def events() -> Results:
     yield from merge_events(*map(parse_takeout, takeout_input_directories()))
 
 
+@warn_if_empty
 def merge_events(*sources: Results) -> Results:
     emitted: Set[int] = set()
     for event in chain(*sources):

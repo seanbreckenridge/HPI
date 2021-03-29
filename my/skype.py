@@ -23,18 +23,18 @@ class config(user_config):
 import json
 from pathlib import Path
 from datetime import datetime
-from typing import Iterator, Optional, Sequence
+from typing import Iterator, Sequence
 from itertools import chain
 
 import dateparser
 
 from my.core import get_files, LazyLogger
+from .utils.common import InputSource
 
 logger = LazyLogger(__name__, level="warning")
 
 
 Results = Iterator[datetime]
-OptResults = Iterator[Optional[datetime]]
 
 
 def inputs() -> Sequence[Path]:
@@ -42,20 +42,20 @@ def inputs() -> Sequence[Path]:
 
 
 @mcachew(
-    depends_on=lambda: list(map(str, inputs())),
+    depends_on=lambda: [str(p) for p in sorted(inputs())],
     logger=logger,
 )
-def timestamps(from_paths=inputs) -> Results:
-    for d in chain(*map(_parse_file, from_paths())):
-        if d is not None:
-            yield d
+def timestamps(from_paths: InputSource = inputs) -> Results:
+    yield from chain(*map(_parse_file, from_paths()))
 
 
-def _parse_file(post_file: Path) -> OptResults:
+def _parse_file(post_file: Path) -> Results:
     items = json.loads(post_file.read_text())
     for conv in items["conversations"]:
         for msg in conv["MessageList"]:
-            yield dateparser.parse(msg["originalarrivaltime"].rstrip("Z"))
+            d = dateparser.parse(msg["originalarrivaltime"].rstrip("Z"))
+            if d is not None:
+                yield d
 
 
 def stats() -> Stats:

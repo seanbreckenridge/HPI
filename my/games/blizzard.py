@@ -5,7 +5,8 @@ from: https://github.com/seanbreckenridge/blizzard_gdpr_parser
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import blizzard as user_config  # type: ignore[attr-defined]
-from my.core import Paths, dataclass
+from my.core import Paths, dataclass, LazyLogger
+from my.core.common import mcachew
 
 
 @dataclass
@@ -22,10 +23,18 @@ from itertools import chain
 
 from my.core import get_files, Stats
 from ..utils.time import parse_datetime_sec
+from ..utils.common import InputSource
+
+
+logger = LazyLogger(__name__, level="warning")
 
 
 def inputs() -> Sequence[Path]:
     return get_files(config.export_path)
+
+
+def _cachew_depends_on() -> List[float]:
+    return [p.stat().st_mtime for p in inputs()]
 
 
 class Event(NamedTuple):
@@ -37,7 +46,8 @@ class Event(NamedTuple):
 Results = Iterator[Event]
 
 
-def events(from_paths=inputs) -> Results:
+@mcachew(depends_on=_cachew_depends_on, logger=logger)
+def events(from_paths: InputSource = inputs) -> Results:
     yield from chain(*map(_parse_json_file, from_paths()))
 
 

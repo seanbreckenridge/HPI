@@ -24,6 +24,7 @@ from itertools import chain
 
 from my.core import get_files, Stats, LazyLogger
 from .utils.time import parse_datetime_sec
+from .utils.common import InputSource
 
 
 def inputs() -> Sequence[Path]:
@@ -44,7 +45,7 @@ class Post(NamedTuple):
 Results = Iterator[Post]
 
 
-def history(from_paths=inputs) -> Results:
+def history(from_paths: InputSource = inputs) -> Results:
     yield from chain(*map(_parse_file, from_paths()))
 
 

@@ -24,8 +24,9 @@ from typing import NamedTuple, Iterator, Sequence, Dict, Union, List, Optional, 
 from functools import partial
 from itertools import chain
 
-from my.core import get_files, Stats, Res, Json
+from my.core import get_files, Stats, Res, Json, warn_if_empty
 from ..utils.time import parse_datetime_millis
+from ..utils.common import InputSource
 
 
 def inputs() -> Sequence[Path]:
@@ -73,7 +74,9 @@ class Game(NamedTuple):
 Results = Iterator[Res[Game]]
 
 
-def history(from_paths=inputs, summoner_name: Optional[str] = None) -> Results:
+def history(
+    from_paths: InputSource = inputs, summoner_name: Optional[str] = None
+) -> Results:
     sname: Optional[str] = summoner_name or config.username
     if sname is None:
         raise RuntimeError("No league of legends username received!")
@@ -81,6 +84,7 @@ def history(from_paths=inputs, summoner_name: Optional[str] = None) -> Results:
     yield from _merge_histories(*map(_json_for_user, from_paths()))
 
 
+@warn_if_empty
 def _merge_histories(*sources: Results) -> Results:
     emitted: Set[int] = set()
     for g in chain(*sources):
