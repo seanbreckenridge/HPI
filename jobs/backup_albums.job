@@ -8,5 +8,5 @@ evry 6 hours -backup_albums && {
 	printlog "albums:Running nextalbums export..."
 	# arctee doesnt overwrite if this fails
 	# dont save incremental backups, just the current data
-	arctee -r 3 "${BACKUP_DIR}/albums.json" -- python3 -m nextalbums export
+	arctee -r 3 "${BACKUP_DIR}/albums.json" -- python3 -m nextalbums export || send-error 'nextalbums: export failed'
 }

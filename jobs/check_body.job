@@ -14,7 +14,7 @@ evry 3 hours -checkbody && {
 	# https://sean.fish/d/cross-platform/notify
 	case "$RES" in
 	1)
-		notify "error running check body script"
+		send-error "error running check body script"
 		;;
 	2)
 		notify "havent updated weight in more than a week!"

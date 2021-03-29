@@ -9,9 +9,11 @@ import sys
 
 from datetime import datetime, timedelta, timezone
 
-from my.body import weight
+from my.body import weight, Weight
+from my.core.query import select
+from more_itertools import last
 
-last_logged_at = list(weight())[-1].when
+last_logged_at: datetime = last(select(weight, order_key="when")).when  # type: ignore
 
 # if its been more than 7 days since I logged my weight
 if datetime.now(tz=timezone.utc) - last_logged_at > timedelta(days=7):

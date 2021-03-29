@@ -4,5 +4,5 @@ evry 2 days -backup_zsh_history && {
 	readonly BACKUP_DIR="${HOME}/data/zsh_history"
 	readonly ZSH_HIST_FILE="${ZDOTDIR:?ZDOTDIR environment variable not set}/.zsh_history"
 	printlog "zsh_history:Backing up zsh history..."
-	arctee "${BACKUP_DIR}/{utcnow}-{hostname}-{platform}" -- cat "$ZSH_HIST_FILE"
+	arctee "${BACKUP_DIR}/{utcnow}-{hostname}-{platform}" -- cat "$ZSH_HIST_FILE" || send-error 'zsh: failed to backup zsh history file'
 }
