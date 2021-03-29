@@ -28,6 +28,7 @@ from mpv_history_daemon.events import (
 
 from my.core import get_files, Stats, LazyLogger
 from my.core.common import mcachew
+from .utils.common import InputSource
 
 # monkey patch logs
 if "HPI_LOGS" in os.environ:
@@ -57,16 +58,30 @@ def inputs() -> Sequence[Path]:
     return get_files(config.export_path)
 
 
-def _cachew_depends_on() -> List[float]:
-    return [p.stat().st_mtime for p in sorted(inputs())]
+def _cachew_depends_on(for_paths: InputSource) -> List[float]:
+    return [p.stat().st_mtime for p in sorted(for_paths())]
 
 
-@mcachew(depends_on=_cachew_depends_on, logger=logger)
+def _filter_by(m: Media) -> bool:
+    # if duration is under 10 minutes, but listen_time is over
+    # 3 hours, probably a broken item, caused by hanging mpv/socket?
+    # I only have 2 of these, in the 13,000 or so history items
+    if m.media_duration is not None and m.media_duration < 600:
+        if m.listen_time > 10800:
+            logger.debug(f"Assuming this is a broken file: {str(m)}")
+            return False
+    # fallback to library func
+    return _actually_listened_to(m)
+
+
+# hmm, cant figure out passing the optional InputSource
+# as a non-positional argument
+@mcachew(depends_on=lambda: _cachew_depends_on(inputs), logger=logger)
 def all_history() -> Results:
     yield from M_all_history(inputs())
 
 
 # filter out items I probably didn't listen to
-@mcachew(depends_on=_cachew_depends_on, logger=logger)
+@mcachew(depends_on=lambda: _cachew_depends_on(inputs), logger=logger)
 def history() -> Results:
-    yield from filter(_actually_listened_to, all_history())
+    yield from filter(_filter_by, all_history())
