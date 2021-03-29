@@ -82,11 +82,9 @@ def history(from_paths: InputSource = backup_inputs) -> Results:
     if hash(from_paths) != hash(backup_inputs):
         yield from _merge_histories(*map(_parse_file, from_paths()))
         return
-    live_history: Results = iter([])
     lf = _live_file()
     if lf is not None:
-        live_history = _parse_file(lf)
-        yield from _merge_histories(_history_from_backups(from_paths), live_history)
+        yield from _merge_histories(_history_from_backups(from_paths), _parse_file(lf))
     else:
         # if we're not merging the live history file
         # dont ned to spend the time doing the additional _merge_histories
