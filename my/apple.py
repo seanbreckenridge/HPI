@@ -72,7 +72,7 @@ Results = Iterator[Res[Event]]
 
 
 @mcachew(
-    depends_on=lambda: list(map(str, Path(config.gdpr_dir).rglob("*"))),
+    depends_on=lambda: sorted(Path(config.gdpr_dir).expanduser().rglob("*")),
     logger=logger,
 )
 def events() -> Results:

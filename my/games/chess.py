@@ -16,7 +16,7 @@ class config(user_config):
 
 from pathlib import Path
 from datetime import datetime
-from typing import Iterator, Sequence, Set
+from typing import Iterator, Sequence, Set, List
 from itertools import chain
 
 from my.core import get_files, Stats, LazyLogger, warn_if_empty
@@ -35,7 +35,11 @@ def inputs() -> Sequence[Path]:
 Results = Iterator[Game]
 
 
-@mcachew(depends_on=lambda: list(sorted(inputs())), logger=logger)
+def _cachew_depends_on(for_paths: InputSource = inputs) -> List[float]:
+    return [p.stat().st_mtime for p in for_paths()]
+
+
+@mcachew(depends_on=_cachew_depends_on, logger=logger)
 def history(from_paths: InputSource = inputs) -> Results:
     yield from _merge_histories(*[from_export(str(p)) for p in from_paths()])
 

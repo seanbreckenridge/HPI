@@ -58,11 +58,13 @@ def inputs() -> Sequence[Path]:
     return get_files(config.export_path)
 
 
-def _cachew_depends_on(for_paths: InputSource) -> List[float]:
+def _cachew_depends_on(for_paths: InputSource = inputs) -> List[float]:
     return [p.stat().st_mtime for p in sorted(for_paths())]
 
 
 def _filter_by(m: Media) -> bool:
+    if m.is_stream:
+        return True
     # if duration is under 10 minutes, but listen_time is over
     # 3 hours, probably a broken item, caused by hanging mpv/socket?
     # I only have 2 of these, in the 13,000 or so history items
@@ -74,14 +76,12 @@ def _filter_by(m: Media) -> bool:
     return _actually_listened_to(m)
 
 
-# hmm, cant figure out passing the optional InputSource
-# as a non-positional argument
-@mcachew(depends_on=lambda: _cachew_depends_on(inputs), logger=logger)
-def all_history() -> Results:
-    yield from M_all_history(inputs())
+@mcachew(depends_on=_cachew_depends_on, logger=logger)
+def all_history(from_paths: InputSource = inputs) -> Results:
+    yield from M_all_history(list(from_paths()))
 
 
 # filter out items I probably didn't listen to
-@mcachew(depends_on=lambda: _cachew_depends_on(inputs), logger=logger)
-def history() -> Results:
-    yield from filter(_filter_by, all_history())
+@mcachew(depends_on=_cachew_depends_on, logger=logger)
+def history(from_paths: InputSource = inputs) -> Results:
+    yield from filter(_filter_by, all_history(from_paths))

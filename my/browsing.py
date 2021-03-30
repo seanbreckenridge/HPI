@@ -72,7 +72,7 @@ def history(tmp_dir: Optional[str] = None) -> Results:
     yield from merge_visits(_history_from_backups(), live_visits)
 
 
-@mcachew(depends_on=lambda: list(sorted(map(str, backup_inputs()))), logger=logger)
+@mcachew(depends_on=lambda: sorted(map(str, backup_inputs())), logger=logger)
 def _history_from_backups() -> Results:
     # not sure how to type this properly?
     yield from read_and_merge(*backup_inputs())  # type: ignore[arg-type]

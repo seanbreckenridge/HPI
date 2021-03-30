@@ -91,7 +91,7 @@ def history(from_paths: InputSource = backup_inputs) -> Results:
         yield from _history_from_backups(from_paths)
 
 
-@mcachew(depends_on=lambda p: list(sorted(p())), logger=logger)
+@mcachew(depends_on=lambda p: sorted(p()), logger=logger)
 def _history_from_backups(from_paths: InputSource) -> Results:
     yield from _merge_histories(*map(_parse_file, from_paths()))
 

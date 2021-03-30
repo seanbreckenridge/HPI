@@ -33,8 +33,8 @@ def inputs() -> Sequence[Path]:
     return get_files(config.export_path)
 
 
-def _cachew_depends_on() -> List[float]:
-    return [p.stat().st_mtime for p in inputs()]
+def _cachew_depends_on(for_paths: InputSource = inputs) -> List[float]:
+    return [p.stat().st_mtime for p in for_paths()]
 
 
 class Event(NamedTuple):
