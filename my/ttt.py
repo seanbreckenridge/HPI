@@ -13,6 +13,7 @@ from my.core import PathIsh, Paths, dataclass
 @dataclass
 class config(user_config):
     # path[s]/glob to the backed up ttt history files
+    # (can be a list if you want to provide the live file)
     export_path: Paths
 
 
@@ -26,9 +27,6 @@ from .utils.common import InputSource
 
 
 def inputs() -> Sequence[Path]:
-    """
-    Returns all inputs, including live_file if provided and backups
-    """
     return get_files(config.export_path)
 
 
