@@ -15,33 +15,21 @@ class config(user_config):
     # path[s]/glob to the backed up ttt history files
     export_path: Paths
 
-    # path to current ttt history (i.e. the live file)
-    live_file: Optional[PathIsh]
-
 
 import csv
 from pathlib import Path
 from typing import Sequence
 
 from my.core import get_files, warn_if_empty, Stats
-from my.core.common import listify
-from my.core.warnings import low
 from .utils.time import parse_datetime_sec
 from .utils.common import InputSource
 
 
-@listify
-def inputs() -> Sequence[Path]:  # type: ignore[misc]
+def inputs() -> Sequence[Path]:
     """
     Returns all inputs, including live_file if provided and backups
     """
-    yield from get_files(config.export_path)
-    if config.live_file is not None:
-        p: Path = Path(config.live_file).expanduser().absolute()
-        if p.exists():
-            yield p
-        else:
-            low(f"'live_file' provided {config.live_file} but that file doesn't exist.")
+    return get_files(config.export_path)
 
 
 from datetime import datetime

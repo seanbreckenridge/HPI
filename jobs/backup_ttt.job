@@ -1,8 +1,0 @@
-#!/bin/bash
-
-evry 1 week -backup_ttt_history && {
-	readonly BACKUP_DIR="${HOME}/data/ttt"
-	readonly TTT_HISTORY="${XDG_DATA_HOME}/ttt_history.csv"
-	printlog "ttt:Backing up history..."
-	arctee "${BACKUP_DIR}/{utcnow}-{hostname}-{platform}.csv" -- cat "$TTT_HISTORY" || send-error 'ttt: failed to copy current ttt histfile'
-}
