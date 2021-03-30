@@ -3,9 +3,9 @@ Parses backups of my newsboat rss file
 """
 
 from datetime import datetime
-from typing import NamedTuple, Optional
+from typing import NamedTuple
 
-from my.core import PathIsh, Paths, dataclass
+from my.core import Paths, dataclass
 from my.config import newsboat as user_config  # type: ignore[attr-defined]
 
 
@@ -14,15 +14,11 @@ class config(user_config):
     # path[s]/glob to the backed up newsboat rss files
     export_path: Paths
 
-    # path to current newsboat rss file
-    live_file: Optional[PathIsh]
-
 
 from typing import Tuple, Sequence, Iterator, Dict, Set
 from pathlib import Path
 
 from my.core.common import listify, get_files, Stats
-from my.core.warnings import low
 
 Subscription = str
 Subscriptions = Sequence[str]
@@ -33,19 +29,10 @@ SubscriptionState = Tuple[datetime, Subscriptions]
 
 @listify
 def inputs() -> Sequence[Tuple[datetime, Path]]:  # type: ignore[misc]
-    """
-    Returns all inputs, including live_file if provided
-    """
     rss_backups = get_files(config.export_path)
     for rssf in rss_backups:
         dt = datetime.strptime(rssf.stem, "%Y%m%dT%H%M%SZ")
         yield (dt, rssf)
-    if config.live_file is not None:
-        p: Path = Path(config.live_file).expanduser().absolute()
-        if p.exists():
-            yield (datetime.now(), p)
-        else:
-            low(f"'live_file' provided {config.live_file} but that file doesn't exist.")
 
 
 def current_subscriptions() -> Subscriptions:

@@ -7,7 +7,7 @@ from my.config import ttt as user_config  # type: ignore[attr-defined]
 
 from typing import Optional
 
-from my.core import PathIsh, Paths, dataclass
+from my.core import Paths, dataclass
 
 
 @dataclass
