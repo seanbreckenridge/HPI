@@ -10,6 +10,7 @@ directories=(
 	'github/gdpr'
 	'github/ghexport'
 	'zsh_history'
+	'bash_history'
 	'rexport'
 	'todotxt'
 	'newsboat'
