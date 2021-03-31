@@ -4,6 +4,8 @@
 evry 1 week -backup_bash_server_history && {
 	wait-for-internet
 	readonly BACKUP_DIR="${HOME}/data/bash_history"
+	# exit if not on my linux machine
+	[[ "$(uname -s)" == "Linux" ]] || exit 0
 	printlog "zsh_history:Backing up bash history from servers..."
 	arctee -r 3 "${BACKUP_DIR}/{utcnow}-vultr" -- ssh vultr 'cat .bash_history' || send-error 'bash_server_history: failed to backup bash history file'
 }
