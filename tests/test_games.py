@@ -1,8 +1,9 @@
 from more_itertools import ilen
 
-from my.games.blizzard import events
-from my.games.league import history
-from my.games.steam import games, achievements
+from my.blizzard import events
+from my.league import history
+from my.steam import games, achievements
+from my.chess import history as chess_history
 
 
 def test_blizzard():
@@ -23,3 +24,7 @@ def test_steam():
     assert ilen(games()) > 10
     ach = list(achievements())
     assert any([a.game_name == "Counter-Strike: Global Offensive" for a in ach])
+
+
+def test_chess():
+    assert ilen(chess_history()) > 10

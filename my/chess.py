@@ -3,6 +3,8 @@ Parses chess games from chess.com using
 https://github.com/seanbreckenridge/chessdotcom_export
 """
 
+REQUIRES = ["chessdotcom_export"]
+
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import chess as user_config  # type: ignore[attr-defined]
 from my.core import Paths, dataclass
@@ -21,7 +23,7 @@ from itertools import chain
 
 from my.core import get_files, Stats, LazyLogger, warn_if_empty
 from my.core.common import mcachew
-from ..utils.common import InputSource
+from .utils.common import InputSource
 
 from chessdotcom_export import from_export, Game
 

@@ -2,7 +2,7 @@
 Parses Firefox History using http://github.com/seanbreckenridge/ffexport
 """
 
-REQUIRES = ["git+http://github.com/seanbreckenridge/ffexport"]
+REQUIRES = ["ffexport"]
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import firefox as user_config  # type: ignore[attr-defined]

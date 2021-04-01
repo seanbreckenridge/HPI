@@ -31,8 +31,8 @@ This is built on top of and uses lots of the machinery from [`karlicoss/HPI`](ht
 - `my.ttt`, to parse shell/system history tracked by [`ttt`](https://github.com/seanbreckenridge/ttt)
 - `my.battery`, to parse basic battery percentage over time on my laptop
 - `my.window_watcher`, to parse active window events (what application I'm using/what the window title is) using [`window_watcher`](https://github.com/seanbreckenridge/aw-watcher-window)
-- `my.location`, merges data from [`gpslogger`](https://github.com/mendhak/gpslogger), `apple`, `google`, `discord`, `games.blizzard`, and `facebook` to provide location data (goes back ~10 years)
-- `my.games.chess`, to track my [chess.com](https://www.chess.com) games, using [`chessdotcom_export`](https://github.com/seanbreckenridge/chessdotcom_export)
+- `my.location`, merges data from [`gpslogger`](https://github.com/mendhak/gpslogger), `apple`, `google`, `discord`, `blizzard`, and `facebook` to provide location data (goes back ~10 years)
+- `my.chess`, to track my [chess.com](https://www.chess.com) games, using [`chessdotcom_export`](https://github.com/seanbreckenridge/chessdotcom_export)
 - `my.trakt`, providing me a history/my ratings for Movies/TV Show (episodes) using [`traktexport`](https://github.com/seanbreckenridge/traktexport)
 - `my.albums`, grabbing when I listened to music albums/my ratings using my [giant spreadsheet](https://sean.fish/s/albums). Handled by [`nextalbums export`](https://github.com/seanbreckenridge/albums)
 
@@ -42,9 +42,9 @@ These are modules to parse GDPR exports/data from services I used to use, but do
 
 - `my.apple`, parses game center and location data from the apple GDPR export
 - `my.facebook`, to parse the GDPR export I downloaded from facebook before deleting my account
-- `my.games.league`, gives league of legends game history using [`lolexport`](https://github.com/seanbreckenridge/lolexport)
-- `my.games.steam`, for steam achievement data and game playtime using [`steamscraper`](https://github.com/seanbreckenridge/steamscraper)
-- `my.games.blizzard`, for general battle.net event data [parsed from a gdpr export](https://github.com/seanbreckenridge/blizzard_gdpr_parser)
+- `my.league`, gives league of legends game history using [`lolexport`](https://github.com/seanbreckenridge/lolexport)
+- `my.steam`, for steam achievement data and game playtime using [`steamscraper`](https://github.com/seanbreckenridge/steamscraper)
+- `my.blizzard`, for general battle.net event data [parsed from a gdpr export](https://github.com/seanbreckenridge/blizzard_gdpr_parser)
 - `my.old_forums`, random posts from forums I used to use in the past, see [`forum_parser`](https://github.com/seanbreckenridge/forum_parser)
 - `my.skype` to parse a couple datetimes from the skype GDPR export
 - `my.spotify`, to parse the GDPR export from spotify, mostly for songs from my playlists from years ago

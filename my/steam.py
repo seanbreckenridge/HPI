@@ -22,8 +22,8 @@ from typing import NamedTuple, Iterator, Sequence, Dict, List, Optional, Any
 from itertools import chain
 
 from my.core import get_files, Stats, Res
-from ..utils.time import parse_datetime_sec
-from ..utils.common import InputSource
+from .utils.time import parse_datetime_sec
+from .utils.common import InputSource
 
 
 def inputs() -> Sequence[Path]:

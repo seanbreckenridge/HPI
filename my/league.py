@@ -3,6 +3,9 @@ Parses league of legend history from my `lolexport.parse` format
 from: https://github.com/seanbreckenridge/lolexport
 """
 
+REQUIRES = ["lolexport"]
+
+
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import league_of_legends as user_config  # type: ignore[attr-defined]
 from my.core import Paths, dataclass
@@ -25,8 +28,8 @@ from functools import partial
 from itertools import chain
 
 from my.core import get_files, Stats, Res, Json, warn_if_empty
-from ..utils.time import parse_datetime_millis
-from ..utils.common import InputSource
+from .utils.time import parse_datetime_millis
+from .utils.common import InputSource
 
 
 def inputs() -> Sequence[Path]:

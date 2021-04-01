@@ -18,7 +18,7 @@ from .models import Location
 from ..facebook import AdminAction, UploadedPhoto
 from ..facebook import events as facebook_events
 from ..facebook import config as facebook_config
-from ..games.blizzard import events as blizzard_events
+from ..blizzard import events as blizzard_events
 from ..discord import activity, _cachew_depends_on
 
 
