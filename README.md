@@ -168,6 +168,7 @@ $ ./scripts/hpi_query my.body water --days 1 | jq '.[] | .glasses' | datamash su
 
 create 'export modules' which keep these up to date:
 
+- [ ] backup twitch?
 - [ ] backup MAL (ugh)
 
 Need to do more research/figure out
