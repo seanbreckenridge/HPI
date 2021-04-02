@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # wrapper around linter/formatters
 # pauses at each step if there are errors
 
