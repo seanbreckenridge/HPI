@@ -5,6 +5,8 @@
 # perhaps even a special takeout module that deals with all of this automatically?
 # e.g. accumulate, filter and maybe report useless takeouts?
 
+REQUIRES = ["cssselect", "lxml"]
+
 from itertools import chain
 from typing import Set
 

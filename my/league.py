@@ -3,7 +3,7 @@ Parses league of legend history from my `lolexport.parse` format
 from: https://github.com/seanbreckenridge/lolexport
 """
 
-REQUIRES = ["lolexport"]
+REQUIRES = ["git+https://github.com/seanbreckenridge/lolexport"]
 
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example

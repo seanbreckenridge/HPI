@@ -35,7 +35,7 @@ havecmd() {
 
 clone_if_not_exists() {
 	if [[ ! -d "$2" ]]; then
-		git clone "$1" "$2" || exit $?
+		git clone "$1" "$2" || return $?
 	fi
 }
 
@@ -56,15 +56,16 @@ setup_fork() {
 		git clone "${FORK_URL}" "${FORK_TARGET}"
 		cd "${FORK_TARGET}"
 		git remote add upstream "${UPSTREAM_URL}"
-		python3 -m pip install -e "${FORK_TARGET}"
 	else
-		echo "Path already exists, skipping setting up fork..."
+		echo "Path already exists, skipping clone..."
 	fi
+	cd "${FORK_TARGET}"
+	python3 -m pip install -e '.[optional,testing]'
 
 	# cd back to here, to pip install this
-	cd "${BASE_DIR}" || exit $?
-	python3 -m pip install -e .
-	# TODO: re-order easy-install.path?
+	cd "${BASE_DIR}" || return $?
+	python3 -m pip install -e '.'
+	# TODO: ensure easy-install.path is ordered right?
 }
 
 setup_ghexport() {
@@ -75,7 +76,7 @@ setup_ghexport() {
 	TARGET="${REPOS:?Repos environment variable is not set}/ghexport"
 	python3 -m pip install httpx
 	clone_if_not_exists "$URL" "$TARGET"
-	cd "$TARGET" || exit $?
+	cd "$TARGET" || return $?
 	git submodule update --init
 	python3 -m pip install --user .
 }
@@ -87,8 +88,18 @@ module_dependencies() {
 	hpi module install --user my.window_watcher
 	hpi module install --user my.discord
 	hpi module install --user my.body
-	# replace with more 'hpi module install' calls
-	# and remove overlapping items from requirements.txt
+	hpi module install --user my.google
+	hpi module install --user my.time.tz.via_location
+	hpi module install --user my.coding.commits
+	hpi module install --user my.todotxt
+	hpi module install --user my.reddit
+	hpi module install --user my.location.ip
+	hpi module install --user my.location.gpslogger
+	hpi module install --user my.chess
+	hpi module install --user my.mpv
+	hpi module install --user my.league
+	hpi module install --user my.trakt
+	# other requirements needed in general/not specifically for a module
 	python3 -m pip install --user -r ./requirements.txt
 }
 

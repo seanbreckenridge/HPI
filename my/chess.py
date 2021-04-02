@@ -3,7 +3,7 @@ Parses chess games from chess.com using
 https://github.com/seanbreckenridge/chessdotcom_export
 """
 
-REQUIRES = ["chessdotcom_export"]
+REQUIRES = ["git+https://github.com/seanbreckenridge/chessdotcom_export"]
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import chess as user_config  # type: ignore[attr-defined]

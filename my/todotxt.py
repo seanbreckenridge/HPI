@@ -2,6 +2,9 @@
 Parses todotxt (http://todotxt.org/) done.txt and todo.txt files
 """
 
+REQUIRES = ["topydo"]
+
+
 from typing import Optional
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example

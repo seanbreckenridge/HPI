@@ -2,6 +2,8 @@
 Uses IP address data from other exports to get location data
 """
 
+REQUIRES = ["git+https://github.com/seanbreckenridge/ipgeocache"]
+
 import ipaddress
 from typing import NamedTuple, Iterator
 from pathlib import Path

@@ -3,7 +3,7 @@ Parses the dump of my movies/tv shows history and watchlist from https://trakt.t
 Uses https://github.com/seanbreckenridge/traktexport
 """
 
-REQUIRES = ["traktexport"]
+REQUIRES = ["git+https://github.com/seanbreckenridge/traktexport"]
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import trakt as user_config  # type: ignore[attr-defined]

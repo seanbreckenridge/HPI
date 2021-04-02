@@ -2,6 +2,8 @@
 Parse gpslogger https://github.com/mendhak/gpslogger .gpx (xml) files
 """
 
+REQUIRES = ["gpxpy"]
+
 # For config, see: https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py
 from my.config import gpslogger as user_config  # type: ignore[attr-defined]
 from my.core import Paths, dataclass
