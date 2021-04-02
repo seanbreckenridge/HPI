@@ -41,9 +41,9 @@ create_data_dir() {
 install_python_extras() {
 	hpi module install --user my.reddit
 	hpi module install --user my.pdfs
-	python3 -m pip install --user 'git+https://github.com/seanbreckenridge/aw-watcher-window'
-	python3 -m pip install --user 'git+https://github.com/seanbreckenridge/discord_data'
-	python3 -m pip install --user 'git+https://github.com/seanbreckenridge/tupletally'
+	hpi module install --user my.window_watcher
+	hpi module install --user my.discord
+	hpi module install --user my.body
 }
 
 setup_arctee() {

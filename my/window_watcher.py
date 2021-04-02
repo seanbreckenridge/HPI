@@ -2,6 +2,8 @@
 Parses history from https://github.com/seanbreckenridge/aw-watcher-window
 """
 
+REQUIRES = ["git+https://github.com/seanbreckenridge/aw-watcher-window"]
+
 from typing import Optional, List
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
