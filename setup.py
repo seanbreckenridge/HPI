@@ -1,4 +1,3 @@
-from pathlib import Path
 from setuptools import setup, find_namespace_packages  # type: ignore[import]
 
 
@@ -7,9 +6,6 @@ def subpackages():
     for p in find_namespace_packages(".", include=("my.*",)):
         if p.startswith("my."):
             yield p
-
-
-reqs = Path("requirements.txt").read_text().strip().splitlines()
 
 
 if __name__ == "__main__":
@@ -25,5 +21,4 @@ if __name__ == "__main__":
         author_email="seanbrecke@gmail.com",
         description="A Python interface to my life",
         python_requires=">=3.6",
-        install_requires=reqs,
     )

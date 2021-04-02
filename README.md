@@ -132,7 +132,7 @@ Movie I've watched most?
 
 ### Other Changes
 
-- [`setup/install`](setup/install) first installs the upstream repo ([`karlicoss/HPI`](https://github.com/karlicoss/HPI)) as a editable namespace package, then sets up this repository as a bunch of sub-modules. (TODO: add minimal hpi namespace example)
+- [`install`](install) first installs the upstream repo ([`karlicoss/HPI`](https://github.com/karlicoss/HPI)) as a editable namespace package, then sets up this repository as a bunch of sub-modules. (TODO: add minimal hpi namespace example)
 - [`jobs`](./jobs) contains anacron-like jobs that are run periodically, using [`bgproc`](https://github.com/seanbreckenridge/bgproc) and [`evry`](https://github.com/seanbreckenridge/evry). So, this repo has both the [DAL](https://beepb00p.xyz/exports.html#dal) and the scripts to backup the data. I run the jobs in the background using supervisor, see the `run_jobs` script [`here`](https://github.com/seanbreckenridge/dotfiles/tree/master/.local/scripts/supervisor)
 - Added a little query interface to `my.utils`: to do some type introspection to query/order functions/events based on datetime, and to dump any of the computed events to JSON. It includes some helpers to serialize NamedTuple/dataclass and date-like objects:
 

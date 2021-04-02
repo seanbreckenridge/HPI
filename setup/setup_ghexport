@@ -1,9 +1,0 @@
-#!/bin/bash
-
-URL='https://github.com/seanbreckenridge/ghexport'
-TARGET="${REPOS:?Repos environment variable is not set}/ghexport"
-
-clone_if_not_exists "$URL" "$TARGET"
-cd "$TARGET" || exit $?
-git submodule update --init
-python3 -m pip install --user .

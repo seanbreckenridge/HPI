@@ -1,0 +1,174 @@
+#!/usr/bin/env bash
+set -u
+
+# script to setup HPI
+# - installs karlicoss/HPI as an editable namespace package,
+# - installs this repo
+# - installs additional python packages for modules
+# - checks for any required external commands
+# - sets up directory structure in ~/data
+
+# cd to this directory
+BASE_DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")")" || exit $?
+readonly BASE_DIR
+cd "${BASE_DIR}" || exit 1
+
+# function to verify an external command is installed
+havecmd() {
+	local BINARY ERRMSG script_name
+	script_name='HPI'
+	# error if first argument isn't provided
+	BINARY="${1:?Must provide command to check}"
+	# the commend exists, exit with 0 (success!)
+	if command -v "${BINARY}" >/dev/null 2>&1; then
+		return 0
+	else
+		# construct error message
+		ERRMSG="'${script_name}' requires '${BINARY}', could not find that on your \$PATH"
+		if [[ -n "$2" ]]; then
+			ERRMSG="$ERRMSG. $2"
+		fi
+		printf '%s\n' "$ERRMSG" 1>&2
+		return 1
+	fi
+}
+
+clone_if_not_exists() {
+	if [[ ! -d "$2" ]]; then
+		git clone "$1" "$2" || exit $?
+	fi
+}
+
+setup_fork() {
+	local FORK_ABBREV FORK_URL UPSTREAM_URL FORK_TARGET
+	echo 'Setting up upstream fork...'
+
+	# the name of my fork close to karlicoss/HPI, since HPI is this repo
+	FORK_ABBREV='HPI-to-master'
+
+	UPSTREAM_URL='https://github.com/karlicoss/HPI'
+	FORK_URL="https://github.com/seanbreckenridge/${FORK_ABBREV}"
+
+	FORK_TARGET="$(realpath "../${FORK_ABBREV}")"
+
+	# clone my fork one level up from here if it doesnt exist
+	if [[ ! -e "${FORK_TARGET}" ]]; then
+		git clone "${FORK_URL}" "${FORK_TARGET}"
+		cd "${FORK_TARGET}"
+		git remote add upstream "${UPSTREAM_URL}"
+		python3 -m pip install -e "${FORK_TARGET}"
+	else
+		echo "Path already exists, skipping setting up fork..."
+	fi
+
+	# cd back to here, to pip install this
+	cd "${BASE_DIR}" || exit $?
+	python3 -m pip install -e .
+	# TODO: re-order easy-install.path?
+}
+
+setup_ghexport() {
+	local URL TARGET
+	# temporary (hopefully?) patch to use httpx instead of requirements
+	echo 'Setting up ghexport...'
+	URL='https://github.com/seanbreckenridge/ghexport'
+	TARGET="${REPOS:?Repos environment variable is not set}/ghexport"
+	python3 -m pip install httpx
+	clone_if_not_exists "$URL" "$TARGET"
+	cd "$TARGET" || exit $?
+	git submodule update --init
+	python3 -m pip install --user .
+}
+
+module_dependencies() {
+	(setup_ghexport) || return $?
+	hpi module install --user my.reddit
+	hpi module install --user my.pdfs
+	hpi module install --user my.window_watcher
+	hpi module install --user my.discord
+	hpi module install --user my.body
+	# replace with more 'hpi module install' calls
+	# and remove overlapping items from requirements.txt
+	python3 -m pip install --user -r ./requirements.txt
+}
+
+verify_personal_python_packages() {
+	# some python packages I install manually as they're
+	# pretty personal/require extensive configuration
+	# here, just try and import them -- that shouldn't fail
+	python3 -c "import nextalbums, budget"
+}
+
+setup_data_dir() {
+	local DATA_PREFIX="${HOME}/data"
+	local -a directories
+	directories=(
+		'tupletally'
+		'doctor'
+		'github/gdpr'
+		'github/ghexport'
+		'zsh_history'
+		'bash_history'
+		'rexport'
+		'pushshift'
+		'todotxt'
+		'newsboat'
+		'firefox'
+		'mpv'
+		'blizzard'
+		'facebook_gdpr'
+		'ipython'
+		'old_forums'
+		'ttt'
+		'window_watcher'
+		'google_takeout'
+		'spotify'
+		'apple'
+		'discord'
+		'league_of_legends'
+		'chessdotcom'
+		'trakt'
+		'albums'
+	)
+
+	echo 'Setting up directories in ~/data'
+	for dir in "${directories[@]}"; do
+		ddir="${DATA_PREFIX}/${dir}"
+		if [[ ! -d "${ddir}" ]]; then
+			mkdir -p "${ddir}"
+		fi
+	done
+}
+
+required_commands() {
+	echo 'Checking if required commands are installed...'
+	set -e
+	havecmd curl
+	havecmd git
+	havecmd bgproc "For background tasks; install from https://github.com/seanbreckenridge/bgproc"
+	havecmd evry "To handle background tasks; install from https://github.com/seanbreckenridge/evry"
+	havecmd wait-for-internet "To verify I have internet; install from https://github.com/seanbreckenridge/wait-for-internet"
+	havecmd python3 "This needs 'python3'\!"
+	havecmd flake8
+	havecmd black
+	havecmd shfmt
+	havecmd shellcheck
+	havecmd mypy
+	havecmd pytest
+	havecmd jq
+	havecmd fd
+	set +e
+	# install arctee, needed for jobs
+	python3 -m pip install --user 'git+https://github.com/karlicoss/arctee'
+}
+
+main() {
+	required_commands || return $?
+	wait-for-internet
+	setup_data_dir || return $?
+	(setup_fork) || return $?
+	module_dependencies || return $?
+	verify_personal_python_packages || return $?
+}
+
+main "$@" || exit $?
