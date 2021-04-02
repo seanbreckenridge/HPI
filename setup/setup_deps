@@ -43,6 +43,7 @@ install_python_extras() {
 	python3 -m pip install --user 'git+https://github.com/seanbreckenridge/discord_data'
 	python3 -m pip install --user 'git+https://github.com/seanbreckenridge/tupletally'
 	python3 -m pip install --user 'git+https://github.com/karlicoss/rexport'
+	python3 -m pip install --user 'git+https://github.com/0xabu/pdfannots'
 }
 
 setup_arctee() {
