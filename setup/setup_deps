@@ -39,11 +39,11 @@ create_data_dir() {
 }
 
 install_python_extras() {
+	hpi module install --user my.reddit
+	hpi module install --user my.pdfs
 	python3 -m pip install --user 'git+https://github.com/seanbreckenridge/aw-watcher-window'
 	python3 -m pip install --user 'git+https://github.com/seanbreckenridge/discord_data'
 	python3 -m pip install --user 'git+https://github.com/seanbreckenridge/tupletally'
-	python3 -m pip install --user 'git+https://github.com/karlicoss/rexport'
-	python3 -m pip install --user 'git+https://github.com/0xabu/pdfannots'
 }
 
 setup_arctee() {
@@ -79,7 +79,6 @@ havecmd bgproc "Install from https://github.com/seanbreckenridge/bgproc"
 havecmd wait-for-internet " Install from https://github.com/seanbreckenridge/wait-for-internet"
 havecmd evry "Install from https://github.com/seanbreckenridge/evry"
 havecmd python3 'This needs python!'
-havecmd go "Requires golang for 'https://github.com/zupzup/calories'"
 set +e
 
 wait-for-internet
@@ -88,7 +87,6 @@ wait-for-internet
 (setup_arctee) || exit $? # run in subshell to not 'cd' in current process
 create_data_dir
 install_python_extras
-go get github.com/zupzup/calories
 
 # export specific setup
 ./structure
