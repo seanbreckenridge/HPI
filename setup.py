@@ -12,17 +12,18 @@ def subpackages():
 reqs = Path("requirements.txt").read_text().strip().splitlines()
 
 
-setup(
-    name="HPI-additions",  # use a different name from karlicoss/HPI, for confusion regarding egg-link reasons
-    use_scm_version={
-        "local_scheme": "dirty-tag",
-    },
-    zip_safe=False,
-    packages=list(subpackages()),
-    url="https://github.com/seanbreckenridge/HPI",
-    author="Sean Breckenridge",
-    author_email="seanbrecke@gmail.com",
-    description="A Python interface to my life",
-    python_requires=">=3.6",
-    install_requires=reqs,
-)
+if __name__ == "__main__":
+    setup(
+        name="HPI-additions",  # use a different name from karlicoss/HPI, for confusion regarding egg-link reasons
+        use_scm_version={
+            "local_scheme": "dirty-tag",
+        },
+        zip_safe=False,
+        packages=list(subpackages()),
+        url="https://github.com/seanbreckenridge/HPI",
+        author="Sean Breckenridge",
+        author_email="seanbrecke@gmail.com",
+        description="A Python interface to my life",
+        python_requires=">=3.6",
+        install_requires=reqs,
+    )
