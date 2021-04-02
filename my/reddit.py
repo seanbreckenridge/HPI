@@ -100,7 +100,7 @@ def saved() -> Iterator[Save]:
 @cache
 def comments() -> Iterator[RComment]:
     # prefer _dal.comments to pushshift, gets added to emitted first
-    yield from _merge_comments(_dal().comments(), pushshift_comments())
+    yield from _merge_comments(list(chain(_dal().comments(), pushshift_comments())))
 
 
 @cache
