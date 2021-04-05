@@ -159,7 +159,7 @@ required_commands() {
 	havecmd bgproc "For background tasks; install from https://github.com/seanbreckenridge/bgproc"
 	havecmd evry "To handle background tasks; install from https://github.com/seanbreckenridge/evry"
 	havecmd wait-for-internet "To verify I have internet; install from https://github.com/seanbreckenridge/wait-for-internet"
-	havecmd python3 "This needs 'python3'\!"
+	havecmd python3
 	havecmd flake8
 	havecmd black
 	havecmd shfmt
