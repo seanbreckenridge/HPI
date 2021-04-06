@@ -5,5 +5,6 @@ evry 3 hours -checkbody && {
 	printlog "check_weight:checking..."
 	# cross platform script that sends notifications
 	# https://sean.fish/d/cross-platform/notify
-	[[ "$(hpi query --recent 1w my.body.weight | jq 'length')" == '0' ]] && notify "havent updated weight in more than a week!"
+	QR="$(hpi query --recent 1w my.body.weight)" || send-error "check_body: hpi query failed"
+	[[ "$(jq 'length' <<<"$QR")" == '0' ]] && notify "havent updated weight in more than a week!"
 }
