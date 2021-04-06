@@ -2,24 +2,8 @@
 # remind me to log my weight
 
 evry 3 hours -checkbody && {
-	cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")" || {
-		send-error "Couldn't cd to current dir"
-		exit 1
-	}
 	printlog "check_weight:checking..."
-	# store in-case I use return code to specify what hasn't been logged
-	./check_body.py
-	RES=$?
 	# cross platform script that sends notifications
 	# https://sean.fish/d/cross-platform/notify
-	case "$RES" in
-	1)
-		send-error "error running check body script"
-		;;
-	2)
-		notify "havent updated weight in more than a week!"
-		;;
-	*) ;;
-
-	esac
+	[[ "$(hpi query --recent 1w my.body.weight | jq 'length')" == '0' ]] && notify "havent updated weight in more than a week!"
 }
