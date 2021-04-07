@@ -168,6 +168,7 @@ required_commands() {
 	havecmd pytest
 	havecmd jq
 	havecmd fd
+	havecmd mispipe 'part of the moreutils package'
 	set +e
 	# install arctee, needed for jobs
 	python3 -m pip install --user 'git+https://github.com/karlicoss/arctee'

@@ -2,9 +2,9 @@
 # remind me to log my weight
 
 evry 3 hours -checkbody && {
-	printlog "check_weight:checking..."
+	printlog "checkbody:checking last time I logged my weight..."
 	# cross platform script that sends notifications
 	# https://sean.fish/d/cross-platform/notify
-	QR="$(hpi query --recent 1w my.body.weight)" || send-error "check_body: hpi query failed"
-	[[ "$(jq 'length' <<<"$QR")" == '0' ]] && notify "havent updated weight in more than a week!"
+	LOGCOUNT="$(mispipe 'hpi query --recent 1w my.body.weight' 'jq length')" || send-error "check_body: hpi query failed"
+	[[ "${LOGCOUNT}" == '0' ]] && notify "havent updated weight in more than a week!"
 }
