@@ -107,6 +107,8 @@ verify_personal_python_packages() {
 	# some python packages I install manually as they're
 	# pretty personal/require extensive configuration
 	# here, just try and import them -- that shouldn't fail
+	# https://github.com/seanbreckenridge/mint
+	# https://github.com/seanbreckenridge/albums
 	python3 -c "import nextalbums, budget"
 }
 
