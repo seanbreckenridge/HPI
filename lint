@@ -26,13 +26,16 @@ havecmd() {
 }
 
 set -e
-havecmd realpath
 havecmd shellcheck
 havecmd exists 'See https://github.com/seanbreckenridge/exists'
 havecmd rifleman 'See https://github.com/seanbreckenridge/rifleman'
+havecmd pytest
 havecmd jq
 havecmd tput
 havecmd mypy
+havecmd flake8
+havecmd black
+havecmd shfmt
 set +e
 
 cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")" || {

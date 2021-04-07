@@ -162,14 +162,7 @@ required_commands() {
 	havecmd evry "To handle background tasks; install from https://github.com/seanbreckenridge/evry"
 	havecmd wait-for-internet "To verify I have internet; install from https://github.com/seanbreckenridge/wait-for-internet"
 	havecmd python3
-	havecmd flake8
-	havecmd black
-	havecmd shfmt
-	havecmd shellcheck
-	havecmd mypy
-	havecmd pytest
-	havecmd jq
-	havecmd fd
+	havecmd fd 'For my.coding.commits'
 	havecmd mispipe 'part of the moreutils package'
 	set +e
 	# install arctee, needed for jobs
