@@ -51,7 +51,7 @@ def test_parse_dt():
     parse_dt("Sep 10, 2019, 8:51:45 PM MSK")
 
 
-def clean_latin1_chars(s: str):
+def clean_latin1_chars(s: str) -> str:
     # these are latin1 encoded space characters
     return s.replace("\xa0", "").replace("\u2003", "")
 

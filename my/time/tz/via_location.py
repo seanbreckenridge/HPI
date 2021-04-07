@@ -12,7 +12,7 @@ from collections import Counter
 from datetime import date, datetime
 from functools import lru_cache
 from itertools import groupby
-from typing import Iterator, NamedTuple, Optional
+from typing import Iterator, NamedTuple, Optional, Tuple, Any
 
 from more_itertools import seekable
 import pytz
@@ -32,7 +32,7 @@ _FASTER: bool = True
 
 
 @lru_cache(2)
-def _timezone_finder(fast: bool):
+def _timezone_finder(fast: bool) -> Any:
     if fast:
         # less precise, but faster
         from timezonefinder import TimezoneFinderL as Finder  # type: ignore
@@ -52,7 +52,7 @@ class DayWithZone(NamedTuple):
 
 
 # TODO: remove kwargs? not used be me
-def _iter_local_dates(start=0, stop=None) -> Iterator[DayWithZone]:
+def _iter_local_dates() -> Iterator[DayWithZone]:
     # TODO: split this into multiple providers? and merge in main/all.py?
     # location data from IP addresses, which return tz info
     for ip in ips():
@@ -124,9 +124,11 @@ def _get_day_tz(d: date) -> Optional[pytz.BaseTzInfo]:
     return None if zone is None else pytz.timezone(zone)
 
 
+LatLon = Tuple[float, float]
+
 # ok to cache, there are only a few home locations?
 @lru_cache(maxsize=None)
-def _get_home_tz(loc) -> Optional[pytz.BaseTzInfo]:
+def _get_home_tz(loc: LatLon) -> Optional[pytz.BaseTzInfo]:
     (lat, lng) = loc
     finder = _timezone_finder(fast=False)  # ok to use slow here for better precision
     zone = finder.timezone_at(lat=lat, lng=lng)

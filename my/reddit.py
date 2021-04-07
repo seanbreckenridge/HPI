@@ -230,7 +230,7 @@ def _get_events(backups: Sequence[Path], parallel: bool = True) -> Iterator[Even
 
 
 @lru_cache(1)
-def events(*args, **kwargs) -> List[Event]:
+def events(*args: bool, **kwargs: bool) -> List[Event]:
     inp = inputs()
     # 2.2s for 300 files without cachew
     # 0.2s for 300 files with cachew
