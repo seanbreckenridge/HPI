@@ -130,36 +130,10 @@ Movie I've watched most?
 [('Up', 92)]  # (the pixar movie)
 ```
 
-### Other Changes
+### Structural Changes
 
-- [`install`](install) first installs the upstream repo ([`karlicoss/HPI`](https://github.com/karlicoss/HPI)) as a editable namespace package, then sets up this repository as a bunch of sub-modules. (TODO: add minimal hpi namespace example)
+- [`install`](install) first installs the upstream repo ([`karlicoss/HPI`](https://github.com/karlicoss/HPI)) as a editable namespace package, then sets up this repository as a bunch of sub-modules
 - [`jobs`](./jobs) contains anacron-like jobs that are run periodically, using [`bgproc`](https://github.com/seanbreckenridge/bgproc) and [`evry`](https://github.com/seanbreckenridge/evry). So, this repo has both the [DAL](https://beepb00p.xyz/exports.html#dal) and the scripts to backup the data. I run the jobs in the background using supervisor, see the `run_jobs` script [`here`](https://github.com/seanbreckenridge/dotfiles/tree/master/.local/scripts/supervisor)
-- Added a little query interface to `my.utils`: to do some type introspection to query/order functions/events based on datetime, and to dump any of the computed events to JSON. It includes some helpers to serialize NamedTuple/dataclass and date-like objects:
-
-```python
->>> from my.utils.serialize import dumps
->>> from my.utils.query import most_recent, find_hpi_function
->>> print(dumps(list(most_recent(find_hpi_function("my.zsh", "history")(), events=2)), indent=2))
-[
-  {
-    "dt": 1609195654,
-    "duration": 0,
-    "command": "ls"
-  },
-  {
-    "dt": 1609195491,
-    "duration": 0,
-    "command": "ls"
-  }
-]
-```
-
-That info is also available as a CLI interface, which I use to grab recent events so I can populate that info into my dashboard/menu bar. For example, to quickly grab how much water I've drank in the last day:
-
-```
-$ ./scripts/hpi_query my.body water --days 1 | jq '.[] | .glasses' | datamash sum 1
-4.5
-```
 
 ### TODO:
 
@@ -168,10 +142,13 @@ $ ./scripts/hpi_query my.body water --days 1 | jq '.[] | .glasses' | datamash su
 
 create 'export modules' which keep these up to date:
 
+- [ ] backup amazon export? or make notes as to why I shouldnt
+- [ ] additional services using [finance-dl](https://github.com/jbms/finance-dl) ?
+- [ ] [listenbrainz](https://listenbrainz.org/) (RYM replacement) exporter/DAL?
 - [ ] backup twitch?
 - [ ] backup MAL (ugh)
 
 Need to do more research/figure out
 
-- [ ] polar? some other reading system? formalize documents/configure `my.pdfs`
+- [ ] zotero for PDFs annotations?
 - [ ] email?
