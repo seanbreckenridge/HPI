@@ -2,12 +2,11 @@ from pathlib import Path
 
 from my.coding.commits import repos, _cached_commits, Commit
 
+from more_itertools import ilen
+
 
 def file_count(dir_name: Path) -> int:
-    count = 0
-    for _ in dir_name.rglob("*"):
-        count += 1
-    return count
+    return ilen(dir_name.rglob("*"))
 
 
 def test():
@@ -16,7 +15,7 @@ def test():
     # get a repo which has lots of files
     # probably has a couple commits
     for r in sorted(all_repos):
-        if file_count(r) > 100:
+        if file_count(r) > 50:
             biggest_repo = r
             break
     else:

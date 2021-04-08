@@ -39,6 +39,14 @@ clone_if_not_exists() {
 	fi
 }
 
+pipm() {
+	python3 -m pip "$@"
+}
+
+pip_install() {
+	pipm install --user "$@"
+}
+
 setup_fork() {
 	local FORK_ABBREV FORK_URL UPSTREAM_URL FORK_TARGET
 	echo 'Setting up upstream fork...'
@@ -54,53 +62,61 @@ setup_fork() {
 	# clone my fork one level up from here if it doesnt exist
 	if [[ ! -e "${FORK_TARGET}" ]]; then
 		git clone "${FORK_URL}" "${FORK_TARGET}"
-		cd "${FORK_TARGET}"
+		cd "${FORK_TARGET}" || return $?
 		git remote add upstream "${UPSTREAM_URL}"
 	else
 		echo "Path already exists, skipping clone..."
 	fi
-	cd "${FORK_TARGET}"
-	python3 -m pip install -e '.[optional,testing]'
+	cd "${FORK_TARGET}" || return $?
+	pip_install -e '.[optional,testing]'
 
 	# cd back to here, to pip install this
 	cd "${BASE_DIR}" || return $?
-	python3 -m pip install -e '.'
+	pip_install -e '.'
 	# TODO: ensure easy-install.path is ordered right?
 }
 
 setup_ghexport() {
 	local URL TARGET
-	# temporary (hopefully?) patch to use httpx instead of requirements
+	# temporary (hopefully?) patch to use httpx instead of requests
 	echo 'Setting up ghexport...'
 	URL='https://github.com/seanbreckenridge/ghexport'
 	TARGET="${REPOS:?Repos environment variable is not set}/ghexport"
-	python3 -m pip install httpx
+	pip_install httpx
 	clone_if_not_exists "$URL" "$TARGET"
 	cd "$TARGET" || return $?
 	git submodule update --init
-	python3 -m pip install --user .
+	pip_install .
+}
+
+# install dependencies (with pip) for this module
+# this works by traversing the AST/looking for
+# a 'REQUIRES' global variable in the
+# corresponding file
+hpi_module() {
+	hpi module install --user "$@"
 }
 
 module_dependencies() {
+	# no my.github.gdpr because I install deps manually
 	(setup_ghexport) || return $?
-	hpi module install --user my.reddit
-	hpi module install --user my.pdfs
-	hpi module install --user my.window_watcher
-	hpi module install --user my.discord
-	hpi module install --user my.body
-	hpi module install --user my.google
-	hpi module install --user my.time.tz.via_location
-	hpi module install --user my.coding.commits
-	hpi module install --user my.todotxt
-	hpi module install --user my.reddit
-	hpi module install --user my.location.ip
-	hpi module install --user my.location.gpslogger
-	hpi module install --user my.chess
-	hpi module install --user my.mpv
-	hpi module install --user my.league
-	hpi module install --user my.trakt
+	hpi_module my.reddit
+	hpi_module my.pdfs
+	hpi_module my.window_watcher
+	hpi_module my.discord
+	hpi_module my.body
+	hpi_module my.google
+	hpi_module my.time.tz.via_location
+	hpi_module my.coding.commits
+	hpi_module my.todotxt
+	hpi_module my.location.ip
+	hpi_module my.location.gpslogger
+	hpi_module my.chess
+	hpi_module my.mpv
+	hpi_module my.league
+	hpi_module my.trakt
 	# other requirements needed in general/not specifically for a module
-	python3 -m pip install --user -r ./requirements.txt
+	pip_install -r ./requirements.txt
 }
 
 verify_personal_python_packages() {
@@ -166,7 +182,7 @@ required_commands() {
 	havecmd mispipe 'part of the moreutils package'
 	set +e
 	# install arctee, needed for jobs
-	python3 -m pip install --user 'git+https://github.com/karlicoss/arctee'
+	pip_install 'git+https://github.com/karlicoss/arctee'
 }
 
 main() {

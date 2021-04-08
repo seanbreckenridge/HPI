@@ -2,6 +2,8 @@
 # wrapper around linter/formatters
 # pauses at each step if there are errors
 
+set -o pipefail
+
 # get the name of this script
 declare script_name
 script_name="$(basename "${BASH_SOURCE[0]}")"
