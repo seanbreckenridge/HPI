@@ -116,7 +116,7 @@ module_dependencies() {
 	hpi_module my.league
 	hpi_module my.trakt
 	# other requirements needed in general/not specifically for a module
-	pip_install -r ./requirements.txt
+	pip_install -r -U ./requirements.txt
 }
 
 verify_personal_python_packages() {
