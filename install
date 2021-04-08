@@ -44,7 +44,7 @@ setup_fork() {
 	echo 'Setting up upstream fork...'
 
 	# the name of my fork close to karlicoss/HPI, since HPI is this repo
-	FORK_ABBREV='HPI-to-master'
+	FORK_ABBREV='HPI-fork'
 
 	UPSTREAM_URL='https://github.com/karlicoss/HPI'
 	FORK_URL="https://github.com/seanbreckenridge/${FORK_ABBREV}"

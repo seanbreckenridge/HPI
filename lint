@@ -85,7 +85,7 @@ custom_flake8() {
 
 update_fork() {
 	local FORK_LOCATION
-	FORK_LOCATION="$(realpath ../HPI-to-master/)"
+	FORK_LOCATION="$(realpath ../HPI-fork/)"
 	cd "${FORK_LOCATION}" || return $?
 	git checkout master
 	git pull upstream master
