@@ -116,7 +116,7 @@ module_dependencies() {
 	hpi_module my.league
 	hpi_module my.trakt
 	# other requirements needed in general/not specifically for a module
-	pip_install -r -U ./requirements.txt
+	pip_install -U -r ./requirements.txt
 }
 
 verify_personal_python_packages() {
@@ -181,14 +181,19 @@ required_commands() {
 	havecmd fd 'For my.coding.commits'
 	havecmd mispipe 'part of the moreutils package'
 	set +e
+}
+
+install_dependencies() {
 	# install arctee, needed for jobs
 	pip_install 'git+https://github.com/karlicoss/arctee'
+	pip_install 'git+https://github.com/seanbreckenridge/reorder_editable'
 }
 
 main() {
 	required_commands || return $?
 	wait-for-internet
 	setup_data_dir || return $?
+	install_dependencies || return $?
 	(setup_fork) || return $?
 	module_dependencies || return $?
 	verify_personal_python_packages || return $?
