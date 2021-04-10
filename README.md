@@ -132,12 +132,11 @@ Movie I've watched most?
 
 ### Structural Changes
 
-- [`install`](install) first installs the upstream repo ([`karlicoss/HPI`](https://github.com/karlicoss/HPI)) as a editable namespace package, then sets up this repository as a bunch of sub-modules
+- [`install`](install) first installs the upstream repo ([`karlicoss/HPI`](https://github.com/karlicoss/HPI)) as a editable namespace package, then sets up this repository as a bunch of sub-modules. For more information on how that works and some of the complications one can run into, see [reorder_editable](https://github.com/seanbreckenridge/reorder_editable#editable-namespace-packages)
 - [`jobs`](./jobs) contains anacron-like jobs that are run periodically, using [`bgproc`](https://github.com/seanbreckenridge/bgproc) and [`evry`](https://github.com/seanbreckenridge/evry). So, this repo has both the [DAL](https://beepb00p.xyz/exports.html#dal) and the scripts to backup the data. I run the jobs in the background using supervisor, see the `run_jobs` script [`here`](https://github.com/seanbreckenridge/dotfiles/tree/master/.local/scripts/supervisor)
 
 ### TODO:
 
-- [ ] create HPI example namespace package
 - [ ] configure `my.stackexchange` API tokens: https://github.com/karlicoss/stexport
 
 create 'export modules' which keep these up to date:
