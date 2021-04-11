@@ -1,5 +1,4 @@
-**TLDR**: I'm using `HPI`(Human Programming Interface) package as a means of unifying, accessing and
-interacting with all of my personal data.
+**TLDR**: I'm using `HPI`(Human Programming Interface) package as a means of unifying, accessing and interacting with all of my personal data.
 
 It's a Python library (named `my`), a collection of modules for:
 
@@ -10,11 +9,11 @@ It's a Python library (named `my`), a collection of modules for:
 - todos and notes
 - instant messaging
 - bank account history/transactions
-- some video game achievements/history
+- media histories (movies, tv shows, albums, video game achievements/history)
 
 [_Why?_](https://github.com/karlicoss/HPI#why)
 
-This is built on top of and uses lots of the machinery from [`karlicoss/HPI`](https://github.com/karlicoss/HPI)
+This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It started out as a fork, but has since been converted to my own set of modules. This is installed alongside the upstream repository, see [#install](#install)
 
 ### My Modules
 
@@ -130,10 +129,33 @@ Movie I've watched most?
 [('Up', 92)]  # (the pixar movie)
 ```
 
-### Structural Changes
+## Structural Changes
 
-- [`install`](install) first installs the upstream repo ([`karlicoss/HPI`](https://github.com/karlicoss/HPI)) as a editable namespace package, then sets up this repository as a bunch of sub-modules. For more information on how that works and some of the complications one can run into, see [reorder_editable](https://github.com/seanbreckenridge/reorder_editable#editable-namespace-packages)
 - [`jobs`](./jobs) contains anacron-like jobs that are run periodically, using [`bgproc`](https://github.com/seanbreckenridge/bgproc) and [`evry`](https://github.com/seanbreckenridge/evry). So, this repo has both the [DAL](https://beepb00p.xyz/exports.html#dal) and the scripts to backup the data. I run the jobs in the background using supervisor, see the `run_jobs` script [`here`](https://github.com/seanbreckenridge/dotfiles/tree/master/.local/scripts/supervisor)
+
+### Install
+
+[`install`](https://github.com/seanbreckenridge/HPI/blob/master/install#L50) first installs the upstream repo ([`karlicoss/HPI`](https://github.com/karlicoss/HPI)) as a editable package, then sets up this repository along side it -- this is possible because `HPI` is a namespace package.
+
+For more information on that, and some of the complications one can run into, see [reorder_editable](https://github.com/seanbreckenridge/reorder_editable#editable-namespace-packages), and the [module design](https://github.com/karlicoss/HPI/blob/master/doc/MODULE_DESIGN.org#adding-new-modules) docs for HPI.
+
+Disregarding setting up all the dependencies for individual modules (which is why the [`install`](install) script exists), this is setup by doing:
+
+```bash
+# clone and install upstream as an editable package
+git clone https://github.com/karlicoss/HPI ./HPI-fork
+python3 -m pip install -e ./HPI-fork
+
+# clone and install my repository as an editable package
+git clone https://github.com/seanbreckenridge/HPI ./HPI
+python3 -m pip install -e ./HPI
+
+# make sure my easy-install.pth is ordered correctly
+python3 -m pip install 'git+https://github.com/seanbreckenridge/reorder_editable'
+python3 -m reorder_editable reorder ./HPI ./HPI-fork
+```
+
+Those directories are editable installs, meaning any changes I make to them get applied immediately, which is very convenient for debugging and developing new modules.
 
 ### TODO:
 

@@ -73,7 +73,10 @@ setup_fork() {
 	# cd back to here, to pip install this
 	cd "${BASE_DIR}" || return $?
 	pip_install -e '.'
-	# TODO: ensure easy-install.path is ordered right?
+
+	# make sure my repository appears before the upstream repo
+	python3 -m reorder_editable reorder "${BASE_DIR}" "${FORK_TARGET}"
+	python3 -m reorder_editable cat
 }
 
 setup_ghexport() {
