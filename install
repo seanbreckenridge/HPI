@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -u
+set -o pipefail
 
 # script to setup HPI
 # - installs karlicoss/HPI as an editable namespace package,
@@ -33,6 +33,16 @@ havecmd() {
 	fi
 }
 
+maybe_boxes() {
+	# Print a fancy box, if boxes is installed
+	# http://boxes.thomasjensen.com/
+	if havecmd boxes >/dev/null 2>&1; then
+		boxes -dshell -pv1h2
+	else
+		cat
+	fi
+}
+
 clone_if_not_exists() {
 	if [[ ! -d "$2" ]]; then
 		git clone "$1" "$2" || return $?
@@ -49,7 +59,7 @@ pip_install() {
 
 setup_fork() {
 	local FORK_ABBREV FORK_URL UPSTREAM_URL FORK_TARGET
-	echo 'Setting up upstream fork...'
+	echo 'Setting up upstream fork...' | maybe_boxes
 
 	# the name of my fork close to karlicoss/HPI, since HPI is this repo
 	FORK_ABBREV='HPI-fork'
@@ -67,16 +77,18 @@ setup_fork() {
 	else
 		echo "Path already exists, skipping clone..."
 	fi
-	cd "${FORK_TARGET}" || return $?
-	pip_install -e '.[optional,testing]'
 
-	# cd back to here, to pip install this
+	# install my fork of upstream
+	cd "${FORK_TARGET}" || return $?
+	pip_install -e '.[optional,testing]' || return $?
+
+	# cd back to here, to install this
 	cd "${BASE_DIR}" || return $?
-	pip_install -e '.'
+	pip_install -e '.' || return $?
 
 	# make sure my repository appears before the upstream repo
-	python3 -m reorder_editable reorder "${BASE_DIR}" "${FORK_TARGET}"
-	python3 -m reorder_editable cat
+	python3 -m reorder_editable reorder "${BASE_DIR}" "${FORK_TARGET}" || return $?
+	python3 -m reorder_editable cat | maybe_boxes
 }
 
 setup_ghexport() {
@@ -101,25 +113,26 @@ hpi_module() {
 }
 
 module_dependencies() {
+	echo "Installing module dependencies" | maybe_boxes
 	# no my.github.gdpr because I install deps manually
 	(setup_ghexport) || return $?
-	hpi_module my.reddit
-	hpi_module my.pdfs
-	hpi_module my.window_watcher
-	hpi_module my.discord
-	hpi_module my.body
-	hpi_module my.google
-	hpi_module my.time.tz.via_location
-	hpi_module my.coding.commits
-	hpi_module my.todotxt
-	hpi_module my.location.ip
-	hpi_module my.location.gpslogger
-	hpi_module my.chess
-	hpi_module my.mpv
-	hpi_module my.league
-	hpi_module my.trakt
+	hpi_module my.reddit || return $?
+	hpi_module my.pdfs || return $?
+	hpi_module my.window_watcher || return $?
+	hpi_module my.discord || return $?
+	hpi_module my.body || return $?
+	hpi_module my.google || return $?
+	hpi_module my.time.tz.via_location || return $?
+	hpi_module my.coding.commits || return $?
+	hpi_module my.todotxt || return $?
+	hpi_module my.location.ip || return $?
+	hpi_module my.location.gpslogger || return $?
+	hpi_module my.chess || return $?
+	hpi_module my.mpv || return $?
+	hpi_module my.league || return $?
+	hpi_module my.trakt || return $?
 	# other requirements needed in general/not specifically for a module
-	pip_install -U -r ./requirements.txt
+	pip_install -U -r ./requirements.txt || return $?
 }
 
 verify_personal_python_packages() {
@@ -128,7 +141,7 @@ verify_personal_python_packages() {
 	# here, just try and import them -- that shouldn't fail
 	# https://github.com/seanbreckenridge/mint
 	# https://github.com/seanbreckenridge/albums
-	python3 -c "import nextalbums, budget"
+	python3 -c "import nextalbums, budget" || return $?
 }
 
 setup_data_dir() {
@@ -163,7 +176,7 @@ setup_data_dir() {
 		'albums'
 	)
 
-	echo 'Setting up directories in ~/data'
+	echo 'Setting up directories in ~/data' | maybe_boxes
 	for dir in "${directories[@]}"; do
 		ddir="${DATA_PREFIX}/${dir}"
 		if [[ ! -d "${ddir}" ]]; then
@@ -173,33 +186,43 @@ setup_data_dir() {
 }
 
 required_commands() {
-	echo 'Checking if required commands are installed...'
-	set -e
-	havecmd curl
-	havecmd git
-	havecmd bgproc "For background tasks; install from https://github.com/seanbreckenridge/bgproc"
-	havecmd evry "To handle background tasks; install from https://github.com/seanbreckenridge/evry"
-	havecmd wait-for-internet "To verify I have internet; install from https://github.com/seanbreckenridge/wait-for-internet"
-	havecmd python3
-	havecmd fd 'For my.coding.commits'
-	havecmd mispipe 'part of the moreutils package'
-	set +e
+	# ordered from most likely to least likely
+	echo 'Checking if required commands are installed...' | maybe_boxes
+	havecmd curl || return $?
+	havecmd git || return $?
+	havecmd python3 || return $?
+	havecmd fd 'Required for the my.coding.commits module' || return $?
+}
+
+optional_commands() {
+	echo 'Checking if optional commands are installed...' | maybe_boxes
+	havecmd mispipe 'part of the moreutils package' || return $?
+	havecmd evry "To handle background tasks; install from https://github.com/seanbreckenridge/evry" || return $?
+	havecmd bgproc "For background tasks; install from https://github.com/seanbreckenridge/bgproc" || return $?
+	havecmd wait-for-internet "To verify I have internet; install from https://github.com/seanbreckenridge/wait-for-internet" || return $?
 }
 
 install_dependencies() {
+	echo 'Installing dependencies...' | maybe_boxes
 	# install arctee, needed for jobs
-	pip_install 'git+https://github.com/karlicoss/arctee'
-	pip_install 'git+https://github.com/seanbreckenridge/reorder_editable'
+	pip_install 'git+https://github.com/karlicoss/arctee' || return $?
+	pip_install 'git+https://github.com/seanbreckenridge/reorder_editable' || return $?
+}
+
+prompt_if_fails() {
+	printf "Command failed... Hit Enter to continue, Ctrl+C to exit"
+	read -r
 }
 
 main() {
-	required_commands || return $?
-	wait-for-internet
-	setup_data_dir || return $?
-	install_dependencies || return $?
-	(setup_fork) || return $?
-	module_dependencies || return $?
-	verify_personal_python_packages || return $?
+	required_commands || prompt_if_fails || return $?
+	optional_commands || prompt_if_fails || return $?
+	havecmd wait-for-internet >/dev/null 2>&1 && wait-for-internet --text "waiting for internet..."
+	setup_data_dir || prompt_if_fails || return $?
+	install_dependencies || prompt_if_fails || return $?
+	(setup_fork) || prompt_if_fails || return $?
+	module_dependencies || prompt_if_fails || return $?
+	verify_personal_python_packages || prompt_if_fails || return $?
 }
 
 main "$@" || exit $?
