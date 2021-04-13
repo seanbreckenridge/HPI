@@ -52,7 +52,7 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 
 ### In-use from [karlicoss/HPI](https://github.com/karlicoss/HPI)
 
-- `my.coding` to track git commits across the system
+- `my.coding.commits` to track git commits across the system
 - `my.github` to track github events/commits and parse the GDPR export, using [`ghexport`](https://github.com/karlicoss/ghexport)
 - `my.reddit`, get saved posts, comments. Uses [`rexport`](https://github.com/karlicoss/rexport) to create backups of recent activity periodically, and [`pushshift`](https://github.com/seanbreckenridge/pushshift_comment_export) to get old comments.
 - `my.smscalls`, exports call/sms history using [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore&hl=en_US)
