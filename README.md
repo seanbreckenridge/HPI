@@ -35,7 +35,7 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 - `my.trakt`, providing me a history/my ratings for Movies/TV Show (episodes) using [`traktexport`](https://github.com/seanbreckenridge/traktexport)
 - `my.albums`, grabbing when I listened to music albums/my ratings using my [giant spreadsheet](https://sean.fish/s/albums). Handled by [`nextalbums export`](https://github.com/seanbreckenridge/albums)
 
-### 'Historical' Modules
+#### 'Historical' Modules
 
 These are modules to parse GDPR exports/data from services I used to use, but don't anymore. They're here to provide more context into the past.
 
@@ -49,6 +49,8 @@ These are modules to parse GDPR exports/data from services I used to use, but do
 - `my.spotify`, to parse the GDPR export from spotify, mostly for songs from my playlists from years ago
 
 See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py) for config.
+
+[Promnesia `Source`s for these `HPI` modules](https://github.com/seanbreckenridge/promnesia)
 
 ### In-use from [karlicoss/HPI](https://github.com/karlicoss/HPI)
 
