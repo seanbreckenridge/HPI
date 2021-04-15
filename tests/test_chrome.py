@@ -1,6 +1,6 @@
 from more_itertools import ilen, last
 
-from my.browsing import history
+from my.chrome import history
 
 
 def test_browsing_contents():

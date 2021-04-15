@@ -1,0 +1,13 @@
+#!/bin/bash
+# backup chrome browsing history
+
+evry 1 week -backup_chrome && {
+	readonly BACKUP_DIR="${HOME}/data/chrome"
+	printlog "chrome:backing up database..."
+	BACKUP_SCRIPT="${REPOS}/promnesia-fork/scripts/browser_history.py"
+	if [[ -e "${BACKUP_SCRIPT}" ]]; then
+		"$BACKUP_SCRIPT" --browser chrome --to "${BACKUP_DIR}"
+	else
+		send-error "Couldn't find backup script for chrome history..."
+	fi
+}

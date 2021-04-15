@@ -159,6 +159,7 @@ setup_data_dir() {
 		'todotxt'
 		'newsboat'
 		'firefox'
+		'chrome'
 		'mpv'
 		'blizzard'
 		'facebook_gdpr'

@@ -131,7 +131,6 @@ Movie I've watched most?
 [('Up', 92)]  # (the pixar movie)
 ```
 
-
 ### Install
 
 The [`install` script here](https://github.com/seanbreckenridge/HPI/blob/master/install#L50) first installs the upstream repo ([`karlicoss/HPI`](https://github.com/karlicoss/HPI)) as a editable package, then sets up this repository along side it -- this is possible because `HPI` is a namespace package.
