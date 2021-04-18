@@ -1,0 +1,13 @@
+#!/bin/bash
+# backup firefox/chrome browsing history
+
+err() {
+	send-error 'browserexport: failed to backup history databases...'
+}
+
+evry 1 week -backup_browser_history && {
+	readonly BACKUP_DIR="${HOME}/data/browsing/"
+	printlog "browserexport:backing up shared history databases..."
+	browserexport save -b firefox --to "${BACKUP_DIR}" || err
+	browserexport save -b chrome --to "${BACKUP_DIR}" || err
+}

@@ -5,7 +5,7 @@
 
 """
 Seems that none of these can really be deleted, as visits are slowly removed over time, as demonstrated by this script:
-If loading visits takes exceedingly long after dozens of databases have been exported, may be worth putting it behind cachew, or optimizing the queries in ffexport
+If loading visits takes exceedingly long after dozens of databases have been exported, may be worth putting it behind cachew, or optimizing the queries in browserexport
 
 So, good thing I export every 2 weeks
 
@@ -24,14 +24,14 @@ from pathlib import Path
 from datetime import datetime
 from typing import List, Set, Tuple
 
-from ffexport.parse_db import read_visits
+from browserexport.parse import read_visits
 from my.browsing import config
 from my.core import get_files
 
 
 @lru_cache(maxsize=None)
 def visit_set(p: Path) -> Set[Tuple[str, datetime]]:
-    return set([(v.url, v.visit_date) for v in read_visits(p)])
+    return set([(v.url, v.dt) for v in read_visits(p)])
 
 
 def main():
