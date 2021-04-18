@@ -165,7 +165,6 @@ Those directories are editable installs, meaning any changes I make to them get 
 
 create 'export modules' which keep these up to date:
 
-- [ ] backup amazon export? or make notes as to why I shouldnt
 - [ ] additional services using [finance-dl](https://github.com/jbms/finance-dl) ?
 - [ ] [listenbrainz](https://listenbrainz.org/) (RYM replacement) exporter/DAL?
 - [ ] backup twitch?
