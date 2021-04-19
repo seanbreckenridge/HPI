@@ -54,13 +54,6 @@ shellcheck_scripts() {
 	git ls-files | exists | rifleman - -a lint -j | jq -r 'to_entries[] | select(.key|startswith("shellcheck")) | .value | .[]' | xargs shellcheck
 }
 
-# remove temporary firefox dbs from previous runs
-# fills up /tmp and causes storage issues otherwise
-cleanup_firefox() {
-	echo "Cleaning up old firefox databases..."
-	find /tmp -iname "places*sqlite" -delete -print 2>/dev/null
-}
-
 prompt() {
 	local MESSAGE
 	MESSAGE='Hit enter to continue > '
@@ -97,7 +90,6 @@ main() {
 	(update_fork) # cd in subshell
 	custom_flake8 || prompt ''
 	pytest "$@" || prompt ''
-	cleanup_firefox
 	echo "Running mypy..."
 	mypy --color-output --ignore-missing-imports -p my || prompt ''
 	echo "Running shellcheck..."

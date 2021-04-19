@@ -77,7 +77,7 @@ Results = Iterator[Visit]
 # is constantly copied when this is called, so the path is different/
 # there may be new visits from the active sqlite datbases
 def history() -> Results:
-    yield from merge_visits([_history_from_backups(), iter(_live_visits())])
+    yield from merge_visits([_history_from_backups(), _live_visits()])
 
 
 @mcachew(depends_on=lambda: sorted(map(str, backup_inputs())), logger=logger)
