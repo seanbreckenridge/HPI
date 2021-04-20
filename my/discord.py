@@ -37,7 +37,7 @@ from urlextract import URLExtract
 logger = LazyLogger(__name__, level="warning")
 
 
-def _remove_supression(text: str, first_index: int, second_index: int) -> str:
+def _remove_suppression(text: str, first_index: int, second_index: int) -> str:
     # remove char at first index
     text = text[:first_index] + text[first_index + 1 :]
     # offset second index, since we removed a character
@@ -49,11 +49,11 @@ def _remove_supression(text: str, first_index: int, second_index: int) -> str:
 extractor = URLExtract()
 
 
-def _remove_link_supression(
+def _remove_link_suppression(
     content: str, urls: Optional[List[Tuple[str, Tuple[int, int]]]] = None
 ) -> str:
-    # fix content to remove discord link supression if any links had any
-    # e.g. this is a supressed link <https://github.com>
+    # fix content to remove discord link suppression if any links had any
+    # e.g. this is a suppressed link <https://github.com>
 
     if urls is None:
         urls = extractor.find_urls(content, get_indices=True)
@@ -65,35 +65,35 @@ def _remove_link_supression(
         after_ind = (end_index) - removed_chars
         try:
             if content[before_ind] == "<" and content[after_ind] == ">":
-                content = _remove_supression(content, before_ind, after_ind)
+                content = _remove_suppression(content, before_ind, after_ind)
                 removed_chars += 2
         except IndexError:  # could happen if the url didn't have braces and we hit the end of a string
             continue
     return content
 
 
-def test_remove_link_supression() -> None:
-    assert _remove_supression("<test>", 0, 5) == "test"
+def test_remove_link_suppression() -> None:
+    assert _remove_suppression("<test>", 0, 5) == "test"
 
     # shouldn't affect this at all
     content = "https://urlextract.readthedocs.io"
-    assert _remove_link_supression(content) == content
+    assert _remove_link_suppression(content) == content
 
     content = "<https://urlextract.readthedocs.io>"
     expected = content.strip("<").strip(">")
-    assert _remove_link_supression(content) == expected
+    assert _remove_link_suppression(content) == expected
 
     content = "Here is some text <https://urlextract.readthedocs.io>"
     expected = "Here is some text https://urlextract.readthedocs.io"
-    assert _remove_link_supression(content) == expected
+    assert _remove_link_suppression(content) == expected
 
     content = "text <https://urlextract.readthedocs.io> other text"
     expected = "text https://urlextract.readthedocs.io other text"
-    assert _remove_link_supression(content) == expected
+    assert _remove_link_suppression(content) == expected
 
     content = "t <https://urlextract.readthedocs.io> other <github.com> f <sean.fish>"
     expected = "t https://urlextract.readthedocs.io other github.com f sean.fish"
-    assert _remove_link_supression(content) == expected
+    assert _remove_link_suppression(content) == expected
 
 
 def _cachew_depends_on() -> List[str]:
@@ -109,7 +109,7 @@ def messages() -> Iterator[Message]:
             message_id=msg.message_id,
             timestamp=msg.timestamp,
             channel=msg.channel,
-            content=_remove_link_supression(msg.content),
+            content=_remove_link_suppression(msg.content),
             attachments=msg.attachments,
         )
 
