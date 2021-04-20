@@ -38,12 +38,11 @@ logger = LazyLogger(__name__, level="warning")
 
 
 def _remove_suppression(text: str, first_index: int, second_index: int) -> str:
-    # remove char at first index
-    text = text[:first_index] + text[first_index + 1 :]
-    # offset second index, since we removed a character
-    second_index -= 1
-    # remove character at second index
-    return text[:second_index] + text[second_index + 1 :]
+    return (
+        text[:first_index]  # before URL
+        + text[first_index + 1 : second_index]  # URL itself
+        + text[second_index + 1 :]  # after URL
+    )
 
 
 extractor = URLExtract()
@@ -73,7 +72,10 @@ def _remove_link_suppression(
 
 
 def test_remove_link_suppression() -> None:
-    assert _remove_suppression("<test>", 0, 5) == "test"
+    content = "<test>"
+    l = content.index("<")
+    r = content.index(">")
+    assert _remove_suppression(content, l, r) == "test"
 
     # shouldn't affect this at all
     content = "https://urlextract.readthedocs.io"
