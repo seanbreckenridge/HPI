@@ -30,7 +30,7 @@ for takeout in "${TAKEOUT_ZIPS[@]}"; do
 	# extract to temp dir
 	unzip "$takeout" -d "$tmpdir"
 	# move to correct location
-	target="${TAKEOUT_PATH}/Takeout-${takeout_created_at}"
+	target="${TAKEOUT_PATH}Takeout-${takeout_created_at}"
 	# if it already exists
 	if [[ -d "$target" ]]; then
 		echo "WARNING: Target directory ${target} already exists! skipping..." 1>&2
