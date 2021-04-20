@@ -78,14 +78,19 @@ Results = Iterator[Res[Event]]
 def events() -> Results:
     gdpr_dir = Path(config.gdpr_dir).expanduser().absolute()  # expand path
     handler_map = {
+        "Apple ID account and device information": None,
+        "Apple Online and Retail Stores": None,
+        "iCloud Bookmarks": None,  # TODO: parse,
+        "Wallet Activity": None,
         "Game Center/Game Center Data.json": _parse_game_center,
-        "iCloud Notes": None,
+        "iCloud Notes": None,  # TODO: parse/copy?
         "Marketing communications": None,
         "iCloud Contacts": None,
-        "Calendar_Events.xml": None,  # TODO: parse
         "iCloud Calendars and Reminders": None,  # TODO: parse
-        "Locations.xml": _parse_locations,
-        "Recents.xml": _parse_recents,
+        "Other data/Apple Features Using iCloud/EventKit/Locations.xml": _parse_locations,
+        "Other data/Apple Features Using iCloud/Calendar/": _parse_calendar_recents,
+        "Other data/Apple Features Using iCloud/Mail": None,  # probably better to just do an IMAP sync and get all the data
+        "Other data/": None,  # ignore anything else in this directory
     }
     for f in gdpr_dir.rglob("*"):
         handler: Any
@@ -159,7 +164,7 @@ def _parse_locations(f: Path) -> Iterator[Location]:
                 )
 
 
-def _parse_recents(f: Path) -> Iterator[Location]:
+def _parse_calendar_recents(f: Path) -> Iterator[Location]:
     tr = etree.parse(str(f))
     for location in _parse_apple_xml_val(tr.find("array")):
         loc_data: Dict[str, Any] = first(list(location.values()))
