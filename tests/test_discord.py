@@ -1,6 +1,7 @@
 from more_itertools import ilen
 
 from my.discord import messages, activity, Activity
+from my.discord import test_remove_link_supression  # bring test into scope
 
 
 def test_discord() -> None:
