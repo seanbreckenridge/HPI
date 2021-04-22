@@ -31,14 +31,15 @@ class config(user_config):
     export_path: Paths
 
 
+from pathlib import Path
 from datetime import datetime
-from typing import Iterator, NamedTuple, Sequence, Callable, List
+from typing import Iterable, NamedTuple, Iterator
 from itertools import chain
 
 from IPython.core.history import HistoryAccessor  # type: ignore[import]
 
-from my.core import get_files, warn_if_empty, Stats
-from my.core.common import listify
+from my.core import get_files, warn_if_empty, Stats, Res
+from .utils.common import InputSource
 
 
 class Command(NamedTuple):
@@ -46,30 +47,48 @@ class Command(NamedTuple):
     command: str
 
 
-Results = Iterator[Command]
+Results = Iterator[Res[Command]]
 
 
 # Return backed up sqlite databases
-@listify
-def inputs() -> Sequence[str]:  # type: ignore[misc]
-    yield from map(str, get_files(config.export_path))
+def inputs() -> Iterable[Path]:
+    yield from get_files(config.export_path)
+
+
+def _live_history() -> Results:
     # the empty string makes IPython use the live history file ~/.local/share/ipython/.../history.sqlite
     # instead of one of the files from the export backup
     # merge histories combines those
-    yield ""
+    #
+    # seems that this has the possibility to fail to locate your live
+    # history file if its being run in the background? unsure why
+    try:
+        yield from _parse_database("")
+    except Exception as e:
+        yield e
 
 
-def history(from_paths: Callable[[None], List[Sequence[str]]] = inputs) -> Results:
-    yield from _merge_histories(*from_paths())  # type: ignore[call-arg]
+def history(from_paths: InputSource = inputs) -> Results:
+    yield from _merge_histories(
+        *[_parse_database(str(p)) for p in from_paths()], _live_history()
+    )
 
 
 @warn_if_empty
-def _merge_histories(*sources: Sequence[str]) -> Results:
-    yield from set(chain(*map(_parse_database, sources)))  # type: ignore[arg-type]
+def _merge_histories(*sources: Results) -> Results:
+    emitted = set()
+    for e in chain(*sources):
+        if isinstance(e, Exception):
+            yield e
+        else:
+            key = (e.command, e.dt)
+            if key in emitted:
+                continue
+            emitted.add(key)
+            yield e
 
 
-def _parse_database(sqlite_database: str = "") -> Results:
-    # If empty string is provided as sqlite database, uses the live ipython database file instead
+def _parse_database(sqlite_database: str) -> Results:
     hist = HistoryAccessor(hist_file=sqlite_database)
     total_sessions = hist.get_last_session_id()
     for sess in range(1, total_sessions):
