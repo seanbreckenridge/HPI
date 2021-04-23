@@ -39,14 +39,14 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 
 These are modules to parse GDPR exports/data from services I used to use, but don't anymore. They're here to provide more context into the past.
 
-- `my.apple`, parses game center and location data from the apple GDPR export
-- `my.facebook`, to parse the GDPR export I downloaded from facebook before deleting my account
-- `my.league`, gives league of legends game history using [`lolexport`](https://github.com/seanbreckenridge/lolexport)
+- `my.apple`, parses Game Center and location data from the apple GDPR export
+- `my.facebook`, to parse the GDPR export from Facebook
+- `my.league`, gives League of Legends game history using [`lolexport`](https://github.com/seanbreckenridge/lolexport)
 - `my.steam`, for steam achievement data and game playtime using [`steamscraper`](https://github.com/seanbreckenridge/steamscraper)
-- `my.blizzard`, for general battle.net event data [parsed from a gdpr export](https://github.com/seanbreckenridge/blizzard_gdpr_parser)
+- `my.blizzard`, for general battle.net event data [parsed from a GDPR export](https://github.com/seanbreckenridge/blizzard_gdpr_parser)
 - `my.old_forums`, random posts from forums I used to use in the past, see [`forum_parser`](https://github.com/seanbreckenridge/forum_parser)
-- `my.skype` to parse a couple datetimes from the skype GDPR export
-- `my.spotify`, to parse the GDPR export from spotify, mostly for songs from my playlists from years ago
+- `my.skype` to parse a couple datetimes from the Skype GDPR export
+- `my.spotify`, to parse the GDPR export from Spotify, mostly to access songs from my playlists from years ago
 
 See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py) for config.
 
