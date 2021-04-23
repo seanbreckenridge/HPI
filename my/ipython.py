@@ -70,7 +70,7 @@ def _live_history() -> Results:
 
 def history(from_paths: InputSource = inputs) -> Results:
     yield from _merge_histories(
-        *[_parse_database(str(p)) for p in from_paths()], _live_history()
+        *(_parse_database(str(p)) for p in from_paths()), _live_history()
     )
 
 
