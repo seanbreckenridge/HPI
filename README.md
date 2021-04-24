@@ -141,7 +141,7 @@ $ hpi query --recent 1d my.body.water | jq '.[] | .glasses' | datamash sum 1
 
 ### Install
 
-The [`install` script here](https://github.com/seanbreckenridge/HPI/blob/master/install#L50) first installs the upstream repo ([`karlicoss/HPI`](https://github.com/karlicoss/HPI)) as a editable package, then sets up this repository along side it -- this is possible because `HPI` is a namespace package.
+The [`install` script here](https://github.com/seanbreckenridge/HPI/blob/a6495ade62efb21e61830865d8221bf3669ad0fd/install#L60) first installs the upstream repo ([`karlicoss/HPI`](https://github.com/karlicoss/HPI)) as a editable package, then sets up this repository along side it -- this is possible because `HPI` is a namespace package.
 
 For more information on that, and some of the complications one can run into, see [reorder_editable](https://github.com/seanbreckenridge/reorder_editable#editable-namespace-packages), and the [module design](https://github.com/karlicoss/HPI/blob/master/doc/MODULE_DESIGN.org#adding-new-modules) docs for HPI.
 
