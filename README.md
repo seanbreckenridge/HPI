@@ -163,7 +163,7 @@ python3 -m reorder_editable reorder ./HPI ./HPI-fork
 
 Those directories are editable installs, meaning any changes I make to them get applied immediately, which is very convenient for debugging and developing new modules.
 
-[`jobs`](./jobs) contains anacron-like jobs that are run periodically, using [`bgproc`](https://github.com/seanbreckenridge/bgproc) and [`evry`](https://github.com/seanbreckenridge/evry). So, this repo contains both the [DAL](https://beepb00p.xyz/exports.html#dal) and scripts to backup my data. I run the jobs in the background using supervisor, see the `run_jobs` script [`here`](https://github.com/seanbreckenridge/dotfiles/tree/master/.local/scripts/supervisor)
+[`jobs`](./jobs) contains anacron-like jobs that are run periodically, using [`bgproc`](https://github.com/seanbreckenridge/bgproc) and [`evry`](https://github.com/seanbreckenridge/evry). So, this repo contains both the [DAL](https://beepb00p.xyz/exports.html#dal) and scripts to backup my data. I run the jobs in the background using supervisor, see [here](https://github.com/seanbreckenridge/dotfiles/tree/master/.local/scripts/supervisor) for the config, and/or [`run_jobs`](https://github.com/seanbreckenridge/dotfiles/blob/master/.local/scripts/supervisor/run_jobs) for the `bgproc` wrapper
 
 ### TODO:
 
