@@ -3,8 +3,6 @@
 evry 6 hours -backup_albums && {
 	wait-for-internet
 	readonly BACKUP_DIR="${HOME}/data/albums"
-	# exit if not on my linux machine
-	[[ "$(uname -s)" == "Linux" ]] || exit 0
 	printlog "albums:Running nextalbums export..."
 	# arctee doesnt overwrite if this fails
 	# dont save incremental backups, just the current data

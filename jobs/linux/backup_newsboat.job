@@ -4,8 +4,6 @@
 evry 1 day -backup_rss && {
 	readonly RSS_FILE="${XDG_CONFIG_HOME}/newsboat/urls"
 	readonly BACKUP_DIR="${HOME}/data/newsboat"
-	# exit if not on my linux machine
-	[[ "$(uname -s)" == "Linux" ]] || exit 0
 	printlog "rss:backing up..."
 	arctee "${BACKUP_DIR}/{utcnow}.txt" -- cat "${RSS_FILE}" || send-error 'failed to backup newsboat subscriptions'
 }

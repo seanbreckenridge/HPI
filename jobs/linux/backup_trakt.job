@@ -3,8 +3,6 @@
 evry 1 week -backup_trakt && {
 	wait-for-internet
 	readonly BACKUP_DIR="${HOME}/data/trakt"
-	# exit if not on my linux machine
-	[[ "$(uname -s)" == "Linux" ]] || exit 0
 	printlog "traktexport:Running export..."
 	arctee -r 3 "${BACKUP_DIR}/{utcnow}.json" -- python3 -m traktexport export purplepinapples || send-error 'traktexport: failed to export list'
 }

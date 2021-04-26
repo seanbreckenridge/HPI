@@ -6,8 +6,6 @@
 evry 3 months -backup_rexport && {
 	wait-for-internet
 	readonly BACKUP_DIR="${HOME}/data/rexport"
-	# exit if not on my linux machine
-	[[ "$(uname -s)" == "Linux" ]] || exit 0
 	printlog "rexport:Running reddit export..."
 	arctee -r 3 "${BACKUP_DIR}/{utcnow}.json" -- python3 -m rexport.export --secrets "${XDG_CONFIG_HOME}/my/my/config/reddit_secret.py" || send-error 'rexport: failed to backup reddit events'
 }
