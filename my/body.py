@@ -5,7 +5,7 @@ Interactive prompts to log random things, like my current weight
 """
 
 REQUIRES = [
-    "git+https://github.com/seanbreckenridge/tupletally",
+    "git+https://github.com/seanbreckenridge/ttally",
 ]
 
 from pathlib import Path
@@ -26,10 +26,10 @@ class config(user_config):
 
 from typing import Iterator
 from functools import partial
-from tupletally.autotui_ext import glob_namedtuple
+from ttally.autotui_ext import glob_namedtuple
 
-# for definitions see https://sean.fish/d/tupletally.py
-from tupletally.config import Weight, Shower, Food, Water  # type: ignore[attr-defined]
+# for definitions see https://sean.fish/d/ttally.py
+from ttally.config import Weight, Shower, Food, Water  # type: ignore[attr-defined]
 
 glob_namedtuple_with_config = partial(glob_namedtuple, in_dir=config.abs())
 

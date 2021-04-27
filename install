@@ -149,7 +149,7 @@ setup_data_dir() {
 	local DATA_PREFIX="${HOME}/data"
 	local -a directories
 	directories=(
-		'tupletally'
+		'phone/ttally'
 		'doctor'
 		'github/gdpr'
 		'github/ghexport'

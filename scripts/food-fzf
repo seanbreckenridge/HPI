@@ -2,13 +2,13 @@
 # an adaption of https://github.com/seanbreckenridge/calories-scripts
 # to work on my own calories system
 # prompts me with fzf to pick something,
-# to generate a JSON blob which https://github.com/seanbreckenridge/tupletally
+# to generate a JSON blob which https://github.com/seanbreckenridge/ttally
 # can save to the current JSON file
 
 main() {
 	local SELECTED JSON_DATA
 	local -a CHOSEN
-	SELECTED="$(python3 -m tupletally export food | jq -r '.[] | "\(.calories)|\(.food)"' | sort -u |
+	SELECTED="$(python3 -m ttally export food | jq -r '.[] | "\(.calories)|\(.food)"' | sort -u |
 		fzf -q "$*" --header="What to add to calories?")" || {
 		echo "Didn't select anything to add to calories..." 1>&2
 		return 1
@@ -24,8 +24,8 @@ main() {
 		--arg CALORIES "${CHOSEN[0]}" \
 		--arg FOODNAME "${CHOSEN[1]/$'\n'/}" \
 		'[{"when":$TIMESTAMP | tonumber, "food": $FOODNAME, "calories": $CALORIES | tonumber}]')" || return $?
-	python3 -m tupletally from-json food <<<"${JSON_DATA}"
-	python3 -m tupletally recent food
+	python3 -m ttally from-json food <<<"${JSON_DATA}"
+	python3 -m ttally recent food
 }
 
 main "$@" || exit $?
