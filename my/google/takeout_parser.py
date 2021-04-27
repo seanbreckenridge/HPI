@@ -59,12 +59,18 @@ def parse_takeout(single_takeout_dir: Path) -> Results:
     # and parses it into whatever events you want.
 
     # I select:
+    # Chrome
+    # Google Account
     # Google Play Store
+    # Groups
+    # Hangouts
     # Location History
+    #   - Select JSON as format
     # My Activity
+    #   - Select JSON as format
     # Youtube and Youtube Music
     #   - go to options and select JSON instead of HTML
-    #   - deselect music-library-songs, music-uploads and videos options)
+    #   - deselect music-library-songs, music-uploads and videos)
     #
     # Have to manually go to takeout.google.com once per year and select that info, and then it
     # puts the zipped file into google drive at 2 months intervals, 6 times
