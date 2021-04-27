@@ -8,7 +8,7 @@
 main() {
 	local SELECTED JSON_DATA
 	local -a CHOSEN
-	SELECTED="$(python3 -m ttally export food | jq -r '.[] | "\(.calories)|\(.food)"' | sort -u |
+	SELECTED="$(python3 -m ttally export food --stream | jq -r '"\(.calories)|\(.food)"' | awk '!seen[$0]++' |
 		fzf -q "$*" --header="What to add to calories?")" || {
 		echo "Didn't select anything to add to calories..." 1>&2
 		return 1
