@@ -6,7 +6,7 @@ err() {
 }
 
 evry 1 week -backup_browser_history && {
-	readonly BACKUP_DIR="${HOME}/data/browsing/"
+	readonly BACKUP_DIR="${HPIDATA}/browsing/"
 	printlog "browserexport:backing up shared history databases..."
 	browserexport save -b firefox --to "${BACKUP_DIR}" || err
 	browserexport save -b chrome --to "${BACKUP_DIR}" || err

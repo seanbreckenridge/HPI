@@ -5,7 +5,7 @@
 
 evry 3 days -backup_ghexport && {
 	wait-for-internet
-	readonly BACKUP_DIR="${HOME}/data/github/ghexport"
+	readonly BACKUP_DIR="${HPIDATA}/github/ghexport"
 	printlog "ghexport:Running github export..."
 	arctee -r 3 "${BACKUP_DIR}/{utcnow}.json" -- python3 -m ghexport.export --secrets "${XDG_CONFIG_HOME}/my/my/config/gh_secret_token.py" || send-error 'ghexport: failed to backup github events'
 }

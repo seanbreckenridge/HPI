@@ -3,7 +3,7 @@
 
 evry 1 week -backup_ipython && {
 	readonly IPYTHON_DB="${XDG_DATA_HOME}/ipython/profile_default/history.sqlite"
-	readonly BACKUP_DIR="${HOME}/data/ipython"
+	readonly BACKUP_DIR="${HPIDATA}/ipython"
 	printlog "ipython:backing up history database..."
 	arctee "${BACKUP_DIR}/{utcnow}-{hostname}-{platform}.sqlite" -- cat "$IPYTHON_DB" || send-error 'ipython: failed to backup database'
 }

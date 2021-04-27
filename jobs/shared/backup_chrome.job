@@ -2,7 +2,7 @@
 # backup chrome browsing history
 
 evry 1 week -backup_chrome && {
-	readonly BACKUP_DIR="${HOME}/data/chrome"
+	readonly BACKUP_DIR="${HPIDATA}/chrome"
 	printlog "chrome:backing up database..."
 	BACKUP_SCRIPT="${REPOS}/promnesia-fork/scripts/browser_history.py"
 	if [[ -e "${BACKUP_SCRIPT}" ]]; then
