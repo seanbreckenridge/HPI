@@ -165,7 +165,7 @@ setup_data_dir() {
 		'facebook_gdpr'
 		'ipython'
 		'old_forums'
-		'ttt'
+		'phone/ttt'
 		'window_watcher'
 		'google_takeout'
 		'spotify'
