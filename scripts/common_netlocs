@@ -2,11 +2,16 @@
 # print the most common netlocs from my browsing history
 # ./history_common 500 to print the top 500
 
+set -e
+set -o pipefail
+
+declare COUNT
 COUNT="${1:-250}"
-exec hpi query -s my.browsing.history | \
-  jq -r '.url' | \
-  cut -d"/" -f-3 | \
-  sed -e 's/www\.//' | \
-  sort | \
-  uniq -c | \
-  sort -n | tail -n "${COUNT}"
+
+exec hpi query -s my.browsing.history |
+	jq -r '.url' |
+	cut -d"/" -f-3 |
+	sed -e 's/www\.//' |
+	sort |
+	uniq -c |
+	sort -n | tail -n "${COUNT}"

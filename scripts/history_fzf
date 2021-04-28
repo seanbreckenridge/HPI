@@ -1,8 +1,15 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # fuzzy search all my history (with descriptions, to help match what I'm looking for)
 
-THIS_DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
-cd "${THIS_DIR}" || exit $?
+set -e
+set -o pipefail
 
-CHOSEN="$(./history_fzf_py 2>/dev/null | fzf +m --tac)" || exit $?
-cut -d"|" -f1 <<<"${CHOSEN}"
+# awk: removes duplicates
+# additional jq after you pick with fzf removes quotes (-r)
+
+exec hpi query -s my.browsing.history |
+	jq '"\(.url)|\(.metadata.description)"' |
+	awk '!seen[$0]++' |
+	fzf +m --tac |
+	jq -r |
+	cut -d"|" -f1
