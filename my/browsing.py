@@ -48,7 +48,7 @@ from browserexport.parse import read_visits
 
 
 # all of my backed up databases
-def backup_inputs() -> List[Path]:
+def inputs() -> List[Path]:
     return list(get_files(config.export_path))
 
 
@@ -80,9 +80,9 @@ def history() -> Results:
     yield from merge_visits([_history_from_backups(), _live_visits()])
 
 
-@mcachew(depends_on=lambda: sorted(map(str, backup_inputs())), logger=logger)
+@mcachew(depends_on=lambda: sorted(map(str, inputs())), logger=logger)
 def _history_from_backups() -> Results:
-    yield from read_and_merge(backup_inputs())
+    yield from read_and_merge(inputs())
 
 
 def stats() -> Stats:
