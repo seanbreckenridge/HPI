@@ -12,4 +12,5 @@ exec hpi query -s my.browsing.history |
 	awk '!seen[$0]++' |
 	fzf +m --tac |
 	jq -r |
+	head -n 1 |
 	cut -d"|" -f1
