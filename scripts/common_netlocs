@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# print the most common netlocs from my browsing history
+# ./history_common 500 to print the top 500
+
+COUNT="${1:-250}"
+exec hpi query -s my.browsing.history | \
+  jq -r '.url' | \
+  cut -d"/" -f-3 | \
+  sed -e 's/www\.//' | \
+  sort | \
+  uniq -c | \
+  sort -n | tail -n "${COUNT}"
