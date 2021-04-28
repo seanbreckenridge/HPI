@@ -173,7 +173,7 @@ setup_data_dir() {
 		'apple'
 		'discord'
 		'league_of_legends'
-		'chessdotcom'
+		'chess'
 		'trakt'
 		'albums'
 	)
