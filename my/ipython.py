@@ -33,7 +33,7 @@ class config(user_config):
 
 from pathlib import Path
 from datetime import datetime
-from typing import Iterable, NamedTuple, Iterator
+from typing import Iterable, NamedTuple, Iterator, Optional
 from itertools import chain
 
 from IPython.core.history import HistoryAccessor  # type: ignore[import]
@@ -90,7 +90,9 @@ def _merge_histories(*sources: Results) -> Results:
 
 def _parse_database(sqlite_database: str) -> Results:
     hist = HistoryAccessor(hist_file=sqlite_database)
-    total_sessions = hist.get_last_session_id()
+    total_sessions: Optional[int] = hist.get_last_session_id()
+    if total_sessions is None:
+        return
     # yes, these start at 1
     for sess in range(1, total_sessions + 1):
         # get when this session started, use that as timestamp
