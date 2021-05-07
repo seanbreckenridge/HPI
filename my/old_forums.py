@@ -15,15 +15,14 @@ class config(user_config):
     export_path: Paths
 
 
-import json
 from pathlib import Path
 from typing import Sequence
 from datetime import datetime
 from typing import NamedTuple, Iterator
-from itertools import chain
+
+from autotui.shortcuts import load_from
 
 from my.core import get_files, Stats, LazyLogger
-from .utils.time import parse_datetime_sec
 from .utils.common import InputSource
 
 
@@ -35,10 +34,10 @@ logger = LazyLogger(__name__)
 
 # represents one post on a forum entry
 class Post(NamedTuple):
-    dt: datetime
+    date: datetime
     post_title: str
     post_url: str
-    post_contents: str  # eh, doesnt match contents, whatever
+    contents: str
     forum_name: str
 
 
@@ -46,18 +45,9 @@ Results = Iterator[Post]
 
 
 def history(from_paths: InputSource = inputs) -> Results:
-    yield from chain(*map(_parse_file, from_paths()))
-
-
-def _parse_file(post_file: Path) -> Results:
-    for p in json.loads(post_file.read_text()):
-        yield Post(
-            dt=parse_datetime_sec(p["date"]),
-            post_title=p["post_title"],
-            post_url=p["post_url"],
-            post_contents=p["contents"],
-            forum_name=p["forum_name"],
-        )
+    for path in from_paths():
+        # TODO: fix types in autotui to bind to first arg?
+        yield from load_from(Post, path)  # type: ignore[misc]
 
 
 def stats() -> Stats:
