@@ -34,10 +34,10 @@ logger = LazyLogger(__name__)
 
 # represents one post on a forum entry
 class Post(NamedTuple):
-    date: datetime
+    dt: datetime
     post_title: str
     post_url: str
-    contents: str
+    post_contents: str
     forum_name: str
 
 
