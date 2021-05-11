@@ -1,0 +1,12 @@
+#!/bin/bash
+# backup safari browsing history
+
+err() {
+	send-error 'browserexport: failed to backup safari databases...'
+}
+
+evry 1 week -backup_safari && {
+	readonly BACKUP_DIR="${HPIDATA}/browsing/"
+	printlog "browserexport:backing up safari history databases..."
+	browserexport save -b safari --to "${BACKUP_DIR}" || err
+}
