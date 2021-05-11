@@ -119,6 +119,7 @@ module_dependencies() {
 	hpi_module my.reddit || return $?
 	hpi_module my.pdfs || return $?
 	hpi_module my.window_watcher || return $?
+	hpi_module my.smscalls || return $?
 	hpi_module my.browsing || return $?
 	hpi_module my.discord || return $?
 	hpi_module my.body || return $?
