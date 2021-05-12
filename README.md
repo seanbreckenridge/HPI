@@ -46,6 +46,7 @@ These are modules to parse GDPR exports/data from services I used to use, but do
 - `my.old_forums`, random posts from forums I used to use in the past, see [`forum_parser`](https://github.com/seanbreckenridge/forum_parser)
 - `my.skype` to parse a couple datetimes from the Skype GDPR export
 - `my.spotify`, to parse the GDPR export from Spotify, mostly to access songs from my playlists from years ago
+- `my.twitch`, merging the [data export](https://www.twitch.tv/p/en/legal/privacy-choices/#user-privacy-requests) and my messages parsed from the [overrustle logs dump](https://github.com/seanbreckenridge/overrustle_parser)
 
 See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py) for config.
 
@@ -173,7 +174,6 @@ create 'export modules' which keep these up to date:
 - [ ] separate google takeout into a separate parser/repository
 - [ ] additional services using [finance-dl](https://github.com/jbms/finance-dl) ?
 - [ ] [listenbrainz](https://listenbrainz.org/) (RYM replacement) exporter/DAL?
-- [ ] backup twitch?
 - [ ] backup MAL (ugh)
 
 Need to do more research/figure out
