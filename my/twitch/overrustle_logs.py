@@ -16,15 +16,28 @@ class config(user_config.overrustle):
 
 import json
 from pathlib import Path
+from typing import Sequence, List
 
-from my.core import get_files
+from my.core.common import get_files, mcachew, LazyLogger
 from my.utils.time import parse_datetime_sec
+from my.utils.common import InputSource
 
 from .common import Event, Results
 
+logger = LazyLogger(__name__, level="warning")
 
-def events(from_paths: Paths = config.export_path) -> Results:
-    for file in get_files(from_paths):
+
+def inputs() -> Sequence[Path]:
+    return get_files(config.export_path)
+
+
+def _cachew_depends_on(for_paths: InputSource = inputs) -> List[float]:
+    return [p.stat().st_mtime for p in for_paths()]
+
+
+@mcachew(depends_on=_cachew_depends_on, logger=logger)
+def events(from_paths: InputSource = inputs) -> Results:
+    for file in from_paths():
         yield from _parse_json_dump(file)
 
 

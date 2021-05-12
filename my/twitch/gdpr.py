@@ -17,19 +17,25 @@ class config(user_config.gdpr):
 import csv
 from datetime import datetime
 from pathlib import Path
-from typing import Iterator, Optional, Union, Sequence
+from typing import Iterator, Union, Sequence, List
 
 from .common import Event, Results
 
-from my.core import get_files
+from my.core.common import get_files, LazyLogger, mcachew
 from my.utils.common import InputSource
 
-
-def inputs(gdpr_dir: Optional[PathIsh] = None) -> Sequence[Path]:
-    chosen: PathIsh = gdpr_dir if gdpr_dir is not None else config.gdpr_dir
-    return get_files(chosen, glob="*.csv")
+logger = LazyLogger(__name__, level="warning")
 
 
+def inputs() -> Sequence[Path]:
+    return get_files(config.gdpr_dir, glob="*.csv")
+
+
+def _cachew_depends_on(for_paths: InputSource = inputs) -> List[float]:
+    return [p.stat().st_mtime for p in for_paths()]
+
+
+@mcachew(depends_on=_cachew_depends_on, logger=logger)
 def events(from_paths: InputSource = inputs) -> Results:
     for file in from_paths():
         yield from _parse_csv_file(file)
