@@ -1,5 +1,13 @@
 """
 Parses ZSH history (uses exports from ./job/zsh_history.job) and current zsh history (from $ZDOTDIR)
+
+This parses the zsh format I've configured, zsh is heavily configurable
+Mine looks like:
+: 1598471925:470;python3
+: datetime:duration:command
+
+See here for zsh configuration I've set
+https://github.com/seanbreckenridge/dotfiles/blob/95f1869632e6c0d72fb5fbf901f0dacddbbd1043/.config/zsh/env_config.zsh#L9-L18
 """
 
 # if on multiple computers, the zsh histories can be copied into the zsh.export_path
@@ -50,13 +58,6 @@ def _live_file() -> Optional[Path]:
             return None
     return None
 
-
-### This parses the zsh format I've configured, zsh is heavily configurable
-### Mine looks like:
-### : 1598471925:470;python3
-### : datetime:duration:command
-### See here for zsh configuration I've set
-### https://github.com/seanbreckenridge/dotfiles/blob/95f1869632e6c0d72fb5fbf901f0dacddbbd1043/.config/zsh/env_config.zsh#L9-L18
 
 import re
 
