@@ -50,8 +50,8 @@ def _parse_json_dump(p: Path) -> Results:
             context=blob["message"],
         )
 
+
 def stats() -> Stats:
     from my.core import stat
 
     return {**stat(events)}
-
