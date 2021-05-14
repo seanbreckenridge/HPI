@@ -1,10 +1,15 @@
 #!/bin/bash
 # backup bash history from servers I commonly use
 
+backup_server() {
+	local SERVER="${1:?Must provide server to ssh to -- set in .ssh/config}"
+	arctee -r 3 "${BACKUP_DIR}/{utcnow}-${SERVER}" -- ssh "${SERVER}" 'cat .bash_history' || send-error "bash_server_history: failed to backup bash history file from ${SERVER}"
+}
+
 evry 1 week -backup_bash_server_history && {
 	wait-for-internet
 	readonly BACKUP_DIR="${HPIDATA}/bash_history"
 	printlog "bash_server_history:Backing up bash history from servers..."
-	arctee -r 3 "${BACKUP_DIR}/{utcnow}-vultr" -- ssh vultr 'cat .bash_history' || send-error 'bash_server_history: failed to backup bash history file from vultr'
-	arctee -r 3 "${BACKUP_DIR}/{utcnow}-nas" -- ssh naspublic 'cat .bash_history' || send-error 'bash_server_history: failed to backup bash history file from nas'
+	backup_server vultr
+	backup_server naspublic
 }
