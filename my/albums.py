@@ -22,7 +22,7 @@ from typing import Iterator
 from my.core import get_files, Stats, LazyLogger
 from my.core.common import mcachew
 
-from nextalbums.export import Album, read_dump
+from nextalbums.export import Album, read_dump, CANT_FIND
 
 
 logger = LazyLogger(__name__, level="warning")
@@ -51,8 +51,15 @@ def history() -> Iterator[Album]:
 
 @mcachew(depends_on=_cachew_depends_on, logger=logger)
 def to_listen() -> Iterator[Album]:
-    """Items I have yet to listen to"""
-    yield from filter(lambda a: a.score is None, _albums_cached())
+    """Albums I have yet to listen to"""
+    for a in _albums_cached():
+        if a.score is not None:
+            continue
+        # cant find this album, exclude it
+        if a.note is not None and a.note == CANT_FIND:
+            continue
+        yield a
+
 
 
 def stats() -> Stats:

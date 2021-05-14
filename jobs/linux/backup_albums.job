@@ -2,7 +2,7 @@
 
 evry 6 hours -backup_albums && {
 	wait-for-internet
-	readonly BACKUP_DIR="${HPIDATA}/albums"
+	readonly BACKUP_DIR="${HPIDATA}"
 	printlog "albums:Running nextalbums export..."
 	# arctee doesnt overwrite if this fails
 	# dont save incremental backups, just the current data

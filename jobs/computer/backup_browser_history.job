@@ -2,12 +2,12 @@
 # backup firefox/chrome browsing history
 
 err() {
-	send-error 'browserexport: failed to backup history databases...'
+	send-error "browserexport: failed to backup ${1:-browser} database..."
 }
 
 evry 1 week -backup_browser_history && {
 	readonly BACKUP_DIR="${HPIDATA}/browsing/"
 	printlog "browserexport:backing up shared history databases..."
-	browserexport save -b firefox --to "${BACKUP_DIR}" || err
-	browserexport save -b chrome --to "${BACKUP_DIR}" || err
+	browserexport save -b firefox --to "${BACKUP_DIR}" || err firefox
+	browserexport save -b chrome --to "${BACKUP_DIR}" || err chrome
 }

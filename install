@@ -176,7 +176,6 @@ setup_data_dir() {
 		'league_of_legends'
 		'chess'
 		'trakt'
-		'albums'
 	)
 
 	echo 'Setting up directories in ~/data' | maybe_boxes
