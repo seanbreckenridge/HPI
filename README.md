@@ -172,7 +172,6 @@ Those directories are editable installs, meaning any changes I make to them get 
 create 'export modules' which keep these up to date:
 
 - [ ] separate google takeout into a separate parser/repository
-- [ ] additional services using [finance-dl](https://github.com/jbms/finance-dl) ?
 - [ ] [listenbrainz](https://listenbrainz.org/) (RYM replacement) exporter/DAL?
 - [ ] backup MAL (ugh)
 
