@@ -18,7 +18,7 @@ import json
 from pathlib import Path
 from typing import Sequence, List
 
-from my.core.common import get_files, mcachew, LazyLogger
+from my.core.common import get_files, mcachew, LazyLogger, Stats
 from my.utils.time import parse_datetime_sec
 from my.utils.common import InputSource
 
@@ -49,3 +49,9 @@ def _parse_json_dump(p: Path) -> Results:
             channel=blob["channel"],
             context=blob["message"],
         )
+
+def stats() -> Stats:
+    from my.core import stat
+
+    return {**stat(events)}
+

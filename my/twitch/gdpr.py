@@ -21,7 +21,7 @@ from typing import Iterator, Union, Sequence, List
 
 from .common import Event, Results
 
-from my.core.common import get_files, LazyLogger, mcachew
+from my.core.common import get_files, LazyLogger, mcachew, Stats
 from my.utils.common import InputSource
 
 logger = LazyLogger(__name__, level="warning")
@@ -56,3 +56,9 @@ def _parse_csv_file(p: Path) -> Iterator[Event]:
                 channel=line[5],
                 context=context,
             )
+
+
+def stats() -> Stats:
+    from my.core import stat
+
+    return {**stat(events)}
