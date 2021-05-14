@@ -100,8 +100,7 @@ def _parse_file(histfile: Path) -> Results:
                 # this case happens when we successfully parse a datetime line
                 # yield old data, then set newly parsed data to next items datetime
                 if dt is not None:
-                    # rstrip \n gets rid of the last newline for a command, if
-                    # there were multiple lines
+                    # rstrip \n gets rid of the last newline for each command
                     yield Entry(dt=dt, command=command_buf.rstrip("\n"))
                 # set new datetime for next entry
                 dt = newdt
