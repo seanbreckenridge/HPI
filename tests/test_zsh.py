@@ -8,7 +8,7 @@ history_file = os.path.join(test_dir, "zsh", "zsh_history")
 overlap_file = os.path.join(test_dir, "zsh", "overlap_history")
 
 
-def test_single_file():
+def test_single_file() -> None:
     """
     test that a single zsh parse works and for an entry in the history
     """
@@ -38,7 +38,7 @@ def test_single_file():
     assert e in items
 
 
-def test_overlap():
+def test_overlap() -> None:
     """
     To make sure that duplicates are removed
     """

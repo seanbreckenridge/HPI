@@ -5,8 +5,6 @@ Parses ZSH history (uses exports from ./job/zsh_history.job) and current zsh his
 # if on multiple computers, the zsh histories can be copied into the zsh.export_path
 # and it will merge everything without duplicates
 
-# look at https://github.com/bamos/zsh-history-analysis
-
 from typing import Optional
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
