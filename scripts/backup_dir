@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# helper script to locate the backup
+# directory while on an operating system
+
+declare DIRNAME BACKUP_DIR
+DIRNAME="${1:?Need to pass a directory name}"
+
+BACKUP_DIR="${HPIDATA}"
+if [[ "${ON_OS}" == 'android' ]]; then
+	BACKUP_DIR="${HPIDATA}/phone"
+fi
+BACKUP_DIR="${BACKUP_DIR}/${DIRNAME}"
+mkdir -p "${BACKUP_DIR}"
+printf '%s\n' "${BACKUP_DIR}"
