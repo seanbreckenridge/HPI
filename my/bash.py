@@ -78,7 +78,6 @@ def _merge_histories(*sources: Results) -> Results:
     for e in chain(*sources):
         key = (e.dt, e.command)
         if key in emitted:
-            # logger.debug('ignoring %s: %s', key, e)
             continue
         yield e
         emitted.add(key)

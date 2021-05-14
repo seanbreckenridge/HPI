@@ -97,7 +97,6 @@ def songs() -> Songs:
                 continue
             key = (song.name, song.artist, song.album)
             if key in emitted:
-                # logger.debug('ignoring %s: %s', key, s)
                 continue
             yield song
             emitted.add(key)

@@ -115,7 +115,6 @@ def _merge_histories(*sources: Results) -> Results:
             continue
         key = (e.completion_date, e.text)
         if key in emitted:
-            # logger.debug('ignoring %s: %s', key, e)
             continue
         yield e
         emitted.add(key)
