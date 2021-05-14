@@ -3,7 +3,7 @@ Parses bash history (mostly from servers/vps I run)
 using the following bootstrap script:
 https://github.com/seanbreckenridge/bootstrap/
 
-This parses the histories with the following configuration:
+This parses bash history with the following configuration:
 
 export HISTTIMEFORMAT="%s "
 export HISTFILESIZE=-1
