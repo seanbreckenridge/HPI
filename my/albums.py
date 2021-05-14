@@ -30,7 +30,9 @@ logger = LazyLogger(__name__, level="warning")
 
 # should only ever be one dump, the .job overwrites the file
 def _current_albums_export_path() -> Path:
-    return get_files(config.export_path)[0]
+    dump = list(get_files(config.export_path))
+    assert len(dump) == 1, "Expected one JSON file as input"
+    return dump[0]
 
 
 def _cachew_depends_on() -> float:
@@ -39,7 +41,6 @@ def _cachew_depends_on() -> float:
 
 @mcachew(depends_on=_cachew_depends_on, logger=logger)
 def _albums_cached() -> Iterator[Album]:
-    # read the 'stats' key directly from the JSON file
     return read_dump(_current_albums_export_path())
 
 
@@ -55,11 +56,10 @@ def to_listen() -> Iterator[Album]:
     for a in _albums_cached():
         if a.score is not None:
             continue
-        # cant find this album, exclude it
+        # cant find this album anywhere to listen to it, exclude it
         if a.note is not None and a.note == CANT_FIND:
             continue
         yield a
-
 
 
 def stats() -> Stats:
