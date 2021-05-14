@@ -4,7 +4,7 @@
 evry 1 week -backup_ipython && {
 	declare BACKUP_DIR BDSCRIPT
 	BDSCRIPT="$(realpath "$(dirname "${BASH_SOURCE[0]}")"/../../scripts/backup_dir)"
-	BACKUP_DIR="$("$BDSCRIPT" 'zsh_history')"
+	BACKUP_DIR="$("$BDSCRIPT" 'ipython')"
 	readonly IPYTHON_DB="${XDG_DATA_HOME}/ipython/profile_default/history.sqlite"
 	printlog "ipython:backing up history database..."
 	arctee "${BACKUP_DIR}/{utcnow}-{hostname}-{platform}.sqlite" -- cat "$IPYTHON_DB" || send-error 'ipython: failed to backup database'
