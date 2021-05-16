@@ -171,6 +171,7 @@ Those directories are editable installs, meaning any changes I make to them get 
 
 create 'export modules' which keep these up to date:
 
+- [ ] garmin module (using the output of https://github.com/tcgoetz/GarminDB)
 - [ ] separate google takeout into a separate parser/repository
 - [ ] [listenbrainz](https://listenbrainz.org/) (RYM replacement) exporter/DAL?
 - [ ] backup MAL (ugh)

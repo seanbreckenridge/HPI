@@ -1,0 +1,8 @@
+#!/bin/bash
+# Export https://github.com/tcgoetz/GarminDB every so often
+
+evry 6 hours -backup_garmin && {
+	wait-for-internet
+	printlog "garmin:updating garmin data..."
+	cd "${REPOS}/GarminDB" && make
+}
