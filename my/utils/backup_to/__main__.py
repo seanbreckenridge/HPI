@@ -1,4 +1,3 @@
-
 import shutil
 from os import environ, path
 from pathlib import Path
@@ -23,6 +22,7 @@ def get_dir(name: str) -> Path:
     to = (base / name).absolute()
     to.mkdir(parents=True, exist_ok=True)
     return to
+
 
 @click.command()
 @click.argument("NAME")
