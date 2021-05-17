@@ -146,47 +146,6 @@ verify_personal_python_packages() {
 	python3 -c "import nextalbums, budget" || return $?
 }
 
-setup_data_dir() {
-	local DATA_PREFIX="${HPIDATA:-${HOME}/data}"
-	local -a directories
-	directories=(
-		'phone/ttally'
-		'doctor'
-		'github/gdpr'
-		'github/ghexport'
-		'zsh_history'
-		'bash_history'
-		'rexport'
-		'pushshift'
-		'todotxt'
-		'newsboat'
-		'browsing'
-		'mpv'
-		'blizzard'
-		'facebook_gdpr'
-		'ipython'
-		'old_forums'
-		'ttt'
-		'phone/ttt'
-		'window_watcher'
-		'google_takeout'
-		'spotify'
-		'apple'
-		'discord'
-		'league_of_legends'
-		'chess'
-		'trakt'
-	)
-
-	echo 'Setting up directories in ~/data' | maybe_boxes
-	for dir in "${directories[@]}"; do
-		ddir="${DATA_PREFIX}/${dir}"
-		if [[ ! -d "${ddir}" ]]; then
-			mkdir -p "${ddir}"
-		fi
-	done
-}
-
 required_commands() {
 	# ordered from most likely to least likely
 	echo 'Checking if required commands are installed...' | maybe_boxes
@@ -220,7 +179,6 @@ main() {
 	required_commands || prompt_if_fails || return $?
 	optional_commands || prompt_if_fails || return $?
 	havecmd wait-for-internet >/dev/null 2>&1 && wait-for-internet --text "waiting for internet..."
-	setup_data_dir || prompt_if_fails || return $?
 	install_dependencies || prompt_if_fails || return $?
 	(setup_fork) || prompt_if_fails || return $?
 	module_dependencies || prompt_if_fails || return $?
