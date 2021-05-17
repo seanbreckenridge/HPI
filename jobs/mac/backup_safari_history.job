@@ -6,7 +6,6 @@ err() {
 }
 
 evry 1 week -backup_safari && {
-	readonly BACKUP_DIR="${HPIDATA}/browsing/"
 	printlog "browserexport:backing up safari history databases..."
-	browserexport save -b safari --to "${BACKUP_DIR}" || err
+	browserexport save -b safari --to "$(python3 -m my.utils.backup_to browsing)" || err
 }

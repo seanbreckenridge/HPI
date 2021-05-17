@@ -2,9 +2,8 @@
 
 evry 6 hours -backup_albums && {
 	wait-for-internet
-	readonly BACKUP_DIR="${HPIDATA}"
 	printlog "albums:Running nextalbums export..."
 	# arctee doesnt overwrite if this fails
 	# dont save incremental backups, just the current data
-	arctee -r 3 "${BACKUP_DIR}/albums.json" -- python3 -m nextalbums export || send-error 'nextalbums: export failed'
+	arctee -r 3 "${HPIDATA}/albums.json" -- python3 -m nextalbums export || send-error 'nextalbums: export failed'
 }

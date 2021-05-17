@@ -3,7 +3,6 @@
 
 evry 1 day -backup_rss && {
 	readonly RSS_FILE="${XDG_CONFIG_HOME}/newsboat/urls"
-	readonly BACKUP_DIR="${HPIDATA}/newsboat"
 	printlog "rss:backing up..."
-	arctee "${BACKUP_DIR}/{utcnow}.txt" -- cat "${RSS_FILE}" || send-error 'failed to backup newsboat subscriptions'
+	arctee "$(python3 -m my.utils.backup_to newsboat)/{utcnow}.txt" -- cat "${RSS_FILE}" || send-error 'failed to backup newsboat subscriptions'
 }

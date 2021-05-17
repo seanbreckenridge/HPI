@@ -2,7 +2,6 @@
 
 evry 1 week -backup_trakt && {
 	wait-for-internet
-	readonly BACKUP_DIR="${HPIDATA}/trakt"
 	printlog "traktexport:Running export..."
-	arctee -r 3 "${BACKUP_DIR}/{utcnow}.json" -- python3 -m traktexport export purplepinapples || send-error 'traktexport: failed to export list'
+	arctee -r 3 "$(python3 -m my.utils.backup_to trakt)/{utcnow}.json" -- python3 -m traktexport export purplepinapples || send-error 'traktexport: failed to export list'
 }

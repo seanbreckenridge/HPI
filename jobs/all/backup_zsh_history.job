@@ -3,9 +3,6 @@
 
 evry 2 days -backup_zsh_history && {
 	readonly ZSH_HIST_FILE="${ZDOTDIR:?ZDOTDIR environment variable not set}/.zsh_history"
-	declare BACKUP_DIR BDSCRIPT
-	BDSCRIPT="$(realpath "$(dirname "${BASH_SOURCE[0]}")"/../../scripts/backup_dir)"
-	BACKUP_DIR="$("$BDSCRIPT" 'zsh_history')"
 	printlog "zsh_history:Backing up zsh history..."
-	arctee "${BACKUP_DIR}/{utcnow}-{hostname}-{platform}" -- cat "$ZSH_HIST_FILE" || send-error 'zsh: failed to backup zsh history file'
+	arctee "$(python3 -m my.utils.backup_to zsh_history)/{utcnow}-{hostname}-{platform}" -- cat "$ZSH_HIST_FILE" || send-error 'zsh: failed to backup zsh history file'
 }

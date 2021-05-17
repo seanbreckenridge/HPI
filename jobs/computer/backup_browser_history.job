@@ -3,8 +3,7 @@
 
 save_database() {
 	local BROWSER="${1:?Must provide browser to backup}"
-	local -r BACKUP_DIR="${HPIDATA}/browsing/"
-	browserexport save -b "${BROWSER}" --to "${BACKUP_DIR}" || send-error "browserexport: failed to backup ${BROWSER} database..."
+	browserexport save -b "${BROWSER}" --to "$(python3 -m my.utils.backup_to browsing)" || send-error "browserexport: failed to backup ${BROWSER} database..."
 }
 
 evry 1 week -backup_browser_history && {

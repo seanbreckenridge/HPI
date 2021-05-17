@@ -2,7 +2,7 @@
 
 evry 2 hours -backup_todotxt && {
 	readonly TODOTXT_DIR="${XDG_CONFIG_HOME}/todo"
-	readonly BACKUP_DIR="${HPIDATA}/todotxt"
+	BACKUP_DIR="$(python3 -m my.utils.backup_to todotxt)"
 	printlog "todotxt:backing up..."
 	arctee "${BACKUP_DIR}/{utcnow}-todo.txt" -- cat "${TODOTXT_DIR}/todo.txt" || send-error 'todotxt: failed to backup current todos'
 	arctee "${BACKUP_DIR}/{utcnow}-done.txt" -- cat "${TODOTXT_DIR}/done.txt" || send-error 'todotxt: failed to backup current todos'
