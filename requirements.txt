@@ -5,4 +5,3 @@ click
 bash_like
 autotui
 click
-httpx

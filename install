@@ -80,7 +80,7 @@ setup_fork() {
 
 	# install my fork of upstream
 	cd "${FORK_TARGET}" || return $?
-	pip_install -e '.[optional]' || return $?
+	pip_install -e '.' || return $?
 
 	# cd back to here, to install this
 	cd "${BASE_DIR}" || return $?
