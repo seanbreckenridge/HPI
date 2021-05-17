@@ -207,8 +207,8 @@ optional_commands() {
 install_dependencies() {
 	echo 'Installing dependencies...' | maybe_boxes
 	# install arctee, needed for jobs
-	pip_install 'git+https://github.com/karlicoss/arctee' || return $?
-	pip_install 'git+https://github.com/seanbreckenridge/reorder_editable' || return $?
+	havecmd arctee || pip_install 'git+https://github.com/karlicoss/arctee' || return $?
+	havecmd reorder_editable || pip_install 'git+https://github.com/seanbreckenridge/reorder_editable' || return $?
 }
 
 prompt_if_fails() {
