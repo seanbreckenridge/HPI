@@ -1,10 +1,3 @@
-"""
-Helper script to locate a directory to backup to
-while on an operating system (computer vs. phone)
-
-Typically this backs up to ~/data/dirname on my computer
-~/data/phone/dirname on my phone
-"""
 
 import shutil
 from os import environ, path
@@ -24,6 +17,13 @@ def _on_android() -> bool:
 @click.command()
 @click.argument("NAME")
 def main(name: str) -> None:
+    """
+    Helper script to locate a directory to backup to
+    while on an operating system (computer vs. phone)
+
+    Typically this backs up to ~/data/dirname on my computer
+    ~/data/phone/dirname on my phone
+    """
     base: Path
     if _on_android():
         base = BASE_PREFIX / "phone"
@@ -35,4 +35,4 @@ def main(name: str) -> None:
 
 
 if __name__ == "__main__":
-    main(prog_name="backup_dir")
+    main(prog_name="backup_to")
