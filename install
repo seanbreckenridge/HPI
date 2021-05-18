@@ -164,7 +164,6 @@ optional_commands() {
 	havecmd evry "To handle background tasks; install from https://github.com/seanbreckenridge/evry" || return $?
 	havecmd bgproc "For background tasks; install from https://github.com/seanbreckenridge/bgproc" || return $?
 	havecmd wait-for-internet "To verify I have internet; install from https://github.com/seanbreckenridge/wait-for-internet" || return $?
-	havecmd mispipe 'part of the moreutils package' || return $?
 }
 
 install_dependencies() {
