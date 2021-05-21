@@ -175,8 +175,4 @@ create 'export modules' which keep these up to date:
 - [ ] separate google takeout into a separate parser/repository
 - [ ] [listenbrainz](https://listenbrainz.org/) (RYM replacement) exporter/DAL?
 - [ ] backup MAL (ugh)
-
-Need to do more research/figure out
-
-- [ ] zotero for PDFs annotations?
-- [ ] email?
+- [ ] parse email from local isync backups
