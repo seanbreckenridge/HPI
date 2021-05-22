@@ -4,11 +4,22 @@ Parses history from https://github.com/seanbreckenridge/aw-watcher-window
 
 REQUIRES = ["git+https://github.com/seanbreckenridge/aw-watcher-window"]
 
-from typing import Optional, List
-
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import window_watcher as user_config  # type: ignore[attr-defined]
-from my.core import Paths, dataclass
+
+import csv
+from io import StringIO
+from pathlib import Path
+from datetime import datetime, timedelta
+from typing import NamedTuple, Iterator, Tuple, Dict, Set, Sequence, Optional, List
+from itertools import chain
+
+from my.core import get_files, Stats, Paths, dataclass
+from my.core.common import listify
+from my.utils.time import parse_datetime_sec
+from my.utils.common import InputSource
+
+from more_itertools import unique_everseen
 
 
 @dataclass
@@ -18,19 +29,6 @@ class config(user_config):
 
     # force individual events for these applications
     force_individual: Optional[List[str]] = None
-
-
-import csv
-from io import StringIO
-from pathlib import Path
-from datetime import datetime, timedelta
-from typing import NamedTuple, Iterator, Tuple, Dict, Set, Sequence
-from itertools import chain
-
-from my.core import get_files, warn_if_empty, Stats
-from my.core.common import listify
-from .utils.time import parse_datetime_sec
-from .utils.common import InputSource
 
 
 @listify
@@ -64,7 +62,7 @@ def history(from_paths: InputSource = inputs) -> Results:
     yield from _construct_stream(
         filter(
             _is_unlikely,
-            _merge_histories(*map(_parse_file, from_paths())),
+            unique_everseen(chain(*map(_parse_file, from_paths())), key=lambda e: e.dt),
         )
     )
 
@@ -125,18 +123,6 @@ def _construct_stream(
             application=appname,
             window_title=window_title,
         )
-
-
-@warn_if_empty
-def _merge_histories(*sources: LinearResults) -> LinearResults:
-    emitted: Set[datetime] = set()
-    for e in chain(*sources):
-        key = e.dt
-        if key in emitted:
-            # print('ignoring %s: %s', key, e)
-            continue
-        yield e
-        emitted.add(key)
 
 
 unlikely_duration: int = 3600

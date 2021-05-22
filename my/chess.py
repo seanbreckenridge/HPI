@@ -7,7 +7,19 @@ REQUIRES = ["git+https://github.com/seanbreckenridge/chess_export"]
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import chess as user_config  # type: ignore[attr-defined]
-from my.core import Paths, dataclass
+
+
+from pathlib import Path
+from typing import Iterator, Sequence, List, Union
+from itertools import chain
+
+import chess_export.chessdotcom.model as cmodel
+import chess_export.lichess.model as lmodel
+from more_itertools import unique_everseen
+
+from my.core import get_files, Stats, LazyLogger, Paths, dataclass
+from my.core.common import mcachew
+from my.utils.common import InputSource
 
 
 @dataclass
@@ -15,18 +27,6 @@ class config(user_config):
     # path[s]/glob to the exported data. These are the resulting JSON files from 'chess_export ... export'
     export_path: Paths
 
-
-from pathlib import Path
-from datetime import datetime
-from typing import Iterator, Sequence, Set, List, Union
-from itertools import chain
-
-from my.core import get_files, Stats, LazyLogger, warn_if_empty
-from my.core.common import mcachew
-from .utils.common import InputSource
-
-import chess_export.chessdotcom.model as cmodel
-import chess_export.lichess.model as lmodel
 
 logger = LazyLogger(__name__, level="warning")
 
@@ -55,17 +55,9 @@ def _parse_export_file(p: Path) -> Results:
 
 @mcachew(depends_on=_cachew_depends_on, logger=logger)
 def history(from_paths: InputSource = inputs) -> Results:
-    yield from _merge_histories(*(_parse_export_file(p) for p in from_paths()))
-
-
-@warn_if_empty
-def _merge_histories(*sources: Results) -> Results:
-    emitted: Set[datetime] = set()
-    for g in chain(*sources):
-        if g.end_time in emitted:  # exists on both lichess and chess.com model
-            continue
-        yield g
-        emitted.add(g.end_time)
+    yield from unique_everseen(
+        chain(*(_parse_export_file(p) for p in from_paths())), key=lambda g: g.end_time
+    )
 
 
 def stats() -> Stats:

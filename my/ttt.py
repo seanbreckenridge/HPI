@@ -5,9 +5,17 @@ Parses history from https://github.com/seanbreckenridge/ttt
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import ttt as user_config  # type: ignore[attr-defined]
 
-from typing import Optional
+import csv
+from pathlib import Path
+from datetime import datetime
+from typing import NamedTuple, Iterator, Sequence, Optional
+from itertools import chain
 
-from my.core import Paths, dataclass
+from more_itertools import unique_everseen
+
+from my.core import get_files, Stats, Paths, dataclass
+from my.utils.time import parse_datetime_sec
+from my.utils.common import InputSource
 
 
 @dataclass
@@ -17,22 +25,8 @@ class config(user_config):
     export_path: Paths
 
 
-import csv
-from pathlib import Path
-from typing import Sequence
-
-from my.core import get_files, warn_if_empty, Stats
-from .utils.time import parse_datetime_sec
-from .utils.common import InputSource
-
-
 def inputs() -> Sequence[Path]:
     return get_files(config.export_path)
-
-
-from datetime import datetime
-from typing import NamedTuple, Iterator, Set, Tuple
-from itertools import chain
 
 
 # represents one history entry (command)
@@ -46,18 +40,13 @@ Results = Iterator[Entry]
 
 
 def history(from_paths: InputSource = inputs) -> Results:
-    yield from _merge_histories(*map(_parse_file, from_paths()))
-
-
-@warn_if_empty
-def _merge_histories(*sources: Results) -> Results:
-    emitted: Set[Tuple[datetime, str]] = set()
-    for e in chain(*sources):
-        key = (e.dt, e.command)
-        if key in emitted:
-            continue
-        yield e
-        emitted.add(key)
+    yield from unique_everseen(
+        chain(*map(_parse_file, from_paths())),
+        key=lambda e: (
+            e.dt,
+            e.command,
+        ),
+    )
 
 
 def _parse_file(histfile: Path) -> Results:

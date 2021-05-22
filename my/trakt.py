@@ -7,7 +7,16 @@ REQUIRES = ["git+https://github.com/seanbreckenridge/traktexport"]
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import trakt as user_config  # type: ignore[attr-defined]
-from my.core import Paths, dataclass
+
+from pathlib import Path
+from typing import Iterator, Dict, Any
+from functools import lru_cache
+
+from more_itertools import last
+import traktexport.dal as D
+
+from my.core import get_files, Stats, LazyLogger, Paths, dataclass
+from my.core.common import mcachew
 
 
 @dataclass
@@ -15,17 +24,6 @@ class config(user_config):
     # path[s]/glob to the exported data. These are the resulting json file from 'traktexport export'
     export_path: Paths
 
-
-from pathlib import Path
-from typing import Iterator, Dict, Any
-from functools import lru_cache
-
-from more_itertools import last
-
-from my.core import get_files, Stats, LazyLogger
-from my.core.common import mcachew
-
-import traktexport.dal as D
 
 logger = LazyLogger(__name__, level="warning")
 

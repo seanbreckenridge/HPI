@@ -5,8 +5,6 @@ Parses todotxt (http://todotxt.org/) done.txt and todo.txt files
 REQUIRES = ["topydo"]
 
 
-from typing import Optional
-
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import todotxt as user_config  # type: ignore[attr-defined]
 from my.core import PathIsh, Paths, dataclass
@@ -18,6 +16,28 @@ from my.core import PathIsh, Paths, dataclass
 # time
 # currently only the done.txt are being merged and the live_file
 # is parsed to get current todos
+
+
+import warnings
+from pathlib import Path
+from datetime import datetime
+from typing import (
+    NamedTuple,
+    Iterator,
+    Set,
+    List,
+    Tuple,
+    Dict,
+    Callable,
+    Iterable,
+    Optional,
+)
+from itertools import chain
+
+# pip3 install topydo
+from topydo.lib.TodoParser import parse_line  # type: ignore[import]
+
+from my.core import get_files, warn_if_empty, Stats, LazyLogger, Res
 
 
 @dataclass
@@ -33,18 +53,6 @@ class config(user_config):
     # the currently being used todo.txt file, at ~/.todo/todo.txt or ~/.config/todo.txt
     live_file: Optional[PathIsh]
 
-
-import warnings
-from pathlib import Path
-from datetime import datetime
-from typing import NamedTuple, Iterator, Set, List, Tuple, Dict, Callable, Iterable
-from itertools import chain
-
-
-from my.core import get_files, warn_if_empty, Stats, LazyLogger, Res
-
-# pip3 install topydo
-from topydo.lib.TodoParser import parse_line  # type: ignore[import]
 
 logger = LazyLogger(__name__)
 

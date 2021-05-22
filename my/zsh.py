@@ -21,11 +21,28 @@ setopt EXTENDED_HISTORY   # save time/duration to history file
 # if on multiple computers, the zsh histories can be copied into the zsh.export_path
 # and it will merge everything without duplicates
 
-from typing import Optional
-
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import zsh as user_config  # type: ignore[attr-defined]
-from my.core import PathIsh, Paths, dataclass
+
+from pathlib import Path
+from typing import Sequence, Optional
+from functools import lru_cache
+
+from my.core import (
+    get_files,
+    warn_if_empty,
+    Stats,
+    LazyLogger,
+    PathIsh,
+    Paths,
+    dataclass,
+)
+from my.core.common import mcachew
+from my.core.warnings import low
+from my.utils.time import parse_datetime_sec
+from my.utils.common import InputSource
+
+from more_itertools import unique_everseen
 
 
 @dataclass
@@ -35,17 +52,6 @@ class config(user_config):
 
     # path to current zsh history (i.e. the live file)
     live_file: Optional[PathIsh]
-
-
-from pathlib import Path
-from typing import Sequence
-from functools import lru_cache
-
-from my.core import get_files, warn_if_empty, Stats, LazyLogger
-from my.core.common import mcachew
-from my.core.warnings import low
-from .utils.time import parse_datetime_sec
-from .utils.common import InputSource
 
 
 logger = LazyLogger(__name__, level="warning")
@@ -70,7 +76,7 @@ def _live_file() -> Optional[Path]:
 import re
 
 from datetime import datetime
-from typing import NamedTuple, Iterator, Set, Tuple
+from typing import NamedTuple, Iterator, Tuple
 from itertools import chain
 
 
@@ -105,13 +111,13 @@ def _history_from_backups(from_paths: InputSource) -> Results:
 
 @warn_if_empty
 def _merge_histories(*sources: Results) -> Results:
-    emitted: Set[Tuple[datetime, str]] = set()
-    for e in chain(*sources):
-        key = (e.dt, e.command)
-        if key in emitted:
-            continue
-        yield e
-        emitted.add(key)
+    yield from unique_everseen(
+        chain(*sources),
+        key=lambda e: (
+            e.dt,
+            e.command,
+        ),
+    )
 
 
 def _parse_file(histfile: Path) -> Results:
