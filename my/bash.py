@@ -8,8 +8,6 @@ This parses bash history with the following configuration:
 export HISTTIMEFORMAT="%s "
 export HISTFILESIZE=-1
 export HISTSIZE=-1
-export HISTCONTROL=ignoredups
-export HISTIGNORE=?:??
 shopt -s histappend  # dont overwrite history
 shopt -s cmdhist   # save al-lines of multi-line commands in the same entry
 shopt -s lithist  # embedded newlines for multi-line commands

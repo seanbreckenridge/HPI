@@ -6,8 +6,16 @@ Mine looks like:
 : 1598471925:470;python3
 : datetime:duration:command
 
-See here for zsh configuration I've set
-https://github.com/seanbreckenridge/dotfiles/blob/95f1869632e6c0d72fb5fbf901f0dacddbbd1043/.config/zsh/env_config.zsh#L9-L18
+My config looks like:
+
+HISTFILE="${ZDOTDIR}/.zsh_history"
+HISTSIZE=1000000
+SAVEHIST=1000000
+setopt APPEND_HISTORY     # append to history file instead of replacing
+setopt HIST_REDUCE_BLANKS # delete empty lines from history file
+setopt HIST_IGNORE_SPACE  # ignore lines that start with space
+setopt HIST_NO_STORE      # Do not add history and fc commands to the history
+setopt EXTENDED_HISTORY   # save time/duration to history file
 """
 
 # if on multiple computers, the zsh histories can be copied into the zsh.export_path
