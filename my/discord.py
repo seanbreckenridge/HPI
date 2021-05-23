@@ -38,9 +38,13 @@ logger = LazyLogger(__name__, level="warning")
 
 
 def _remove_suppression(text: str, first_index: int, second_index: int) -> str:
+    # add spaces so that text like <link1><link2>
+    # don't get converted into one long link
     return (
         text[:first_index]  # before URL
+        + " "
         + text[first_index + 1 : second_index]  # URL itself
+        + " "
         + text[second_index + 1 :]  # after URL
     )
 
@@ -57,25 +61,22 @@ def _remove_link_suppression(
     if urls is None:
         urls = extractor.find_urls(content, get_indices=True)
 
-    # need to keep track to we can offset the index in the content to remove
-    removed_chars = 0
     for (url_text, (start_index, end_index)) in urls:
-        before_ind = (start_index - 1) - removed_chars
-        after_ind = (end_index) - removed_chars
+        before_ind = start_index - 1
+        after_ind = end_index
         try:
             if content[before_ind] == "<" and content[after_ind] == ">":
                 content = _remove_suppression(content, before_ind, after_ind)
-                removed_chars += 2
         except IndexError:  # could happen if the url didn't have braces and we hit the end of a string
             continue
-    return content
+    return content.strip()
 
 
 def test_remove_link_suppression() -> None:
     content = "<test>"
     l = content.index("<")
     r = content.index(">")
-    assert _remove_suppression(content, l, r) == "test"
+    assert _remove_suppression(content, l, r) == " test "
 
     # shouldn't affect this at all
     content = "https://urlextract.readthedocs.io"
@@ -86,15 +87,19 @@ def test_remove_link_suppression() -> None:
     assert _remove_link_suppression(content) == expected
 
     content = "Here is some text <https://urlextract.readthedocs.io>"
-    expected = "Here is some text https://urlextract.readthedocs.io"
+    expected = "Here is some text  https://urlextract.readthedocs.io"
     assert _remove_link_suppression(content) == expected
 
     content = "text <https://urlextract.readthedocs.io> other text"
-    expected = "text https://urlextract.readthedocs.io other text"
+    expected = "text  https://urlextract.readthedocs.io  other text"
     assert _remove_link_suppression(content) == expected
 
     content = "t <https://urlextract.readthedocs.io> other <github.com> f <sean.fish>"
-    expected = "t https://urlextract.readthedocs.io other github.com f sean.fish"
+    expected = "t  https://urlextract.readthedocs.io  other  github.com  f  sean.fish"
+    assert _remove_link_suppression(content) == expected
+
+    content = "t <https://urlextract.readthedocs.io><sean.fish>"
+    expected = "t  https://urlextract.readthedocs.io  sean.fish"
     assert _remove_link_suppression(content) == expected
 
 
