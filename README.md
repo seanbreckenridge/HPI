@@ -32,6 +32,7 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 - `my.location`, merges data from [`gpslogger`](https://github.com/mendhak/gpslogger), `apple`, `google`, `discord`, `blizzard`, and `facebook` to provide location data (goes back ~10 years)
 - `my.chess`, to track my [chess.com](https://www.chess.com)/[lichess.org](https://lichess.org/) games, using [`chess_export`](https://github.com/seanbreckenridge/chess_export)
 - `my.trakt`, providing me a history/my ratings for Movies/TV Show (episodes) using [`traktexport`](https://github.com/seanbreckenridge/traktexport)
+- `my.grouvee`, for my video game history/backlog using [`grouvee_export`](https://github.com/seanbreckenridge/grouvee_export)
 - `my.albums`, grabbing when I listened to music albums/my ratings using my [giant spreadsheet](https://sean.fish/s/albums). Handled by [`nextalbums export`](https://github.com/seanbreckenridge/albums)
 
 #### 'Historical' Modules
