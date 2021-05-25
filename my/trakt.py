@@ -30,7 +30,7 @@ logger = LazyLogger(__name__, level="warning")
 
 def _latest_input() -> Path:
     """Since the exports are complete exports, can just use the most recent export"""
-    return last(sorted(get_files(config.export_path)))
+    return last(sorted(get_files(config.export_path), key=lambda p: p.stat().st_mtime))
 
 
 # should typically only parse the latest dump when the info
