@@ -46,8 +46,7 @@ Results = Iterator[Post]
 
 def history(from_paths: InputSource = inputs) -> Results:
     for path in from_paths():
-        # TODO: fix types in autotui to bind to first arg?
-        yield from load_from(Post, path)  # type: ignore[misc]
+        yield from load_from(Post, path)
 
 
 def stats() -> Stats:
