@@ -34,9 +34,13 @@ def _read_grouvee_export(p: Path) -> List[G.Game]:
     return list(G.parse_export(p))
 
 
+def games() -> Iterator[G.Game]:
+    yield from _read_grouvee_export(_latest_input())
+
+
 def played() -> Iterator[G.Game]:
     # read the 'stats' key directly from the JSON file
-    for game in _read_grouvee_export(_latest_input()):
+    for game in games():
         for shelf in game.shelves:
             if shelf.name == "Played":
                 yield game
