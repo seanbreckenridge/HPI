@@ -113,10 +113,6 @@ hpi_module() {
 }
 
 module_dependencies() {
-	if [[ -n "${ON_OS}" && "${ON_OS}" == 'android' ]]; then
-		echo "On android, skipping module dependencies"
-		return 0
-	fi
 	echo "Installing module dependencies" | maybe_boxes
 	# no my.github.gdpr because I install deps manually
 	(setup_ghexport) || return $?
