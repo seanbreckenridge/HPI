@@ -47,19 +47,15 @@ def _albums_cached() -> Iterator[Album]:
 @mcachew(depends_on=_cachew_depends_on, logger=logger)
 def history() -> Iterator[Album]:
     """Only return items I've listened to, where the score is not null"""
-    yield from filter(lambda a: a.score is not None, _albums_cached())
+    yield from filter(lambda a: a.listened, _albums_cached())
 
 
 @mcachew(depends_on=_cachew_depends_on, logger=logger)
 def to_listen() -> Iterator[Album]:
     """Albums I have yet to listen to"""
-    for a in _albums_cached():
-        if a.score is not None:
-            continue
-        # cant find this album anywhere to listen to it, exclude it
-        if a.note is not None and a.note == CANT_FIND:
-            continue
-        yield a
+    yield from filter(
+        lambda a: not a.listened and a.note != CANT_FIND, _albums_cached()
+    )
 
 
 def stats() -> Stats:
