@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import Any
 
 from more_itertools import ilen
 

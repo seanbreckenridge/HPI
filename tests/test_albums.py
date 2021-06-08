@@ -3,7 +3,7 @@ from itertools import chain
 
 from more_itertools import ilen
 
-from my.albums import to_listen, history, _albums_cached, Album, CANT_FIND
+from my.albums import to_listen, history, Album, CANT_FIND
 
 
 def test_albums() -> None:
