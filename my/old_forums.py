@@ -3,6 +3,8 @@ Manually Scraped Forum Posts from Random Forums I've used in the past
 https://github.com/seanbreckenridge/forum_parser
 """
 
+REQUIRES = ["autotui"]
+
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import old_forums as user_config  # type: ignore[attr-defined]
 

@@ -2,6 +2,8 @@
 Parse Message Dates from Skypes GDPR JSON export
 """
 
+REQUIRES = ["dateparser"]
+
 # Isn't a lot of data here, seems a lot of the old
 # data is gone. Only parses a couple messages, might
 # as well use the datetimes for context on when I

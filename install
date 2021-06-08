@@ -134,6 +134,8 @@ module_dependencies() {
 	hpi_module my.league || return $?
 	hpi_module my.trakt || return $?
 	hpi_module my.grouvee || return $?
+	hpi_module my.old_forums || return $?
+	hpi_module my.skype || return $?
 	# other requirements needed in general/not specifically for a module
 	pip_install -U -r ./requirements.txt || return $?
 }
