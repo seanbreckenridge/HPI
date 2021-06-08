@@ -3,7 +3,7 @@
 # but I use github pretty actively, so backing this up more often
 # this exports things like comments/issues/prs
 
-wait-for-internet --timeout 10 || exit 0
+wait-for-internet -q --timeout 10 || exit 0
 
 evry 3 days -backup_ghexport && {
 	BACKUP_DIR="$(python3 -m my.utils.backup_to 'github/ghexport')"

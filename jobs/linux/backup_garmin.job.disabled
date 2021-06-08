@@ -1,7 +1,7 @@
 #!/bin/bash
 # Export https://github.com/tcgoetz/GarminDB every so often
 
-wait-for-internet --timeout 10 || exit 0
+wait-for-internet -q --timeout 10 || exit 0
 
 evry 3 days -backup_garmin && {
 	printlog "garmin:updating garmin data..."

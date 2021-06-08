@@ -1,7 +1,7 @@
 #!/bin/bash
 # should never really expire, so just to track new games
 
-wait-for-internet --timeout 10 || exit 0
+wait-for-internet -q --timeout 10 || exit 0
 
 evry 1 week -backup_chess && {
 	BACKUP_DIR="$(python3 -m my.utils.backup_to chess)"

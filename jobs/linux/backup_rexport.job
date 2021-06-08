@@ -3,7 +3,7 @@
 # leaving this at 3 months for now, I dont use reddit as often anymore
 # can decrease if I start using it again
 
-wait-for-internet --timeout 10 || exit 0
+wait-for-internet -q --timeout 10 || exit 0
 
 evry 3 months -backup_rexport && {
 	printlog "rexport:Running reddit export..."

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-wait-for-internet --timeout 10 || exit 0
+wait-for-internet -q --timeout 10 || exit 0
 
 evry 1 week -backup_trakt && {
 	printlog "traktexport:Running export..."
