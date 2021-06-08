@@ -1,7 +1,8 @@
 #!/bin/bash
 
+wait-for-internet --timeout 10 || exit 0
+
 evry 1 week -backup_trakt && {
-	wait-for-internet
 	printlog "traktexport:Running export..."
 	arctee -r 3 "$(python3 -m my.utils.backup_to trakt)/{utcnow}.json" -- python3 -m traktexport export purplepinapples || send-error 'traktexport: failed to export list'
 }

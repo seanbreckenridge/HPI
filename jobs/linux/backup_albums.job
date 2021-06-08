@@ -1,7 +1,8 @@
 #!/bin/bash
 
+wait-for-internet --timeout 10 || exit 0
+
 evry 6 hours -backup_albums && {
-	wait-for-internet
 	printlog "albums:Running nextalbums export..."
 	# arctee doesnt overwrite if this fails
 	# dont save incremental backups, just the current data
