@@ -91,6 +91,7 @@ main() {
 	custom_flake8 || prompt ''
 	pytest "$@" || prompt ''
 	echo "Running mypy..."
+	mypy --install-types --non-interactive
 	mypy --color-output --ignore-missing-imports -p my || prompt ''
 	mypy ~/.config/my/my/config/ || prompt ''
 	echo "Running shellcheck..."
