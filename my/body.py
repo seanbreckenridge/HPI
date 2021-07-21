@@ -24,12 +24,14 @@ class config(user_config):
         return Path(cls.datadir).expanduser().absolute()
 
 
-from typing import Iterator
+from typing import Iterator, NamedTuple
 from functools import partial
+from datetime import datetime
+
 from ttally.autotui_ext import glob_namedtuple
 
 # for definitions see https://sean.fish/d/ttally.py
-from ttally.config import Weight, Shower, Food, Water  # type: ignore[attr-defined]
+from ttally.config import Weight, Shower, Food  # type: ignore[attr-defined]
 
 glob_namedtuple_with_config = partial(glob_namedtuple, in_dir=config.abs())
 
@@ -42,12 +44,21 @@ def shower() -> Iterator[Shower]:
     yield from glob_namedtuple_with_config(Shower)
 
 
-def water() -> Iterator[Water]:
-    yield from glob_namedtuple_with_config(Water)
-
-
-def food() -> Iterator[Water]:
+def food() -> Iterator[Food]:
     yield from glob_namedtuple_with_config(Food)
+
+
+class Water(NamedTuple):
+    when: datetime
+    ml: float
+
+
+# extracts from the water attribute on food
+def water() -> Iterator[Water]:
+    for f in food():
+        ml = f.quantity * f.water
+        if ml > 0:
+            yield Water(when=f.when, ml=ml)
 
 
 def stats() -> Stats:
