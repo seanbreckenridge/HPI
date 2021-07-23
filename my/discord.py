@@ -21,11 +21,6 @@ class config(user_config):
     # see https://github.com/seanbreckenridge/discord_data for more info
     export_path: PathIsh
 
-    # property? functools.cached_property?
-    @classmethod
-    def _abs_export_path(cls) -> Path:
-        return Path(cls.export_path).expanduser().absolute()
-
 
 from typing import Iterator, Optional, Tuple, Set
 from my.core.common import LazyLogger, Stats, mcachew, get_files
