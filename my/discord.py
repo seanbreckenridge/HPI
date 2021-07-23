@@ -27,10 +27,11 @@ class config(user_config):
         return Path(cls.export_path).expanduser().absolute()
 
 
-from typing import Iterator, Optional, Tuple
-from my.core.common import LazyLogger, Stats, mcachew
+from typing import Iterator, Optional, Tuple, Set
+from my.core.common import LazyLogger, Stats, mcachew, get_files
+from my.core.structure import match_structure
 
-from discord_data import merge_messages, merge_activity, Activity, Message
+from discord_data import parse_messages, parse_activity, Activity, Message
 from urlextract import URLExtract
 
 
@@ -104,26 +105,47 @@ def test_remove_link_suppression() -> None:
 
 
 def _cachew_depends_on() -> List[str]:
-    return list(map(str, config._abs_export_path().iterdir()))
+    return [str(p) for p in get_files(config.export_path)]
 
+
+EXPECTED_DISCORD_STRUCTURE = ("messages/index.json", "account/user.json")
 
 # reduces time by multiple minutes, after the cache is created
 # HTML rendering can take quite a long time for the thousands of messages
 @mcachew(depends_on=_cachew_depends_on, logger=logger)
 def messages() -> Iterator[Message]:
-    for msg in merge_messages(export_dir=config._abs_export_path()):
-        yield Message(
-            message_id=msg.message_id,
-            timestamp=msg.timestamp,
-            channel=msg.channel,
-            content=_remove_link_suppression(msg.content),
-            attachments=msg.attachments,
-        )
+    emitted: Set[int] = set()
+    for exp in get_files(config.export_path):
+        with match_structure(
+            exp, expected=EXPECTED_DISCORD_STRUCTURE
+        ) as discord_export:
+            for message_dir in [d / "messages" for d in discord_export]:
+                for msg in parse_messages(message_dir):
+                    if msg.message_id in emitted:
+                        continue
+                    yield Message(
+                        message_id=msg.message_id,
+                        timestamp=msg.timestamp,
+                        channel=msg.channel,
+                        content=_remove_link_suppression(msg.content),
+                        attachments=msg.attachments,
+                    )
+                    emitted.add(msg.message_id)
 
 
 @mcachew(depends_on=_cachew_depends_on, logger=logger)
 def activity() -> Iterator[Activity]:
-    yield from merge_activity(export_dir=config._abs_export_path())
+    emitted: Set[str] = set()
+    for exp in get_files(config.export_path):
+        with match_structure(
+            exp, expected=EXPECTED_DISCORD_STRUCTURE
+        ) as discord_export:
+            for activity_dir in [d / "activity" for d in discord_export]:
+                for act in parse_activity(activity_dir):
+                    if act.event_id in emitted:
+                        continue
+                    yield act
+                    emitted.add(act.event_id)
 
 
 def stats() -> Stats:
