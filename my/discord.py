@@ -7,7 +7,6 @@ REQUIRES = [
 ]
 
 
-from pathlib import Path
 from typing import List
 
 from my.config import discord as user_config  # type: ignore[attr-defined]

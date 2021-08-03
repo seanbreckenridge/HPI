@@ -3,6 +3,11 @@
 wait-for-internet -q --timeout 10 || exit 0
 
 evry 1 week -backup_trakt && {
-	printlog "traktexport:Running export..."
-	arctee -r 3 "$(python3 -m my.utils.backup_to trakt)/{utcnow}.json" -- python3 -m traktexport export purplepinapples || send-error 'traktexport: failed to export list'
+	printlog "traktexport:Running full export..."
+	arctee -r 3 "$(python3 -m my.utils.backup_to trakt)/{utcnow}-full.json" -- python3 -m traktexport export purplepinapples || send-error 'traktexport: failed to export account'
+}
+
+evry 12 hours -backup_trakt_partial && {
+	printlog "traktexport:Running partial export..."
+	arctee -r 3 "$(python3 -m my.utils.backup_to trakt)/{utcnow}-partial.json" -- python3 -m traktexport partial_export purplepinapples --pages 1 || send-error 'traktexport: failed to partial export'
 }

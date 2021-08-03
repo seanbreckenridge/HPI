@@ -9,11 +9,11 @@ REQUIRES = ["git+https://github.com/seanbreckenridge/traktexport"]
 from my.config import trakt as user_config  # type: ignore[attr-defined]
 
 from pathlib import Path
-from typing import Iterator, Dict, Any
+from typing import Iterator, Dict, Any, Sequence
 from functools import lru_cache
 
-from more_itertools import last
 import traktexport.dal as D
+from traktexport.merge import read_and_merge_exports
 
 from my.core import get_files, Stats, LazyLogger, Paths, dataclass
 from my.core.common import mcachew
@@ -28,16 +28,13 @@ class config(user_config):
 logger = LazyLogger(__name__, level="warning")
 
 
-def _latest_input() -> Path:
-    """Since the exports are complete exports, can just use the most recent export"""
-    return last(sorted(get_files(config.export_path), key=lambda p: p.stat().st_mtime))
+def inputs() -> Sequence[Path]:
+    return get_files(config.export_path)
 
 
-# should typically only parse the latest dump when the info
-# isn't cached in the cachew dbs
 @lru_cache(maxsize=None)
-def _read_trakt_export(p: Path) -> D.TraktExport:
-    return D.parse_export(p)
+def _read_trakt_exports() -> D.FullTraktExport:
+    return read_and_merge_exports(list(map(str, inputs())))
 
 
 ### Expose all the parsed information from traktexport.dal
@@ -45,32 +42,32 @@ def _read_trakt_export(p: Path) -> D.TraktExport:
 
 def profile_stats() -> Dict[str, Any]:
     # read the 'stats' key directly from the JSON file
-    return D._read_unparsed(_latest_input())["stats"]
+    return _read_trakt_exports().stats
 
 
-@mcachew(depends_on=_latest_input, logger=logger)
+@mcachew(depends_on=inputs, logger=logger)
 def followers() -> Iterator[D.Follow]:
-    yield from _read_trakt_export(_latest_input()).followers
+    yield from _read_trakt_exports().followers
 
 
-@mcachew(depends_on=_latest_input, logger=logger)
+@mcachew(depends_on=inputs, logger=logger)
 def likes() -> Iterator[D.Like]:
-    yield from _read_trakt_export(_latest_input()).likes
+    yield from _read_trakt_exports().likes
 
 
-@mcachew(depends_on=_latest_input, logger=logger)
+@mcachew(depends_on=inputs, logger=logger)
 def watchlist() -> Iterator[D.WatchListEntry]:
-    yield from _read_trakt_export(_latest_input()).watchlist
+    yield from _read_trakt_exports().watchlist
 
 
-@mcachew(depends_on=_latest_input, logger=logger)
+@mcachew(depends_on=inputs, logger=logger)
 def ratings() -> Iterator[D.Rating]:
-    yield from _read_trakt_export(_latest_input()).ratings
+    yield from _read_trakt_exports().ratings
 
 
-@mcachew(depends_on=_latest_input, logger=logger)
+@mcachew(depends_on=inputs, logger=logger)
 def history() -> Iterator[D.HistoryEntry]:
-    yield from _read_trakt_export(_latest_input()).history
+    yield from _read_trakt_exports().history
 
 
 def stats() -> Stats:
