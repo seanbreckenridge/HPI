@@ -91,19 +91,6 @@ setup_fork() {
 	python3 -m reorder_editable cat | maybe_boxes
 }
 
-setup_ghexport() {
-	local URL TARGET
-	# temporary (hopefully?) patch to use httpx instead of requests
-	echo 'Setting up ghexport...'
-	URL='https://github.com/seanbreckenridge/ghexport'
-	TARGET="${REPOS:?Repos environment variable is not set}/ghexport"
-	pip_install httpx
-	clone_if_not_exists "$URL" "$TARGET"
-	cd "$TARGET" || return $?
-	git submodule update --init
-	pip_install .
-}
-
 # install dependencies (with pip) for this module
 # this works by traversing the AST/looking for
 # a 'REQUIRES' global variable in the
@@ -114,8 +101,7 @@ hpi_module() {
 
 module_dependencies() {
 	echo "Installing module dependencies" | maybe_boxes
-	# no my.github.gdpr because I install deps manually
-	(setup_ghexport) || return $?
+	hpi_module my.github.ghexport || return $?
 	hpi_module my.reddit || return $?
 	hpi_module my.pdfs || return $?
 	hpi_module my.window_watcher || return $?
