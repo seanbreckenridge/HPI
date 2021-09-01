@@ -19,6 +19,7 @@ from my.core.structure import match_structure
 
 from malexport.parse.combine import combine, AnimeData, MangaData
 from malexport.parse.forum import Post, iter_forum_posts
+from malexport.parse.history import parse_history_dir
 
 
 @dataclass
@@ -39,13 +40,12 @@ def export_dirs() -> List[Path]:
         return list(matches)
 
 
-# use the XML files from the export
-# to determine if cache has expired
-def _cachew_depends_on() -> List[float]:
-    xml_files = []
+def _history_depends_on() -> List[float]:
+    json_history_files: List[Path] = []
     for p in export_dirs():
-        xml_files.extend(list(get_files(p / "*.xml")))
-    return [p.lstat().st_mtime for p in xml_files]
+        json_history_files.extend(list((p / "history").rglob("*.json")))
+    json_history_files.sort()
+    return [p.lstat().st_mtime for p in json_history_files]
 
 
 def _forum_depends_on() -> List[float]:
@@ -85,13 +85,14 @@ class Episode(NamedTuple):
     at: datetime
 
 
-@mcachew(depends_on=_cachew_depends_on, logger=logger)
+@mcachew(depends_on=_history_depends_on, logger=logger)
 def episodes() -> Iterator[Episode]:
     for path in export_dirs():
-        anime, _ = _read_malexport(path.stem)
-        for a in anime:
-            for h in a.history:
-                yield Episode(mal_id=a.id, title=a.title, episode=h.number, at=h.at)
+        for hist in parse_history_dir(path / "history" / "anime", "anime"):
+            for ep in hist.entries:
+                yield Episode(
+                    mal_id=hist.mal_id, title=hist.title, episode=ep.number, at=ep.at
+                )
 
 
 class Chapter(NamedTuple):
@@ -101,13 +102,14 @@ class Chapter(NamedTuple):
     at: datetime
 
 
-@mcachew(depends_on=_cachew_depends_on, logger=logger)
+@mcachew(depends_on=_history_depends_on, logger=logger)
 def chapters() -> Iterator[Chapter]:
     for path in export_dirs():
-        _, manga = _read_malexport(path.stem)
-        for m in manga:
-            for h in m.history:
-                yield Chapter(mal_id=m.id, title=m.title, chapter=h.number, at=h.at)
+        for hist in parse_history_dir(path / "history" / "manga", "manga"):
+            for ch in hist.entries:
+                yield Chapter(
+                    mal_id=hist.mal_id, title=hist.title, chapter=ch.number, at=ch.at
+                )
 
 
 @mcachew(depends_on=_forum_depends_on, logger=logger)
