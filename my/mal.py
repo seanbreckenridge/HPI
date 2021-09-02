@@ -13,13 +13,12 @@ from datetime import datetime
 from typing import Iterator, List, Tuple, NamedTuple
 from functools import lru_cache
 
-from my.core import get_files, Stats, LazyLogger, PathIsh, dataclass
+from my.core import Stats, LazyLogger, PathIsh, dataclass
 from my.core.common import mcachew
 from my.core.structure import match_structure
 
-from malexport.parse.combine import combine, AnimeData, MangaData, ListType
+from malexport.parse.combine import combine, AnimeData, MangaData
 from malexport.parse.forum import Post, iter_forum_posts
-from malexport.parse.history import parse_history_dir
 
 
 @dataclass
@@ -85,15 +84,20 @@ class Episode(NamedTuple):
     at: datetime
 
 
-# parse the directory directly instead of parsing all data
-# and then extracting the history from it
+# use the combined data when reading history
+# since it removes entries you may have deleted
+# which still have local history files left over
 @mcachew(depends_on=_history_depends_on, logger=logger)
 def episodes() -> Iterator[Episode]:
     for path in export_dirs():
-        for hist in parse_history_dir(path / "history" / "anime", ListType.ANIME):
-            for ep in hist.entries:
+        anime, _ = _read_malexport(path.stem)
+        for a in anime:
+            for h in a.history:
                 yield Episode(
-                    mal_id=hist.mal_id, title=hist.title, episode=ep.number, at=ep.at
+                    mal_id=a.id,
+                    title=a.title,
+                    episode=h.number,
+                    at=h.at,
                 )
 
 
@@ -107,10 +111,14 @@ class Chapter(NamedTuple):
 @mcachew(depends_on=_history_depends_on, logger=logger)
 def chapters() -> Iterator[Chapter]:
     for path in export_dirs():
-        for hist in parse_history_dir(path / "history" / "manga", ListType.MANGA):
-            for ch in hist.entries:
+        _, manga = _read_malexport(path.stem)
+        for m in manga:
+            for h in m.history:
                 yield Chapter(
-                    mal_id=hist.mal_id, title=hist.title, chapter=ch.number, at=ch.at
+                    mal_id=m.id,
+                    title=m.title,
+                    chapter=h.number,
+                    at=h.at,
                 )
 
 
