@@ -17,7 +17,7 @@ from my.core import get_files, Stats, LazyLogger, PathIsh, dataclass
 from my.core.common import mcachew
 from my.core.structure import match_structure
 
-from malexport.parse.combine import combine, AnimeData, MangaData
+from malexport.parse.combine import combine, AnimeData, MangaData, ListType
 from malexport.parse.forum import Post, iter_forum_posts
 from malexport.parse.history import parse_history_dir
 
@@ -85,10 +85,12 @@ class Episode(NamedTuple):
     at: datetime
 
 
+# parse the directory directly instead of parsing all data
+# and then extracting the history from it
 @mcachew(depends_on=_history_depends_on, logger=logger)
 def episodes() -> Iterator[Episode]:
     for path in export_dirs():
-        for hist in parse_history_dir(path / "history" / "anime", "anime"):
+        for hist in parse_history_dir(path / "history" / "anime", ListType.ANIME):
             for ep in hist.entries:
                 yield Episode(
                     mal_id=hist.mal_id, title=hist.title, episode=ep.number, at=ep.at
@@ -105,7 +107,7 @@ class Chapter(NamedTuple):
 @mcachew(depends_on=_history_depends_on, logger=logger)
 def chapters() -> Iterator[Chapter]:
     for path in export_dirs():
-        for hist in parse_history_dir(path / "history" / "manga", "manga"):
+        for hist in parse_history_dir(path / "history" / "manga", ListType.MANGA):
             for ch in hist.entries:
                 yield Chapter(
                     mal_id=hist.mal_id, title=hist.title, chapter=ch.number, at=ch.at
