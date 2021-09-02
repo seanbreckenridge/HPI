@@ -56,12 +56,16 @@ def _parse_file(histfile: Path) -> Results:
         csv_reader = csv.reader(
             f, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
         )
-        for row in csv_reader:
-            yield Entry(
-                dt=parse_datetime_sec(row[0]),
-                command=row[2],
-                directory=None if row[1] == "-" else row[1],
-            )
+        try:
+            for row in csv_reader:
+                yield Entry(
+                    dt=parse_datetime_sec(row[0]),
+                    command=row[2],
+                    directory=None if row[1] == "-" else row[1],
+                )
+        except csv.Error:
+            print(f"While parsing {histfile}...")
+            raise
 
 
 def stats() -> Stats:
