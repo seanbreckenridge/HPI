@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # copies screenshots that runelite makes when levels/quests are completed
-# these are essentially game acheivements (as images), so it makes for some nice lifelogging
+# these are essentially game achievements (as images), so it makes for some nice lifelogging
 
 locate_screenshots() {
 	# if on windows, I set the $WHOME envvar, which is something like /mnt/c/Users/Sean
