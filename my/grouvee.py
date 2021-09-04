@@ -38,12 +38,26 @@ def games() -> Iterator[G.Game]:
     yield from _read_grouvee_export(_latest_input())
 
 
-def played() -> Iterator[G.Game]:
-    # read the 'stats' key directly from the JSON file
+def filter_shelf(name: str) -> Iterator[G.Game]:
     for game in games():
         for shelf in game.shelves:
-            if shelf.name == "Played":
+            if shelf.name == name:
                 yield game
+
+
+def played() -> Iterator[G.Game]:
+    """Games I've Played"""
+    yield from filter_shelf("Played")
+
+
+def watched() -> Iterator[G.Game]:
+    """Games I've watched, not played"""
+    yield from filter_shelf("Watched")
+
+
+def backlog() -> Iterator[G.Game]:
+    """Games on my backlog"""
+    yield from filter_shelf("Backlog")
 
 
 def stats() -> Stats:
@@ -51,4 +65,6 @@ def stats() -> Stats:
 
     return {
         **stat(played),
+        **stat(watched),
+        **stat(backlog),
     }
