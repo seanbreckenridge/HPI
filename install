@@ -119,6 +119,7 @@ module_dependencies() {
 	hpi_module my.mpv || return $?
 	hpi_module my.league || return $?
 	hpi_module my.trakt || return $?
+	hpi_module my.imap || return $?
 	hpi_module my.grouvee || return $?
 	hpi_module my.mal || return $?
 	hpi_module my.listenbrainz || return $?
