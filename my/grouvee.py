@@ -38,26 +38,30 @@ def games() -> Iterator[G.Game]:
     yield from _read_grouvee_export(_latest_input())
 
 
-def filter_shelf(name: str) -> Iterator[G.Game]:
+def _filter_games_for_shelf(name: str) -> Iterator[G.Game]:
     for game in games():
-        for shelf in game.shelves:
-            if shelf.name == name:
-                yield game
+        if name in [s.name for s in game.shelves]:
+            yield game
 
 
 def played() -> Iterator[G.Game]:
     """Games I've Played"""
-    yield from filter_shelf("Played")
+    yield from _filter_games_for_shelf("Played")
 
 
 def watched() -> Iterator[G.Game]:
     """Games I've watched, not played"""
-    yield from filter_shelf("Watched")
+    yield from _filter_games_for_shelf("Watched")
 
 
 def backlog() -> Iterator[G.Game]:
     """Games on my backlog"""
-    yield from filter_shelf("Backlog")
+    yield from _filter_games_for_shelf("Backlog")
+
+
+def wish_list() -> Iterator[G.Game]:
+    """Games on my wish list"""
+    yield from _filter_games_for_shelf("Wish List")
 
 
 def stats() -> Stats:
@@ -67,4 +71,5 @@ def stats() -> Stats:
         **stat(played),
         **stat(watched),
         **stat(backlog),
+        **stat(wish_list),
     }
