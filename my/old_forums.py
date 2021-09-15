@@ -18,9 +18,8 @@ class config(user_config):
 
 
 from pathlib import Path
-from typing import Sequence
+from typing import Sequence, NamedTuple, Iterator
 from datetime import datetime
-from typing import NamedTuple, Iterator
 
 from autotui.shortcuts import load_from
 
