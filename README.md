@@ -36,6 +36,7 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 - `my.listenbrainz`, exporting my music scrobbling history from [ListenBrainz](https://listenbrainz.org/) (open-source Last.fm) using [`listenbrainz_export`](https://github.com/seanbreckenridge/listenbrainz_export)
 - `my.mal`, for anime/manga history using [`malexport`](https://github.com/seanbreckenridge/malexport)
 - `my.grouvee`, for my video game history/backlog using [`grouvee_export`](https://github.com/seanbreckenridge/grouvee_export)
+- `my.runelite`, parses data from the [automatic runelite screenshots](https://github.com/runelite/runelite/wiki/Screenshot)
 - `my.albums`, grabbing when I listened to music albums/my ratings using my [giant spreadsheet](https://sean.fish/s/albums). Handled by [`nextalbums export`](https://github.com/seanbreckenridge/albums)
 
 #### 'Historical' Modules
