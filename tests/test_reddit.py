@@ -13,7 +13,7 @@ def test_reddit_has_data() -> None:
 
 
 def test_saves() -> None:
-    # TODO not sure if this is necesasry anymore?
+    # TODO not sure if this is necessary anymore?
     saves = list(saved())
     # just check that they are unique..
     assert len(make_dict(saves, key=lambda s: s.sid)) > 10
