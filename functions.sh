@@ -1,11 +1,18 @@
 # These should work with both bash and zsh
 #
+# To use these, put 'source /path/to/this/repo/functions.sh'
+# in your shell profile
+#
 # these use a bunch of common-ish shell tools
 # to interact with the hpi query JSON API
 # jq: https://github.com/stedolan/jq
 # fzf: https://github.com/junegunn/fzf
 
+# helpers used across multiple functions
 alias mpv-from-stdin='mpv --playlist=- --no-audio-display --msg-level=file=error'
+filter_unique() {
+	awk '!seen[$0]++'
+}
 
 #############
 # my.albums
@@ -47,3 +54,9 @@ alias replay='mpv-recent-paths | mpv-from-stdin'
 replay-recent() {
 	mpv-recent-paths "${1:-$LINES}" | fzf | mpv-from-stdin
 }
+
+##########
+# my.zsh
+##########
+
+alias zsh-unique="hpi query -s my.zsh.history | jq -r '.command' | filter_unique | fzf"
