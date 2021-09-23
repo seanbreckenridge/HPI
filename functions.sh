@@ -59,4 +59,6 @@ replay-recent() {
 # my.zsh
 ##########
 
-alias zsh-unique="hpi query -s my.zsh.history | jq -r '.command' | filter_unique | fzf"
+# jq later to preserve newlines in commands
+alias zsh-unique="hpi query -s my.zsh.history | jq '.command' | filter_unique | jq -r"
+alias zsh-unique-fzf='zsh-unique | fzf'
