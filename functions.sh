@@ -62,3 +62,33 @@ replay-recent() {
 # jq later to preserve newlines in commands
 alias zsh-unique="hpi query -s my.zsh.history | jq '.command' | filter_unique | jq -r"
 alias zsh-unique-fzf='zsh-unique | fzf'
+
+############
+# my.trakt
+############
+
+# e.g. trakt-movies --recent 4w | trakt-describe-movie
+trakt-movies() {
+	hpi query my.trakt.ratings -s "$@" | trakt-filter-movies
+}
+
+# e.g. trakt-episodes --recent 4w | trakt-describe-episode
+trakt-episodes() {
+	hpi query 'my.trakt.history' -s "$@" | trakt-filter-episodes
+}
+
+trakt-filter-movies() {
+	jq 'select(.media_type == "movie")'
+}
+
+trakt-filter-episodes() {
+	jq 'select(.media_type == "episode")'
+}
+
+trakt-describe-movie() {
+	jq -r '"\(.media_data.title) (\(.media_data.year)) \(.rating)/10"'
+}
+
+trakt-describe-episode() {
+	jq -r '"\(.media_data.show.title) (\(.media_data.show.year)) - S\(.media_data.season)E\(.media_data.episode) \(.media_data.title)"'
+}
