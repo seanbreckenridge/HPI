@@ -195,6 +195,7 @@ def _parse_apple_xml_val(xml_el):
     elif xml_el.tag == "real":
         return float(xml_el.text)
     elif xml_el.tag == "date":
+        # TODO: make sure this is parsing dates properly
         # is this UTC? probably, since others are
         return datetime.astimezone(
             datetime.fromisoformat(xml_el.text.rstrip("Z")), tz=timezone.utc
