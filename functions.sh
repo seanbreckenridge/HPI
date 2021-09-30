@@ -69,7 +69,7 @@ alias zsh-unique-fzf='zsh-unique | fzf'
 
 # e.g. trakt-movies --recent 4w | trakt-describe-movie
 trakt-movies() {
-	hpi query my.trakt.ratings -s "$@" | trakt-filter-movies
+	hpi query 'my.trakt.history' -s "$@" | trakt-filter-movies
 }
 
 # e.g. trakt-episodes --recent 4w | trakt-describe-episode
@@ -86,7 +86,7 @@ trakt-filter-episodes() {
 }
 
 trakt-describe-movie() {
-	jq -r '"\(.media_data.title) (\(.media_data.year)) \(.rating)/10"'
+	jq -r '"\(.media_data.title) (\(.media_data.year))"'
 }
 
 trakt-describe-episode() {
