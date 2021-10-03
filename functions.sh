@@ -50,12 +50,12 @@ albums-next() {
 mpv-recent() {
 	hpi query my.mpv.history --order-type datetime --reverse -s --limit "${1:-1}"
 }
-mpv-recent-paths() {
+mpv-recent-path() {
 	mpv-recent "$1" | jq -r .path
 }
-alias replay='mpv-recent-paths | mpv-from-stdin'
+alias replay='mpv-recent-path | mpv-from-stdin'
 replay-recent() {
-	mpv-recent-paths "${1:-$LINES}" | fzf | mpv-from-stdin
+	mpv-recent-path "${1:-$LINES}" | fzf | mpv-from-stdin
 }
 
 ##########
