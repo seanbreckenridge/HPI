@@ -139,7 +139,7 @@ Movie I've watched most?
 `hpi` also has a JSON query interface, so I can do quick computations using shell tools like:
 
 ```bash
-# how many calories have I had today?
+# how many calories have I eaten today?
 $ hpi query my.body.food --recent 1d -s | jq -r '(.quantity)*(.calories)' | datamash sum 1
 2258.5
 ```
