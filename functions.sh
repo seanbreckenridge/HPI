@@ -8,6 +8,8 @@
 # jq: https://github.com/stedolan/jq
 # fzf: https://github.com/junegunn/fzf
 
+alias hq='hpi query'
+
 # helpers used across multiple functions
 alias mpv-from-stdin='mpv --playlist=- --no-audio-display --msg-level=file=error'
 filter_unique() {
@@ -18,6 +20,7 @@ filter_unique() {
 # my.albums
 #############
 
+alias albums-history='hpi query my.albums.history'
 # how many albums I have on my list that I havent listened to yet
 alias albums-left='hpi query my.albums.to_listen | jq length'
 # pipe a list of album blobs to this to describe them

@@ -136,12 +136,12 @@ Movie I've watched most?
 [('Up', 92)]  # (the pixar movie)
 ```
 
-`hpi` also has a query interface, so I can do quick computations using shell tools like:
+`hpi` also has a JSON query interface, so I can do quick computations using shell tools like:
 
 ```bash
-# how many glasses of water have I drank today?
-$ hpi query --recent 1d my.body.water | jq '.[] | .glasses' | datamash sum 1
-7.8
+# how many calories have I had today?
+$ hpi query my.body.food --recent 1d -s | jq -r '(.quantity)*(.calories)' | datamash sum 1
+2258.5
 ```
 
 ### Install
