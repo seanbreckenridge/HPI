@@ -62,9 +62,9 @@ class Email(MailParser):
         if self.date is not None:
             return self.date
         if "Date" in self.headers:
-            dt: Optional[datetime] = dateparser.parse(self.headers["Date"])
-            if dt is not None:
-                return dt
+            maybe_dt: Optional[datetime] = dateparser.parse(self.headers["Date"])
+            if maybe_dt is not None:
+                return maybe_dt
         return None
 
     def _serialize(self) -> Dict[str, Any]:
@@ -132,12 +132,13 @@ def raw_mail() -> Iterator[Email]:
 def mail() -> Iterator[Email]:
     # remove duplicates (from a file being
     # in multiple boxes and the 'default' inbox)
-    # some formats won't have a parseable date
-    # or message id, so use the subject/body instead
+    # some formats won't have a message id,
+    # but hopefully the date/subject creates a unique
+    # key in that case
     yield from unique_everseen(
         raw_mail(),
         key=lambda m: (
-            m.subject,
+            m.subject_json,
             m.message_id_json,
             m.dt,
         ),
