@@ -5,7 +5,7 @@ Uses https://github.com/SpamScope/mail-parser to
 parse the mail
 """
 
-REQUIRES = ["mail-parser"]
+REQUIRES = ["mail-parser", "dateparser"]
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import imap as user_config  # type: ignore[attr-defined]
@@ -20,7 +20,9 @@ from typing import (
     Dict,
     Any,
 )
+from datetime import datetime
 
+import dateparser
 from mailparser import MailParser
 from mailparser.exceptions import MailParserReceivedParsingError
 from more_itertools import unique_everseen
@@ -51,12 +53,26 @@ class Email(MailParser):
         super().__init__(message=message)
         self.filepath: Optional[Path] = None
 
+    @property
+    def dt(self) -> Optional[datetime]:
+        """
+        try to parse datetime if mail date wasn't in RFC 2822 format
+        """
+        # check if date is None -- couldn't be parsed
+        if self.date is not None:
+            return self.date
+        if "Date" in self.headers:
+            dt: Optional[datetime] = dateparser.parse(self.headers["Date"])
+            if dt is not None:
+                return dt
+        return None
+
     def _serialize(self) -> Dict[str, Any]:
         return {
             "filepath": self.filepath,
             "bcc": self.bcc,
             "cc": self.cc,
-            "date": self.date,
+            "date": self.dt,
             "date_utc": self.date_utc,
             "delivered_to": self.delivered_to,
             "from": self.from_,
@@ -116,13 +132,14 @@ def raw_mail() -> Iterator[Email]:
 def mail() -> Iterator[Email]:
     # remove duplicates (from a file being
     # in multiple boxes and the 'default' inbox)
-    # use the message_id_json since that can
-    # be a string or a list
+    # some formats won't have a parseable date
+    # or message id, so use the subject/body instead
     yield from unique_everseen(
         raw_mail(),
         key=lambda m: (
+            m.subject,
             m.message_id_json,
-            m.date,
+            m.dt,
         ),
     )
 
