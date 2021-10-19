@@ -48,7 +48,7 @@ These are modules to parse GDPR exports/data from services I used to use, but do
 - `my.league`, gives League of Legends game history using [`lolexport`](https://github.com/seanbreckenridge/lolexport)
 - `my.steam`, for steam achievement data and game playtime using [`steamscraper`](https://github.com/seanbreckenridge/steamscraper)
 - `my.blizzard`, for general battle.net event data [parsed from a GDPR export](https://github.com/seanbreckenridge/blizzard_gdpr_parser)
-- `my.old_forums`, random posts from forums I used to use in the past, see [`forum_parser`](https://github.com/seanbreckenridge/forum_parser)
+- `my.old_forums`, parses random forum posts and achievements from sites I used to use in the past, see [`old_forums`](https://github.com/seanbreckenridge/old_forums)
 - `my.skype` to parse a couple datetimes from the Skype GDPR export
 - `my.spotify`, to parse the GDPR export from Spotify, mostly to access songs from my playlists from years ago
 - `my.twitch`, merging the [data export](https://www.twitch.tv/p/en/legal/privacy-choices/#user-privacy-requests) and my messages parsed from the [overrustle logs dump](https://github.com/seanbreckenridge/overrustle_parser)
