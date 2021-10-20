@@ -1,8 +1,7 @@
 """
-Parses my local IMAP mailbox, synced using mbsync
+Parses my locally synced IMAP email files, using mbsync
 https://isync.sourceforge.io/mbsync.html
-Uses https://github.com/SpamScope/mail-parser to
-parse the mail
+Uses https://github.com/SpamScope/mail-parser to parse the mail
 """
 
 REQUIRES = ["mail-parser", "dateparser"]
@@ -46,25 +45,37 @@ class config(user_config):
     mailboxes: Paths
 
 
-# subclass of the mailparser which
-# supports serialization by my.core.serialize
 class Email(MailParser):
+    """
+    subclass of the mailparser which
+    supports serialization by my.core.serialize
+    along with a few other convenience functions
+    """
+
+    # note: The 'message' property on this class
+    # is the stdlib email.Message class:
+    # https://docs.python.org/3/library/email.message.html#module-email.message
     def __init__(self, message: Parser) -> None:
         super().__init__(message=message)
         self.filepath: Optional[Path] = None
+        self._dt: Optional[datetime] = None  # property to cache datetime result
 
     @property
     def dt(self) -> Optional[datetime]:
         """
-        try to parse datetime if mail date wasn't in RFC 2822 format
+        Try to parse datetime if mail date wasn't in RFC 2822 format
         """
-        # check if date is None -- couldn't be parsed
+        if self._dt is not None:
+            return self._dt
+        # If date was parsed properly by mailparser
         if self.date is not None:
+            self._dt = self.date
             return self.date
         if "Date" in self.headers:
-            maybe_dt: Optional[datetime] = dateparser.parse(self.headers["Date"])
-            if maybe_dt is not None:
-                return maybe_dt
+            # even if this fails (returns None), we should save the None, since it means
+            # that the dateparser call (which can take a while) doesn't have to run again
+            self._dt = dateparser.parse(self.headers["Date"])
+            return self._dt
         return None
 
     def _serialize(self) -> Dict[str, Any]:
@@ -95,6 +106,29 @@ class Email(MailParser):
             "to_domains": self.to_domains,
         }
 
+    @classmethod
+    def safe_parse(cls, path: Path) -> Optional["Email"]:
+        """
+        Alternate constructor which catches common
+        errors/bugs that mailparser could raise
+        """
+        try:
+            m = cls.from_file(path)  # calls MailParser.from_file
+            m.filepath = path
+            return m
+        except UnicodeDecodeError as e:
+            logger.debug(f"While parsing {path}: {e}")
+        except MailParserReceivedParsingError as e:
+            logger.debug(f"While parsing {path}: {e}")
+        except AttributeError as e:
+            # error in the 'find_between' function when
+            # the epilogue fails to be parse
+            if str(e) == "'NoneType' object has no attribute 'index'":
+                logger.debug(f"While parsing {path}: {e}")
+            else:
+                raise e
+        return None
+
 
 def mailboxes() -> List[Path]:
     return list(get_files(config.mailboxes))
@@ -111,22 +145,9 @@ def files() -> Iterator[Path]:
 
 
 def raw_mail() -> Iterator[Email]:
-    for f in files():
-        try:
-            m = Email.from_file(f)
-            m.filepath = f
+    for m in map(Email.safe_parse, files()):
+        if m is not None:
             yield m
-        except UnicodeDecodeError as e:
-            logger.debug(f"While parsing {f}: {e}")
-        except MailParserReceivedParsingError as e:
-            logger.debug(f"While parsing {f}: {e}")
-        except AttributeError as e:
-            # error in the 'find_between' function when
-            # the epilogue fails to be parsed
-            if str(e) == "'NoneType' object has no attribute 'index'":
-                logger.debug(f"While parsing {f}: {e}")
-            else:
-                raise e
 
 
 def mail() -> Iterator[Email]:
