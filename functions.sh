@@ -41,6 +41,7 @@ albums-awards() {
 albums-next() {
 	hpi query my.albums.to_listen -s --limit "${1:-10}" | jq -r '"\(.year) | \(.album_name) - \(.cover_artists)"'
 }
+alias albums-history-desc='albums-history -s | albums-describe-score'
 
 ##########
 # my.mpv
