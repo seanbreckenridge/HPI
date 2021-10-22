@@ -20,7 +20,7 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 - `my.browsing`, using [`browserexport`](https://github.com/seanbreckenridge/browserexport) to backup/parse firefox/chrome/safari history
 - `my.zsh` and `my.bash`, access to my shell history w/ timestamps
 - `my.imap` to parse local IMAP sync's of my email
-- `my.google_takeout`, parses lots of (~250,000) events (youtube, searches, phone usage, comments, location history) from [google takeouts](https://takeout.google.com/), using [google_takeout_parser](https://github.com/seanbreckenridge/google_takeout_parser)
+- `my.google_takeout`, parses lots of (~500,000) events (youtube, searches, phone usage, comments, location history) from [google takeouts](https://takeout.google.com/), using [google_takeout_parser](https://github.com/seanbreckenridge/google_takeout_parser)
 - `my.mpv`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-history-daemon)
 - `my.discord`, parses ~1,000,000 messages/events from the discord data export, parser [here](https://github.com/seanbreckenridge/discord_data)
 - `my.money`, bank account transactions/balance history from [my personal budget tool](https://github.com/seanbreckenridge/mint)
