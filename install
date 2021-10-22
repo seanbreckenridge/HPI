@@ -109,7 +109,7 @@ module_dependencies() {
 	hpi_module my.browsing || return $?
 	hpi_module my.discord || return $?
 	hpi_module my.body || return $?
-	hpi_module my.google || return $?
+	hpi_module my.google_takeout || return $?
 	hpi_module my.time.tz.via_location || return $?
 	hpi_module my.coding.commits || return $?
 	hpi_module my.todotxt || return $?

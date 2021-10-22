@@ -11,10 +11,14 @@ from .models import Location
 # sources
 from .ip import ips
 from .gpslogger import history as gpslogger_history
-from ..google import events as google_events, takeout_input_directories
-from ..google.models import Location as GoogleLocation
 from ..apple import events as apple_events
 from ..apple import Location as AppleLocation
+
+from ..google_takeout import (
+    events as google_events,
+    inputs as takeout_input_directories,
+)
+from google_takeout_parser.models import Location as GoogleLocation
 
 
 logger = LazyLogger(__name__, level="warning")
