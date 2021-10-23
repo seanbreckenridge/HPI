@@ -88,7 +88,7 @@ class Email(MailParser):
             "delivered_to": self.delivered_to,
             "from": self.from_,
             "message_id": self.message_id,
-            "recieved": self.recieved,
+            "received": self.received,
             "reply_to": self.reply_to,
             "subject": self.subject,
             "to": self.to,
