@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+"""
+Parses my Google Takeout using https://github.com/seanbreckenridge/google_takeout_parser
+"""
 
 REQUIRES = ["git+https://github.com/seanbreckenridge/google_takeout_parser"]
 
@@ -12,6 +14,7 @@ from my.core.structure import match_structure
 from google_takeout_parser.path_dispatch import TakeoutParser, Results
 from google_takeout_parser.merge import GoogleEventSet
 
+# see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import google as user_config
 
 
@@ -48,7 +51,10 @@ EXPECTED = "My Activity"
 @mcachew(depends_on=_cachew_depends_on, logger=logger, force_file=True)
 def events() -> Results:
     emitted = GoogleEventSet()
-    for path in inputs():
+    # reversed shouldn't really matter? but logic is to use newer
+    # takeouts if they're named according to date, since JSON Activity
+    # is nicer than HTML Activity
+    for path in reversed(inputs()):
         with match_structure(path, expected=EXPECTED) as results:
             for m in results:
                 # e.g. /home/sean/data/google_takeout/Takeout-1634932457.zip") -> 'Takeout-1634932457'
