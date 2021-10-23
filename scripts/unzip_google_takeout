@@ -1,50 +1,19 @@
 #!/bin/bash
 
-normalize_path() {
-	sed -e "s|~|$HOME|"
-}
-
-# read from my.config
-TAKEOUT_PATH="$(python3 -c "from my.config import google; print(google.takeout_path)" | normalize_path)" || exit $?
-DRIVE_TAKEOUTS="$(python3 -c "from my.config import google; print(google.google_drive_local_path)" | normalize_path)" || exit $?
-
 declare -a TAKEOUT_ZIPS=()
+declare GOOGLE_DRIVE_TAKEOUT_DIR
+GOOGLE_DRIVE_TAKEOUT_DIR="${1:?Provide Google Drive Takeout directory as first argument}"
 
 # read all takeouts into array
 while read -r -d $'\0' zipped_takeout; do
 	TAKEOUT_ZIPS+=("$zipped_takeout")
-done < <(find "$DRIVE_TAKEOUTS" -type f -name "*.zip" -print0)
+done < <(find "${GOOGLE_DRIVE_TAKEOUT_DIR}" -type f -name "*.zip" -print0)
 
-# make sure one exists
 if [[ "${#TAKEOUT_ZIPS}" == 0 ]]; then
-	echo "No takeouts found at ${DRIVE_TAKEOUTS}, exiting..." 1>&2
+	echo "No takeouts found at ${GOOGLE_DRIVE_TAKEOUT_DIR}, exiting..."
 	exit 1
 fi
 
-# make tmp dir so we can match the filename, and move it
-# to a location which includes the timestamp
-
 for takeout in "${TAKEOUT_ZIPS[@]}"; do
-	tmpdir="$(mktemp -p /tmp -d takeout.XXXXXXXXXX)"
-	takeout_created_at="$(stat -c"%W" "$takeout")"
-	# extract to temp dir
-	unzip "$takeout" -d "$tmpdir"
-	# move to correct location
-	target="${TAKEOUT_PATH}Takeout-${takeout_created_at}"
-	# if it already exists
-	if [[ -d "$target" ]]; then
-		echo "WARNING: Target directory ${target} already exists! skipping..." 1>&2
-		continue
-	else
-		mv "$tmpdir"/* "$target"
-	fi
-	if [[ -d "${target}" ]]; then
-		echo "Move successful (new takeout: ${target}); contents:"
-		tree -L 1 "${target}"
-		echo "Should be safe to remove the zip file:"
-		rm -i "$takeout"
-	else
-		echo "ERROR!" 1>&2
-		echo "Target directory at ${target} doesn't exist, leaving zip file alone" 1>&2
-	fi
+	google_takeout_parser move --from "${takeout}" --to-dir "${HPIDATA}/google_takeout" --no-extract
 done
