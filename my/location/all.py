@@ -16,7 +16,7 @@ from ..apple import Location as AppleLocation
 
 from ..google_takeout import (
     events as google_events,
-    inputs as takeout_input_directories,
+    _cachew_depends_on as _google_cachew_depends_on,
 )
 from google_takeout_parser.models import Location as GoogleLocation
 
@@ -41,7 +41,7 @@ def locations() -> Iterator[Location]:
 
 # get location data from google exports
 @mcachew(
-    depends_on=lambda: list(sorted(takeout_input_directories())),
+    depends_on=_google_cachew_depends_on,
     logger=logger,
 )
 def _google_locations() -> Iterator[Location]:
