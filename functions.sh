@@ -25,10 +25,10 @@ alias albums-history='hpi query my.albums.history'
 alias albums-left='hpi query my.albums.to_listen | jq length'
 # pipe a list of album blobs to this to describe them
 albums-describe() {
-	jq -r '"\(.album_name) - \(.cover_artists) (\(.year))"'
+	jq -r '"\(.cover_artists) - \(.album_name) (\(.year))"'
 }
 albums-describe-score() {
-	jq -r '"[\(.score) | \(.listened_on)] \(.album_name) - \(.cover_artists) (\(.year))"'
+	jq -r '"[\(.score) | \(.listened_on)] \(.cover_artists) - \(.album_name) (\(.year))"'
 }
 # any albums which I can't find/have to order physical copies for to listen to
 alias albums-cant-find="hpi query -s my.albums._albums_cached | jq -r 'select(.note==\"cant find\")' | albums-describe"
@@ -39,9 +39,24 @@ albums-awards() {
 }
 # just the next albums I should listen to chronologically
 albums-next() {
-	hpi query my.albums.to_listen -s --limit "${1:-10}" | jq -r '"\(.year) | \(.album_name) - \(.cover_artists)"'
+	hpi query my.albums.to_listen -s --limit "${1:-10}" | albums-describe
 }
+alias albums-next-all='albums-next 99999'
 alias albums-history-desc='albums-history -s | albums-describe-score'
+# albums-history -s | albums-filter-reason 'Grammy for Best Rock' | albums-describe-score
+# hq my.albums.to_listen -s | albums-filter-reason 'Contemporary Blues' | albums-describe
+albums-filter-reason() {
+	local reason
+	reason="${1:?provide reason to filter by as first argument}"
+	jq "select(.reasons | .[] | contains(\"${reason}\"))"
+}
+albums-filter-genre() {
+	local genre
+	genre="${1:?provide genre or style to filter by as first argument}"
+	# lower what the user gave, as well as the genres/styles so can compare
+	genre="$(echo "${genre}" | tr '[:upper:]' '[:lower:]')"
+	jq "select((.genres + .styles) | .[] |= ascii_downcase | .[] | contains(\"${genre}\"))"
+}
 
 ##########
 # my.mpv
