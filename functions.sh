@@ -21,8 +21,9 @@ filter_unique() {
 #############
 
 alias albums-history='hpi query my.albums.history'
+alias albums-to-listen='hpi query my.albums.to_listen'
 # how many albums I have on my list that I havent listened to yet
-alias albums-left='hpi query my.albums.to_listen | jq length'
+alias albums-left='albums-to-listen | jq length'
 # pipe a list of album blobs to this to describe them
 albums-describe() {
 	jq -r '"\(.cover_artists) - \(.album_name) (\(.year))"'
@@ -35,7 +36,7 @@ alias albums-cant-find="hpi query -s my.albums._albums_cached | jq -r 'select(.n
 # list any albums I have yet to listen to, sorted by how many awards they've won
 albums-awards() {
 	local COUNT="${1:-10}"
-	hpi query my.albums.to_listen | jq -r "sort_by(.reasons | length) | reverse | .[0:${COUNT}] | .[] | \"[\(.reasons | length)] \(.album_name) - \(.cover_artists) (\(.year))\""
+	albums-to-listen | jq -r "sort_by(.reasons | length) | reverse | .[0:${COUNT}] | .[] | \"[\(.reasons | length)] \(.album_name) - \(.cover_artists) (\(.year))\""
 }
 # just the next albums I should listen to chronologically
 albums-next() {
