@@ -1,0 +1,14 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+textgenrnn = {git = "git://github.com/minimaxir/textgenrnn.git"}
+tensorflow = "==2.3.2"
+ipython = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.7"
