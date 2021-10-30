@@ -59,6 +59,17 @@ albums-filter-genre() {
 	jq "select((.genres + .styles) | .[] |= ascii_downcase | .[] | contains(\"${genre}\"))"
 }
 
+###################
+# my.listenbrainz
+###################
+
+scrobbles() {
+	hpi query my.listenbrainz.history -s "$@"
+}
+scrobble-describe() {
+	jq -r '"\(.listened_at) \(.artist_name) - \(.track_name)"'
+}
+
 ##########
 # my.mpv
 ##########
