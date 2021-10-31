@@ -79,8 +79,8 @@ Some basic examples.
 When was I most using reddit?
 
 ```python
->>> import collections, my.reddit, pprint
->>> pprint.pprint(collections.Counter([c.created.year for c in my.reddit.comments()]))
+>>> import collections, my.reddit.all, pprint
+>>> pprint.pprint(collections.Counter([c.created.year for c in my.reddit.all.comments()]))
 Counter({2016: 3288,
          2017: 801,
          2015: 523,
