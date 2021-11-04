@@ -19,6 +19,7 @@ from my.core.structure import match_structure
 
 from malexport.parse.combine import combine, AnimeData, MangaData
 from malexport.parse.forum import Post, iter_forum_posts
+from malexport.parse.friends import Friend, iter_friends
 
 
 @dataclass
@@ -45,13 +46,6 @@ def _history_depends_on() -> List[float]:
         json_history_files.extend(list((p / "history").rglob("*.json")))
     json_history_files.sort()
     return [p.lstat().st_mtime for p in json_history_files]
-
-
-def _forum_depends_on() -> List[float]:
-    indexes = []
-    for p in export_dirs():
-        indexes.append(p / "forum" / "index.json")
-    return [p.lstat().st_mtime for p in indexes]
 
 
 Export = Tuple[List[AnimeData], List[MangaData]]
@@ -122,10 +116,14 @@ def chapters() -> Iterator[Chapter]:
                 )
 
 
-@mcachew(depends_on=_forum_depends_on, logger=logger)
 def posts() -> Iterator[Post]:
     for path in export_dirs():
         yield from iter_forum_posts(path.stem)
+
+
+def friends() -> Iterator[Friend]:
+    for path in export_dirs():
+        yield from iter_friends(path.stem)
 
 
 def stats() -> Stats:
@@ -137,4 +135,5 @@ def stats() -> Stats:
         **stat(chapters),
         **stat(episodes),
         **stat(posts),
+        **stat(friends),
     }
