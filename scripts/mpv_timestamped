@@ -1,0 +1,18 @@
+#!/usr/bin/env python3
+
+from datetime import datetime
+
+from my.mpv import history
+
+
+def to_naive(dt: datetime) -> datetime:
+    return datetime.fromtimestamp(dt.timestamp())
+
+
+def main() -> None:
+    for m in history():
+        print(f"{to_naive(m.start_time)} {m.path}")
+
+
+if __name__ == "__main__":
+    main()
