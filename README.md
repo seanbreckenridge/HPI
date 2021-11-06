@@ -173,4 +173,3 @@ Those directories are editable installs, meaning any changes I make to them get 
 ### TODO:
 
 - [ ] configure `my.stackexchange` API tokens: https://github.com/karlicoss/stexport
-- [ ] separate google takeout into a separate parser/repository
