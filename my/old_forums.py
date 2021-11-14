@@ -29,20 +29,20 @@ from my.core import get_files, Stats
 from .utils.common import InputSource
 
 
-def forum_post_files() -> Sequence[Path]:
+def forum_posts_inputs() -> Sequence[Path]:
     return get_files(config.export_path, glob="*.json")
 
 
-def achievement_files() -> Sequence[Path]:
+def achievement_inputs() -> Sequence[Path]:
     return get_files(config.export_path, glob="*.html")
 
 
-def forum_posts(from_paths: InputSource = forum_post_files) -> Iterator[Post]:
+def forum_posts(from_paths: InputSource = forum_posts_inputs) -> Iterator[Post]:
     for path in from_paths():
         yield from load_from(Post, path)
 
 
-def achievements(from_paths: InputSource = achievement_files) -> Iterator[Achievement]:
+def achievements(from_paths: InputSource = achievement_inputs) -> Iterator[Achievement]:
     # quite personal, lets me specify CSS selectors as a JSON config file, see:
     # https://github.com/seanbreckenridge/old_forums
     sels = AchievementSelector.load_from_blob(open(os.environ["OLD_FORUMS_SELECTORS"]))
