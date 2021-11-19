@@ -10,14 +10,13 @@ from my.config import listenbrainz as user_config  # type: ignore[attr-defined]
 
 
 from pathlib import Path
-from typing import Iterator, Sequence, List
+from typing import Iterator, Sequence
 from itertools import chain
 
 from listenbrainz_export.parse import Listen, iter_listens
 from more_itertools import unique_everseen
 
 from my.core import get_files, Stats, LazyLogger, Paths, dataclass
-from my.core.common import mcachew
 from my.utils.common import InputSource
 
 
@@ -37,17 +36,12 @@ def inputs() -> Sequence[Path]:
 Results = Iterator[Listen]
 
 
-def _cachew_depends_on(for_paths: InputSource = inputs) -> List[float]:
-    return [p.stat().st_mtime for p in for_paths()]
-
-
 def _parse_export_file(p: Path) -> Results:
     # remove any items which have null as listen date
     # (may have been listening to something when export happened)
     yield from filter(lambda l: l.listened_at is not None, iter_listens(str(p)))
 
 
-@mcachew(depends_on=_cachew_depends_on, logger=logger)
 def history(from_paths: InputSource = inputs) -> Results:
     yield from unique_everseen(
         chain(*(_parse_export_file(p) for p in from_paths())),
