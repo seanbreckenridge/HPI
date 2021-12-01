@@ -17,7 +17,12 @@ from my.core.common import Stats, mcachew, LazyLogger
 
 from .models import Location
 
-from ..facebook import AdminAction, UploadedPhoto, events as facebook_events, config as facebook_config
+from ..facebook import (
+    AdminAction,
+    UploadedPhoto,
+    events as facebook_events,
+    config as facebook_config,
+)
 from ..blizzard import events as blizzard_events
 from ..discord import activity, _cachew_depends_on
 
