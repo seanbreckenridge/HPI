@@ -26,7 +26,7 @@ class config(user_config):
 
 import re
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Sequence, Iterator, NamedTuple
 from itertools import chain
 
@@ -84,9 +84,7 @@ def _parse_file(p: Path) -> Iterator[Solution]:
             problem, day, month_desc, year_short, hour, minute = m.groups()
             month_lowered = month_desc.lower()
             assert month_lowered in MONTHS, f"Couldnt find {month_lowered} in {MONTHS}"
-            # Note: datetime is naive, so may be different when you downloaded this
-            # is different than your current timezone. Could use tz provider and when
-            # the file was modified to possibly get which tz to place this into
+            # datetimes in the file are UTC time
             yield Solution(
                 problem=int(problem),
                 dt=datetime(
@@ -95,6 +93,7 @@ def _parse_file(p: Path) -> Iterator[Solution]:
                     day=int(day),
                     hour=int(hour),
                     minute=int(minute),
+                    tzinfo=timezone.utc,
                 ),
             )
 
