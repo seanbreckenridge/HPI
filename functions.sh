@@ -8,8 +8,6 @@
 # jq: https://github.com/stedolan/jq
 # fzf: https://github.com/junegunn/fzf
 
-alias hq='hpi query'
-
 # helpers used across multiple functions
 alias mpv-from-stdin='mpv --playlist=- --no-audio-display --msg-level=file=error'
 filter_unique() {
