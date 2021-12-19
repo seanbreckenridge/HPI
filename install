@@ -80,7 +80,7 @@ setup_fork() {
 
 	# install my fork of upstream
 	cd "${FORK_TARGET}" || return $?
-	pip_install -e '.' || return $?
+	pip_install -e '.[optional]' || return $?
 
 	# cd back to here, to install this
 	cd "${BASE_DIR}" || return $?
@@ -109,7 +109,6 @@ module_dependencies() {
 	hpi_module my.smscalls || return $?
 	hpi_module my.browsing || return $?
 	hpi_module my.discord || return $?
-	hpi_module my.body || return $?
 	hpi_module my.google_takeout || return $?
 	hpi_module my.time.tz.via_location || return $?
 	hpi_module my.coding.commits || return $?
