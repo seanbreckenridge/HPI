@@ -173,3 +173,4 @@ Those directories are editable installs, meaning any changes I make to them get 
 ### TODO:
 
 - [ ] configure `my.stackexchange` API tokens: https://github.com/karlicoss/stexport
+- [ ] google [now playing history](https://dfir.pubpub.org/pub/xbvsrjt5/release/1)
