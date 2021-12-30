@@ -75,6 +75,8 @@ def _extract_locations(path: Path) -> Iterator[Res[Location]]:
             for track in gpx_obj.tracks:
                 for segment in track.segments:
                     for point in segment.points:
+                        if point.time is None:
+                            continue
                         # TODO: use elevation?
                         yield Location(
                             lat=point.latitude,
