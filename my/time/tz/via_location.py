@@ -17,7 +17,7 @@ from typing import Iterator, NamedTuple, Optional, Tuple, Any
 from more_itertools import seekable
 import pytz
 
-from ...core.common import LazyLogger, mcachew, tzdatetime
+from my.core.common import LazyLogger, tzdatetime
 
 # sources
 from ...location.ip import ips
@@ -81,7 +81,9 @@ def _iter_local_dates() -> Iterator[DayWithZone]:
             warnings.append("local time goes backwards {ldt} ({tz}) < {pdt}")
             continue
         pdt = ldt
-        yield DayWithZone(day=ndate, zone=tz.zone)
+        z = tz.zone
+        assert z is not None
+        yield DayWithZone(day=ndate, zone=z)
 
 
 def most_common(l):
@@ -93,7 +95,13 @@ def most_common(l):
 # its a bit complicated as this is pulling from multiple data sources
 # maybe create a utility func in my.location.all that returns a list of
 # all source filepaths?
-@mcachew()
+#
+# TODO(sean): Thu Dec 30 02:34:53 PM PST 2021
+# with how extendible HPI intends to be, its probably better
+# to just accept that the amount of inputs varies so much, especially
+# for tz/location, and this will take a while. Its possible to define
+# some global var here where users would register files which this depends on,
+# but seems confusing
 def _iter_tzs() -> Iterator[DayWithZone]:
     for d, gr in groupby(_iter_local_dates(), key=lambda p: p.day):
         logger.info("processed %s", d)
