@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+
+"""
+Merges (so duplicate events can be removed)
+all ghexport events into a single JSON file
+
+Example:
+arctee merged.json -- deduped_ghexport
+"""
+
+import orjson
+
+from ghexport.dal import DAL
+from my.github.ghexport import inputs
+
+
+def main() -> None:
+    events = list(DAL(sources=inputs()).events())
+    print(orjson.dumps(events).decode('utf-8'))
+
+
+if __name__ == "__main__":
+    main()
