@@ -16,7 +16,7 @@ from my.github.ghexport import inputs
 
 def main() -> None:
     events = list(DAL(sources=inputs()).events())
-    print(orjson.dumps(events).decode('utf-8'))
+    print(orjson.dumps(events).decode("utf-8"))
 
 
 if __name__ == "__main__":
