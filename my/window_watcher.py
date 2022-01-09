@@ -15,7 +15,6 @@ from typing import NamedTuple, Iterator, Tuple, Dict, Set, Sequence, Optional, L
 from itertools import chain
 
 from my.core import get_files, Stats, Paths, dataclass
-from my.core.common import listify
 from my.utils.time import parse_datetime_sec
 from my.utils.common import InputSource
 
@@ -31,9 +30,8 @@ class config(user_config):
     force_individual: Optional[List[str]] = None
 
 
-@listify
-def inputs() -> Sequence[Path]:  # type: ignore[misc]
-    yield from get_files(config.export_path)
+def inputs() -> Sequence[Path]:
+    return get_files(config.export_path)
 
 
 # represents one history entry

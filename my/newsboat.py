@@ -27,8 +27,7 @@ Subscriptions = Sequence[str]
 SubscriptionState = Tuple[datetime, Subscriptions]
 
 
-@listify
-def inputs() -> Sequence[Tuple[datetime, Path]]:  # type: ignore[misc]
+def inputs() -> Iterator[Tuple[datetime, Path]]:
     rss_backups = get_files(config.export_path)
     for rssf in rss_backups:
         dt = datetime.strptime(rssf.stem, "%Y%m%dT%H%M%SZ")
