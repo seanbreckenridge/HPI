@@ -162,7 +162,7 @@ git clone https://github.com/seanbreckenridge/HPI ./HPI
 python3 -m pip install -e ./HPI
 
 # make sure my easy-install.pth is ordered correctly
-python3 -m pip install 'git+https://github.com/seanbreckenridge/reorder_editable'
+python3 -m pip install reorder_editable
 python3 -m reorder_editable reorder ./HPI ./HPI-fork
 ```
 
