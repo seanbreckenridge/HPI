@@ -1,0 +1,31 @@
+#!/bin/bash
+# updates my banking account/transactions
+# https://github.com/seanbreckenridge/mint
+
+wait-for-internet -q --timeout 10 || exit 0
+
+MINTLOG='/tmp/mint.log'
+
+setup_mint() {
+	readonly MINT_REPO="${REPOS}/mint"
+	readonly UPDATE_MINT="${MINT_REPO}/mint"
+	if [[ -z "${MINT_DATA}" ]]; then
+		send-error 'MINT_DATA environment variable is not set'
+		return 1
+	fi
+	if [[ ! -d "${MINT_DATA}" ]]; then
+		send-error 'MINT_DATA directory doesnt exist'
+		return 1
+	fi
+}
+
+update_mintable() {
+	"$UPDATE_MINT" fetch >>"$MINTLOG" 2>&1 || return $?
+}
+
+evry 6 hours -updatemint && {
+	setup_mint || exit $?
+	printlog 'mint:fetching accounts...'
+	update_mintable || send-error "Could not fetch data for mint, see $MINTLOG"
+	printlog "mint:finished fetching accounts: $(date)"
+}
