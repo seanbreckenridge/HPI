@@ -17,6 +17,7 @@ if __name__ == "__main__":
         },
         zip_safe=False,
         packages=list(subpackages()),
+        package_data={"my": ["py.typed"]},
         url=f"https://github.com/{username}/HPI",
         author="Sean Breckenridge",
         author_email="seanbrecke@gmail.com",
