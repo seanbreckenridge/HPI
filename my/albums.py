@@ -20,7 +20,6 @@ from pathlib import Path
 from typing import Iterator
 
 from my.core import get_files, Stats, LazyLogger
-from my.core.common import mcachew
 
 from nextalbums.export import Album, read_dump
 
@@ -35,22 +34,15 @@ def _current_albums_export_path() -> Path:
     return dump[0]
 
 
-def _cachew_depends_on() -> float:
-    return _current_albums_export_path().stat().st_mtime
-
-
-@mcachew(depends_on=_cachew_depends_on, logger=logger)
 def _albums_cached() -> Iterator[Album]:
     return read_dump(_current_albums_export_path())
 
 
-@mcachew(depends_on=_cachew_depends_on, logger=logger)
 def history() -> Iterator[Album]:
     """Only return items I've listened to, where the score is not null"""
     yield from filter(lambda a: a.listened, _albums_cached())
 
 
-@mcachew(depends_on=_cachew_depends_on, logger=logger)
 def to_listen() -> Iterator[Album]:
     """Albums I have yet to listen to"""
     yield from filter(lambda a: not a.listened and not a.dropped, _albums_cached())
