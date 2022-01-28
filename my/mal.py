@@ -89,7 +89,7 @@ def episodes() -> Iterator[Episode]:
             for h in a.history:
                 yield Episode(
                     mal_id=a.id,
-                    title=a.title,
+                    title=a.XMLData.title,
                     episode=h.number,
                     at=h.at,
                 )
@@ -110,7 +110,7 @@ def chapters() -> Iterator[Chapter]:
             for h in m.history:
                 yield Chapter(
                     mal_id=m.id,
-                    title=m.title,
+                    title=m.XMLData.title,
                     chapter=h.number,
                     at=h.at,
                 )
