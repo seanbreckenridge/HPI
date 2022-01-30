@@ -17,5 +17,5 @@ The one motivating this change is `apple.py`, since the old `apple.py` was parsi
 Possible 'Exceptions' to this:
 
 - For some files, if the possibility for conflict is low (I can't imagine anyone exporting data from the source in any other way, e.g., `ipython`, `project_euler`) or the name is so specific to the source that its not needed (e.g. `ttt`, `window_watcher`)
-- For files where I can't imagine you'd want both mine and your/custom implementation the same time, e.g. if you override `bash`, `zsh` or `imap`, you're probably creating your own solution to parse that source, and don't need mine (If that's not the case, feel free to open an issue)
+- For files where I can't imagine you'd want both mine and your/custom implementation the same time, e.g. if you override `bash`, `zsh`, you're probably creating your own solution to parse that source, and don't need mine (If that's not the case, feel free to open an issue)
 - For some of my modules, I've renamed them from what they do to their service/project names instead (`albums` to `nextalbums`; `money` to `mint`), so I'm not holding the generic name of some function when I don't really need to

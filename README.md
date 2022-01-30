@@ -17,7 +17,7 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 
 ### My Modules
 
-- `my.browsing`, using [`browserexport`](https://github.com/seanbreckenridge/browserexport) to backup/parse firefox/chrome/safari history
+- `my.browser.export`, using [`browserexport`](https://github.com/seanbreckenridge/browserexport) to backup/parse firefox/chrome/safari history
 - `my.zsh` and `my.bash`, access to my shell history w/ timestamps
 - `my.imap` to parse local IMAP sync's of my email
 - `my.google_takeout`, parses lots of (~500,000) events (youtube, searches, phone usage, comments, location history) from [google takeouts](https://takeout.google.com/), using [`google_takeout_parser`](https://github.com/seanbreckenridge/google_takeout_parser)
@@ -111,8 +111,8 @@ Most common shell commands?
 What websites do I visit most?
 
 ```python
->>> import collections, pprint, my.browsing, urllib
->>> pprint.pprint(collections.Counter([urllib.parse.urlparse(h.url).netloc for h in my.browsing.history()]).most_common(5))
+>>> import collections, pprint, my.browser.export, urllib
+>>> pprint.pprint(collections.Counter([urllib.parse.urlparse(h.url).netloc for h in my.browser.export.history()]).most_common(5))
 [('github.com', 20953),
  ('duckduckgo.com', 10146),
  ('www.youtube.com', 10126),

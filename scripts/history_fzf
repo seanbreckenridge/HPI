@@ -7,7 +7,7 @@ set -o pipefail
 # awk: removes duplicates
 # additional jq after you pick with fzf removes quotes (-r)
 
-exec hpi query -s my.browsing.history |
+exec hpi query -s my.browsing.export.history |
 	jq '"\(.url)|\(.metadata.description)"' |
 	awk '!seen[$0]++' |
 	fzf +m --tac |

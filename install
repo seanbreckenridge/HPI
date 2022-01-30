@@ -107,7 +107,7 @@ module_dependencies() {
 	hpi_module my.pdfs || return $?
 	hpi_module my.window_watcher || return $?
 	hpi_module my.smscalls || return $?
-	hpi_module my.browsing || return $?
+	hpi_module my.browser.export || return $?
 	hpi_module my.discord.data_export || return $?
 	hpi_module my.google_takeout || return $?
 	hpi_module my.time.tz.via_location || return $?
@@ -119,7 +119,7 @@ module_dependencies() {
 	hpi_module my.mpv.history_daemon || return $?
 	hpi_module my.league.export || return $?
 	hpi_module my.trakt.export || return $?
-	hpi_module my.imap || return $?
+	hpi_module my.mail.imap || return $?
 	hpi_module my.grouvee.export || return $?
 	hpi_module my.mal.export || return $?
 	hpi_module my.listenbrainz.export || return $?
