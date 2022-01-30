@@ -1,12 +1,14 @@
 ### 2022-01-30
 
+[Relevant PR](https://github.com/seanbreckenridge/HPI/pull/18)
+
 Renamed some modules to allow for future extension, and less possibilities for conflicts with other related HPI modules under a particular company/service/source
 
 For reference, [here is the current directory structure](https://github.com/seanbreckenridge/HPI/tree/eb425e653918d68eb9d41da29e791fe1ba554dc7/my) as of this commit
 
 In particular, anything with a `gdpr`/`data_export`/`privacy_export` is named to be that, instead of globally squashing the namespace module to the single `modulename.py` file
 
-Converting a single-file module to a namespace module [is always a breaking change](https://github.com/karlicoss/promnesia/pull/225#issuecomment-819773697), and though [one can do hacky traceback introspection](https://github.com/karlicoss/HPI/blob/master/my/reddit/__init__.py) (to possible delay the change from a non-namespace package to a namespace package, but if anyone else is using this code, its likely in the background through promnesia, so most likely situation is that they don't see that till I deprecate it anyways), but its only a temporary solution until the `__init__.py`/`module.py` file is eventually removed -- so better to do them all now instead of waiting till it becomes 'too late'
+Converting a single-file module to a namespace module [is always a breaking change](https://github.com/karlicoss/promnesia/pull/225#issuecomment-819773697), and though [one can do hacky traceback introspection](https://github.com/karlicoss/HPI/blob/master/my/reddit/__init__.py) (to possible delay the change from a non-namespace package to a namespace package. However, if anyone else is using this code, its likely in the background through promnesia, so most likely situation is that they don't see that till I deprecate it anyways), but its only a temporary solution until the `__init__.py`/`module.py` file is eventually removed -- so better to do them all now instead of waiting till it becomes 'too late'
 
 A user (or me) may want to write their own module with the same name, meaning they can't use both at the same time if mine is just `my.module_name.py`, since that means any other namespace packages installed with have their module before mine (see [reorder_editable](https://github.com/seanbreckenridge/reorder_editable)) for an explanation
 
