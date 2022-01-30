@@ -123,9 +123,9 @@ What websites do I visit most?
 Song I've listened to most?
 
 ```python
->>> import collections, my.mpv
->>> collections.Counter([m.path for m in my.mpv.history()]).most_common(1)[0][0]
-'/home/sean/Music/Toby Fox/Toby Fox - UNDERTALE Soundtrack (2015) [V0]/085 - Fallen Down (Reprise).mp3'
+>>> import collections, my.mpv.history_daemon
+>>> collections.Counter([m.path for m in my.mpv.history_daemon.history()]).most_common(1)[0][0]
+'/home/sean/Music/JPEFMAFIA/JPEGMAFIA - LP! - 2021 - V0/JPEGMAFIA - LP! - 05 HAZARD DUTY PAY!.mp3'
 ```
 
 Movie I've watched most?
@@ -150,7 +150,7 @@ The [`install` script here](https://github.com/seanbreckenridge/HPI/blob/a6495ad
 
 For more information on that, and some of the complications one can run into, see [reorder_editable](https://github.com/seanbreckenridge/reorder_editable#editable-namespace-packages), and the [module design](https://github.com/karlicoss/HPI/blob/master/doc/MODULE_DESIGN.org#adding-new-modules) docs for HPI.
 
-Disregarding setting up all the dependencies for individual modules (which is why the [`install`](install) script exists), this is setup by doing:
+Disregarding setting up all the dependencies for individual (e.g. `my.ipython`) modules (which is why the [`install`](install) script exists), this is setup by doing:
 
 ```bash
 # clone and install upstream as an editable package
@@ -167,6 +167,8 @@ python3 -m reorder_editable reorder ./HPI ./HPI-fork
 ```
 
 Those directories are editable installs, meaning any changes I make to them get applied immediately, which is very convenient for debugging and developing new modules.
+
+If you have issues installing, check the [CHANGELOG](CHANGELOG.md) for any possible breaking changes
 
 [`jobs`](./jobs) contains anacron-like jobs that are run periodically, using [`bgproc`](https://github.com/seanbreckenridge/bgproc) and [`evry`](https://github.com/seanbreckenridge/evry). So, this repo contains both the [DAL](https://beepb00p.xyz/exports.html#dal) and scripts to backup my data. I run the jobs in the background using supervisor, see [here](https://github.com/seanbreckenridge/dotfiles/tree/master/.local/scripts/supervisor) for the config, and/or [`run_jobs`](https://github.com/seanbreckenridge/dotfiles/blob/master/.local/scripts/supervisor/run_jobs) for the `bgproc` wrapper. (They likely won't work out of the box for you, as they depend on tokens/environment variables that are set on my system - In particular the `HPIDATA` environment variable, which for me is `~/data`)
 
