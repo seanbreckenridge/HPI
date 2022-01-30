@@ -30,7 +30,7 @@ from mpv_history_daemon.events import (
 
 from my.core import get_files, Stats, LazyLogger
 from my.core.common import mcachew
-from .utils.common import InputSource
+from my.utils.input_source import InputSource
 
 # monkey patch logs
 if "HPI_LOGS" in os.environ:

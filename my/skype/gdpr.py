@@ -31,7 +31,7 @@ from itertools import chain
 import dateparser
 
 from my.core import get_files, LazyLogger
-from .utils.common import InputSource
+from my.utils.input_source import InputSource
 
 logger = LazyLogger(__name__, level="warning")
 

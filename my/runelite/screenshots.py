@@ -25,7 +25,7 @@ from datetime import datetime
 
 from my.core import get_files, Stats
 from my.core.structure import match_structure
-from my.utils.common import InputSource
+from my.utils.input_source import InputSource
 
 EXPECTED = ("Levels", "Quests")
 

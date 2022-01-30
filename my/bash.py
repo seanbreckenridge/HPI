@@ -36,7 +36,7 @@ from more_itertools import unique_everseen
 from my.core import get_files, Stats, LazyLogger, Paths, dataclass
 from my.core.common import mcachew
 from my.utils.time import parse_datetime_sec
-from my.utils.common import InputSource
+from my.utils.input_source import InputSource
 
 
 @dataclass

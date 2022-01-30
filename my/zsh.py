@@ -40,7 +40,7 @@ from my.core import (
 from my.core.common import mcachew
 from my.core.warnings import low
 from my.utils.time import parse_datetime_sec
-from my.utils.common import InputSource
+from my.utils.input_source import InputSource
 
 from more_itertools import unique_everseen
 
