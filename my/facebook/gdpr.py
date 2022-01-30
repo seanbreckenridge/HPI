@@ -21,7 +21,7 @@ from typing import Iterator, Dict, Any, NamedTuple, Union, Optional, List
 
 
 from my.core import get_files, Stats, Res, Json, LazyLogger
-from .utils.time import parse_datetime_sec
+from my.utils.time import parse_datetime_sec
 
 
 logger = LazyLogger(__name__, level="warning")

@@ -22,8 +22,8 @@ from typing import NamedTuple, Iterator, Sequence, List
 from itertools import chain
 
 from my.core import get_files, Stats
-from .utils.time import parse_datetime_sec
-from .utils.common import InputSource
+from my.utils.time import parse_datetime_sec
+from my.utils.input_source import InputSource
 
 
 logger = LazyLogger(__name__, level="warning")

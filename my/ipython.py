@@ -39,7 +39,7 @@ from itertools import chain
 from IPython.core.history import HistoryAccessor  # type: ignore[import]
 
 from my.core import get_files, warn_if_empty, Stats, Res
-from .utils.common import InputSource
+from my.utils.input_source import InputSource
 
 
 class Command(NamedTuple):

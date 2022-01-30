@@ -1,6 +1,12 @@
 from more_itertools import ilen
 
-from my.apple import events, Game, GameAchievement, GameLeaderboardData, Location
+from my.apple.privacy_export import (
+    events,
+    Game,
+    GameAchievement,
+    GameLeaderboardData,
+    Location,
+)
 
 
 def test_apple_types():

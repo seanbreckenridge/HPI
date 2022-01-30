@@ -33,7 +33,7 @@ from itertools import chain
 from more_itertools import unique_everseen
 
 from my.core import get_files, Stats
-from .utils.common import InputSource
+from my.utils.input_source import InputSource
 
 
 class Solution(NamedTuple):

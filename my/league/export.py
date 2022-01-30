@@ -28,8 +28,8 @@ from functools import partial
 from itertools import chain
 
 from my.core import get_files, Stats, Res, Json, warn_if_empty
-from .utils.time import parse_datetime_millis
-from .utils.common import InputSource
+from my.utils.time import parse_datetime_millis
+from my.utils.input_source import InputSource
 
 
 def inputs() -> Sequence[Path]:

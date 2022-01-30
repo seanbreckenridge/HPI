@@ -18,8 +18,8 @@ filter_unique() {
 # my.albums
 #############
 
-alias albums-history='hpi query my.albums.history'
-alias albums-to-listen='hpi query my.albums.to_listen'
+alias albums-history='hpi query my.nextalbums.history'
+alias albums-to-listen='hpi query my.nextalbums.to_listen'
 # how many albums I have on my list that I havent listened to yet
 alias albums-left='albums-to-listen | jq length'
 # pipe a list of album blobs to this to describe them
@@ -30,7 +30,7 @@ albums-describe-score() {
 	jq -r '"[\(.score) | \(.listened_on)] \(.cover_artists) - \(.album_name) (\(.year))"'
 }
 # any albums which I can't find/have to order physical copies for to listen to
-alias albums-cant-find="hpi query -s my.albums._albums_cached | jq -r 'select(.note==\"cant find\")' | albums-describe"
+alias albums-cant-find="hpi query -s my.nextalbums._albums_cached | jq -r 'select(.note==\"cant find\")' | albums-describe"
 # list any albums I have yet to listen to, sorted by how many awards they've won
 albums-awards() {
 	local COUNT="${1:-10}"
@@ -38,7 +38,7 @@ albums-awards() {
 }
 # just the next albums I should listen to chronologically
 albums-next() {
-	hpi query my.albums.to_listen -s --limit "${1:-10}" | albums-describe
+	hpi query my.nextalbums.to_listen -s --limit "${1:-10}" | albums-describe
 }
 alias albums-next-all='albums-next 99999'
 alias albums-history-desc='albums-history -s | albums-describe-score'
@@ -62,7 +62,7 @@ albums-filter-genre() {
 ###################
 
 scrobbles() {
-	hpi query my.listenbrainz.history -s "$@"
+	hpi query my.listenbrainz.export.history -s "$@"
 }
 scrobble-describe() {
 	jq -r '"\(.listened_at) \(.artist_name) - \(.track_name)"'
@@ -74,7 +74,7 @@ scrobble-describe() {
 
 # functions to replay music I've listened to recently
 mpv-recent() {
-	hpi query my.mpv.history --order-type datetime --reverse -s --limit "${1:-1}"
+	hpi query my.mpv.history_daemon.history --order-type datetime --reverse -s --limit "${1:-1}"
 }
 mpv-recent-path() {
 	mpv-recent "$1" | jq -r .path
@@ -98,12 +98,12 @@ alias zsh-unique-fzf='zsh-unique | fzf'
 
 # e.g. trakt-movies --recent 4w | trakt-describe-movie
 trakt-movies() {
-	hpi query 'my.trakt.history' -s "$@" | trakt-filter-movies
+	hpi query 'my.trakt.export.history' -s "$@" | trakt-filter-movies
 }
 
 # e.g. trakt-episodes --recent 4w | trakt-describe-episode
 trakt-episodes() {
-	hpi query 'my.trakt.history' -s "$@" | trakt-filter-episodes
+	hpi query 'my.trakt.export.history' -s "$@" | trakt-filter-episodes
 }
 
 trakt-filter-movies() {

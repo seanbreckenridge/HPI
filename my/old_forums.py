@@ -26,7 +26,7 @@ from old_forums.forum import Post  # model from lib
 from old_forums.achievements import AchievementSelector, Achievement
 
 from my.core import get_files, Stats
-from .utils.common import InputSource
+from my.utils.input_source import InputSource
 
 
 def forum_posts_inputs() -> Sequence[Path]:

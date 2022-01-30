@@ -25,7 +25,7 @@ from lxml import etree  # type: ignore[import]
 from my.core import Stats, LazyLogger, Res
 from my.core.common import get_files, warn_if_empty, mcachew
 from my.core.warnings import high
-from ..utils.common import InputSource
+from my.utils.input_source import InputSource
 
 
 logger = LazyLogger(__name__, level="warning")

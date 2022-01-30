@@ -9,12 +9,11 @@ from my.core.common import mcachew
 from .models import Location
 
 # sources
-from .ip import ips
-from .gpslogger import history as gpslogger_history
-from ..apple import events as apple_events
-from ..apple import Location as AppleLocation
+from my.location.ip import ips
+from my.location.gpslogger import history as gpslogger_history
+from my.apple.privacy_export import events as apple_events, Location as AppleLocation
 
-from ..google_takeout import (
+from my.google_takeout import (
     events as google_events,
     _cachew_depends_on as _google_cachew_depends_on,
 )

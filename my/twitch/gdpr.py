@@ -22,7 +22,7 @@ from typing import Iterator, Union, Sequence, List
 from .common import Event, Results
 
 from my.core.common import get_files, LazyLogger, mcachew, Stats
-from my.utils.common import InputSource
+from my.utils.input_source import InputSource
 
 logger = LazyLogger(__name__, level="warning")
 

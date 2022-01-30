@@ -21,36 +21,36 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 - `my.zsh` and `my.bash`, access to my shell history w/ timestamps
 - `my.imap` to parse local IMAP sync's of my email
 - `my.google_takeout`, parses lots of (~500,000) events (youtube, searches, phone usage, comments, location history) from [google takeouts](https://takeout.google.com/), using [`google_takeout_parser`](https://github.com/seanbreckenridge/google_takeout_parser)
-- `my.mpv`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-history-daemon)
-- `my.discord`, parses ~1,000,000 messages/events from the discord data export, parser [here](https://github.com/seanbreckenridge/discord_data)
-- `my.money`, bank account transactions/balance history from [my personal budget tool](https://github.com/seanbreckenridge/mint)
+- `my.mpv.history_daemon`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-history-daemon)
+- `my.discord.data_export`, parses ~1,000,000 messages/events from the discord data export, parser [here](https://github.com/seanbreckenridge/discord_data)
+- `my.mint`, bank account transactions/balance history from [my personal budget tool](https://github.com/seanbreckenridge/mint)
 - `my.todotxt`, to track my to-do list history (using backups of my [`todotxt`](http://todotxt.org/) files)
-- `my.newsboat`, keeps track of when I added/removed RSS feeds (for [`newsboat`](https://newsboat.org/))
+- `my.rss.newsboat`, keeps track of when I added/removed RSS feeds (for [`newsboat`](https://newsboat.org/))
 - `my.ipython`, for timestamped python REPL history
 - `my.ttt`, to parse shell/system history tracked by [`ttt`](https://github.com/seanbreckenridge/ttt)
 - `my.window_watcher`, to parse active window events (what application I'm using/what the window title is) using [`window_watcher`](https://github.com/seanbreckenridge/aw-watcher-window)
 - `my.location`, merges data from [`gpslogger`](https://github.com/mendhak/gpslogger), `apple`, `google`, `discord`, `blizzard`, and `facebook` to provide location data (goes back ~10 years)
-- `my.chess`, to track my [chess.com](https://www.chess.com)/[lichess.org](https://lichess.org/) games, using [`chess_export`](https://github.com/seanbreckenridge/chess_export)
-- `my.trakt`, providing me a history/my ratings for Movies/TV Show (episodes) using [`traktexport`](https://github.com/seanbreckenridge/traktexport)
-- `my.listenbrainz`, exporting my music scrobbling history from [ListenBrainz](https://listenbrainz.org/) (open-source Last.fm) using [`listenbrainz_export`](https://github.com/seanbreckenridge/listenbrainz_export)
-- `my.mal`, for anime/manga history using [`malexport`](https://github.com/seanbreckenridge/malexport)
-- `my.grouvee`, for my video game history/backlog using [`grouvee_export`](https://github.com/seanbreckenridge/grouvee_export)
-- `my.runelite`, parses data from the [automatic runelite screenshots](https://github.com/runelite/runelite/wiki/Screenshot)
+- `my.chess.export`, to track my [chess.com](https://www.chess.com)/[lichess.org](https://lichess.org/) games, using [`chess_export`](https://github.com/seanbreckenridge/chess_export)
+- `my.trakt.export`, providing me a history/my ratings for Movies/TV Show (episodes) using [`traktexport`](https://github.com/seanbreckenridge/traktexport)
+- `my.listenbrainz.export`, exporting my music scrobbling history from [ListenBrainz](https://listenbrainz.org/) (open-source Last.fm) using [`listenbrainz_export`](https://github.com/seanbreckenridge/listenbrainz_export)
+- `my.mal.export`, for anime/manga history using [`malexport`](https://github.com/seanbreckenridge/malexport)
+- `my.grouvee.export`, for my video game history/backlog using [`grouvee_export`](https://github.com/seanbreckenridge/grouvee_export)
+- `my.runelite.screenshots`, parses data from the [automatic runelite screenshots](https://github.com/runelite/runelite/wiki/Screenshot)
 - `my.project_euler`, when I solved [Project Euler](https://projecteuler.net/) problems
-- `my.albums`, grabbing when I listened to music albums/my ratings using my [giant spreadsheet](https://sean.fish/s/albums). Handled by [`nextalbums export`](https://github.com/seanbreckenridge/albums)
+- `my.nextalbums`, grabbing when I listened to music albums/my ratings using my [giant spreadsheet](https://sean.fish/s/albums). Handled by [`nextalbums export`](https://github.com/seanbreckenridge/albums)
 
 #### 'Historical' Modules
 
 These are modules to parse GDPR exports/data from services I used to use, but don't anymore. They're here to provide more context into the past.
 
-- `my.apple`, parses Game Center and location data from the apple GDPR export
-- `my.facebook`, to parse the GDPR export from Facebook
-- `my.league`, gives League of Legends game history using [`lolexport`](https://github.com/seanbreckenridge/lolexport)
-- `my.steam`, for steam achievement data and game playtime using [`steamscraper`](https://github.com/seanbreckenridge/steamscraper)
-- `my.blizzard`, for general battle.net event data [parsed from a GDPR export](https://github.com/seanbreckenridge/blizzard_gdpr_parser)
+- `my.apple.privacy_export`, parses Game Center and location data from the apple GDPR export
+- `my.facebook.gdpr`, to parse the GDPR export from Facebook
+- `my.league.export`, gives League of Legends game history using [`lolexport`](https://github.com/seanbreckenridge/lolexport)
+- `my.steam.scraper`, for steam achievement data and game playtime using [`steamscraper`](https://github.com/seanbreckenridge/steamscraper)
+- `my.blizzard.gdpr`, for general battle.net event data [parsed from a GDPR export](https://github.com/seanbreckenridge/blizzard_gdpr_parser)
 - `my.old_forums`, parses random forum posts and achievements from sites I used to use in the past, see [`old_forums`](https://github.com/seanbreckenridge/old_forums)
-- `my.skype` to parse a couple datetimes from the Skype GDPR export
-- `my.spotify`, to parse the GDPR export from Spotify, mostly to access songs from my playlists from years ago
+- `my.skype.gdpr` to parse a couple datetimes from the Skype GDPR export (seems all my data from years ago is long gone)
+- `my.spotify.gdpr`, to parse the GDPR export from Spotify, mostly to access songs from my playlists from years ago
 - `my.twitch`, merging the [data export](https://www.twitch.tv/p/en/legal/privacy-choices/#user-privacy-requests) and my messages parsed from the [overrustle logs dump](https://github.com/seanbreckenridge/overrustle_parser)
 
 See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py) for config.

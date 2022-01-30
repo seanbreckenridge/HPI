@@ -1,7 +1,7 @@
 from more_itertools import ilen
 
-from my.league import history
-from my.steam import games, achievements
+from my.league.export import history
+from my.steam.scraper import games, achievements
 
 
 def test_league() -> None:
