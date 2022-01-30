@@ -1,0 +1,8 @@
+#!/bin/bash
+# backup current messages (imessage) database
+
+evry 1 week -backup_imessages && {
+	readonly MESSAGES_DB="${HOME}/Library/Messages/chat.db"
+	printlog "imessage:backing up history database..."
+	backup_sqlite "${MESSAGES_DB}" "$(python3 -m my.utils.backup_to imessage)/$(date +'%s').sqlite" || send-error 'imessage: failed to backup database'
+}
