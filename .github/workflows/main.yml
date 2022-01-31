@@ -16,7 +16,7 @@ jobs:
 
     steps:
     # https://github.com/actions/toolkit/blob/main/docs/commands.md#path-manipulation
-    - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+    #- run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
     - uses: actions/setup-python@v2
       with:
@@ -25,7 +25,7 @@ jobs:
     - name: Run CI
       working-directory: .
       run: |
-        make
+        make install
 
     - uses: actions/upload-artifact@v2
       with:
