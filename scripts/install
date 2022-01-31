@@ -1,17 +1,25 @@
 #!/usr/bin/env bash
+# If the 'CI' environment variable is set, this runs
+# like it would on the CI. To try and test that locally,
+# can do: CI_SKIP_INSTALL=1 CI_1 ./scripts/install
 set -o pipefail
+
+[[ -n "${CI}" ]] && set -x
 
 # script to setup HPI
 # - installs karlicoss/HPI as an editable namespace package,
 # - installs this repo
 # - installs additional python packages for modules
 # - checks for any required external commands
-# - sets up directory structure in ~/data
 
 # cd to this directory
-BASE_DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")")" || exit $?
+BASE_DIR="$(git rev-parse --show-toplevel)"
 readonly BASE_DIR
 cd "${BASE_DIR}" || exit 1
+printf 'In: %s\n' "$(pwd)"
+
+# could be inherited from global env
+declare MY_CONFIG
 
 # function to verify an external command is installed
 havecmd() {
@@ -57,34 +65,34 @@ pip_install() {
 	pipm install --user "$@"
 }
 
+install_editable() {
+	pipm install --prefix="$(python -m site --user-base)" --editable "$@"
+}
+
 setup_fork() {
-	local FORK_ABBREV FORK_URL UPSTREAM_URL FORK_TARGET
+	local FORK_ABBREV UPSTREAM_URL FORK_TARGET
 	echo 'Setting up upstream fork...' | maybe_boxes
 
-	# the name of my fork close to karlicoss/HPI, since HPI is this repo
 	FORK_ABBREV='HPI-fork'
-
 	UPSTREAM_URL='https://github.com/karlicoss/HPI'
-	FORK_URL="https://github.com/seanbreckenridge/${FORK_ABBREV}"
 
 	FORK_TARGET="$(realpath "../${FORK_ABBREV}")"
 
 	# clone my fork one level up from here if it doesnt exist
 	if [[ ! -e "${FORK_TARGET}" ]]; then
-		git clone "${FORK_URL}" "${FORK_TARGET}"
+		git clone "${UPSTREAM_URL}" "${FORK_TARGET}"
 		cd "${FORK_TARGET}" || return $?
-		git remote add upstream "${UPSTREAM_URL}"
 	else
 		echo "Path already exists, skipping clone..."
 	fi
 
 	# install my fork of upstream
 	cd "${FORK_TARGET}" || return $?
-	pip_install -e '.[optional]' || return $?
+	install_editable '.[optional,testing]' || return $?
 
 	# cd back to here, to install this
 	cd "${BASE_DIR}" || return $?
-	pip_install -e '.' || return $?
+	install_editable '.' || return $?
 
 	# make sure my repository appears before the upstream repo
 	python3 -m reorder_editable reorder "${BASE_DIR}" "${FORK_TARGET}" || return $?
@@ -127,25 +135,29 @@ module_dependencies() {
 	hpi_module my.skype.gdpr || return $?
 }
 
-verify_personal_python_packages() {
-	# some python packages I install manually as they're
-	# pretty personal/require extensive configuration
-	# here, just try and import them -- that shouldn't fail
-	# https://github.com/seanbreckenridge/mint
-	# https://github.com/seanbreckenridge/albums
-	python3 -c "import nextalbums, budget" || return $?
+ci_install_deps() {
+	if [[ -n "${CI}" && -z "${CI_SKIP_INSTALL}" ]]; then
+		# install OS specific stuff here
+		if [[ "$OSTYPE" == "darwin"* ]]; then
+			# macos
+			brew install fd
+		else
+			sudo apt update
+			sudo apt install fd-find
+		fi
+	fi
 }
 
 required_commands() {
 	# ordered from most likely to least likely
 	echo 'Checking if required commands are installed...' | maybe_boxes
-	havecmd curl || return $?
 	havecmd git || return $?
 	havecmd python3 || return $?
-	havecmd fd 'Required for the my.coding.commits module' || return $?
+	ci_install_deps || return $?
 }
 
 optional_commands() {
+	[[ -n "${CI}" ]] && return
 	echo 'Checking if optional commands are installed...' | maybe_boxes
 	havecmd evry "To handle background tasks; install from https://github.com/seanbreckenridge/evry" || return $?
 	havecmd bgproc "For background tasks; install from https://github.com/seanbreckenridge/bgproc" || return $?
@@ -160,18 +172,85 @@ install_dependencies() {
 }
 
 prompt_if_fails() {
+	if [[ -n "$CI" ]]; then
+		return 1
+	fi
 	printf "Command failed... Hit Enter to continue, Ctrl+C to exit"
 	read -r
+}
+
+ci_config() {
+	MY_CONFIG="${PWD}/tests/my"
+	declare -rx MY_CONFIG
+	hpi config check || return $?
+}
+
+ci_tests() {
+	[[ -n "$CI" ]] && unset HPI_TESTS_SEANB
+	pytest || return $?
+}
+
+ci_mypy() {
+	# find -name '*.py' | grep -v '__' | sed -e 's|\.\/||' -e 's|/|.|g' -e 's/\.py$//g' -e 's/^/my./' -e 's/$/ \\/' -e 's/^/-p /' | sort
+	python3 -m mypy --install-types --non-interactive \
+		--color-output --ignore-missing-import \
+		-p my.apple.privacy_export \
+		-p my.bash \
+		-p my.blizzard.gdpr \
+		-p my.browser.export \
+		-p my.chess.export \
+		-p my.discord.data_export \
+		-p my.facebook.gdpr \
+		-p my.google_takeout \
+		-p my.grouvee.export \
+		-p my.ipython \
+		-p my.league.export \
+		-p my.listenbrainz.export \
+		-p my.location.all \
+		-p my.location.gpslogger \
+		-p my.location.ip \
+		-p my.location.models \
+		-p my.mail.imap \
+		-p my.mal.export \
+		-p my.mint \
+		-p my.mpv.history_daemon \
+		-p my.nextalbums \
+		-p my.old_forums \
+		-p my.project_euler \
+		-p my.rss.newsboat.file_backups \
+		-p my.runelite.screenshots \
+		-p my.skype.gdpr \
+		-p my.spotify.gdpr \
+		-p my.steam.scraper \
+		-p my.time.tz.via_location \
+		-p my.todotxt.file_backups \
+		-p my.trakt.export \
+		-p my.ttt \
+		-p my.twitch.all \
+		-p my.twitch.common \
+		-p my.twitch.gdpr \
+		-p my.twitch.overrustle_logs \
+		-p my.utils.input_source \
+		-p my.utils.time \
+		-p my.window_watcher \
+		-p my.zsh \
+		--txt-report .coverage.mypy || return $?
+}
+
+ci_run() {
+	[[ -z "${CI}" ]] && return 0
+	ci_config || return $?
+	ci_tests || return $?
+	ci_mypy || return $?
 }
 
 main() {
 	required_commands || prompt_if_fails || return $?
 	optional_commands || prompt_if_fails || return $?
-	havecmd wait-for-internet >/dev/null 2>&1 && wait-for-internet --text "waiting for internet..."
 	install_dependencies || prompt_if_fails || return $?
 	(setup_fork) || prompt_if_fails || return $?
 	module_dependencies || prompt_if_fails || return $?
-	verify_personal_python_packages || prompt_if_fails || return $?
+	ci_run || return $?
 }
 
 main "$@" || exit $?

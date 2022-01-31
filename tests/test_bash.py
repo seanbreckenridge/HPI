@@ -3,11 +3,11 @@ from pathlib import Path
 
 from my.bash import _parse_file
 
-test_dir = os.path.dirname(os.path.abspath(__file__))
-history_file = Path(os.path.join(test_dir, "bash", "history"))
+from .common import data
 
 
 def test_single_file() -> None:
+    history_file = data("bash/history")
     history = list(_parse_file(history_file))
     assert len(history) == 4
     assert history[0].command == "ls"

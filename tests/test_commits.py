@@ -1,15 +1,18 @@
 from pathlib import Path
 
-from my.coding.commits import repos, _cached_commits, Commit
-
 from more_itertools import ilen
+
+from .common import skip_if_not_seanb
 
 
 def file_count(dir_name: Path) -> int:
     return ilen(dir_name.rglob("*"))
 
 
-def test():
+@skip_if_not_seanb
+def test_commits() -> None:
+    from my.coding.commits import repos, _cached_commits, Commit
+
     all_repos = list(repos())
     assert len(all_repos) > 1
     # get a repo which has lots of files
