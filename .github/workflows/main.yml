@@ -26,12 +26,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-        fetch-depth: 0  # nicer to have all git history when debugging/for tests
-
-    - run: install
+    - run: ./install
 
     - uses: actions/upload-artifact@v2
       with:
