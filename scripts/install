@@ -88,7 +88,12 @@ setup_fork() {
 
 	# install my fork of upstream
 	cd "${FORK_TARGET}" || return $?
-	install_editable '.[optional,testing]' || return $?
+
+	if [[ -n "${CI}" ]]; then
+		install_editable '.[optional,testing]' || return $?
+	else
+		install_editable '.[optional]' || return $?
+	fi
 
 	# cd back to here, to install this
 	cd "${BASE_DIR}" || return $?
