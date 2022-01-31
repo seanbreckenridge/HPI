@@ -11,9 +11,10 @@ set -o pipefail
 # - sets up directory structure in ~/data
 
 # cd to this directory
-BASE_DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")")" || exit $?
+BASE_DIR="$(git rev-parse --show-toplevel)"
 readonly BASE_DIR
 cd "${BASE_DIR}" || exit 1
+printf 'In: %s\n' "$(pwd)"
 
 # could be inherited from global env
 declare MY_CONFIG

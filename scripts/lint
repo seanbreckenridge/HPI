@@ -40,10 +40,11 @@ havecmd black
 havecmd shfmt
 set +e
 
-cd "$(realpath "$(dirname "${BASH_SOURCE[0]}")")" || {
-	echo "Couldn't cd to current dir"
+cd "$(git rev-parse --show-toplevel)" || {
+	echo "Couldn't cd to root dir"
 	exit 1
 }
+printf 'In: %s\n' "$(pwd)"
 
 # E225,E501,E302,E402,E305,E261,E265,E116,E252,E702,E266,E741,E306,E203,E731,W503
 readonly FLAKE8_IGNORE='E402,E501,E741,W503,E266,E302,E305,E203'
