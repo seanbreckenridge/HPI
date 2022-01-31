@@ -19,9 +19,13 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+    - name: test python
+      run: |
+        python3 setup.py
+
     - name: Run CI
       run: |
-        scripts/install
+        bash scripts/install
 
     - uses: actions/upload-artifact@v2
       with:
