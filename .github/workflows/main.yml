@@ -5,10 +5,6 @@ on:
   pull_request: # needed to trigger on others' PRs
   workflow_dispatch: # needed to trigger workflows manually
 
-env:
-  # useful for scripts & sometimes tests to know
-  CI: true
-
 jobs:
   build:
     strategy:
@@ -23,7 +19,8 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - run: make
+    - name: Run CI
+    - run: scripts/install
 
     - uses: actions/upload-artifact@v2
       with:
