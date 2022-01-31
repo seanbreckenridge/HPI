@@ -7,17 +7,17 @@ on:
 
 jobs:
   build:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: [ubuntu-latest, macos-latest] # TODO windows-latest??
         python-version: [3.8, 3.9]
 
-    runs-on: ${{ matrix.platform }}
-
     steps:
-    - uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
 
     - name: test python
       run: |
