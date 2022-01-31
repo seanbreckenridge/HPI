@@ -20,7 +20,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Run CI
-    - run: scripts/install
+      run: |
+        scripts/install
 
     - uses: actions/upload-artifact@v2
       with:
