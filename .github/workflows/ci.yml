@@ -1,26 +1,39 @@
 name: CI
-
-on: [push, pull_request]
+on:
+  push:
+    branches: '*'
+  pull_request: # needed to trigger on others' PRs
+  workflow_dispatch: # needed to trigger workflows manually
 
 env:
+  # useful for scripts & sometimes tests to know
   CI: true
 
 jobs:
   build:
-    runs-on: [ubuntu-latest, macos-latest]
     strategy:
       matrix:
-        python-version: [3.8, 3.9, "3.10"]
+        platform: [ubuntu-latest, macos-latest] # TODO windows-latest??
+        python-version: [3.8, 3.9]
+
+    runs-on: ${{ matrix.platform }}
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Run CI Script
-        run: install
-      - uses: actions/upload-artifact@v2
-        with:
-          name: .coverage.mypy-${{ matrix.platform }}_${{ matrix.python-version }}
-          path: .coverage.mypy/
+    # https://github.com/actions/toolkit/blob/main/docs/commands.md#path-manipulation
+    - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+        fetch-depth: 0  # nicer to have all git history when debugging/for tests
+
+    - run: install
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: .coverage.mypy-${{ matrix.platform }}_${{ matrix.python-version }}
+        path: .coverage.mypy/
