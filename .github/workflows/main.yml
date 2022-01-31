@@ -19,11 +19,8 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: test python
-      run: |
-        python3 setup.py
-
     - name: Run CI
+      working-directory: .
       run: |
         bash scripts/install
 
