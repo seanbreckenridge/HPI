@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# If the 'CI' environment variable is set, this runs
+# like it would on the CI. To try and test that locally,
+# can do: CI_SKIP_INSTALL=1 CI_1 ./scripts/install
 set -o pipefail
 
 [[ -n "${CI}" ]] && set -x
@@ -8,7 +11,6 @@ set -o pipefail
 # - installs this repo
 # - installs additional python packages for modules
 # - checks for any required external commands
-# - sets up directory structure in ~/data
 
 # cd to this directory
 BASE_DIR="$(git rev-parse --show-toplevel)"
