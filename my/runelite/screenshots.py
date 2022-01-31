@@ -11,7 +11,7 @@ from my.core import Paths, dataclass
 
 
 @dataclass
-class config(user_config):
+class config(user_config.screenshots):
     # path[s]/glob to the base screenshot directory or each username
     # this can be some rsynced folder (like my jobs/computer/runelite_screenshots.job does)
     # or the .runelite folder itself

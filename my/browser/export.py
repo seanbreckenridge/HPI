@@ -6,13 +6,13 @@ http://github.com/seanbreckenridge/browserexport
 REQUIRES = ["git+https://github.com/seanbreckenridge/browserexport"]
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import browsing as user_config  # type: ignore[attr-defined]
+from my.config import browser as user_config  # type: ignore[attr-defined]
 
 from my.core import Paths, dataclass
 
 
 @dataclass
-class config(user_config):
+class config(user_config.export):
     # path[s]/glob to your backed-up sqlite history files
     export_path: Paths
 

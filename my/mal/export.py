@@ -23,7 +23,7 @@ from malexport.parse.friends import Friend, iter_friends
 
 
 @dataclass
-class config(user_config):
+class config(user_config.export):
     # path[s]/glob to the exported data
     export_path: PathIsh
 

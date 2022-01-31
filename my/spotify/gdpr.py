@@ -9,7 +9,7 @@ from my.core import PathIsh, Stats, dataclass
 
 
 @dataclass
-class config(user_config):
+class config(user_config.gdpr):
     gdpr_dir: PathIsh  # path to unpacked GDPR archive
 
 

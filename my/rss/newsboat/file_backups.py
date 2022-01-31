@@ -6,11 +6,11 @@ from datetime import datetime
 from typing import NamedTuple
 
 from my.core import Paths, dataclass
-from my.config import newsboat as user_config  # type: ignore[attr-defined]
+from my.config import rss as user_config  # type: ignore[attr-defined]
 
 
 @dataclass
-class config(user_config):
+class config(user_config.newsboat.file_backups):
     # path[s]/glob to the backed up newsboat rss files
     export_path: Paths
 

@@ -8,7 +8,7 @@ from my.core import PathIsh, dataclass
 
 
 @dataclass
-class config(user_config):
+class config(user_config.privacy_export):
     # path to unpacked GDPR archive
     gdpr_dir: PathIsh
 

@@ -14,7 +14,7 @@ from my.core import PathIsh, dataclass
 
 
 @dataclass
-class config(user_config):
+class config(user_config.data_export):
 
     # path to the top level discord export directory
     # see https://github.com/seanbreckenridge/discord_data for more info

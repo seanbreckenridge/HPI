@@ -7,7 +7,7 @@ Uses https://github.com/SpamScope/mail-parser to parse the mail
 REQUIRES = ["mail-parser", "dateparser"]
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import imap as user_config  # type: ignore[attr-defined]
+from my.config import mail as user_config  # type: ignore[attr-defined]
 
 import logging
 from pathlib import Path
@@ -40,7 +40,7 @@ logger = LazyLogger(__name__)
 
 
 @dataclass
-class config(user_config):
+class config(user_config.imap):
     # path[s]/glob to the the mailboxes/IMAP files
     mailboxes: Paths
 

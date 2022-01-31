@@ -13,7 +13,7 @@ from my.core import Paths, dataclass
 
 
 @dataclass
-class config(user_config):
+class config(user_config.history_daemon):
     # glob to the JSON files that the daemon writes whenever Im using mpv
     export_path: Paths
 

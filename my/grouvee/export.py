@@ -18,7 +18,7 @@ from my.core import get_files, Stats, Paths, dataclass
 
 
 @dataclass
-class config(user_config):
+class config(user_config.export):
     # path[s]/glob to the exported CSV files
     export_path: Paths
 

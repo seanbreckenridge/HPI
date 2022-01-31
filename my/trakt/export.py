@@ -20,7 +20,7 @@ from my.core.common import mcachew
 
 
 @dataclass
-class config(user_config):
+class config(user_config.export):
     # path[s]/glob to the exported data. These are the resulting json file from 'traktexport export'
     export_path: Paths
 

@@ -21,7 +21,7 @@ from my.utils.input_source import InputSource
 
 
 @dataclass
-class config(user_config):
+class config(user_config.export):
     # path[s]/glob to the exported data
     export_path: Paths
 

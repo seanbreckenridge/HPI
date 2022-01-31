@@ -9,7 +9,7 @@ from my.core import Paths, dataclass
 
 
 @dataclass
-class config(user_config):
+class config(user_config.scraper):
     # path to the exported data
     export_path: Paths
 

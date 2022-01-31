@@ -7,12 +7,12 @@ REQUIRES = ["git+https://github.com/seanbreckenridge/lolexport"]
 
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
-from my.config import league_of_legends as user_config  # type: ignore[attr-defined]
+from my.config import league as user_config  # type: ignore[attr-defined]
 from my.core import Paths, dataclass
 
 
 @dataclass
-class config(user_config):
+class config(user_config.export):
     # path[s]/glob to the exported data. These are the resulting json file from 'lolexport parse'
     export_path: Paths
 

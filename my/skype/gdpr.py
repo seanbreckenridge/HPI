@@ -17,7 +17,7 @@ from my.core.common import mcachew
 
 
 @dataclass
-class config(user_config):
+class config(user_config.gdpr):
     # path[s]/glob to the skype JSON files
     export_path: Paths
 

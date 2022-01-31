@@ -41,7 +41,7 @@ from my.core import get_files, warn_if_empty, Stats, LazyLogger, Res
 
 
 @dataclass
-class config(user_config):
+class config(user_config.file_backups):
     # path[s]/glob to the exported zsh history files
     # expects files like:
     # 20200827T192309Z-done.txt

@@ -5,14 +5,14 @@ from: https://github.com/seanbreckenridge/blizzard_gdpr_parser
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import blizzard as user_config  # type: ignore[attr-defined]
-from my.core import Paths, dataclass, LazyLogger
+from my.core import PathIsh, dataclass, LazyLogger
 from my.core.common import mcachew
 
 
 @dataclass
-class config(user_config):
+class config(user_config.gdpr):
     # path to the exported data
-    export_path: Paths
+    export_path: PathIsh
 
 
 import json
