@@ -3,9 +3,10 @@ from pathlib import Path
 
 from my.zsh import history, Entry
 
-test_dir = os.path.dirname(os.path.abspath(__file__))
-history_file = os.path.join(test_dir, "zsh", "zsh_history")
-overlap_file = os.path.join(test_dir, "zsh", "overlap_history")
+from .common import data
+
+history_file = data("zsh/zsh_history")
+overlap_file = data("zsh/overlap_history")
 
 
 def test_single_file() -> None:
