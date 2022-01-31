@@ -26,6 +26,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+    - run: ls
     - run: make
 
     - uses: actions/upload-artifact@v2
