@@ -113,6 +113,16 @@ hpi_module() {
 }
 
 module_dependencies() {
+	if [[ -z "$CI" ]]; then
+		printf 'Install all module dependencies? [y/N] '
+		read -r || return $?
+		case "${REPLY}" in
+		y | Y) ;;
+		*)
+			return 0
+			;;
+		esac
+	fi
 	echo "Installing module dependencies" | maybe_boxes
 	hpi_module my.github.ghexport || return $?
 	hpi_module my.reddit.pushshift || return $?
@@ -251,7 +261,7 @@ ci_run() {
 
 main() {
 	required_commands || prompt_if_fails || return $?
-	optional_commands || prompt_if_fails || return $?
+	optional_commands || true
 	install_dependencies || prompt_if_fails || return $?
 	(setup_fork) || prompt_if_fails || return $?
 	module_dependencies || prompt_if_fails || return $?
