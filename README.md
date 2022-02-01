@@ -154,16 +154,16 @@ Disregarding setting up all the dependencies for individual (e.g. `my.ipython`) 
 
 ```bash
 # clone and install upstream as an editable package
-git clone https://github.com/karlicoss/HPI ./HPI-fork
-python3 -m pip install -e ./HPI-fork
+git clone https://github.com/karlicoss/HPI ./HPI-karlicoss
+python3 -m pip install -e ./HPI-karlicoss
 
 # clone and install my repository as an editable package
-git clone https://github.com/seanbreckenridge/HPI ./HPI
-python3 -m pip install -e ./HPI
+git clone https://github.com/seanbreckenridge/HPI ./HPI-seanb
+python3 -m pip install -e ./HPI-seanb
 
 # make sure my easy-install.pth is ordered correctly
 python3 -m pip install reorder_editable
-python3 -m reorder_editable reorder ./HPI ./HPI-fork
+python3 -m reorder_editable reorder ./HPI-seanb ./HPI-karlicoss
 ```
 
 Those directories are editable installs, meaning any changes I make to them get applied immediately, which is very convenient for debugging and developing new modules.
