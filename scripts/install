@@ -70,24 +70,23 @@ install_editable() {
 }
 
 setup_fork() {
-	local FORK_ABBREV UPSTREAM_URL FORK_TARGET
+	local FORK_ABBREV UPSTREAM_URL UPSTREAM_DIR
 	echo 'Setting up upstream fork...' | maybe_boxes
 
-	FORK_ABBREV='HPI-fork'
+	FORK_ABBREV='HPI-karlicoss'
 	UPSTREAM_URL='https://github.com/karlicoss/HPI'
 
-	FORK_TARGET="$(realpath "../${FORK_ABBREV}")"
+	UPSTREAM_DIR="$(realpath "../${FORK_ABBREV}")"
 
 	# clone my fork one level up from here if it doesnt exist
-	if [[ ! -e "${FORK_TARGET}" ]]; then
-		git clone "${UPSTREAM_URL}" "${FORK_TARGET}"
-		cd "${FORK_TARGET}" || return $?
+	if [[ ! -e "${UPSTREAM_DIR}" ]]; then
+		git clone "${UPSTREAM_URL}" "${UPSTREAM_DIR}"
 	else
 		echo "Path already exists, skipping clone..."
 	fi
 
-	# install my fork of upstream
-	cd "${FORK_TARGET}" || return $?
+	# install upstream/core HPI
+	cd "${UPSTREAM_DIR}" || return $?
 
 	if [[ -n "${CI}" ]]; then
 		install_editable '.[optional,testing]' || return $?
@@ -100,7 +99,7 @@ setup_fork() {
 	install_editable '.' || return $?
 
 	# make sure my repository appears before the upstream repo
-	python3 -m reorder_editable reorder "${BASE_DIR}" "${FORK_TARGET}" || return $?
+	python3 -m reorder_editable reorder "${BASE_DIR}" "${UPSTREAM_DIR}" || return $?
 	python3 -m reorder_editable cat | maybe_boxes
 }
 
