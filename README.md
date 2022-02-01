@@ -53,7 +53,7 @@ These are modules to parse GDPR exports/data from services I used to use, but do
 - `my.spotify.gdpr`, to parse the GDPR export from Spotify, mostly to access songs from my playlists from years ago
 - `my.twitch`, merging the [data export](https://www.twitch.tv/p/en/legal/privacy-choices/#user-privacy-requests) and my messages parsed from the [overrustle logs dump](https://github.com/seanbreckenridge/overrustle_parser)
 
-See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py) for config.
+See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py) for my `HPI` config
 
 [Promnesia `Source`s for these `HPI` modules](https://github.com/seanbreckenridge/promnesia)
 
@@ -170,7 +170,9 @@ Those directories are editable installs, meaning any changes I make to them get 
 
 If you have issues installing, check the [CHANGELOG](CHANGELOG.md) for any possible breaking changes
 
-[`jobs`](./jobs) contains anacron-like jobs that are run periodically, using [`bgproc`](https://github.com/seanbreckenridge/bgproc) and [`evry`](https://github.com/seanbreckenridge/evry). So, this repo contains both the [DAL](https://beepb00p.xyz/exports.html#dal) and scripts to backup my data. I run the jobs in the background using supervisor, see [here](https://github.com/seanbreckenridge/dotfiles/tree/master/.local/scripts/supervisor) for the config, and/or [`run_jobs`](https://github.com/seanbreckenridge/dotfiles/blob/master/.local/scripts/supervisor/run_jobs) for the `bgproc` wrapper. (They likely won't work out of the box for you, as they depend on tokens/environment variables that are set on my system - In particular the `HPIDATA` environment variable, which for me is `~/data`)
+[`scripts/jobs`](./scripts/jobs) contains anacron-like jobs that are run periodically, using [`bgproc`](https://github.com/seanbreckenridge/bgproc) and [`evry`](https://github.com/seanbreckenridge/evry). In other words, those are the scripts that back up the data, and the python here parses it.
+
+I run the jobs in the background using [supervisor](https://github.com/Supervisor/supervisor), see [here](https://github.com/seanbreckenridge/dotfiles/tree/master/.local/scripts/supervisor) for my configuration, and/or [`run_jobs`](https://github.com/seanbreckenridge/dotfiles/blob/master/.local/scripts/supervisor/run_jobs) for the `bgproc` wrapper. They likely won't work out of the box for you, as they depend on tokens/environment variables that are set on my system - In particular the `HPIDATA` environment variable, which for me is `~/data` -- they're here as examples if you're having issues setting up cron/scripts to backup the data
 
 ### TODO:
 
