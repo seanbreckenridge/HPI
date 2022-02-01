@@ -12,9 +12,6 @@ username = "seanbreckenridge"
 if __name__ == "__main__":
     setup(
         name=f"HPI-{username}",  # use a different name from karlicoss/HPI, for confusion regarding egg-link reasons
-        use_scm_version={
-            "local_scheme": "dirty-tag",
-        },
         zip_safe=False,
         packages=list(subpackages()),
         package_data={"my": ["py.typed"]},
