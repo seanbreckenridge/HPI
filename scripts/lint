@@ -40,10 +40,10 @@ havecmd black
 havecmd shfmt
 set +e
 
-cd "$(git rev-parse --show-toplevel)" || {
-	echo "Couldn't cd to root dir"
-	exit 1
-}
+# cd to base directory
+BASE_DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")"/..)"
+readonly BASE_DIR
+cd "${BASE_DIR}" || exit 1
 printf 'In: %s\n' "$(pwd)"
 
 # E225,E501,E302,E402,E305,E261,E265,E116,E252,E702,E266,E741,E306,E203,E731,W503
