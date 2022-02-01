@@ -170,14 +170,6 @@ required_commands() {
 	ci_install_deps || return $?
 }
 
-optional_commands() {
-	[[ -n "${CI}" ]] && return
-	echo 'Checking if optional commands are installed...' | maybe_boxes
-	havecmd evry "To handle background tasks; install from https://github.com/seanbreckenridge/evry" || return $?
-	havecmd bgproc "For background tasks; install from https://github.com/seanbreckenridge/bgproc" || return $?
-	havecmd wait-for-internet "To verify I have internet; install from https://github.com/seanbreckenridge/wait-for-internet" || return $?
-}
-
 install_dependencies() {
 	echo 'Installing dependencies...' | maybe_boxes
 	# install arctee, needed for jobs
@@ -260,7 +252,6 @@ ci_run() {
 
 main() {
 	required_commands || prompt_if_fails || return $?
-	optional_commands || true
 	install_dependencies || prompt_if_fails || return $?
 	(setup_fork) || prompt_if_fails || return $?
 	module_dependencies || prompt_if_fails || return $?

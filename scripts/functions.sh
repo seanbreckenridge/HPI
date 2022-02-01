@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # These should work with both bash and zsh
 #
 # To use these, put 'source /path/to/this/repo/functions.sh'
