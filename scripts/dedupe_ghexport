@@ -5,7 +5,10 @@ Merges (so duplicate events can be removed)
 all ghexport events into a single JSON file
 
 Example:
-arctee merged.json -- deduped_ghexport
+arctee 'merged_{utcnow}.json' -- dedupe_ghexport
+
+If the new merged file looks correct, you can reove
+the other JSON files
 """
 
 import orjson
