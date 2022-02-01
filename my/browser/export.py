@@ -3,7 +3,7 @@ Parses Browser history using
 http://github.com/seanbreckenridge/browserexport
 """
 
-REQUIRES = ["git+https://github.com/seanbreckenridge/browserexport"]
+REQUIRES = ["browserexport", "sqlite_backup"]
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import browser as user_config  # type: ignore[attr-defined]
@@ -28,9 +28,10 @@ import os
 from pathlib import Path
 from typing import Iterator, List
 
+from sqlite_backup import sqlite_backup
+
 from my.core import Stats, get_files, LazyLogger
 from my.core.common import mcachew
-from my.core.sqlite import sqlite_copy_and_open
 
 
 # patch browserexport logs if HPI_LOGS is present
@@ -59,7 +60,8 @@ def _live_visits() -> List[Visit]:
     live_dbs = get_files(config.live_databases or "")
     logger.debug(f"Live databases: {live_dbs}")
     for live_db in live_dbs:
-        conn = sqlite_copy_and_open(live_db)
+        conn = sqlite_backup(live_db)
+        assert conn is not None
         try:
             # consume generator early,
             # so the connection doesn't close before we read the visits
