@@ -152,9 +152,11 @@ ci_install_deps() {
 	if [[ -n "${CI}" && -z "${CI_SKIP_INSTALL}" ]]; then
 		# install OS specific stuff here
 		if [[ "$OSTYPE" == "darwin"* ]]; then
-			# macos
+			# macos ci
 			brew install fd
+			brew install coreutils
 		else
+			# ubuntu ci
 			sudo apt update
 			sudo apt install fd-find
 			sudo apt install realpath
