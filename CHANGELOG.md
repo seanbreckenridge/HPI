@@ -1,6 +1,6 @@
 ### 2022-01-30
 
-[Relevant PR](https://github.com/seanbreckenridge/HPI/pull/18)
+[Relevant PR](https://github.com/seanbreckenridge/HPI/pull/18); If you're having issues with the `my.config` blocks, compare yours to [mine](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py)
 
 Renamed some modules to allow for future extension, and less possibilities for conflicts with other related HPI modules under a particular company/service/source
 
