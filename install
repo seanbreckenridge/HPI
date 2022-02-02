@@ -189,7 +189,8 @@ prompt_if_fails() {
 }
 
 ci_config() {
-	MY_CONFIG="${BASE_DIR}/tests/my"
+	MY_CONFIG="$(realpath "${BASE_DIR}/tests/my")"
+	printf 'Config: %s\n' "${MY_CONFIG}"
 	declare -rx MY_CONFIG
 	hpi config check || return $?
 }
