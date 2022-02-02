@@ -13,7 +13,7 @@ set -o pipefail
 # - checks for any required external commands
 
 # cd to base directory
-BASE_DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")"/..)"
+BASE_DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
 readonly BASE_DIR
 cd "${BASE_DIR}" || exit 1
 printf 'In: %s\n' "$(pwd)"

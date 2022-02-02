@@ -146,11 +146,11 @@ $ hpi query ttally.funcs.food --recent 1d -s | jq -r '(.quantity)*(.calories)' |
 
 ### Install
 
-The [`install` script here](./scripts/install) first installs the upstream repo ([`karlicoss/HPI`](https://github.com/karlicoss/HPI)) as a editable package, then sets up this repository along side it -- this is possible because `HPI` is a namespace package.
+The [`install` script here](./install) first installs the upstream repo ([`karlicoss/HPI`](https://github.com/karlicoss/HPI)) as a editable package, then sets up this repository along side it -- this is possible because `HPI` is a namespace package.
 
 For more information on that, and some of the complications one can run into, see [reorder_editable](https://github.com/seanbreckenridge/reorder_editable#editable-namespace-packages), and the [module design](https://github.com/karlicoss/HPI/blob/master/doc/MODULE_DESIGN.org#adding-new-modules) docs for HPI.
 
-Disregarding setting up all the dependencies for individual (e.g. `my.ipython`) modules (which is why the [`install`](./scripts/install) script exists), this is setup by doing:
+Disregarding setting up all the dependencies for individual (e.g. `my.ipython`) modules (which is why the [`install`](./install) script exists), this is setup by doing:
 
 ```bash
 # clone and install upstream as an editable package
