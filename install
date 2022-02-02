@@ -107,7 +107,7 @@ setup_fork() {
 # a 'REQUIRES' global variable in the
 # corresponding file
 hpi_module() {
-	hpi module install --user "$@"
+	python3 -m my.core module install --user "$@"
 }
 
 module_dependencies() {
