@@ -17,9 +17,6 @@ BASE_DIR="$(dirname "${BASH_SOURCE[0]}")"
 cd "${BASE_DIR}" || exit 1
 printf 'In: %s\n' "$(pwd)"
 
-# could be inherited from global env
-declare MY_CONFIG
-
 # function to verify an external command is installed
 havecmd() {
 	local BINARY ERRMSG script_name
@@ -188,10 +185,9 @@ prompt_if_fails() {
 }
 
 ci_config() {
-	MY_CONFIG="$(realpath "${BASE_DIR}/tests/my")" || return $?
-	printf 'Config: %s\n' "${MY_CONFIG}"
-	declare -rx MY_CONFIG
-	hpi config check || return $?
+	CONF="$(realpath "${BASE_DIR}/tests/my")" || return $?
+	MY_CONFIG="${CONF}" python3 -m my.core config check 1>&2 || return $?
+	echo "${CONF}"
 }
 
 ci_tests() {
@@ -248,9 +244,9 @@ ci_mypy() {
 
 ci_run() {
 	[[ -z "${CI}" ]] && return 0
-	ci_config || return $?
-	ci_tests || return $?
-	ci_mypy || return $?
+	CONF="$(ci_config)" || return $?
+	MY_CONFIG="${CONF}" ci_tests || return $?
+	MY_CONFIG="${CONF}" ci_mypy || return $?
 }
 
 main() {
