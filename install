@@ -65,10 +65,6 @@ pip_install() {
 	pipm install --user "$@"
 }
 
-install_editable() {
-	pipm install --prefix="$(python -m site --user-base)" --editable "$@"
-}
-
 setup_fork() {
 	local FORK_ABBREV UPSTREAM_URL UPSTREAM_DIR
 	echo 'Setting up upstream fork...' | maybe_boxes
@@ -89,14 +85,14 @@ setup_fork() {
 	cd "${UPSTREAM_DIR}" || return $?
 
 	if [[ -n "${CI}" ]]; then
-		install_editable '.[optional,testing]' || return $?
+		pip_install -e '.[optional,testing]' || return $?
 	else
-		install_editable '.[optional]' || return $?
+		pip_install -e '.[optional]' || return $?
 	fi
 
 	# cd back to here, to install this
 	cd "${BASE_DIR}" || return $?
-	install_editable '.' || return $?
+	pip_install -e '.' || return $?
 
 	# make sure my repository appears before the upstream repo
 	python3 -m reorder_editable reorder "${BASE_DIR}" "${UPSTREAM_DIR}" || return $?
