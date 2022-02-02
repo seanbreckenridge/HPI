@@ -14,7 +14,6 @@ set -o pipefail
 
 # cd to base directory
 BASE_DIR="$(dirname "${BASH_SOURCE[0]}")"
-readonly BASE_DIR
 cd "${BASE_DIR}" || exit 1
 printf 'In: %s\n' "$(pwd)"
 
@@ -122,12 +121,14 @@ module_dependencies() {
 		esac
 	fi
 	echo "Installing module dependencies" | maybe_boxes
+	# from karlicoss/HPI
 	hpi_module my.github.ghexport || return $?
 	hpi_module my.reddit.pushshift || return $?
 	hpi_module my.reddit.rexport || return $?
 	hpi_module my.pdfs || return $?
-	hpi_module my.window_watcher || return $?
 	hpi_module my.smscalls || return $?
+	# from this repo
+	hpi_module my.window_watcher || return $?
 	hpi_module my.browser.export || return $?
 	hpi_module my.discord.data_export || return $?
 	hpi_module my.google_takeout || return $?
@@ -166,11 +167,8 @@ ci_install_deps() {
 }
 
 required_commands() {
-	# ordered from most likely to least likely
 	echo 'Checking if required commands are installed...' | maybe_boxes
-	havecmd git || return $?
-	havecmd python3 || return $?
-	ci_install_deps || return $?
+	havecmd realpath || return $?
 }
 
 install_dependencies() {
@@ -178,6 +176,7 @@ install_dependencies() {
 	# install arctee, needed for jobs
 	pip_install 'git+https://github.com/karlicoss/arctee' || return $?
 	pip_install 'git+https://github.com/seanbreckenridge/reorder_editable' || return $?
+	ci_install_deps || return $?
 }
 
 prompt_if_fails() {
@@ -189,7 +188,7 @@ prompt_if_fails() {
 }
 
 ci_config() {
-	MY_CONFIG="$(realpath "${BASE_DIR}/tests/my")"
+	MY_CONFIG="$(realpath "${BASE_DIR}/tests/my")" || return $?
 	printf 'Config: %s\n' "${MY_CONFIG}"
 	declare -rx MY_CONFIG
 	hpi config check || return $?
@@ -255,8 +254,10 @@ ci_run() {
 }
 
 main() {
-	required_commands || prompt_if_fails || return $?
 	install_dependencies || prompt_if_fails || return $?
+	required_commands || prompt_if_fails || return $?
+	# use realpath to make sure BASE_DIR is set properly
+	BASE_DIR="$(realpath "${BASE_DIR}")" || return $?
 	(setup_fork) || prompt_if_fails || return $?
 	module_dependencies || prompt_if_fails || return $?
 	ci_run || return $?
