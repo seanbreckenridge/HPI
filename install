@@ -94,6 +94,9 @@ setup_fork() {
 	cd "${BASE_DIR}" || return $?
 	pip_install -e '.' || return $?
 
+	# if on CI, don't reorder path
+	[[ -n "$CI" ]] && return 0
+
 	# make sure my repository appears before the upstream repo
 	python3 -m reorder_editable reorder "${BASE_DIR}" "${UPSTREAM_DIR}" || return $?
 	python3 -m reorder_editable cat | maybe_boxes
@@ -155,6 +158,7 @@ ci_install_deps() {
 			sudo apt update
 			sudo apt install fd-find
 		fi
+		pip_install -U pip wheel setuptools
 	fi
 }
 
