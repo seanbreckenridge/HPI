@@ -60,6 +60,7 @@ class Email(MailParser):
         super().__init__(message=message)
         self.filepath: Optional[Path] = None
         self._dt: Optional[datetime] = None  # property to cache datetime result
+        self._dateparser_failed: bool = False  # if dateparser previously failed
 
     @property
     def dt(self) -> Optional[datetime]:
@@ -68,16 +69,22 @@ class Email(MailParser):
         """
         if self._dt is not None:
             return self._dt
+        if self._dateparser_failed:
+            return None
         # If date was parsed properly by mailparser
         d = self.date
         if isinstance(d, datetime):
             self._dt = d
             return self._dt
         if "Date" in self.headers:
-            # even if this fails (returns None), we should save the None, since it means
-            # that the dateparser call (which can take a while) doesn't have to run again
-            self._dt = dateparser.parse(self.headers["Date"])
-            return self._dt
+            dateparser_res: Optional[datetime] = dateparser.parse(self.headers["Date"])
+            # if this failed to parse, save it on the object
+            if dateparser_res is None:
+                self._dateparser_failed = True
+                return None
+            else:
+                self._dt = dateparser_res
+                return self._dt
         return None
 
     def _serialize(self) -> Dict[str, Any]:
