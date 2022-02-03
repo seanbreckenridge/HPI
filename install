@@ -13,13 +13,9 @@ set -o pipefail
 # - checks for any required external commands
 
 # cd to base directory
-BASE_DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
-readonly BASE_DIR
+BASE_DIR="$(dirname "${BASH_SOURCE[0]}")"
 cd "${BASE_DIR}" || exit 1
 printf 'In: %s\n' "$(pwd)"
-
-# could be inherited from global env
-declare MY_CONFIG
 
 # function to verify an external command is installed
 havecmd() {
@@ -57,12 +53,52 @@ clone_if_not_exists() {
 	fi
 }
 
+prompt_if_fails() {
+	if [[ -n "$CI" ]]; then
+		return 1
+	fi
+	printf "Command failed... Hit Enter to continue, Ctrl+C to exit"
+	read -r
+}
+
 pipm() {
 	python3 -m pip "$@"
 }
 
 pip_install() {
 	pipm install --user "$@"
+}
+
+# install dependencies (with pip) for this module
+# this works by traversing the AST/looking for
+# a 'REQUIRES' global variable in the
+# corresponding file
+hpi_module() {
+	python3 -m my.core module install --user "$@"
+}
+
+ci_install_deps() {
+	if [[ -n "${CI}" && -z "${CI_SKIP_INSTALL}" ]]; then
+		# install OS specific stuff here
+		if [[ "$OSTYPE" == "darwin"* ]]; then
+			# macos ci
+			brew install fd
+			brew install coreutils
+		else
+			# ubuntu ci
+			sudo apt update
+			sudo apt install fd-find
+		fi
+		pip_install -U pip wheel setuptools
+	fi
+}
+
+install_dependencies() {
+	echo 'Installing dependencies...' | maybe_boxes
+	# install arctee, needed for jobs
+	pip_install 'git+https://github.com/karlicoss/arctee' || return $?
+	pip_install 'git+https://github.com/seanbreckenridge/reorder_editable' || return $?
+	ci_install_deps || return $?
 }
 
 setup_fork() {
@@ -94,17 +130,12 @@ setup_fork() {
 	cd "${BASE_DIR}" || return $?
 	pip_install -e '.' || return $?
 
+	# if on CI, don't reorder path
+	[[ -n "$CI" ]] && return 0
+
 	# make sure my repository appears before the upstream repo
 	python3 -m reorder_editable reorder "${BASE_DIR}" "${UPSTREAM_DIR}" || return $?
 	python3 -m reorder_editable cat | maybe_boxes
-}
-
-# install dependencies (with pip) for this module
-# this works by traversing the AST/looking for
-# a 'REQUIRES' global variable in the
-# corresponding file
-hpi_module() {
-	hpi module install --user "$@"
 }
 
 module_dependencies() {
@@ -119,12 +150,18 @@ module_dependencies() {
 		esac
 	fi
 	echo "Installing module dependencies" | maybe_boxes
-	hpi_module my.github.ghexport || return $?
-	hpi_module my.reddit.pushshift || return $?
-	hpi_module my.reddit.rexport || return $?
-	hpi_module my.pdfs || return $?
+	# from karlicoss/HPI; only install these if envvar is set
+	# is pretty much for my personal usage, no one else needs
+	# these and they don't need to install in CI
+	if [[ -n "${HPI_INSTALL_UPSTREAM_MODULES}" ]]; then
+		hpi_module my.github.ghexport || return $?
+		hpi_module my.reddit.pushshift || return $?
+		hpi_module my.reddit.rexport || return $?
+		hpi_module my.pdfs || return $?
+		hpi_module my.smscalls || return $?
+	fi
+	# from this repo
 	hpi_module my.window_watcher || return $?
-	hpi_module my.smscalls || return $?
 	hpi_module my.browser.export || return $?
 	hpi_module my.discord.data_export || return $?
 	hpi_module my.google_takeout || return $?
@@ -145,57 +182,25 @@ module_dependencies() {
 	hpi_module my.skype.gdpr || return $?
 }
 
-ci_install_deps() {
-	if [[ -n "${CI}" && -z "${CI_SKIP_INSTALL}" ]]; then
-		# install OS specific stuff here
-		if [[ "$OSTYPE" == "darwin"* ]]; then
-			# macos
-			brew install fd
-		else
-			sudo apt update
-			sudo apt install fd-find
-		fi
-	fi
-}
-
 required_commands() {
-	# ordered from most likely to least likely
 	echo 'Checking if required commands are installed...' | maybe_boxes
-	havecmd git || return $?
-	havecmd python3 || return $?
-	ci_install_deps || return $?
-}
-
-install_dependencies() {
-	echo 'Installing dependencies...' | maybe_boxes
-	# install arctee, needed for jobs
-	pip_install 'git+https://github.com/karlicoss/arctee' || return $?
-	pip_install 'git+https://github.com/seanbreckenridge/reorder_editable' || return $?
-}
-
-prompt_if_fails() {
-	if [[ -n "$CI" ]]; then
-		return 1
-	fi
-	printf "Command failed... Hit Enter to continue, Ctrl+C to exit"
-	read -r
+	havecmd realpath || return $?
 }
 
 ci_config() {
-	MY_CONFIG="${PWD}/tests/my"
-	declare -rx MY_CONFIG
-	hpi config check || return $?
+	CONF="$(realpath "${BASE_DIR}/tests/my")" || return $?
+	MY_CONFIG="${CONF}" python3 -m my.core config check 1>&2 || return $?
+	echo "${CONF}"
 }
 
 ci_tests() {
 	[[ -n "$CI" ]] && unset HPI_TESTS_SEANB
-	pytest || return $?
+	pytest tests || return $?
 }
 
 ci_mypy() {
-	# find -name '*.py' | grep -v '__' | sed -e 's|\.\/||' -e 's|/|.|g' -e 's/\.py$//g' -e 's/^/my./' -e 's/$/ \\/' -e 's/^/-p /' | sort
+	# find my -name '*.py' | grep -v '__' | grep -Ev 'nextalbums|mint' | sed -e 's|\.\/||' -e 's|/|.|g' -e 's/\.py$//g' -e 's/$/ \\/' -e 's/^/-p /' | sort
 	python3 -m mypy --install-types --non-interactive \
-		--color-output --ignore-missing-import \
 		-p my.apple.privacy_export \
 		-p my.bash \
 		-p my.blizzard.gdpr \
@@ -214,9 +219,7 @@ ci_mypy() {
 		-p my.location.models \
 		-p my.mail.imap \
 		-p my.mal.export \
-		-p my.mint \
 		-p my.mpv.history_daemon \
-		-p my.nextalbums \
 		-p my.old_forums \
 		-p my.project_euler \
 		-p my.rss.newsboat.file_backups \
@@ -241,14 +244,16 @@ ci_mypy() {
 
 ci_run() {
 	[[ -z "${CI}" ]] && return 0
-	ci_config || return $?
-	ci_tests || return $?
-	ci_mypy || return $?
+	CONF="$(ci_config)" || return $?
+	MY_CONFIG="${CONF}" ci_tests || return $?
+	MY_CONFIG="${CONF}" ci_mypy || return $?
 }
 
 main() {
-	required_commands || prompt_if_fails || return $?
 	install_dependencies || prompt_if_fails || return $?
+	required_commands || prompt_if_fails || return $?
+	# use realpath to make sure BASE_DIR is set properly
+	BASE_DIR="$(realpath "${BASE_DIR}")" || return $?
 	(setup_fork) || prompt_if_fails || return $?
 	module_dependencies || prompt_if_fails || return $?
 	ci_run || return $?

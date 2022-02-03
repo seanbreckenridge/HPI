@@ -22,8 +22,8 @@ from typing import (
 from datetime import datetime
 
 import dateparser
-from mailparser import MailParser
-from mailparser.exceptions import MailParserReceivedParsingError
+from mailparser import MailParser  # type: ignore[import]
+from mailparser.exceptions import MailParserReceivedParsingError  # type: ignore[import]
 from more_itertools import unique_everseen
 
 from my.core import Stats, LazyLogger, Paths, dataclass, get_files

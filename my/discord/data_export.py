@@ -26,7 +26,7 @@ from my.core.common import LazyLogger, Stats, mcachew, get_files
 from my.core.structure import match_structure
 
 from discord_data import parse_messages, parse_activity, Activity, Message
-from urlextract import URLExtract
+from urlextract import URLExtract  # type: ignore[import]
 
 
 logger = LazyLogger(__name__, level="warning")
