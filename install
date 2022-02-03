@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 # If the 'CI' environment variable is set, this runs
 # like it would on the CI. To try and test that locally,
-# can do: CI_SKIP_INSTALL=1 CI_1 ./install
+# can do: CI_SKIP_INSTALL=1 CI=1 ./install
 set -o pipefail
 
-[[ -n "${CI}" ]] && set -x
+ci() {
+	[[ -n "${CI}" ]]
+}
+
+ci && set -x
 
 # script to setup HPI
 # - installs karlicoss/HPI as an editable namespace package,
@@ -48,7 +52,7 @@ maybe_boxes() {
 }
 
 prompt_if_fails() {
-	[[ -n "$CI" ]] && return 1
+	ci && return 1
 	printf "Command failed... Hit Enter to continue, Ctrl+C to exit"
 	read -r
 }
@@ -87,10 +91,18 @@ ci_install_deps() {
 
 install_dependencies() {
 	echo 'Installing dependencies...' | maybe_boxes
-	# install arctee, needed for jobs
-	pip_install 'git+https://github.com/karlicoss/arctee' || return $?
-	pip_install 'git+https://github.com/seanbreckenridge/reorder_editable' || return $?
-	ci_install_deps || return $?
+	if ci; then
+		ci_install_deps || return $?
+	else
+		pip_install 'git+https://github.com/karlicoss/arctee' || return $?
+		pip_install 'git+https://github.com/seanbreckenridge/reorder_editable' || return $?
+	fi
+}
+
+required_commands() {
+	echo 'Checking if required commands are installed...' | maybe_boxes
+	havecmd realpath || return $?
+	havecmd git || return $?
 }
 
 setup_fork() {
@@ -112,7 +124,7 @@ setup_fork() {
 	# install upstream/core HPI
 	cd "${UPSTREAM_DIR}" || return $?
 
-	if [[ -n "${CI}" ]]; then
+	if ci; then
 		pip_install -e '.[optional,testing]' || return $?
 	else
 		pip_install -e '.[optional]' || return $?
@@ -123,7 +135,7 @@ setup_fork() {
 	pip_install -e '.' || return $?
 
 	# if on CI, don't reorder path
-	[[ -n "$CI" ]] && return 0
+	ci && return 0
 
 	# make sure my repository appears before the upstream repo
 	python3 -m reorder_editable reorder "${BASE_DIR}" "${UPSTREAM_DIR}" || return $?
@@ -131,7 +143,7 @@ setup_fork() {
 }
 
 module_dependencies() {
-	if [[ -z "$CI" ]]; then
+	if ! ci; then
 		printf 'Install all module dependencies? [y/N] '
 		read -r || return $?
 		case "${REPLY}" in
@@ -174,11 +186,6 @@ module_dependencies() {
 	hpi_module my.skype.gdpr || return $?
 }
 
-required_commands() {
-	echo 'Checking if required commands are installed...' | maybe_boxes
-	havecmd realpath || return $?
-}
-
 ci_config() {
 	CONF="$(realpath "${BASE_DIR}/tests/my")" || return $?
 	MY_CONFIG="${CONF}" python3 -m my.core config check 1>&2 || return $?
@@ -186,7 +193,7 @@ ci_config() {
 }
 
 ci_tests() {
-	[[ -n "$CI" ]] && unset HPI_TESTS_SEANB
+	ci && unset HPI_TESTS_SEANB
 	pytest ./tests || return $?
 }
 
@@ -235,7 +242,7 @@ ci_mypy() {
 }
 
 ci_run() {
-	[[ -z "${CI}" ]] && return 0
+	ci || return 0
 	CONF="$(ci_config)" || return $?
 	MY_CONFIG="${CONF}" ci_tests || return $?
 	MY_CONFIG="${CONF}" ci_mypy || return $?
