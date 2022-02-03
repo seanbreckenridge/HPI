@@ -3,11 +3,10 @@ Config file used for testing in CI; so that config is defined
 """
 
 
-import sys
 import tempfile
 from typing import Optional, List, Sequence
 
-from os import environ, path, listdir
+from os import environ, path
 
 from my.core.common import PathIsh, Paths
 

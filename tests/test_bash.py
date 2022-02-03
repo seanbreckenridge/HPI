@@ -1,6 +1,3 @@
-import os
-from pathlib import Path
-
 from my.bash import _parse_file
 
 from .common import data
