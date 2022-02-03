@@ -63,11 +63,13 @@ class Game(NamedTuple):
 
     @property
     def won(self) -> bool:
-        return self.my_stats["win"]
+        won = self.my_stats["win"]
+        assert isinstance(won, bool)
+        return won
 
     @property
     def champions(self) -> Names:
-        return list(map(lambda s: s["champion"]["name"], self.all_stats))
+        return [str(s["champion"]["name"]) for s in self.all_stats]
 
     @property
     def game_ended(self) -> datetime:

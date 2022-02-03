@@ -17,9 +17,9 @@ import os
 import json
 from datetime import date
 from pathlib import Path
-from typing import Iterator, Dict, Any, NamedTuple, List, Set, Tuple, Sequence, Optional
+from typing import Iterator, Any, NamedTuple, List, Set, Tuple, Sequence, Optional
 
-from my.core import Res, get_files, LazyLogger
+from my.core import Res, get_files, LazyLogger, Json
 
 logger = LazyLogger(__name__)
 
@@ -92,9 +92,6 @@ def songs() -> Songs:
             yield p
             continue
         for song in p.songs:
-            if isinstance(song, Exception):
-                yield song
-                continue
             key = (song.name, song.artist, song.album)
             if key in emitted:
                 continue
@@ -111,7 +108,7 @@ def stats() -> Stats:
     }
 
 
-def _filter_playlists(d: Dict) -> Iterator[Playlist]:
+def _filter_playlists(d: Json) -> Iterator[Playlist]:
     # parse, then filter
     # make sure this playlist has more than one artist
     # if its just one artist, its probably just an album
@@ -121,7 +118,7 @@ def _filter_playlists(d: Dict) -> Iterator[Playlist]:
             yield p
 
 
-def _parse_all_playlists(d: Dict) -> Iterator[Playlist]:
+def _parse_all_playlists(d: Json) -> Iterator[Playlist]:
     for plist in d["playlists"]:
         if plist["numberOfFollowers"] > 50:
             logger.debug(
@@ -136,8 +133,8 @@ def _parse_all_playlists(d: Dict) -> Iterator[Playlist]:
         )
 
 
-def _parse_song(song_info: Dict) -> Song:
-    tr: Dict = song_info["track"]
+def _parse_song(song_info: Json) -> Song:
+    tr: Json = song_info["track"]
     return Song(
         name=tr["trackName"],
         artist=tr["artistName"],

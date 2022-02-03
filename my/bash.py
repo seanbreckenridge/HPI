@@ -28,7 +28,7 @@ from my.config import bash as user_config  # type: ignore[attr-defined]
 from pathlib import Path
 from typing import Sequence, List
 from datetime import datetime
-from typing import NamedTuple, Iterator
+from typing import NamedTuple, Iterator, Optional
 from itertools import chain
 
 from more_itertools import unique_everseen
@@ -77,7 +77,7 @@ def history(from_paths: InputSource = inputs) -> Results:
 
 
 def _parse_file(histfile: Path) -> Results:
-    dt = None
+    dt: Optional[datetime] = None
     command_buf = ""  # current command
     for line in histfile.open(encoding="latin-1"):
         if line.startswith("#"):

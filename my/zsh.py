@@ -121,7 +121,9 @@ def _merge_histories(*sources: Results) -> Results:
 
 
 def _parse_file(histfile: Path) -> Results:
-    dt, dur, command = None, None, ""
+    dt: Optional[datetime] = None
+    dur: Optional[int] = None
+    command: str = ""
     # cant parse line by line since some commands are multiline
     # sort of structured like a do-while loop
     for line in histfile.open(encoding="latin-1"):
@@ -132,7 +134,7 @@ def _parse_file(histfile: Path) -> Results:
         else:
             # this 'if' is needed for the first item (since its not set on the first loop)
             # yield the last command
-            if dur is not None:
+            if dt is not None and dur is not None:
                 yield Entry(
                     dt=dt,
                     duration=dur,

@@ -12,7 +12,7 @@ from collections import Counter
 from datetime import date, datetime
 from functools import lru_cache
 from itertools import groupby
-from typing import Iterator, NamedTuple, Optional, Tuple, Any
+from typing import Iterator, NamedTuple, Optional, Tuple, Any, List
 
 from more_itertools import seekable
 import pytz
@@ -20,8 +20,8 @@ import pytz
 from my.core.common import LazyLogger, tzdatetime
 
 # sources
-from ...location.ip import ips
-from ...location.all import exact_locations
+from my.location.ip import ips
+from my.location.all import exact_locations
 
 
 logger = LazyLogger(__name__, level="warning")
@@ -75,10 +75,10 @@ def _iter_local_dates() -> Iterator[DayWithZone]:
         # TODO this is probably a bit expensive... test & benchmark
         ldt = l.dt.astimezone(tz)
         ndate = ldt.date()
-        if pdt is not None and ndate < pdt.date():
+        if pdt is not None and ndate < pdt.date():  # type: ignore[unreachable]
             # TODO for now just drop and collect the stats
             # I guess we'd have minor drops while air travel...
-            warnings.append("local time goes backwards {ldt} ({tz}) < {pdt}")
+            warnings.append("local time goes backwards {ldt} ({tz}) < {pdt}")  # type: ignore[unreachable]
             continue
         pdt = ldt
         z = tz.zone
@@ -86,7 +86,7 @@ def _iter_local_dates() -> Iterator[DayWithZone]:
         yield DayWithZone(day=ndate, zone=z)
 
 
-def most_common(l):
+def most_common(l: List[DayWithZone]) -> DayWithZone:
     res, count = Counter(l).most_common(1)[0]  # type: ignore[var-annotated]
     return res
 
@@ -153,7 +153,7 @@ def _get_tz(dt: datetime) -> Optional[pytz.BaseTzInfo]:
     if res is not None:
         return res
     # fallback to home tz
-    from ...location import home
+    from my.location import home
 
     loc = home.get_location(dt)
     return _get_home_tz(loc=loc)
@@ -168,7 +168,7 @@ def localize(dt: datetime) -> tzdatetime:
         return tz.localize(dt)
 
 
-from ...core import stat, Stats
+from my.core import stat, Stats
 
 
 def stats() -> Stats:

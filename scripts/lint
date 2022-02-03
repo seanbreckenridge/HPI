@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # wrapper around linter/formatters
 # pauses at each step if there are errors
+# this is run locally to autoformat/lint code
 
 set -o pipefail
 
@@ -68,7 +69,7 @@ custom_flake8() {
 	printf "Running flake8 with:\nignored rules: %s\nIgnored file patterns:\n%s\n" "${FLAKE8_IGNORE}" "$(tr ',' '\n' <<<"${FLAKE8_FILES_IGNORE}")"
 	# capture flake8 output so I can determine whether or not there were lines returned
 	# if there were return 1, so it prompts to wait while I look at the error
-	FLAKE8_OUTPUT="$(find my -iname '*.py' -exec flake8 --ignore="${FLAKE8_IGNORE}" --extend-exclude="${FLAKE8_FILES_IGNORE}" {} +)"
+	FLAKE8_OUTPUT="$(find my tests -iname '*.py' -exec flake8 --ignore="${FLAKE8_IGNORE}" --extend-exclude="${FLAKE8_FILES_IGNORE}" {} +)"
 	FLAKE8_OUTPUT_LENGTH="$(wc -c <<<"${FLAKE8_OUTPUT}")"
 	# ignore newlines/spaces for some reason, all errors will have string length > 5
 	if ((FLAKE8_OUTPUT_LENGTH > 5)); then
@@ -92,7 +93,7 @@ main() {
 	custom_flake8 || prompt ''
 	pytest "$@" || prompt ''
 	echo "Running mypy..."
-	mypy --install-types --non-interactive --color-output -p my || prompt ''
+	MY_CONFIG="${BASE_DIR}/tests/my" mypy --install-types --non-interactive --color-output -p my || prompt ''
 	mypy ~/.config/my/my/config/ || prompt ''
 	echo "Running shellcheck..."
 	shellcheck_scripts
