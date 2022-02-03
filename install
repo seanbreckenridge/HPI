@@ -74,13 +74,11 @@ ci_install_deps() {
 		# install OS specific stuff here
 		if [[ "$OSTYPE" == "darwin"* ]]; then
 			# macos ci
-			brew install fd
 			brew install coreutils
 			brew install boxes
 		else
 			# ubuntu ci
 			sudo apt update
-			sudo apt install fd-find
 			sudo apt install boxes
 		fi
 		pip_install -U pip wheel setuptools
