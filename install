@@ -53,12 +53,53 @@ clone_if_not_exists() {
 	fi
 }
 
+prompt_if_fails() {
+	if [[ -n "$CI" ]]; then
+		return 1
+	fi
+	printf "Command failed... Hit Enter to continue, Ctrl+C to exit"
+	read -r
+}
+
 pipm() {
 	python3 -m pip "$@"
 }
 
 pip_install() {
 	pipm install --user "$@"
+}
+
+# install dependencies (with pip) for this module
+# this works by traversing the AST/looking for
+# a 'REQUIRES' global variable in the
+# corresponding file
+hpi_module() {
+	python3 -m my.core module install --user "$@"
+}
+
+ci_install_deps() {
+	if [[ -n "${CI}" && -z "${CI_SKIP_INSTALL}" ]]; then
+		# install OS specific stuff here
+		if [[ "$OSTYPE" == "darwin"* ]]; then
+			# macos ci
+			brew install fd
+			brew install coreutils
+		else
+			# ubuntu ci
+			sudo apt update
+			sudo apt install fd-find
+			sudo apt install coreutils
+		fi
+		pip_install -U pip wheel setuptools
+	fi
+}
+
+install_dependencies() {
+	echo 'Installing dependencies...' | maybe_boxes
+	# install arctee, needed for jobs
+	pip_install 'git+https://github.com/karlicoss/arctee' || return $?
+	pip_install 'git+https://github.com/seanbreckenridge/reorder_editable' || return $?
+	ci_install_deps || return $?
 }
 
 setup_fork() {
@@ -96,14 +137,6 @@ setup_fork() {
 	# make sure my repository appears before the upstream repo
 	python3 -m reorder_editable reorder "${BASE_DIR}" "${UPSTREAM_DIR}" || return $?
 	python3 -m reorder_editable cat | maybe_boxes
-}
-
-# install dependencies (with pip) for this module
-# this works by traversing the AST/looking for
-# a 'REQUIRES' global variable in the
-# corresponding file
-hpi_module() {
-	python3 -m my.core module install --user "$@"
 }
 
 module_dependencies() {
@@ -146,42 +179,9 @@ module_dependencies() {
 	hpi_module my.skype.gdpr || return $?
 }
 
-ci_install_deps() {
-	if [[ -n "${CI}" && -z "${CI_SKIP_INSTALL}" ]]; then
-		# install OS specific stuff here
-		if [[ "$OSTYPE" == "darwin"* ]]; then
-			# macos ci
-			brew install fd
-			brew install coreutils
-		else
-			# ubuntu ci
-			sudo apt update
-			sudo apt install fd-find
-			sudo apt install coreutils
-		fi
-		pip_install -U pip wheel setuptools
-	fi
-}
-
 required_commands() {
 	echo 'Checking if required commands are installed...' | maybe_boxes
 	havecmd realpath || return $?
-}
-
-install_dependencies() {
-	echo 'Installing dependencies...' | maybe_boxes
-	# install arctee, needed for jobs
-	pip_install 'git+https://github.com/karlicoss/arctee' || return $?
-	pip_install 'git+https://github.com/seanbreckenridge/reorder_editable' || return $?
-	ci_install_deps || return $?
-}
-
-prompt_if_fails() {
-	if [[ -n "$CI" ]]; then
-		return 1
-	fi
-	printf "Command failed... Hit Enter to continue, Ctrl+C to exit"
-	read -r
 }
 
 ci_config() {
@@ -196,7 +196,7 @@ ci_tests() {
 }
 
 ci_mypy() {
-	# find -name '*.py' | grep -v '__' | sed -e 's|\.\/||' -e 's|/|.|g' -e 's/\.py$//g' -e 's/^/my./' -e 's/$/ \\/' -e 's/^/-p /' | sort
+	# find my -name '*.py' | grep -v '__' | grep -Ev 'nextalbums|mint' | sed -e 's|\.\/||' -e 's|/|.|g' -e 's/\.py$//g' -e 's/$/ \\/' -e 's/^/-p /' | sort
 	python3 -m mypy --install-types --non-interactive \
 		-p my.apple.privacy_export \
 		-p my.bash \
@@ -216,9 +216,7 @@ ci_mypy() {
 		-p my.location.models \
 		-p my.mail.imap \
 		-p my.mal.export \
-		-p my.mint \
 		-p my.mpv.history_daemon \
-		-p my.nextalbums \
 		-p my.old_forums \
 		-p my.project_euler \
 		-p my.rss.newsboat.file_backups \
