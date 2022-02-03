@@ -151,6 +151,7 @@ module_dependencies() {
 		hpi_module my.reddit.rexport || return $?
 		hpi_module my.pdfs || return $?
 		hpi_module my.smscalls || return $?
+		hpi_module my.coding.commits || return $?
 	fi
 	# from this repo
 	hpi_module my.window_watcher || return $?
@@ -158,7 +159,6 @@ module_dependencies() {
 	hpi_module my.discord.data_export || return $?
 	hpi_module my.google_takeout || return $?
 	hpi_module my.time.tz.via_location || return $?
-	hpi_module my.coding.commits || return $?
 	hpi_module my.todotxt.file_backups || return $?
 	hpi_module my.location.ip || return $?
 	hpi_module my.location.gpslogger || return $?
