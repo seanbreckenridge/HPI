@@ -88,7 +88,6 @@ ci_install_deps() {
 			# ubuntu ci
 			sudo apt update
 			sudo apt install fd-find
-			sudo apt install coreutils
 		fi
 		pip_install -U pip wheel setuptools
 	fi
