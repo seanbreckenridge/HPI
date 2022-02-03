@@ -192,7 +192,7 @@ ci_config() {
 
 ci_tests() {
 	[[ -n "$CI" ]] && unset HPI_TESTS_SEANB
-	pytest || return $?
+	pytest tests || return $?
 }
 
 ci_mypy() {
