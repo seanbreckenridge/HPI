@@ -78,14 +78,14 @@ ci_install_deps() {
 		# install OS specific stuff here
 		if [[ "$OSTYPE" == "darwin"* ]]; then
 			# macos ci
-			brew install coreutils
-			brew install boxes
+			brew install coreutils || return $?
+			brew install boxes || return $?
 		else
 			# ubuntu ci
-			sudo apt update
-			sudo apt install boxes
+			sudo apt update || return $?
+			sudo apt install boxes || return $?
 		fi
-		pip_install -U pip wheel setuptools
+		pip_install -U pip wheel setuptools || return $?
 	fi
 }
 
@@ -134,12 +134,25 @@ setup_fork() {
 	cd "${BASE_DIR}" || return $?
 	pip_install -e '.' || return $?
 
-	# if on CI, don't reorder path
-	ci && return 0
+	# if running locally, reorder path
+	ci || {
+		# make sure my repository appears before the upstream repo
+		python3 -m reorder_editable reorder "${BASE_DIR}" "${UPSTREAM_DIR}" || return $?
+		python3 -m reorder_editable cat | maybe_boxes
+	}
+}
 
-	# make sure my repository appears before the upstream repo
-	python3 -m reorder_editable reorder "${BASE_DIR}" "${UPSTREAM_DIR}" || return $?
-	python3 -m reorder_editable cat | maybe_boxes
+upstream_module_dependencies() {
+	# from karlicoss/HPI; only install these if envvar is set
+	# is pretty much for my personal usage, no one else needs
+	# these and they don't need to install in CI
+	[[ -z "${HPI_INSTALL_UPSTREAM_MODULES}" ]] && return 0
+	hpi_module my.github.ghexport || return $?
+	hpi_module my.reddit.pushshift || return $?
+	hpi_module my.reddit.rexport || return $?
+	hpi_module my.pdfs || return $?
+	hpi_module my.smscalls || return $?
+	hpi_module my.coding.commits || return $?
 }
 
 module_dependencies() {
@@ -154,18 +167,7 @@ module_dependencies() {
 		esac
 	fi
 	echo "Installing module dependencies" | maybe_boxes
-	# from karlicoss/HPI; only install these if envvar is set
-	# is pretty much for my personal usage, no one else needs
-	# these and they don't need to install in CI
-	if [[ -n "${HPI_INSTALL_UPSTREAM_MODULES}" ]]; then
-		hpi_module my.github.ghexport || return $?
-		hpi_module my.reddit.pushshift || return $?
-		hpi_module my.reddit.rexport || return $?
-		hpi_module my.pdfs || return $?
-		hpi_module my.smscalls || return $?
-		hpi_module my.coding.commits || return $?
-	fi
-	# from this repo
+	upstream_module_dependencies || return $?
 	hpi_module my.window_watcher || return $?
 	hpi_module my.browser.export || return $?
 	hpi_module my.discord.data_export || return $?
@@ -193,12 +195,14 @@ ci_config() {
 }
 
 ci_tests() {
+	echo 'Running tests' | maybe_boxes
 	ci && unset HPI_TESTS_SEANB
 	pytest ./tests || return $?
 }
 
 ci_mypy() {
 	# find my -name '*.py' | grep -v '__' | grep -Ev 'nextalbums|mint' | sed -e 's|\.\/||' -e 's|/|.|g' -e 's/\.py$//g' -e 's/$/ \\/' -e 's/^/-p /' | sort
+	echo 'Checking types' | maybe_boxes
 	python3 -m mypy --install-types --non-interactive \
 		-p tests \
 		-p my.apple.privacy_export \
