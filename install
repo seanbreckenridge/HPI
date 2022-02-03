@@ -47,16 +47,8 @@ maybe_boxes() {
 	fi
 }
 
-clone_if_not_exists() {
-	if [[ ! -d "$2" ]]; then
-		git clone "$1" "$2" || return $?
-	fi
-}
-
 prompt_if_fails() {
-	if [[ -n "$CI" ]]; then
-		return 1
-	fi
+	[[ -n "$CI" ]] && return 1
 	printf "Command failed... Hit Enter to continue, Ctrl+C to exit"
 	read -r
 }
@@ -195,7 +187,7 @@ ci_config() {
 
 ci_tests() {
 	[[ -n "$CI" ]] && unset HPI_TESTS_SEANB
-	pytest tests || return $?
+	pytest ./tests || return $?
 }
 
 ci_mypy() {
