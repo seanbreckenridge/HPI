@@ -151,12 +151,16 @@ module_dependencies() {
 		esac
 	fi
 	echo "Installing module dependencies" | maybe_boxes
-	# from karlicoss/HPI
-	hpi_module my.github.ghexport || return $?
-	hpi_module my.reddit.pushshift || return $?
-	hpi_module my.reddit.rexport || return $?
-	hpi_module my.pdfs || return $?
-	hpi_module my.smscalls || return $?
+	# from karlicoss/HPI; only install these if envvar is set
+	# is pretty much for my personal usage, no one else needs
+	# these and they don't need to install in CI
+	if [[ -n "${HPI_INSTALL_UPSTREAM_MODULES}" ]]; then
+		hpi_module my.github.ghexport || return $?
+		hpi_module my.reddit.pushshift || return $?
+		hpi_module my.reddit.rexport || return $?
+		hpi_module my.pdfs || return $?
+		hpi_module my.smscalls || return $?
+	fi
 	# from this repo
 	hpi_module my.window_watcher || return $?
 	hpi_module my.browser.export || return $?
