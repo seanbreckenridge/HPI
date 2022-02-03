@@ -6,8 +6,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Tuple, Optional
 
-from my.todotxt import inputs as todotxtinputs
-from my.newsboat import inputs as rssinputs
+from my.todotxt.file_backups import inputs as todotxtinputs
+from my.rss.newsboat.file_backups import inputs as rssinputs
 
 TimePath = Tuple[datetime, Path]
 TimePaths = List[TimePath]
