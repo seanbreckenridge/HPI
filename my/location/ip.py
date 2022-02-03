@@ -56,7 +56,8 @@ class IP(NamedTuple):
     # ipgeocache returns timezone info as well!
     @property
     def tz(self) -> str:
-        return self.ipgeocache()["timezone"]
+        tz: str = self.ipgeocache()["timezone"]
+        return tz
 
 
 def ips() -> Iterator[IP]:

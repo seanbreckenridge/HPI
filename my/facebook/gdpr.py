@@ -26,6 +26,8 @@ from my.utils.time import parse_datetime_sec
 
 logger = LazyLogger(__name__, level="warning")
 
+FacebookJson = Dict[Any, Any]
+
 
 class Contact(NamedTuple):
     name: str
@@ -197,7 +199,7 @@ def events() -> Results:
         yield from handler(j)
 
 
-def _parse_address_book(d: Dict) -> Iterator[Contact]:
+def _parse_address_book(d: FacebookJson) -> Iterator[Contact]:
     # remove top-level address book name
     for addr_book_top in d.values():
         for addr_book_list in addr_book_top.values():
@@ -210,7 +212,7 @@ def _parse_address_book(d: Dict) -> Iterator[Contact]:
                 )
 
 
-def _parse_installed_apps(d: Dict) -> Iterator[Action]:
+def _parse_installed_apps(d: FacebookJson) -> Iterator[Action]:
     for app in d["installed_apps"]:
         yield Action(
             description="{} was installed".format(app["name"]),
@@ -218,14 +220,14 @@ def _parse_installed_apps(d: Dict) -> Iterator[Action]:
         )
 
 
-def _parse_app_posts(d: Dict) -> Iterator[Action]:
+def _parse_app_posts(d: FacebookJson) -> Iterator[Action]:
     for post in d["app_posts"]:
         yield Action(
             description=post["title"], dt=parse_datetime_sec(post["timestamp"])
         )
 
 
-def _parse_photo_ips(d: Dict) -> Iterator[UploadedPhoto]:
+def _parse_photo_ips(d: FacebookJson) -> Iterator[UploadedPhoto]:
     for photo_info in d["photos"]:
         if (
             "media_metadata" in photo_info
@@ -238,7 +240,7 @@ def _parse_photo_ips(d: Dict) -> Iterator[UploadedPhoto]:
             )
 
 
-def _parse_group_comments(d: Dict) -> Iterator[Comment]:
+def _parse_group_comments(d: FacebookJson) -> Iterator[Comment]:
     for comment in d["comments"]:
         yield Comment(
             content=comment["data"][0]["comment"]["comment"],
@@ -248,7 +250,7 @@ def _parse_group_comments(d: Dict) -> Iterator[Comment]:
         )
 
 
-def _parse_joined_events(d: Dict) -> Iterator[AcceptedEvent]:
+def _parse_joined_events(d: FacebookJson) -> Iterator[AcceptedEvent]:
     for event in d["event_responses"]["events_joined"]:
         yield AcceptedEvent(
             name=event["name"],
@@ -257,21 +259,21 @@ def _parse_joined_events(d: Dict) -> Iterator[AcceptedEvent]:
         )
 
 
-def _parse_friends(d: Dict) -> Iterator[Friend]:
+def _parse_friends(d: FacebookJson) -> Iterator[Friend]:
     for friend in d["friends"]:
         yield Friend(
             name=friend["name"], dt=parse_datetime_sec(friend["timestamp"]), added=True
         )
 
 
-def _parse_deleted_friends(d: Dict) -> Iterator[Friend]:
+def _parse_deleted_friends(d: FacebookJson) -> Iterator[Friend]:
     for friend in d["deleted_friends"]:
         yield Friend(
             name=friend["name"], dt=parse_datetime_sec(friend["timestamp"]), added=False
         )
 
 
-def _parse_group_activity(d: Dict) -> Iterator[Action]:
+def _parse_group_activity(d: FacebookJson) -> Iterator[Action]:
     for gr in d["groups_joined"]:
         yield Action(
             description=gr["title"],
@@ -279,7 +281,7 @@ def _parse_group_activity(d: Dict) -> Iterator[Action]:
         )
 
 
-def _parse_group_posts(d: Dict) -> Iterator[Union[Comment, Post]]:
+def _parse_group_posts(d: FacebookJson) -> Iterator[Union[Comment, Post]]:
     for log_data_list in d.values():
         for comm_list in log_data_list.values():
             for comm in comm_list:
@@ -299,7 +301,7 @@ def _parse_group_posts(d: Dict) -> Iterator[Union[Comment, Post]]:
                     )
 
 
-def _parse_page_likes(d: Dict) -> Iterator[Action]:
+def _parse_page_likes(d: FacebookJson) -> Iterator[Action]:
     for page in d["page_likes"]:
         yield Action(
             description="Liked Page {}".format(page["name"]),
@@ -307,14 +309,14 @@ def _parse_page_likes(d: Dict) -> Iterator[Action]:
         )
 
 
-def _parse_reactions(d: Dict) -> Iterator[Action]:
+def _parse_reactions(d: FacebookJson) -> Iterator[Action]:
     for react in d["reactions"]:
         yield Action(
             description=react["title"], dt=parse_datetime_sec(react["timestamp"])
         )
 
 
-def _parse_search_history(d: Dict) -> Iterator[Search]:
+def _parse_search_history(d: FacebookJson) -> Iterator[Search]:
     for search in d["searches"]:
         assert len(search["data"]) == 1
         yield Search(
@@ -323,7 +325,7 @@ def _parse_search_history(d: Dict) -> Iterator[Search]:
 
 
 def _parse_conversation(
-    d: Dict,
+    d: FacebookJson,
 ) -> Iterator[Res[Conversation]]:  # will only return 1 convo
     participants: List[str] = [p["name"] for p in d["participants"]]
     good_messages: List[Message] = []
@@ -340,7 +342,9 @@ def _parse_conversation(
     )
 
 
-def _parse_messages_in_conversation(messages: List[Dict]) -> Iterator[Res[Message]]:
+def _parse_messages_in_conversation(
+    messages: List[FacebookJson],
+) -> Iterator[Res[Message]]:
     for m in messages:
         timestamp = parse_datetime_sec(m["timestamp_ms"] / 1000)
         author = m["sender_name"]
@@ -379,7 +383,7 @@ def _parse_messages_in_conversation(messages: List[Dict]) -> Iterator[Res[Messag
 # list(filter(lambda e: isinstance(e, Exception), events())),
 # throw a 'import pdb; pdb.set_trace()' at where its throwing the error
 # and add a new case for a new type of post
-def _parse_posts(d: Dict) -> Iterator[Res[Union[Post, Action]]]:
+def _parse_posts(d: FacebookJson) -> Iterator[Res[Union[Post, Action]]]:
     all_posts = d
     # handle both profile updates and posts
     if isinstance(all_posts, dict) and "profile_updates" in all_posts:
@@ -508,7 +512,7 @@ def _parse_posts(d: Dict) -> Iterator[Res[Union[Post, Action]]]:
             yield RuntimeError("No known way to parse post {}".format(post))
 
 
-def _parse_account_activity(d: Dict) -> Iterator[AdminAction]:
+def _parse_account_activity(d: FacebookJson) -> Iterator[AdminAction]:
     for ac in d["account_activity"]:
         yield AdminAction(
             description=ac["action"],
@@ -518,7 +522,7 @@ def _parse_account_activity(d: Dict) -> Iterator[AdminAction]:
         )
 
 
-def _parse_authorized_logins(d: Dict) -> Iterator[AdminAction]:
+def _parse_authorized_logins(d: FacebookJson) -> Iterator[AdminAction]:
     for ac in d["recognized_devices"]:
         metadata = {}
         if "updated_timestamp" in ac:
@@ -532,7 +536,7 @@ def _parse_authorized_logins(d: Dict) -> Iterator[AdminAction]:
         )
 
 
-def _parse_admin_records(d: Dict) -> Iterator[AdminAction]:
+def _parse_admin_records(d: FacebookJson) -> Iterator[AdminAction]:
     for rec in d["admin_records"]:
         s = rec["session"]
         yield AdminAction(

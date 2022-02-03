@@ -181,7 +181,7 @@ def _parse_calendar_recents(f: Path) -> Iterator[Location]:
 
 
 # parses apples XML file format, specifies what should be JSON as XML
-def _parse_apple_xml_val(xml_el):
+def _parse_apple_xml_val(xml_el: etree.Element) -> Any:
     if xml_el.tag == "array":
         return [_parse_apple_xml_val(el) for el in xml_el]
     elif xml_el.tag == "dict":

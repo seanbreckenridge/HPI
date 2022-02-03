@@ -18,6 +18,7 @@ from typing import (
     Optional,
     Dict,
     Any,
+    cast,
 )
 from datetime import datetime
 
@@ -68,9 +69,10 @@ class Email(MailParser):
         if self._dt is not None:
             return self._dt
         # If date was parsed properly by mailparser
-        if self.date is not None:
-            self._dt = self.date
-            return self.date
+        d = self.date
+        if isinstance(d, datetime):
+            self._dt = d
+            return self._dt
         if "Date" in self.headers:
             # even if this fails (returns None), we should save the None, since it means
             # that the dateparser call (which can take a while) doesn't have to run again
@@ -115,7 +117,7 @@ class Email(MailParser):
         try:
             m = cls.from_file(path)  # calls MailParser.from_file
             m.filepath = path
-            return m
+            return cast(Email, m)
         except UnicodeDecodeError as e:
             logger.debug(f"While parsing {path}: {e}")
         except MailParserReceivedParsingError as e:
