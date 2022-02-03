@@ -198,7 +198,6 @@ ci_tests() {
 ci_mypy() {
 	# find -name '*.py' | grep -v '__' | sed -e 's|\.\/||' -e 's|/|.|g' -e 's/\.py$//g' -e 's/^/my./' -e 's/$/ \\/' -e 's/^/-p /' | sort
 	python3 -m mypy --install-types --non-interactive \
-		--color-output --ignore-missing-import \
 		-p my.apple.privacy_export \
 		-p my.bash \
 		-p my.blizzard.gdpr \

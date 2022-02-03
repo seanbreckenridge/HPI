@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: '*'
+    branches: "*"
   pull_request: # needed to trigger on others' PRs
   workflow_dispatch: # needed to trigger workflows manually
 
@@ -15,20 +15,20 @@ jobs:
     runs-on: ${{ matrix.platform }}
 
     steps:
-    - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-    - uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-        fetch-depth: 0  # nicer to have all git history when debugging/for tests
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0 # nicer to have all git history when debugging/for tests
 
-    - run: ./install
+      - run: ./install
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: .coverage.mypy-${{ matrix.platform }}_${{ matrix.python-version }}
-        path: .coverage.mypy/
+      - uses: actions/upload-artifact@v2
+        with:
+          name: .coverage.mypy-${{ matrix.platform }}_${{ matrix.python-version }}
+          path: .coverage.mypy/
