@@ -72,6 +72,8 @@ Disregarding tools which actively collect data (like [`ttt`](https://github.com/
 - [`url_metadata`](https://github.com/seanbreckenridge/url_metadata) - caches youtube subtitles, url metadata (title, description, image links), and a html/plaintext summary for any URL
 - [`HPI_API`](https://github.com/seanbreckenridge/HPI_API) - automatically creates a JSON API for HPI modules
 
+I also use this in [`my_feed`](https://github.com/seanbreckenridge/my_feed), which creates a feed of media/data using `HPI`, live at <https://sean.fish/feed/>
+
 ### Ad-hoc and interactive
 
 Some basic examples.
