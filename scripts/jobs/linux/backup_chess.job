@@ -3,7 +3,7 @@
 
 wait-for-internet -q --timeout 10 || exit 0
 
-evry 1 week -backup_chess && {
+evry 3 days -backup_chess && {
 	BACKUP_DIR="$(python3 -m my.utils.backup_to chess)"
 	printlog "chess:Running chess.com export..."
 	arctee -r 3 "${BACKUP_DIR}/chessdotcom_{utcnow}.json" -- python3 -m chess_export chessdotcom export seanbreckenridge || send-error 'chessdotcom export: failed to backup chess.com games'
