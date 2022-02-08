@@ -1,5 +1,10 @@
 """
 Parses my Google Takeout using https://github.com/seanbreckenridge/google_takeout_parser
+
+can set DISABLE_TAKEOUT_CACHE as an environment
+variable to disable caching for individual exports
+in ~/.cache/google_takeout_parser
+ see https://github.com/seanbreckenridge/google_takeout_parser
 """
 
 REQUIRES = ["git+https://github.com/seanbreckenridge/google_takeout_parser"]
@@ -37,6 +42,9 @@ if "HPI_LOGS" in os.environ:
     setup_takeout_logger(mklevel(os.environ["HPI_LOGS"]))
 
 
+DISABLE_TAKEOUT_CACHE = "DISABLE_TAKEOUT_CACHE" in os.environ
+
+
 def inputs() -> List[Path]:
     return list(get_files(config.takeout_path))
 
@@ -49,7 +57,7 @@ EXPECTED = "My Activity"
 
 
 @mcachew(depends_on=_cachew_depends_on, logger=logger, force_file=True)
-def events() -> Results:
+def events(disable_takeout_cache: bool = DISABLE_TAKEOUT_CACHE) -> Results:
     emitted = GoogleEventSet()
     # reversed shouldn't really matter? but logic is to use newer
     # takeouts if they're named according to date, since JSON Activity
@@ -60,7 +68,12 @@ def events() -> Results:
                 # e.g. /home/sean/data/google_takeout/Takeout-1634932457.zip") -> 'Takeout-1634932457'
                 # means that zipped takeouts have nice filenames from cachew
                 cw_id, _, _ = path.name.rpartition(".")
-                for event in TakeoutParser(m, cachew_identifier=cw_id).cached_parse():
+                event_itr: Results
+                if disable_takeout_cache:
+                    event_itr = TakeoutParser(m).parse()
+                else:
+                    event_itr = TakeoutParser(m, cachew_identifier=cw_id).cached_parse()
+                for event in event_itr:
                     if isinstance(event, Exception):
                         continue
                     if event in emitted:
