@@ -9,7 +9,7 @@ evry 1 week -backup_listenbrainz_scrobbles && {
 	arctee -r 3 "${BACKUP_DIR}/{utcnow}.json" -- python3 -m listenbrainz_export seanbreckenridge || send-error 'listenbrainz export: failed to backup scrobbles'
 }
 
-evry 4 hours -partial_listenbrainz_scrobbles && {
+evry 2 hours -partial_listenbrainz_scrobbles && {
 	BACKUP_DIR="$(python3 -m my.utils.backup_to listenbrainz)"
 	printlog "listenbrainz:Running listenbrainz partial export..."
 	arctee -r 3 "${BACKUP_DIR}/partial.json" -- python3 -m listenbrainz_export seanbreckenridge --pages 5 || send-error 'listenbrainz partial export: failed to backup scrobbles'
