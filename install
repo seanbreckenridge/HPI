@@ -39,7 +39,7 @@ havecmd() {
 		printf '%s\n' "$ERRMSG" 1>&2
 		return 1
 	fi
-}
+} && export -f havecmd
 
 maybe_boxes() {
 	# Print a fancy box, if boxes is installed
@@ -49,21 +49,21 @@ maybe_boxes() {
 	else
 		cat
 	fi
-}
+} && export -f maybe_boxes
 
 prompt_if_fails() {
 	ci && return 1
 	printf "Command failed... Hit Enter to continue, Ctrl+C to exit"
 	read -r
-}
+} && export -f prompt_if_fails
 
 pipm() {
 	python3 -m pip "$@"
-}
+} && export -f pipm
 
 pip_install() {
 	pipm install --user "$@"
-}
+} && export -f pip_install
 
 # install dependencies (with pip) for this module
 # this works by traversing the AST/looking for
@@ -71,7 +71,7 @@ pip_install() {
 # corresponding file
 hpi_module() {
 	python3 -m my.core module install --user "$@"
-}
+} && export -f hpi_module
 
 ci_install_deps() {
 	if [[ -n "${CI}" && -z "${CI_SKIP_INSTALL}" ]]; then
@@ -142,19 +142,6 @@ setup_fork() {
 	}
 }
 
-upstream_module_dependencies() {
-	# from karlicoss/HPI; only install these if envvar is set
-	# is pretty much for my personal usage, no one else needs
-	# these and they don't need to install in CI
-	[[ -z "${HPI_INSTALL_UPSTREAM_MODULES}" ]] && return 0
-	hpi_module my.github.ghexport || return $?
-	hpi_module my.reddit.pushshift || return $?
-	hpi_module my.reddit.rexport || return $?
-	hpi_module my.pdfs || return $?
-	hpi_module my.smscalls || return $?
-	hpi_module my.coding.commits || return $?
-}
-
 module_dependencies() {
 	if ! ci; then
 		printf 'Install all module dependencies? [y/N] '
@@ -167,7 +154,6 @@ module_dependencies() {
 		esac
 	fi
 	echo "Installing module dependencies" | maybe_boxes
-	upstream_module_dependencies || return $?
 	hpi_module my.window_watcher || return $?
 	hpi_module my.browser.export || return $?
 	hpi_module my.discord.data_export || return $?
@@ -184,7 +170,6 @@ module_dependencies() {
 	hpi_module my.grouvee.export || return $?
 	hpi_module my.mal.export || return $?
 	hpi_module my.listenbrainz.export || return $?
-	hpi_module my.old_forums || return $?
 	hpi_module my.skype.gdpr || return $?
 }
 
@@ -201,7 +186,7 @@ ci_tests() {
 }
 
 ci_mypy() {
-	# find my -name '*.py' | grep -v '__' | grep -Ev 'nextalbums|mint' | sed -e 's|\.\/||' -e 's|/|.|g' -e 's/\.py$//g' -e 's/$/ \\/' -e 's/^/-p /' | sort
+	# find my -name '*.py' | grep -v '__' | sed -e 's|\.\/||' -e 's|/|.|g' -e 's/\.py$//g' -e 's/$/ \\/' -e 's/^/-p /' | sort
 	echo 'Checking types' | maybe_boxes
 	python3 -m mypy --install-types --non-interactive \
 		-p tests \
@@ -224,7 +209,6 @@ ci_mypy() {
 		-p my.mail.imap \
 		-p my.mal.export \
 		-p my.mpv.history_daemon \
-		-p my.old_forums \
 		-p my.project_euler \
 		-p my.rss.newsboat.file_backups \
 		-p my.runelite.screenshots \
@@ -263,4 +247,10 @@ main() {
 	ci_run || return $?
 }
 
-main "$@" || exit $?
+# just source the exported functions into the current bash environment
+if [[ "$1" == "source" ]]; then
+	:
+else
+	# otherwise, run main as usual
+	main "$@" || exit $?
+fi

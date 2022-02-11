@@ -1,4 +1,0 @@
-#!/bin/bash
-# create a snapshot of the current data
-
-evry 1 week -hpidoctor && arctee "$(python3 -m my.utils.backup_to doctor)/{utcnow}-{hostname}-{platform}.txt" -- sh -c 'hpi doctor --skip-config-check --all 2>&1'

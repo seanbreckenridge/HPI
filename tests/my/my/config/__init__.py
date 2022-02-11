@@ -100,10 +100,6 @@ class blizzard:
         export_path: Paths = ""
 
 
-class old_forums:
-    export_path: Paths = ""
-
-
 class project_euler:
     export_path: Paths = ""
 
