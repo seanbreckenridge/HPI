@@ -93,9 +93,6 @@ install_dependencies() {
 	echo 'Installing dependencies...' | maybe_boxes
 	if ci; then
 		ci_install_deps || return $?
-	else
-		pip_install 'git+https://github.com/karlicoss/arctee' || return $?
-		pip_install 'git+https://github.com/seanbreckenridge/reorder_editable' || return $?
 	fi
 }
 
@@ -109,7 +106,7 @@ setup_fork() {
 	local FORK_ABBREV UPSTREAM_URL UPSTREAM_DIR
 	echo 'Setting up upstream fork...' | maybe_boxes
 
-	FORK_ABBREV='HPI-karlicoss'
+	FORK_ABBREV="${HPI_UPSTREAM_FOLDER_NAME:-HPI-karlicoss}"
 	UPSTREAM_URL='https://github.com/karlicoss/HPI'
 
 	UPSTREAM_DIR="$(realpath "../${FORK_ABBREV}")"
@@ -133,13 +130,6 @@ setup_fork() {
 	# cd back to here, to install this
 	cd "${BASE_DIR}" || return $?
 	pip_install -e '.' || return $?
-
-	# if running locally, reorder path
-	ci || {
-		# make sure my repository appears before the upstream repo
-		python3 -m reorder_editable reorder "${BASE_DIR}" "${UPSTREAM_DIR}" || return $?
-		python3 -m reorder_editable cat | maybe_boxes
-	}
 }
 
 module_dependencies() {
