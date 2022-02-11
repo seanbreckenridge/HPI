@@ -127,7 +127,7 @@ setup_fork() {
 	if ci; then
 		pip_install -e '.[optional,testing]' || return $?
 	else
-		pip_install -e '.[optional]' || return $?
+		pip_install -e '.' || return $?
 	fi
 
 	# cd back to here, to install this
