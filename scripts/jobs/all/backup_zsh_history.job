@@ -1,8 +1,0 @@
-#!/bin/bash
-# backup my zsh history
-
-evry 1 week -backup_zsh_history && {
-	readonly ZSH_HIST_FILE="${ZDOTDIR:?ZDOTDIR environment variable not set}/.zsh_history"
-	printlog "zsh_history:Backing up zsh history..."
-	arctee "$(python3 -m my.utils.backup_to zsh_history)/{utcnow}-{hostname}-{platform}" -- cat "$ZSH_HIST_FILE" || send-error 'zsh: failed to backup zsh history file'
-}

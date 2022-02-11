@@ -4,12 +4,9 @@ It's a Python library (named `my`), a collection of modules for:
 
 - social networks: posts, comments, favorites, searches
 - shell/program histories (zsh, bash, python, mpv, firefox)
-- reading: e-books and pdfs
 - programming (github/commits)
-- todos and notes
 - instant messaging
-- bank account history/transactions
-- media histories (movies, tv shows, albums, video game achievements/history)
+- media histories (movies, TV shows, music, video game achievements/history); see <https://sean.fish/feed/>
 
 [_Why?_](https://github.com/karlicoss/HPI#why)
 
@@ -23,7 +20,6 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 - `my.google_takeout`, parses lots of (~500,000) events (youtube, searches, phone usage, comments, location history) from [google takeouts](https://takeout.google.com/), using [`google_takeout_parser`](https://github.com/seanbreckenridge/google_takeout_parser)
 - `my.mpv.history_daemon`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-history-daemon)
 - `my.discord.data_export`, parses ~1,000,000 messages/events from the discord data export, parser [here](https://github.com/seanbreckenridge/discord_data)
-- `my.mint`, bank account transactions/balance history from [my personal budget tool](https://github.com/seanbreckenridge/mint)
 - `my.todotxt`, to track my to-do list history (using backups of my [`todotxt`](http://todotxt.org/) files)
 - `my.rss.newsboat`, keeps track of when I added/removed RSS feeds (for [`newsboat`](https://newsboat.org/))
 - `my.ipython`, for timestamped python REPL history
@@ -37,7 +33,6 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 - `my.grouvee.export`, for my video game history/backlog using [`grouvee_export`](https://github.com/seanbreckenridge/grouvee_export)
 - `my.runelite.screenshots`, parses data from the [automatic runelite screenshots](https://github.com/runelite/runelite/wiki/Screenshot)
 - `my.project_euler`, when I solved [Project Euler](https://projecteuler.net/) problems
-- `my.nextalbums`, grabbing when I listened to music albums/my ratings using my [giant spreadsheet](https://sean.fish/s/albums). Handled by [`nextalbums export`](https://github.com/seanbreckenridge/albums)
 
 #### 'Historical' Modules
 
@@ -48,7 +43,6 @@ These are modules to parse GDPR exports/data from services I used to use, but do
 - `my.league.export`, gives League of Legends game history using [`lolexport`](https://github.com/seanbreckenridge/lolexport)
 - `my.steam.scraper`, for steam achievement data and game playtime using [`steamscraper`](https://github.com/seanbreckenridge/steamscraper)
 - `my.blizzard.gdpr`, for general battle.net event data [parsed from a GDPR export](https://github.com/seanbreckenridge/blizzard_gdpr_parser)
-- `my.old_forums`, parses random forum posts and achievements from sites I used to use in the past, see [`old_forums`](https://github.com/seanbreckenridge/old_forums)
 - `my.skype.gdpr` to parse a couple datetimes from the Skype GDPR export (seems all my data from years ago is long gone)
 - `my.spotify.gdpr`, to parse the GDPR export from Spotify, mostly to access songs from my playlists from years ago
 - `my.twitch`, merging the [data export](https://www.twitch.tv/p/en/legal/privacy-choices/#user-privacy-requests) and my messages parsed from the [overrustle logs dump](https://github.com/seanbreckenridge/overrustle_parser)
@@ -172,9 +166,7 @@ Those directories are editable installs, meaning any changes I make to them get 
 
 If you have issues installing, check the [CHANGELOG](CHANGELOG.md) for any possible breaking changes
 
-[`scripts/jobs`](./scripts/jobs) contains anacron-like jobs that are run periodically, using [`bgproc`](https://github.com/seanbreckenridge/bgproc) and [`evry`](https://github.com/seanbreckenridge/evry). In other words, those are the scripts that back up the data, and the python here parses it.
-
-I run the jobs in the background using [supervisor](https://github.com/Supervisor/supervisor), see [here](https://github.com/seanbreckenridge/dotfiles/tree/master/.local/scripts/supervisor) for my configuration, and/or [`run_jobs`](https://github.com/seanbreckenridge/dotfiles/blob/master/.local/scripts/supervisor/run_jobs) for the `bgproc` wrapper. They likely won't work out of the box for you, as they depend on tokens/environment variables that are set on my system - In particular the `HPIDATA` environment variable, which for me is `~/data` -- they're here as examples if you're having issues setting up cron/scripts to backup the data
+I have some more personal scripts/modules in a separate repo; [HPI-personal](https://github.com/seanbreckenridge/HPI-personal)
 
 ### TODO:
 
