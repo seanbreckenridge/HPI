@@ -5,7 +5,6 @@ http://github.com/seanbreckenridge/browserexport
 
 REQUIRES = ["browserexport", "sqlite_backup"]
 
-# see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import browser as user_config  # type: ignore[attr-defined]
 
 from my.core import Paths, dataclass
@@ -13,15 +12,15 @@ from my.core import Paths, dataclass
 
 @dataclass
 class config(user_config.export):
-    # path[s]/glob to your backed-up sqlite history files
+    # path[s]/glob to your backed up browser history sqlite files
     export_path: Paths
 
-    # paths to the sqlite database files which you
-    # use frequently, which should be combined into your history
-    # makes sure this grabs your most recent history if it
-    # hasn't been backed up yet
-    # see my link above to my config above for an example
-    live_databases: Paths
+    # paths to sqlite database files which you
+    # use actively, which should be combined into your history
+    # For example:
+    # from browserexport.browsers.all import Firefox
+    # active_databases = (Firefox.locate_database(),)
+    active_databases: Paths
 
 
 import os
@@ -53,33 +52,32 @@ def inputs() -> List[Path]:
     return list(get_files(config.export_path))
 
 
-# return the visits from the live sqlite database,
-# copying the live database in memory
-def _live_visits() -> List[Visit]:
+# return the visits from the active sqlite database,
+# copying the active database into memory using
+# https://github.com/seanbreckenridge/sqlite_backup
+def _active_visits() -> List[Visit]:
     visits: List[Visit] = []
-    live_dbs = get_files(config.live_databases or "")
-    logger.debug(f"Live databases: {live_dbs}")
-    for live_db in live_dbs:
-        conn = sqlite_backup(live_db)
+    active_dbs = get_files(config.active_databases or "")
+    logger.debug(f"Reading from active databases: {active_dbs}")
+    for ad in active_dbs:
+        conn = sqlite_backup(ad)
         assert conn is not None
         try:
-            # consume generator early,
-            # so the connection doesn't close before we read the visits
+            # read visits, so can close the in-memory connection
             visits.extend(list(read_visits(conn)))
         finally:
             conn.close()
-    logger.debug(f"Read {len(visits)} live visits")
+    logger.debug(f"Read {len(visits)} visits from active databases")
     return visits
 
 
 Results = Iterator[Visit]
 
 
-# don't put this behind cachew, since the history database
-# is constantly copied when this is called, so the path is different/
-# there may be new visits from the active sqlite datbases
+# don't put this behind cachew, since the active history database(s)
+# are merged when this is called, whose contents may constantly change
 def history() -> Results:
-    yield from merge_visits([_history_from_backups(), _live_visits()])
+    yield from merge_visits([_history_from_backups(), _active_visits()])
 
 
 @mcachew(depends_on=lambda: sorted(map(str, inputs())), logger=logger)
