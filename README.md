@@ -14,7 +14,6 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 
 ### My Modules
 
-- `my.browser.export`, using [`browserexport`](https://github.com/seanbreckenridge/browserexport) to backup/parse firefox/chrome/safari history
 - `my.zsh` and `my.bash`, access to my shell history w/ timestamps
 - `my.mail.imap` to parse local IMAP sync's of my email
 - `my.google_takeout`, parses lots of (~500,000) events (youtube, searches, phone usage, comments, location history) from [google takeouts](https://takeout.google.com/), using [`google_takeout_parser`](https://github.com/seanbreckenridge/google_takeout_parser)

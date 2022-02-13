@@ -49,12 +49,6 @@ class mpv:
         export_path: Paths = ""
 
 
-class browser:
-    class export:
-        export_path: Paths = ""
-        active_databases: Paths = ""
-
-
 class league:
     class export:
         export_path: Paths = ""

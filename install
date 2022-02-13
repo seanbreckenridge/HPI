@@ -145,7 +145,6 @@ module_dependencies() {
 	fi
 	echo "Installing module dependencies" | maybe_boxes
 	hpi_module my.window_watcher || return $?
-	hpi_module my.browser.export || return $?
 	hpi_module my.discord.data_export || return $?
 	hpi_module my.google_takeout || return $?
 	hpi_module my.time.tz.via_location || return $?
@@ -183,7 +182,6 @@ ci_mypy() {
 		-p my.apple.privacy_export \
 		-p my.bash \
 		-p my.blizzard.gdpr \
-		-p my.browser.export \
 		-p my.chess.export \
 		-p my.discord.data_export \
 		-p my.facebook.gdpr \
