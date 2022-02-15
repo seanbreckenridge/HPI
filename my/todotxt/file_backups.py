@@ -2,7 +2,7 @@
 Parses todotxt (http://todotxt.org/) done.txt and todo.txt files
 """
 
-REQUIRES = ["topydo"]
+REQUIRES = ["pytodotxt"]
 
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
@@ -34,8 +34,7 @@ from typing import (
 )
 from itertools import chain
 
-# pip3 install topydo
-from topydo.lib.TodoParser import parse_line  # type: ignore[import]
+from pytodotxt import TodoTxt, Task  # type: ignore[import]
 
 from my.core import get_files, warn_if_empty, Stats, LazyLogger, Res
 
@@ -65,10 +64,23 @@ class Todo(NamedTuple):
     text: str
     projects: List[str]
     contexts: List[str]
-    tags: List[str]
+    attributes: Dict[str, List[str]]
 
     def __hash__(self):
         return hash(self.text)
+
+    @classmethod
+    def from_task(cls, t: Task) -> "Todo":
+        return cls(
+            completed=t.is_completed,
+            completion_date=t.completion_date,
+            creation_date=t.creation_date,
+            priority=t.priority,
+            text=t.bare_description(),
+            projects=t.projects,
+            contexts=t.contexts,
+            attributes=t.attributes,
+        )
 
 
 def inputs() -> Iterable[Tuple[datetime, Path]]:
@@ -174,21 +186,9 @@ def events() -> Iterator[TodoEvent]:
 
 
 def _parse_file(todofile: Path) -> Results:
-    for line in todofile.open():
-        try:
-            t = parse_line(line)
-            yield Todo(
-                completed=t["completed"],
-                completion_date=t["completionDate"],
-                creation_date=t["creationDate"],
-                priority=t["priority"],
-                text=t["text"],
-                projects=t["projects"],
-                contexts=t["contexts"],
-                tags=t["tags"],
-            )
-        except Exception as e:
-            yield e
+    tf = TodoTxt(todofile)
+    for t in tf.parse():
+        yield Todo.from_task(t)
 
 
 def stats() -> Stats:
