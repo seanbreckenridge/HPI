@@ -25,6 +25,7 @@ from typing import (
     NamedTuple,
     Iterator,
     Set,
+    Any,
     List,
     Tuple,
     Dict,
@@ -56,31 +57,25 @@ class config(user_config.file_backups):
 logger = LazyLogger(__name__)
 
 
-class Todo(NamedTuple):
-    completed: bool
-    completion_date: Optional[datetime]
-    creation_date: Optional[datetime]
-    priority: Optional[str]
-    text: str
-    projects: List[str]
-    contexts: List[str]
-    attributes: Dict[str, List[str]]
+class Todo(Task):
 
+    # support serializing with hpi query
+    def _serialize(self) -> Dict[str, Any]:
+        return {
+            "completed": self.is_completed,
+            "completion_date": self.completion_date,
+            "creation_date": self.creation_date,
+            "priority": self.priority,
+            "text": self.bare_description(),
+            "projects": self.projects,
+            "contexts": self.contexts,
+            "attributes": self.attributes,
+        }
+
+
+    # custom hash for detecting changes in events
     def __hash__(self):
-        return hash(self.text)
-
-    @classmethod
-    def from_task(cls, t: Task) -> "Todo":
-        return cls(
-            completed=t.is_completed,
-            completion_date=t.completion_date,
-            creation_date=t.creation_date,
-            priority=t.priority,
-            text=t.bare_description(),
-            projects=t.projects,
-            contexts=t.contexts,
-            attributes=t.attributes,
-        )
+        return hash(self.description)
 
 
 def inputs() -> Iterable[Tuple[datetime, Path]]:
@@ -106,7 +101,7 @@ def completed(
         if isinstance(td, Exception):
             yield td
         else:
-            if td.completed:
+            if td.is_completed:
                 yield td
 
 
@@ -133,7 +128,7 @@ def _merge_histories(*sources: Results) -> Results:
         if isinstance(e, Exception):
             yield e
             continue
-        key = (e.completion_date, e.text)
+        key = (e.completion_date, e.description)
         if key in emitted:
             continue
         yield e
@@ -186,9 +181,9 @@ def events() -> Iterator[TodoEvent]:
 
 
 def _parse_file(todofile: Path) -> Results:
-    tf = TodoTxt(todofile)
-    for t in tf.parse():
-        yield Todo.from_task(t)
+    # TODO: hm - parses twice; could PR an class var
+    for t in TodoTxt(todofile).parse():
+        yield Todo(str(t))
 
 
 def stats() -> Stats:
