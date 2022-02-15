@@ -62,7 +62,11 @@ pipm() {
 } && export -f pipm
 
 pip_install() {
-	pipm install --user "$@"
+	local -a ARGS=()
+	# only use --user when not in a virtual environment
+	[[ -z "$VIRTUAL_ENV" ]] && ARGS+=("--user")
+	ARGS+=("$@")
+	pipm install "${ARGS[@]}"
 } && export -f pip_install
 
 # install dependencies (with pip) for this module
@@ -70,7 +74,10 @@ pip_install() {
 # a 'REQUIRES' global variable in the
 # corresponding file
 hpi_module() {
-	python3 -m my.core module install --user "$@"
+	local -a ARGS=()
+	[[ -z "$VIRTUAL_ENV" ]] && ARGS+=("--user")
+	ARGS+=("$@")
+	python3 -m my.core module install "${ARGS[@]}"
 } && export -f hpi_module
 
 ci_install_deps() {
