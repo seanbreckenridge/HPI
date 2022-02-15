@@ -242,8 +242,9 @@ main() {
 	ci_run || return $?
 }
 
-# just source the exported functions into the current bash environment
-if [[ "$1" == "source" ]]; then
+# if user isn't running this directly
+# source the exported functions into the current bash environment
+if [[ "${BASH_SOURCE[0]}" != "$0" ]]; then
 	:
 else
 	# otherwise, run main as usual
