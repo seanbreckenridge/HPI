@@ -44,9 +44,9 @@ class LinearResult(NamedTuple):
 
 DurInfo = List[Tuple[datetime, timedelta]]
 
-# start_time does duplicate
+
 class Result(NamedTuple):
-    start_time: datetime
+    start_time: datetime  # can be duplicate if you have multiple computers
     times: DurInfo
     application: str
     window_title: str

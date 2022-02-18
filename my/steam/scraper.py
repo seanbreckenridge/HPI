@@ -61,8 +61,9 @@ class Game(NamedTuple):
 Results = Iterator[Res[Game]]
 AchievementResults = Iterator[Res[Achievement]]
 
-# only ones I've played
+
 def games(from_paths: InputSource = inputs) -> Results:
+    """only ones I've played"""
     for game in all_games(from_paths):
         if isinstance(game, Exception):
             yield game

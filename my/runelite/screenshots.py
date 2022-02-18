@@ -45,8 +45,10 @@ class Level(NamedTuple):
 
 Description = Union[Level, str]
 
-# represents one post on a forum entry
+
 class Screenshot(NamedTuple):
+    """represents one screenshot (quest/level etc.)"""
+
     dt: datetime
     path: Path
     screenshot_type: str  # Level/Quest etc
@@ -69,6 +71,8 @@ DT_REGEX = r"%Y-%m-%d_%H-%M-%S"
 # TODO: use tz module to optionally figure out what timezone I was
 # when the file was created, so I can make sure the info in the filename
 # being a naive date isn't an issue if I'm ever in another timezone
+
+
 def _extract_info_from_filename(p: Path) -> Tuple[str, datetime]:
     desc, _, dstr = p.stem.rpartition(" ")
     return desc.strip(), datetime.strptime(dstr, DT_REGEX)

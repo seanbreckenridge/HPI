@@ -44,8 +44,10 @@ ChampionInfo = Dict[str, Union[str, List[str]]]
 Metadata = Optional[str]
 Names = List[str]
 
-# represents one League of Legends game
+
 class Game(NamedTuple):
+    """represents one League of Legends game"""
+
     champion_name: str
     game_id: int
     season: int

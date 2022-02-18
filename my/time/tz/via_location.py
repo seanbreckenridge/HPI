@@ -65,15 +65,15 @@ def _iter_local_dates() -> Iterator[DayWithZone]:
     pdt = None
     warnings = []
     # todo allow to skip if not noo many errors in row?
-    for l in exact_locations():
+    for loc in exact_locations():
         # TODO right. its _very_ slow...
-        zone = finder.timezone_at(lng=l.lng, lat=l.lat)
+        zone = finder.timezone_at(lng=loc.lng, lat=loc.lat)
         if zone is None:
-            warnings.append(f"Couldn't figure out tz for {l}")
+            warnings.append(f"Couldn't figure out tz for {loc}")
             continue
         tz = pytz.timezone(zone)
         # TODO this is probably a bit expensive... test & benchmark
-        ldt = l.dt.astimezone(tz)
+        ldt = loc.dt.astimezone(tz)
         ndate = ldt.date()
         if pdt is not None and ndate < pdt.date():  # type: ignore[unreachable]
             # TODO for now just drop and collect the stats
@@ -86,8 +86,8 @@ def _iter_local_dates() -> Iterator[DayWithZone]:
         yield DayWithZone(day=ndate, zone=z)
 
 
-def most_common(l: List[DayWithZone]) -> DayWithZone:
-    res, count = Counter(l).most_common(1)[0]  # type: ignore[var-annotated]
+def most_common(lst: List[DayWithZone]) -> DayWithZone:
+    res, _ = Counter(lst).most_common(1)[0]  # type: ignore[var-annotated]
     return res
 
 
@@ -134,8 +134,8 @@ def _get_day_tz(d: date) -> Optional[pytz.BaseTzInfo]:
 
 LatLon = Tuple[float, float]
 
-# ok to cache, there are only a few home locations?
-@lru_cache(maxsize=None)
+
+@lru_cache(maxsize=None)  # ok to cache, there are only a few home locations?
 def _get_home_tz(loc: LatLon) -> Optional[pytz.BaseTzInfo]:
     (lat, lng) = loc
     finder = _timezone_finder(fast=False)  # ok to use slow here for better precision

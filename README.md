@@ -37,7 +37,7 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 
 These are modules to parse GDPR exports/data from services I used to use, but don't anymore. They're here to provide more context into the past.
 
-- `my.apple.privacy_export`, parses Game Center and location data from the apple GDPR export
+- `my.apple.privacy_export`, parses Game Center and location data from the [apple privacy export](https://privacy.apple.com/)
 - `my.facebook.gdpr`, to parse the GDPR export from Facebook
 - `my.league.export`, gives League of Legends game history using [`lolexport`](https://github.com/seanbreckenridge/lolexport)
 - `my.steam.scraper`, for steam achievement data and game playtime using [`steamscraper`](https://github.com/seanbreckenridge/steamscraper)

@@ -22,11 +22,14 @@ from google_takeout_parser.models import Location as GoogleLocation
 
 logger = LazyLogger(__name__, level="warning")
 
-# merges basic location data from multiple sources
-# this excludes ip location data which has timezones
-# is useful to separate this to allow for easier
-# use in my.time.tz.via_location
+
 def exact_locations() -> Iterator[Location]:
+    """
+    merges basic location data from multiple sources
+    this excludes ip location data which has timezones
+    is useful to separate this to allow for easier
+    use in my.time.tz.via_location
+    """
     yield from _google_locations()
     yield from _apple_locations()
     yield from _gpslogger_locations()

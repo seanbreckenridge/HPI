@@ -47,10 +47,6 @@ readonly BASE_DIR
 cd "${BASE_DIR}" || exit 1
 printf 'In: %s\n' "$(pwd)"
 
-# E225,E501,E302,E402,E305,E261,E265,E116,E252,E702,E266,E741,E306,E203,E731,W503
-readonly FLAKE8_IGNORE='E402,E501,E741,W503,E266,E302,E305,E203'
-readonly FLAKE8_FILES_IGNORE=''
-
 # call shellcheck on all the scripts
 shellcheck_scripts() {
 	git ls-files | exists | rifleman - -a lint -j | jq -r 'to_entries[] | select(.key|startswith("shellcheck")) | .value | .[]' | xargs shellcheck
@@ -64,22 +60,6 @@ prompt() {
 	read -r # if no variable is specified, sets the REPLY environment variable
 }
 
-custom_flake8() {
-	local FLAKE8_OUTPUT FLAKE8_OUTPUT_LENGTH
-	printf "Running flake8 with:\nignored rules: %s\nIgnored file patterns:\n%s\n" "${FLAKE8_IGNORE}" "$(tr ',' '\n' <<<"${FLAKE8_FILES_IGNORE}")"
-	# capture flake8 output so I can determine whether or not there were lines returned
-	# if there were return 1, so it prompts to wait while I look at the error
-	FLAKE8_OUTPUT="$(find my tests -iname '*.py' -exec flake8 --ignore="${FLAKE8_IGNORE}" --extend-exclude="${FLAKE8_FILES_IGNORE}" {} +)"
-	FLAKE8_OUTPUT_LENGTH="$(wc -c <<<"${FLAKE8_OUTPUT}")"
-	# ignore newlines/spaces for some reason, all errors will have string length > 5
-	if ((FLAKE8_OUTPUT_LENGTH > 5)); then
-		printf '%s\n' "${FLAKE8_OUTPUT}"
-		return 1
-	else
-		return 0
-	fi
-}
-
 update_fork() {
 	local FORK_LOCATION
 	FORK_LOCATION="$(realpath ../HPI-karlicoss/)"
@@ -90,11 +70,11 @@ update_fork() {
 
 main() {
 	(update_fork) # cd in subshell
-	custom_flake8 || prompt ''
 	pytest "$@" || prompt ''
 	echo "Running mypy..."
 	MY_CONFIG="${BASE_DIR}/tests/my" mypy --install-types --non-interactive --color-output -p my || prompt ''
 	mypy ~/.config/my/my/config/ || prompt ''
+	flake8 ./my || prompt ''
 	echo "Running shellcheck..."
 	shellcheck_scripts
 	# format everything in the repo
