@@ -25,7 +25,8 @@ from typing import Iterator, Optional, Tuple, Set
 from my.core.common import LazyLogger, Stats, mcachew, get_files
 from my.core.structure import match_structure
 
-from discord_data import parse_messages, parse_activity, Activity, Message
+from discord_data.parse import parse_messages, parse_activity
+from discord_data.model import Activity, Message
 from urlextract import URLExtract  # type: ignore[import]
 
 
@@ -56,7 +57,7 @@ def _remove_link_suppression(
     if urls is None:
         urls = extractor.find_urls(content, get_indices=True)
 
-    for (url_text, (start_index, end_index)) in urls:
+    for (_, (start_index, end_index)) in urls:
         before_ind = start_index - 1
         after_ind = end_index
         try:
@@ -69,9 +70,9 @@ def _remove_link_suppression(
 
 def test_remove_link_suppression() -> None:
     content = "<test>"
-    l = content.index("<")
-    r = content.index(">")
-    assert _remove_suppression(content, l, r) == " test "
+    left = content.index("<")
+    right = content.index(">")
+    assert _remove_suppression(content, left, right) == " test "
 
     # shouldn't affect this at all
     content = "https://urlextract.readthedocs.io"
@@ -104,8 +105,7 @@ def _cachew_depends_on() -> List[str]:
 
 EXPECTED_DISCORD_STRUCTURE = ("messages/index.json", "account/user.json")
 
-# reduces time by multiple minutes, after the cache is created
-# HTML rendering can take quite a long time for the thousands of messages
+
 @mcachew(depends_on=_cachew_depends_on, logger=logger)
 def messages() -> Iterator[Message]:
     emitted: Set[int] = set()

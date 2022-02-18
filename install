@@ -225,11 +225,18 @@ ci_mypy() {
 		--txt-report .coverage.mypy || return $?
 }
 
+ci_lint() {
+	pip_install flake8 || return $?
+	echo 'Linting...' | maybe_boxes
+	flake8 ./my || return $?
+}
+
 ci_run() {
 	ci || return 0
 	CONF="$(ci_config)" || return $?
 	MY_CONFIG="${CONF}" ci_tests || return $?
 	MY_CONFIG="${CONF}" ci_mypy || return $?
+	MY_CONFIG="${CONF}" ci_lint || return $?
 }
 
 main() {

@@ -1,6 +1,8 @@
 """
-Parses the apple GPDR Export
+Parses the apple privacy Export
+https://privacy.apple.com/
 """
+
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import apple as user_config  # type: ignore[attr-defined]

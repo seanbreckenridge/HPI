@@ -56,14 +56,14 @@ def history(from_paths: InputSource = inputs) -> Results:
 @warn_if_empty
 def _merge_histories(*sources: Results) -> Results:
     emitted: Set[datetime] = set()
-    for l in chain(*sources):
-        if isinstance(l, Exception):
-            yield l
+    for loc in chain(*sources):
+        if isinstance(loc, Exception):
+            yield loc
             continue
-        if l.dt in emitted:
+        if loc.dt in emitted:
             continue
-        emitted.add(l.dt)
-        yield l
+        emitted.add(loc.dt)
+        yield loc
 
 
 def _extract_locations(path: Path) -> Iterator[Res[Location]]:
