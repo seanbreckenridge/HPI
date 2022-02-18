@@ -72,7 +72,6 @@ class Todo(Task):
             "attributes": self.attributes,
         }
 
-
     # custom hash for detecting changes in events
     def __hash__(self):
         return hash(self.description)
