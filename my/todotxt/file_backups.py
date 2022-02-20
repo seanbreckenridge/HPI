@@ -2,7 +2,7 @@
 Parses todotxt (http://todotxt.org/) done.txt and todo.txt files
 """
 
-REQUIRES = ["pytodotxt"]
+REQUIRES = ["pytodotxt>=1.4.0"]
 
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
@@ -18,11 +18,11 @@ from my.core import PathIsh, Paths, dataclass
 # is parsed to get current todos
 
 
-import warnings
 from pathlib import Path
 from datetime import datetime
 from typing import (
     NamedTuple,
+    cast,
     Iterator,
     Set,
     Any,
@@ -35,9 +35,10 @@ from typing import (
 )
 from itertools import chain
 
-from pytodotxt import TodoTxt, Task  # type: ignore[import]
+from more_itertools import unique_everseen
+from pytodotxt import TodoTxtParser, Task  # type: ignore[import]
 
-from my.core import get_files, warn_if_empty, Stats, LazyLogger, Res
+from my.core import get_files, Stats, LazyLogger
 
 
 @dataclass
@@ -73,7 +74,7 @@ class Todo(Task):
         }
 
     # custom hash for detecting changes in events
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self.description)
 
 
@@ -87,7 +88,7 @@ def inputs() -> Iterable[Tuple[datetime, Path]]:
     return res
 
 
-Results = Iterator[Res[Todo]]
+Results = Iterator[Todo]
 
 
 def completed(
@@ -96,42 +97,29 @@ def completed(
     """
     Merges all todo.txt/done.txt files and filters to return the history of todos I've completed
     """
-    for td in _merge_histories(*map(_parse_file, [p for (dt, p) in from_paths()])):
-        if isinstance(td, Exception):
-            yield td
-        else:
-            if td.is_completed:
-                yield td
+    yield from filter(
+        lambda t: t.is_completed,
+        unique_everseen(
+            chain(*map(_parse_file, [p for (_, p) in from_paths()])),
+            key=lambda t: (t.completion_date, t.description),
+        ),
+    )
 
 
-# Note: if you don't have a todo.txt file on your system,
-# this just returns an empty list
 def todos(from_file: Optional[PathIsh] = config.live_file) -> Results:
     """
     Parses the currently in use todo.txt file (returns my current todos)
+
+    Note: if you don't have a todo.txt file on your system,
+    this just returns an empty list
     """
     if from_file is None:
-        warnings.warn(f"Did not receive a valid 'live_file' to read from: {from_file}")
+        return
+    p = Path(from_file).expanduser().absolute()
+    if p.exists():
+        yield from _parse_file(p)
     else:
-        p = Path(from_file).expanduser().absolute()
-        if p.exists():
-            yield from _parse_file(p)
-        else:
-            warnings.warn(f"{p} does not exist")
-
-
-@warn_if_empty
-def _merge_histories(*sources: Results) -> Results:
-    emitted: Set[Tuple[Optional[datetime], str]] = set()
-    for e in chain(*sources):
-        if isinstance(e, Exception):
-            yield e
-            continue
-        key = (e.completion_date, e.description)
-        if key in emitted:
-            continue
-        yield e
-        emitted.add(key)
+        logger.warning(f"'{p}' does not exist")
 
 
 class TodoEvent(NamedTuple):
@@ -141,7 +129,7 @@ class TodoEvent(NamedTuple):
     added: bool
 
 
-TodoState = Tuple[datetime, List[Res[Todo]]]
+TodoState = Tuple[datetime, List[Todo]]
 
 
 def events() -> Iterator[TodoEvent]:
@@ -157,15 +145,9 @@ def events() -> Iterator[TodoEvent]:
     todo_snapshots.sort(key=lambda tsnap: tsnap[0])
 
     for dt, tlist in todo_snapshots:
-        # ignore exceptions while computing events
-        if isinstance(tlist, Exception):
-            continue
         tset: Set[Todo] = set()
         # for each todo
         for td in tlist:
-            if isinstance(td, Exception):
-                # ignore exceptions while computing events
-                continue
             tset.add(td)
             if td in current_state:
                 continue
@@ -180,9 +162,8 @@ def events() -> Iterator[TodoEvent]:
 
 
 def _parse_file(todofile: Path) -> Results:
-    # TODO: hm - parses twice; could PR an class var
-    for t in TodoTxt(todofile).parse():
-        yield Todo(str(t))
+    for t in TodoTxtParser(task_type=Todo).parse_file(todofile):
+        yield cast(Todo, t)
 
 
 def stats() -> Stats:
