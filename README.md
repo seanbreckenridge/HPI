@@ -52,6 +52,7 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 
 ### In-use from [karlicoss/HPI](https://github.com/karlicoss/HPI)
 
+- `my.browser`, to parse browser history using [`browserexport`](https://github.com/seanbreckenridge/browserexport)
 - `my.coding.commits` to track git commits across the system
 - `my.github` to track github events/commits and parse the GDPR export, using [`ghexport`](https://github.com/karlicoss/ghexport)
 - `my.reddit`, get saved posts, comments. Uses [`rexport`](https://github.com/karlicoss/rexport) to create backups of recent activity periodically, and [`pushshift`](https://github.com/seanbreckenridge/pushshift_comment_export) to get old comments.
