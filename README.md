@@ -167,8 +167,3 @@ Those directories are editable installs, meaning any changes I make to them get 
 If you have issues installing, check the [CHANGELOG](CHANGELOG.md) for any possible breaking changes
 
 I have some more personal scripts/modules in a separate repo; [HPI-personal](https://github.com/seanbreckenridge/HPI-personal)
-
-### TODO:
-
-- [ ] configure `my.stackexchange` API tokens: https://github.com/karlicoss/stexport
-- [ ] google [now playing history](https://dfir.pubpub.org/pub/xbvsrjt5/release/1)
