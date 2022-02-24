@@ -12,6 +12,8 @@ from my.config import rss as user_config  # type: ignore[attr-defined]
 @dataclass
 class config(user_config.newsboat.file_backups):
     # path[s]/glob to the backed up newsboat rss files
+    # for an example of expected input, see
+    # https://github.com/seanbreckenridge/HPI-personal/blob/8fb96882b492425280e84b8931b40948c3b5fe8c/jobs/linux/backup_newsboat.job
     export_path: Paths
 
 

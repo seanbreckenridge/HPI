@@ -49,6 +49,8 @@ class config(user_config.file_backups):
     # 20200827T192309Z-todo.txt
     # 20200829T192309Z-done.txt
     # 20200829T192309Z-todo.txt
+    # as an example of how to back those up, see
+    # https://github.com/seanbreckenridge/HPI-personal/blob/8fb96882b492425280e84b8931b40948c3b5fe8c/jobs/linux/backup_todotxt.job
     export_path: Paths
 
     # the currently being used todo.txt file, at ~/.todo/todo.txt or ~/.config/todo.txt
