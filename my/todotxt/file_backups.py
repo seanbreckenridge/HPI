@@ -62,6 +62,7 @@ class Todo(Task):
 
     # support serializing with hpi query
     def _serialize(self) -> Dict[str, Any]:
+        assert self._raw is not None
         return {
             "completed": self.is_completed,
             "completion_date": self.completion_date,
@@ -71,6 +72,7 @@ class Todo(Task):
             "projects": self.projects,
             "contexts": self.contexts,
             "attributes": self.attributes,
+            "raw": self._raw,
         }
 
     # custom hash for detecting changes in events
