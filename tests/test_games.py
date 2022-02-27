@@ -12,7 +12,6 @@ def test_league() -> None:
 
     gs: List[Game] = list(_raise_exceptions(history()))
     assert len(gs) > 50
-    assert len(gs[0].players) == 10
 
 
 @skip_if_not_seanb
