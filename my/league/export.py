@@ -32,8 +32,10 @@ import lolexport.log as llog
 from logzero import setup_logger  # type: ignore[import]
 
 # configure logs
-level = mklevel(os.environ["HPI_LOGS"] if "HPI_LOGS" in os.environ else "INFO")
-llog.logger = setup_logger(name="lolexport", level=level)
+llog.logger = setup_logger(
+    name="lolexport",
+    level=mklevel(os.environ["HPI_LOGS"] if "HPI_LOGS" in os.environ else "INFO"),
+)
 
 
 def inputs() -> Sequence[Path]:
