@@ -61,15 +61,12 @@ def _apple_locations() -> Iterator[Location]:
 
 def _gpslogger_locations() -> Iterator[Location]:
     for gl in gpslogger_history():
-        if isinstance(gl, Exception):
-            logger.exception(gl)
-        else:
-            yield Location(
-                lng=gl.lng,
-                lat=gl.lat,
-                dt=gl.dt,
-                accuracy=True,
-            )
+        yield Location(
+            lng=gl.lng,
+            lat=gl.lat,
+            dt=gl.dt,
+            accuracy=True,
+        )
 
 
 def stats() -> Stats:
