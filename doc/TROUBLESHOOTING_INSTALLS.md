@@ -22,5 +22,5 @@ Clone the repository locally instead, and install it:
 ```
 git clone https://github.com/seanbreckenridge/promnesia ./promnesia_sean
 cd ./promnesia_sean
-pip install .
+python3 -m pip install .
 ```
