@@ -2,7 +2,7 @@ It seems that sometimes installing from git has weird side effects with upgradin
 
 If you're having issues -- try doing the following
 
-I'll use [my promnesia modules](https://github.com/seanbreckenridge/promnesia) as an example.
+I'll use my promnesia modules (at <https://github.com/seanbreckenridge/promnesia>) as an example.
 
 Note: though the repository is `promnesia`, the module it installs is `promnesia_sean`. In python packages in general, its not necessary for the module name to match the repository (thats just where its hosted)
 
@@ -10,7 +10,7 @@ These are directions for installing a package as non-editable (into your python 
 
 ---
 
-Whenever there are directions to use `pip` to do something -- its safer to do `python3 -m pip` (unless you know exactly what youre doing with managing multiple python installs on your system). That makes sure the pip that is being used is the same version as when you use `python3`
+Whenever there are directions to use `pip` to do something -- its safer to do `python3 -m pip` (unless you know exactly what youre doing with managing multiple python installs on your system). That makes sure the `pip` that is being used is the same version as when you use `python3`
 
 Uninstall the package you're using:
 
@@ -18,7 +18,7 @@ Uninstall the package you're using:
 python3 -m pip uninstall -y promnesia_sean
 ```
 
-- Make sure its actually uninstalled -- this should error:
+Make sure its actually uninstalled -- this should error:
 
 ```bash
 $ python3 -c "import promnesia_sean"
