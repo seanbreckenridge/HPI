@@ -50,6 +50,8 @@ See [here](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/m
 
 [Promnesia `Source`s for these `HPI` modules](https://github.com/seanbreckenridge/promnesia)
 
+I also have some more personal scripts/modules in a separate repo; [`HPI-personal`](https://github.com/seanbreckenridge/HPI-personal)
+
 ### In-use from [karlicoss/HPI](https://github.com/karlicoss/HPI)
 
 - `my.browser`, to parse browser history using [`browserexport`](https://github.com/seanbreckenridge/browserexport)
@@ -164,6 +166,6 @@ python3 -m reorder_editable reorder ./HPI-seanb ./HPI-karlicoss
 
 Those directories are editable installs, meaning any changes I make to them get applied immediately, which is very convenient for debugging and developing new modules.
 
-If you have issues installing, check the [CHANGELOG](CHANGELOG.md) for any possible breaking changes
+If you're having issues installing/re-installing, check the [TROUBLESHOOTING_INSTALLS.md](doc/TROUBLESHOOTING_INSTALLS.md) file.
 
-I have some more personal scripts/modules in a separate repo; [HPI-personal](https://github.com/seanbreckenridge/HPI-personal)
+If you recently updated and it seems like something has broke, check the [CHANGELOG](CHANGELOG.md) for any possible breaking changes
