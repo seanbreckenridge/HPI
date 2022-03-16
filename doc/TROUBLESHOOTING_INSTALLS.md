@@ -52,7 +52,7 @@ USER_SITE: '/home/sean/.local/lib/python3.10/site-packages' (exists)
 ENABLE_USER_SITE: True
 ```
 
-That should let you which directories python is scanning for imports. Check any of the `site-packages` directories, for a files like:
+That should let you which directories python is scanning for imports. Check any of the `site-packages` directories, for files like:
 
 ```
 promnesia_sean
@@ -69,7 +69,7 @@ python3 -m reorder_editable locate  # should show you where which editable insta
 python3 -m reorder_editable cat
 ```
 
-Refer to the [reorder_editable](https://github.com/seanbreckenridge/reorder_editable) README for much more info on that
+Refer to the [reorder_editable](https://github.com/seanbreckenridge/reorder_editable) README for more info on that.
 
 You should now be able to confirm it errors, like:
 
@@ -86,10 +86,9 @@ Instead of installing from git (since that can sometimes cache the result and ru
 
 ```bash
 git clone https://github.com/seanbreckenridge/promnesia ./promnesia_sean
-cd ./promnesia_sean
 ```
 
-Then, you can install it like a regular package, by running `python3 -m pip install .` while in the directory
+Then, you can install it by pointing it at the directory with includes the `setup.py` file, like: `python3 -m pip install ./promnesia_sean`
 
 You should now be able to confirm it imports properly:
 
@@ -102,10 +101,10 @@ python3 -c "import promnesia_sean"
 Alternatively, since you already have it locally, you can install it as editable:
 
 ```bash
-python3 -m pip install -e .
+python3 -m pip install -e ./promnesia_sean
 ```
 
-That should modify your `sys.path` (run `python3 -m site`) and you'll see that directory appear on your path.
+That should modify your `sys.path` (run `python3 -m site`; and you'll see that directory appear on your path)
 
 That has the added benefit that whenever you want to update `promnesia_sean`, you can just:
 
