@@ -133,9 +133,11 @@ class Email(MailParser):
             # error in the 'find_between' function when
             # the epilogue fails to be parse
             if str(e) == "'NoneType' object has no attribute 'index'":
-                logger.debug(f"While parsing {path}: {e}")
+                logger.debug(f"While parsing {path}, epilogue failed to be parsed: {e}")
             else:
-                raise e
+                logger.warning(f"Error while parsing {path}: {e}, skipping...", exc_info=e)
+        except Exception as e:
+            logger.warning(f"Unknown error while parsing {path}: {e}, skipping...", exc_info=e)
         return None
 
 
