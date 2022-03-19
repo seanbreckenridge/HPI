@@ -163,6 +163,7 @@ module_dependencies() {
 	hpi_module my.league.export || return $?
 	hpi_module my.trakt.export || return $?
 	hpi_module my.mail.imap || return $?
+	hpi_module my.piazza.scraper || return $?
 	hpi_module my.grouvee.export || return $?
 	hpi_module my.mal.export || return $?
 	hpi_module my.listenbrainz.export || return $?
@@ -204,6 +205,7 @@ ci_mypy() {
 		-p my.mail.imap \
 		-p my.mal.export \
 		-p my.mpv.history_daemon \
+		-p my.piazza.scraper \
 		-p my.project_euler \
 		-p my.rss.newsboat.file_backups \
 		-p my.runelite.screenshots \

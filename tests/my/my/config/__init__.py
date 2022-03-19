@@ -89,6 +89,11 @@ class steam:
         export_path: Paths = ""
 
 
+class piazza:
+    class scraper:
+        export_path: Paths = ""
+
+
 class blizzard:
     class gdpr:
         export_path: Paths = ""
