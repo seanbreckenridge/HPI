@@ -6,7 +6,7 @@ Remember to first run: `hpi module install my.mail.imap` to install the necessar
 
 ## my.mail.imap
 
-Personally, I use `my.mail.imap`. To sync my mail, I use [`mutt-wizard`](https://github.com/LukeSmithxyz/mutt-wizard/), which saves to a bunch of individual files in `~/.local/share/mail` -- updating every 5 minutes. As a visual comparison to any files you may be trying to parse, [this is what one of those files looks like](https://gist.github.com/seanbreckenridge/5a629efacd72e7c28de0930f7e3ed8cf)
+Personally, I use `my.mail.imap`. To sync my mail, I use [`mutt-wizard`](https://github.com/LukeSmithxyz/mutt-wizard/), which uses `mbsync` under the hood to saves a bunch of individual mail files in `~/.local/share/mail` -- updating every 5 minutes. As a visual comparison to any files you may be trying to parse, [this is what one of those files looks like](https://gist.github.com/seanbreckenridge/5a629efacd72e7c28de0930f7e3ed8cf)
 
 There are, of course, hundreds of ways to save your mail locally. Lets take [the ImportTools thunderbird add-on](https://addons.thunderbird.net/en-US/thunderbird/addon/importexporttools-ng/) as an example (since its the one we did troubleshooting on in the [issue](https://github.com/seanbreckenridge/HPI/issues/15)):
 
