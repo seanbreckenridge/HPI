@@ -30,7 +30,9 @@ In `Tools > ImportExportToolsNg > Options > Backup scheduling`, set the `Destina
 
 You can force a backup with `Tools > ImportExportToolsNg > Backup`
 
-Note: you can set the `Overwrite the mbox files with the same name in the destination directory` to overwrite your backup. Alternatively, since `my.config` is a python script, you can use some python in your `my.config` file to parse the timestamp from the exported filepath, only using the latest exports. If you're overwriting the `mbox` files while HPI is trying to parse the files, this may fail
+Note: you can set the `Overwrite the mbox files with the same name in the destination directory` to overwrite your backup. Alternatively, since `my.config` is a python script, you can use some custom python in your `my.config` file to parse the timestamp from the exported filepath, only using the latest exports as the input to `mailboxes`. If you're overwriting the `mbox` files while HPI is trying to parse the files, HPI may fail.
+
+Once you've exported: `WIP`
 
 ---
 
