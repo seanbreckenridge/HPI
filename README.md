@@ -41,6 +41,7 @@ These are modules to parse GDPR exports/data from services I used to use, but do
 - `my.facebook.gdpr`, to parse the GDPR export from Facebook
 - `my.league.export`, gives League of Legends game history using [`lolexport`](https://github.com/seanbreckenridge/lolexport)
 - `my.steam.scraper`, for steam achievement data and game playtime using [`steamscraper`](https://github.com/seanbreckenridge/steamscraper)
+- `my.piazza.scraper`, parsing [piazza](https://piazza.com/) (university forum) posts using [piazza-scraper](https://github.com/seanbreckenridge/piazza-scraper)
 - `my.blizzard.gdpr`, for general battle.net event data [parsed from a GDPR export](https://github.com/seanbreckenridge/blizzard_gdpr_parser)
 - `my.skype.gdpr` to parse a couple datetimes from the Skype GDPR export (seems all my data from years ago is long gone)
 - `my.spotify.gdpr`, to parse the GDPR export from Spotify, mostly to access songs from my playlists from years ago

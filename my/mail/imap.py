@@ -135,9 +135,13 @@ class Email(MailParser):
             if str(e) == "'NoneType' object has no attribute 'index'":
                 logger.debug(f"While parsing {path}, epilogue failed to be parsed: {e}")
             else:
-                logger.warning(f"Error while parsing {path}: {e}, skipping...", exc_info=e)
+                logger.warning(
+                    f"Error while parsing {path}: {e}, skipping...", exc_info=e
+                )
         except Exception as e:
-            logger.warning(f"Unknown error while parsing {path}: {e}, skipping...", exc_info=e)
+            logger.warning(
+                f"Unknown error while parsing {path}: {e}, skipping...", exc_info=e
+            )
         return None
 
 
