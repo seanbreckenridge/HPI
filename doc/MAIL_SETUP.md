@@ -6,7 +6,7 @@ You can also use both modules at the same time -- see `my.mail.all` below
 
 Remember to first run: `hpi module install my.mail.imap` to install the necessary dependencies
 
-## my.mail.imap
+## `my.mail.imap`
 
 Personally, I use `my.mail.imap`. To sync my mail, I use [`mutt-wizard`](https://github.com/LukeSmithxyz/mutt-wizard/), which uses `mbsync` under the hood to saves a bunch of individual mail files in `~/.local/share/mail` -- updating every 5 minutes. As a visual comparison to any files you may be trying to parse, [this is what one of those files looks like](https://gist.github.com/seanbreckenridge/5a629efacd72e7c28de0930f7e3ed8cf)
 
@@ -30,7 +30,7 @@ That may be fine to parse an archive (a backup of some email you don't use anymo
 
 Recently, ImportToolsExports has added support for periodic backups, but only in MBOX format. So -->
 
-## my.mail.mbox
+## `my.mail.mbox`
 
 In `Tools > ImportExportToolsNg > Options > Backup scheduling`, set the `Destination` and `Enable Frequency` to backup once per day, selecting `Just mail files`
 
@@ -56,7 +56,7 @@ class mail:
         exclude_extensions = (".sbd")
 ```
 
-## my.mail.all
+## `my.mail.all`
 
 You can also use both of these at the same time -- if you have some exported as individual text files and others as mbox files, setup a config like above, specifying `mailboxes` from both `imap` and `mbox`
 
