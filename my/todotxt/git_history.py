@@ -2,7 +2,10 @@
 Parses todotxt (http://todotxt.org/) done.txt and todo.txt files
 """
 
-REQUIRES = ["pytodotxt>=1.4.0"]
+REQUIRES = [
+    "pytodotxt>=1.4.0",
+    "git+https://github.com/seanbreckenridge/git_doc_history",
+]
 
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
@@ -12,17 +15,17 @@ from my.config import todotxt as user_config  # type: ignore[attr-defined]
 from pathlib import Path
 from datetime import datetime, timezone
 from typing import (
+    cast,
+    Any,
     Union,
     NamedTuple,
     Iterator,
-    Any,
     List,
     Tuple,
     Dict,
 )
 
 from git_doc_history import DocHistory, DocHistorySnapshot, parse_snapshot_diffs, Action
-from more_itertools import unique_everseen
 from pytodotxt import TodoTxtParser, Task  # type: ignore[import]
 
 from my.core import LazyLogger, Stats, PathIsh, dataclass
@@ -58,14 +61,14 @@ class Todo(Task):
         if hasattr(self, "_bare"):
             return str(self._bare)
         setattr(self, "_bare", self.bare_description())
-        return self._bare
+        return cast(str, self._bare)
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: Any) -> bool:
         if not isinstance(other, Task):
             return False
-        return self.bare == other.bare
+        return cast(bool, self.bare == other.bare)
 
-    def __ne__(self, other) -> bool:
+    def __ne__(self, other: Any) -> bool:
         return not self.__eq__(other)
 
     def __hash__(self) -> int:
@@ -83,7 +86,7 @@ def input() -> DocHistory:
 
 
 def _parse_todotxt_buffer(data: Union[str, bytes]) -> List[Todo]:
-    return TodoTxtParser(task_type=Todo).parse(data)
+    return cast(List[Todo], TodoTxtParser(task_type=Todo).parse(data))
 
 
 def _parse_into_todos(doc: DocHistorySnapshot) -> List[Todo]:
