@@ -56,7 +56,7 @@ class mail:
         exclude_extensions = (".sbd")
 ```
 
-## Using my.mbox.all
+## my.mail.all
 
 You can also use both of these at the same time -- if you have some exported as individual text files and others as mbox files, setup a config like above, specifying `mailboxes` from both `imap` and `mbox`
 
