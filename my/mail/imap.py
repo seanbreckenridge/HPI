@@ -20,7 +20,6 @@ from my.core import Stats, Paths, dataclass, get_files
 from .common import Email, unique_mail
 
 
-
 @dataclass
 class config(user_config.imap):
     # path[s]/glob to the the individual email files -- searches recusively
@@ -45,7 +44,6 @@ def raw_mail() -> Iterator[Email]:
     for m in map(Email.safe_parse_path, files()):
         if m is not None:
             yield m
-
 
 
 def mail() -> Iterator[Email]:

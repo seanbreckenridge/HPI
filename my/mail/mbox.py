@@ -55,7 +55,6 @@ def files() -> Iterator[Path]:
                     yield path
 
 
-
 def _decode_msg(msg: IO[Any]) -> mailbox.mboxMessage:
     """
     Custom decode function
