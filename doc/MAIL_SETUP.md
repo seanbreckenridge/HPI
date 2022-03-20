@@ -56,7 +56,7 @@ class mail:
 
 ## Using my.mbox.all
 
-You can also use both of these at the same time -- if you have some exported as individual text files and other accounts, setup a config like above, but specifying paths from both `imap` and `mbox`
+You can also use both of these at the same time -- if you have some exported as individual text files and others as mbox files, setup a config like above, specifying paths from both `imap` and `mbox`
 
 Then -- you can just use the `my.mbox.all.mail` function -- which return unique messages from both sources
 
