@@ -28,16 +28,13 @@ from typing import (
 from git_doc_history import DocHistory, DocHistorySnapshot, parse_snapshot_diffs, Action
 from pytodotxt import TodoTxtParser, Task  # type: ignore[import]
 
-from my.core import LazyLogger, Stats, PathIsh, dataclass
+from my.core import Stats, PathIsh, dataclass
 
 
 @dataclass
 class config(user_config.git_history):
     # path to the git backup directory
     export_path: PathIsh
-
-
-logger = LazyLogger(__name__)
 
 
 class Todo(Task):
