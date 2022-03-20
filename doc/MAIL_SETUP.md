@@ -62,6 +62,22 @@ You can also use both of these at the same time -- if you have some exported as 
 
 Then -- you can just use the `my.mbox.all.mail` function, which return unique messages from both sources
 
+## Testing
+
+To make sure this works, you can use the `query` and `doctor` commands, to make sure there are no config errors and it parses your mail properly:
+
+```bash
+hpi --debug doctor --verobose my.mail.all
+hpi --debug doctor --verbose my.mail.imap
+hpi --debug doctor --verbose my.mail.mbox
+```
+
+```bash
+hpi --debug query my.mail.all --stream
+hpi --debug query my.mail.imap --stream
+hpi --debug query my.mail.mbox --stream
+```
+
 ---
 
 If you use a different format and aren't able to figure out how to parse it, [create an issue](https://github.com/seanbreckenridge/HPI/issues/new)
