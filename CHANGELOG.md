@@ -1,3 +1,11 @@
+### 2022-03-20
+
+See [#33](https://github.com/seanbreckenridge/HPI/pull/33)
+
+Replaced `file_backups` modules with `git_history`, using [`git_doc_history`](https://github.com/seanbreckenridge/git_doc_history)
+
+I don't expect anyone else was using these modules, but there's a script [here](https://github.com/seanbreckenridge/git_doc_history/blob/master/bin/file_backups_to_doc_history) to convert from the old format to new. Feel free to open an issue if you were using these -- could maintain them in a separate HPI repo as old repositories
+
 ### 2022-01-30
 
 [Relevant PR](https://github.com/seanbreckenridge/HPI/pull/18); If you're having issues with the `my.config` blocks, compare yours to [mine](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py)
