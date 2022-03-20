@@ -16,7 +16,7 @@ To match the format `my.mail.imap` expects, select the folder you want to export
 class mail:
     class imap:
         # path[s]/glob to the the mailboxes/IMAP files
-        # you could also just do something like:
+        # you could also do something like:
         # mailboxes = "~/Documents/mbsync/*@*"
         # to match any files in that directory with '@' in them
         mailboxes = "~/Documents/ExportPlaintext/"
