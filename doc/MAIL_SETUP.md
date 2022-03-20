@@ -32,7 +32,31 @@ You can force a backup with `Tools > ImportExportToolsNg > Backup`
 
 Note: you can set the `Overwrite the mbox files with the same name in the destination directory` to overwrite your backup. Alternatively, since `my.config` is a python script, you can use some custom python in your `my.config` file to parse the timestamp from the exported filepath, only using the latest exports as the input to `mailboxes`. If you're overwriting the `mbox` files while HPI is trying to parse the files, HPI may fail.
 
-Once you've exported: `WIP`
+Once you've exported, setup your configuration to point at the directory. Note that since this uses `my.mail.imap` to parse the messages, you may have to setup a basic config with no files so that module doesnt fail:
+
+```python
+class mail:
+
+    class imap:
+        # signifies no files
+        mailboxes = ''
+
+    class mbox:
+
+        # paths/glob to the mbox directory -- searches recursively
+        mailboxes = "~/Documents/mboxExport"
+
+        # additional extensions to ignore
+        exclude_extensions = (".sbd")
+```
+
+## Using my.mbox.all
+
+You can also use both of these at the same time -- if you have some exported as individual text files and other accounts, setup a config like above, but specifying paths from both `imap` and `mbox`
+
+Then -- you can just use the `my.mbox.all.mail` or `my.mbox.all.raw_mail` functions -- which return results from both
+
+TODO: create my.mbox.all module
 
 ---
 

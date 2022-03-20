@@ -11,8 +11,9 @@ from my.config import mail as user_config  # type: ignore[attr-defined]
 
 import logging
 from pathlib import Path
-from email.parser import Parser
+from email.message import Message
 from typing import (
+    Union,
     Iterator,
     List,
     Optional,
@@ -42,7 +43,7 @@ logger = LazyLogger(__name__)
 
 @dataclass
 class config(user_config.imap):
-    # path[s]/glob to the the mailboxes/IMAP files
+    # path[s]/glob to the the individual email files -- searches recusively
     mailboxes: Paths
 
 
@@ -56,7 +57,7 @@ class Email(MailParser):
     # note: The 'message' property on this class
     # is the stdlib email.Message class:
     # https://docs.python.org/3/library/email.message.html#module-email.message
-    def __init__(self, message: Parser) -> None:
+    def __init__(self, message: Message) -> None:
         super().__init__(message=message)
         self.filepath: Optional[Path] = None
         self._dt: Optional[datetime] = None  # property to cache datetime result
@@ -116,33 +117,49 @@ class Email(MailParser):
         }
 
     @classmethod
-    def safe_parse(cls, path: Path) -> Optional["Email"]:
-        """
-        Alternate constructor which catches common
-        errors/bugs that mailparser could raise
-        """
+    def safe_parse(
+        cls, fp: Union[str, bytes, Message], display_filename: Path
+    ) -> Optional["Email"]:
         try:
-            m = cls.from_file(path)  # calls MailParser.from_file
-            m.filepath = path
+            if isinstance(fp, bytes):
+                m = cls.from_bytes(fp)
+            elif isinstance(fp, str):
+                m = cls.from_string(fp)
+            elif isinstance(fp, Message):
+                # convert the email.Message (or a subclass) to this class
+                m = cls(message=fp)
             return cast(Email, m)
         except UnicodeDecodeError as e:
-            logger.debug(f"While parsing {path}: {e}")
+            logger.debug(f"While parsing {display_filename}: {e}")
         except MailParserReceivedParsingError as e:
-            logger.debug(f"While parsing {path}: {e}")
+            logger.debug(f"While parsing {display_filename}: {e}")
         except AttributeError as e:
             # error in the 'find_between' function when
             # the epilogue fails to be parse
             if str(e) == "'NoneType' object has no attribute 'index'":
-                logger.debug(f"While parsing {path}, epilogue failed to be parsed: {e}")
+                logger.debug(
+                    f"While parsing {display_filename}, epilogue failed to be parsed: {e}"
+                )
             else:
                 logger.warning(
-                    f"Error while parsing {path}: {e}, skipping...", exc_info=e
+                    f"Error while parsing {display_filename}: {e}, skipping...",
+                    exc_info=e,
                 )
         except Exception as e:
             logger.warning(
-                f"Unknown error while parsing {path}: {e}, skipping...", exc_info=e
+                f"Unknown error while parsing {display_filename}: {e}, skipping...",
+                exc_info=e,
             )
         return None
+
+    @classmethod
+    def safe_parse_path(cls, path: Path) -> Optional["Email"]:
+        with path.open("r") as f:
+            m = cls.safe_parse(f.read(), display_filename=path)
+        if m is None:
+            return None
+        m.filepath = path
+        return m
 
 
 def mailboxes() -> List[Path]:
@@ -160,25 +177,29 @@ def files() -> Iterator[Path]:
 
 
 def raw_mail() -> Iterator[Email]:
-    for m in map(Email.safe_parse, files()):
+    for m in map(Email.safe_parse_path, files()):
         if m is not None:
             yield m
 
 
-def mail() -> Iterator[Email]:
+def unique_mail(emails: Iterator[Email]) -> Iterator[Email]:
     # remove duplicates (from a file being
     # in multiple boxes and the 'default' inbox)
     # some formats won't have a message id,
     # but hopefully the date/subject creates a unique
     # key in that case
     yield from unique_everseen(
-        raw_mail(),
+        emails,
         key=lambda m: (
             m.subject_json,
             m.message_id_json,
             m.dt,
         ),
     )
+
+
+def mail() -> Iterator[Email]:
+    yield from unique_mail(raw_mail())
 
 
 def stats() -> Stats:
