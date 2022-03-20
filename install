@@ -203,6 +203,7 @@ ci_mypy() {
 		-p my.location.ip \
 		-p my.location.models \
 		-p my.mail.imap \
+		-p my.mail.mbox \
 		-p my.mal.export \
 		-p my.mpv.history_daemon \
 		-p my.piazza.scraper \
