@@ -128,8 +128,8 @@ class Email(MailParser):
                     f"While parsing {display_filename}, epilogue failed to be parsed: {e}"
                 )
             else:
-                logger.warning(
-                    f"Error while parsing {display_filename}: {e}, skipping...",
+                logger.debug(
+                    f"Unknown error while parsing {display_filename}: {e}, skipping...",
                     exc_info=e,
                 )
         except Exception as e:
@@ -141,8 +141,8 @@ class Email(MailParser):
 
     @classmethod
     def safe_parse_path(cls, path: Path) -> Optional["Email"]:
-        with path.open("r") as f:
-            m = cls.safe_parse(f, display_filename=path)
+        with path.open("rb") as bf:
+            m = cls.safe_parse(try_decode_buf(bf.read()), display_filename=path)
         if m is None:
             return None
         m.filepath = path
@@ -163,3 +163,13 @@ def unique_mail(emails: Iterator[Email]) -> Iterator[Email]:
             m.dt,
         ),
     )
+
+
+def try_decode_buf(buf: bytes) -> str:
+    try:
+        return buf.decode("utf-8")
+    except UnicodeDecodeError:
+        try:
+            return buf.decode("iso-8859-1")
+        except UnicodeDecodeError:
+            return buf.decode("latin-1")

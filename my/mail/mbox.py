@@ -14,7 +14,7 @@ from typing import List, Iterator, Optional, Sequence, IO, Any
 from my.core import Stats, Paths, dataclass, get_files
 from my.core.common import LazyLogger
 
-from .common import Email, unique_mail
+from .common import Email, unique_mail, try_decode_buf
 
 
 logger = LazyLogger(__name__)
@@ -55,15 +55,6 @@ def files() -> Iterator[Path]:
                     yield path
 
 
-def _try_decode(buf: bytes) -> str:
-    try:
-        return buf.decode("utf-8")
-    except UnicodeDecodeError:
-        try:
-            return buf.decode("iso-8859-1")
-        except UnicodeDecodeError:
-            return buf.decode("latin-1")
-
 
 def _decode_msg(msg: IO[Any]) -> mailbox.mboxMessage:
     """
@@ -72,7 +63,7 @@ def _decode_msg(msg: IO[Any]) -> mailbox.mboxMessage:
     by default this uses 'ascii' which can cause fatal errors
     on UnicodeDecodeErrors
     """
-    msg_str = _try_decode(msg.read())
+    msg_str = try_decode_buf(msg.read())
     return mailbox.mboxMessage(mailbox.Message(msg_str))
 
 
