@@ -14,7 +14,7 @@ from typing import List, Iterator, Optional, Sequence, IO, Any
 from my.core import Stats, Paths, dataclass, get_files
 from my.core.common import LazyLogger
 
-from my.mail.imap import Email, unique_mail
+from .common import Email, unique_mail
 
 
 logger = LazyLogger(__name__)
