@@ -64,7 +64,7 @@ Then -- you can just use the `my.mbox.all.mail` function, which return unique me
 
 ## Testing
 
-To make sure this works, you can use the `query` and `doctor` commands, to make sure there are no config errors and it parses your mail properly:
+To make sure this works, you can use the `doctor` and `query` commands, to make sure there are no config errors and it parses your mail properly:
 
 ```bash
 hpi --debug doctor --verobose my.mail.all
