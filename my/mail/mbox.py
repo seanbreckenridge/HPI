@@ -11,8 +11,6 @@ import mailbox
 from pathlib import Path
 from typing import List, Iterator, Optional, Sequence, IO, Any
 
-from more_itertools import unique_everseen
-
 from my.core import Stats, Paths, dataclass, get_files
 from my.core.common import LazyLogger
 
