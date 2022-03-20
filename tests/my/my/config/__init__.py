@@ -33,14 +33,13 @@ class bash:
 
 
 class todotxt:
-    class file_backups:
+    class git_history:
         export_path: Paths = ""
-        live_file: Optional[PathIsh] = None
 
 
 class rss:
     class newsboat:
-        class file_backups:
+        class git_history:
             export_path: Paths = ""
 
 
