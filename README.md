@@ -67,6 +67,7 @@ Disregarding tools which actively collect data (like [`ttt`](https://github.com/
 
 - [`ipgeocache`](https://github.com/seanbreckenridge/ipgeocache) - for any IPs gathered from data exports, provides geolocation info, so I have partial location info going back to 2013
 - [`url_metadata`](https://github.com/seanbreckenridge/url_metadata) - caches youtube subtitles, url metadata (title, description, image links), and a html/plaintext summary for any URL
+- [`git_doc_history`](https://github.com/seanbreckenridge/git_doc_history) - a bash script to copy/backup files into git history, with a python library to help traverse and create a history/parse diffs between commits
 - [`HPI_API`](https://github.com/seanbreckenridge/HPI_API) - automatically creates a JSON API for HPI modules
 
 I also use this in [`my_feed`](https://github.com/seanbreckenridge/my_feed), which creates a feed of media/data using `HPI`, live at <https://sean.fish/feed/>
