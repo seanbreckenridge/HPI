@@ -1,6 +1,8 @@
 This is a distillation of the steps described in [this issue](https://github.com/seanbreckenridge/HPI/issues/15)
 
-There are two mail modules here -- `my.mail.imap` and `my.mail.mbox`. An [`mbox` file](https://docs.python.org/3/library/mailbox.html) is just a collection of email messages in a single text file
+There are two mail parsing modules here -- `my.mail.imap` and `my.mail.mbox`. An [`mbox` file](https://docs.python.org/3/library/mailbox.html) is just a collection of email messages in a single text file
+
+You can also use both modules at the same time -- see `my.mail.all` below
 
 Remember to first run: `hpi module install my.mail.imap` to install the necessary dependencies
 
@@ -56,9 +58,9 @@ class mail:
 
 ## Using my.mbox.all
 
-You can also use both of these at the same time -- if you have some exported as individual text files and others as mbox files, setup a config like above, specifying paths from both `imap` and `mbox`
+You can also use both of these at the same time -- if you have some exported as individual text files and others as mbox files, setup a config like above, specifying `mailboxes` from both `imap` and `mbox`
 
-Then -- you can just use the `my.mbox.all.mail` function -- which return unique messages from both sources
+Then -- you can just use the `my.mbox.all.mail` function, which return unique messages from both sources
 
 ---
 
