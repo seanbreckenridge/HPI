@@ -88,6 +88,7 @@ def _iter_mailbox(file: Path) -> Iterator[Email]:
             mbox_message = next(mbox_itr)
             email = Email.safe_parse(mbox_message, display_filename=file)
             if email is not None:
+                email.filepath = file
                 yield email
         except StopIteration:
             break
