@@ -6,7 +6,7 @@ I'll use my promnesia modules (at <https://github.com/seanbreckenridge/promnesia
 
 Note: though the repository is `promnesia`, the module it installs is `promnesia_sean`. In python packages in general, its not necessary for the module name to match the repository (thats just where its hosted)
 
-These are directions for installing a package as non-editable (into your python `site-packages`) -- If you want to install as editable, see [reorder_editable](https://github.com/seanbreckenridge/reorder_editable) and the [install section](https://github.com/seanbreckenridge/HPI#install) of the README for issues you may run into
+These are directions for installing a package as non-editable (into your python `site-packages`), though it covers uninstalling editable packages -- in case your path is misconfigured in some way. If you want to install as editable, see [reorder_editable](https://github.com/seanbreckenridge/reorder_editable) and the [install section](https://github.com/seanbreckenridge/HPI#install) of the README for issues you may run into, or see the [editable](#editable) section of this doc
 
 ---
 
@@ -96,7 +96,7 @@ You should now be able to confirm it imports properly:
 python3 -c "import promnesia_sean"
 ```
 
----
+### Editable
 
 Alternatively, since you already have it locally, you can install it as editable:
 
