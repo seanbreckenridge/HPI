@@ -15,7 +15,7 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 ### My Modules
 
 - `my.zsh` and `my.bash`, access to my shell history w/ timestamps
-- `my.mail.imap` and `my.mail.mbox` to parse local IMAP sync's of my email -- see [doc/MAIL_SETUP.md](doc/MAIL_SETUP.md)
+- `my.mail.imap` and `my.mail.mbox` to parse local IMAP sync's of my mail/mbox files -- see [doc/MAIL_SETUP.md](doc/MAIL_SETUP.md)
 - `my.google_takeout`, parses lots of (~500,000) events (youtube, searches, phone usage, comments, location history) from [google takeouts](https://takeout.google.com/), using [`google_takeout_parser`](https://github.com/seanbreckenridge/google_takeout_parser)
 - `my.mpv.history_daemon`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-history-daemon)
 - `my.discord.data_export`, parses ~1,000,000 messages/events from the discord data export, parser [here](https://github.com/seanbreckenridge/discord_data)
