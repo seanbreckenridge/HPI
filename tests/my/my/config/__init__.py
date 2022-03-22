@@ -22,6 +22,10 @@ class mail:
     class imap:
         mailboxes: Paths = ""
 
+    class mbox:
+        mailboxes: Paths = ""
+        exclude_extensions = ()
+
 
 class zsh:
     export_path: Paths = ""

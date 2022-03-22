@@ -162,7 +162,7 @@ module_dependencies() {
 	hpi_module my.mpv.history_daemon || return $?
 	hpi_module my.league.export || return $?
 	hpi_module my.trakt.export || return $?
-	hpi_module my.mail.imap || return $?
+	hpi_module my.mail.all || return $?
 	hpi_module my.piazza.scraper || return $?
 	hpi_module my.grouvee.export || return $?
 	hpi_module my.mal.export || return $?
@@ -203,6 +203,9 @@ ci_mypy() {
 		-p my.location.ip \
 		-p my.location.models \
 		-p my.mail.imap \
+		-p my.mail.all \
+		-p my.mail.common \
+		-p my.mail.mbox \
 		-p my.mal.export \
 		-p my.mpv.history_daemon \
 		-p my.piazza.scraper \
