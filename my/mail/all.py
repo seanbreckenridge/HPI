@@ -33,8 +33,8 @@ def _mail_mbox() -> Iterator[Email]:
 def mail() -> Iterator[Email]:
     yield from unique_mail(
         chain(
-            _mail_imap(),
             _mail_mbox(),
+            _mail_imap(),
         )
     )
 
