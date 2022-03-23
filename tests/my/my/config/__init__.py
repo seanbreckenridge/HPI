@@ -151,6 +151,11 @@ class apple:
         gdpr_dir: PathIsh = ""
 
 
+class linkedin:
+    class privacy_export:
+        gdpr_dir: PathIsh = ""
+
+
 class discord:
     class data_export:
         export_path: Paths = ""
