@@ -32,6 +32,7 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 - `my.grouvee.export`, for my video game history/backlog using [`grouvee_export`](https://github.com/seanbreckenridge/grouvee_export)
 - `my.runelite.screenshots`, parses data from the [automatic runelite screenshots](https://github.com/runelite/runelite/wiki/Screenshot)
 - `my.project_euler`, when I solved [Project Euler](https://projecteuler.net/) problems
+- `my.linkedin.privacy_export`, to parse the [privacy export](https://www.linkedin.com/help/linkedin/answer/50191/downloading-your-account-data?lang=en) from linkedin
 
 #### 'Historical' Modules
 
