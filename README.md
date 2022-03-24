@@ -61,6 +61,7 @@ I also have some more personal scripts/modules in a separate repo; [`HPI-persona
 - `my.github` to track github events/commits and parse the GDPR export, using [`ghexport`](https://github.com/karlicoss/ghexport)
 - `my.reddit`, get saved posts, comments. Uses [`rexport`](https://github.com/karlicoss/rexport) to create backups of recent activity periodically, and [`pushshift`](https://github.com/seanbreckenridge/pushshift_comment_export) to get old comments.
 - `my.smscalls`, exports call/sms history using [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore&hl=en_US)
+- `my.stackexchange.stexport`, for stackexchange data using [`stexport`](https://github.com/karlicoss/stexport)
 
 ### Companion Libraries
 
