@@ -55,7 +55,7 @@ def subscriptions() -> Results:
 def events() -> Iterator[Diff]:
     yield from parse_snapshot_diffs(
         input(),
-        file="urls",
+        file=RSS_FILES[0],
     )
 
 

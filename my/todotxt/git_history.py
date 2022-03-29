@@ -18,10 +18,8 @@ from typing import (
     cast,
     Any,
     Union,
-    NamedTuple,
     Iterator,
     List,
-    Tuple,
     Dict,
 )
 
@@ -54,6 +52,7 @@ class Todo(Task):
             "raw": self._raw,
         }
 
+    @property
     def bare(self) -> str:
         if hasattr(self, "_bare"):
             return str(self._bare)
@@ -105,13 +104,11 @@ def todos() -> Results:
     )
 
 
-class TodoEvent(NamedTuple):
+@dataclass
+class TodoEvent:
     todo: Todo
     dt: datetime
     action: Action
-
-
-TodoState = Tuple[datetime, List[Todo]]
 
 
 def events() -> Iterator[TodoEvent]:
