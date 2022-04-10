@@ -19,7 +19,7 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 - `my.google_takeout`, parses lots of (~500,000) events (youtube, searches, phone usage, comments, location history) from [google takeouts](https://takeout.google.com/), using [`google_takeout_parser`](https://github.com/seanbreckenridge/google_takeout_parser)
 - `my.mpv.history_daemon`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-history-daemon)
 - `my.discord.data_export`, parses ~1,000,000 messages/events from the discord data export, parser [here](https://github.com/seanbreckenridge/discord_data)
-- `my.todotxt`, to track my to-do list history (using backups of my [`todotxt`](http://todotxt.org/) files)
+- `my.todotxt.git_history`, to track my to-do list history (using backups of my [`todotxt`](http://todotxt.org/) files in [`git_doc_history`](https://github.com/seanbreckenridge/git_doc_history))
 - `my.rss.newsboat`, keeps track of when I added/removed RSS feeds (for [`newsboat`](https://newsboat.org/))
 - `my.ipython`, for timestamped python REPL history
 - `my.ttt`, to parse shell/system history tracked by [`ttt`](https://github.com/seanbreckenridge/ttt)
@@ -27,7 +27,7 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 - `my.location`, merges data from [`gpslogger`](https://github.com/mendhak/gpslogger), `apple`, `google`, `discord`, `blizzard`, and `facebook` to provide location data (goes back ~10 years)
 - `my.chess.export`, to track my [chess.com](https://www.chess.com)/[lichess.org](https://lichess.org/) games, using [`chess_export`](https://github.com/seanbreckenridge/chess_export)
 - `my.trakt.export`, providing me a history/my ratings for Movies/TV Show (episodes) using [`traktexport`](https://github.com/seanbreckenridge/traktexport)
-- `my.listenbrainz.export`, exporting my music scrobbling history from [ListenBrainz](https://listenbrainz.org/) (open-source Last.fm) using [`listenbrainz_export`](https://github.com/seanbreckenridge/listenbrainz_export)
+- `my.listenbrainz.export`, exporting my music listening history from [ListenBrainz](https://listenbrainz.org/) (open-source Last.fm) using [`listenbrainz_export`](https://github.com/seanbreckenridge/listenbrainz_export)
 - `my.mal.export`, for anime/manga history using [`malexport`](https://github.com/seanbreckenridge/malexport)
 - `my.grouvee.export`, for my video game history/backlog using [`grouvee_export`](https://github.com/seanbreckenridge/grouvee_export)
 - `my.runelite.screenshots`, parses data from the [automatic runelite screenshots](https://github.com/runelite/runelite/wiki/Screenshot)
@@ -63,14 +63,15 @@ I also have some more personal scripts/modules in a separate repo; [`HPI-persona
 - `my.smscalls`, exports call/sms history using [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore&hl=en_US)
 - `my.stackexchange.stexport`, for stackexchange data using [`stexport`](https://github.com/karlicoss/stexport)
 
-### Companion Libraries
+### Companion Tools/Libraries
 
-Disregarding tools which actively collect data (like [`ttt`](https://github.com/seanbreckenridge/ttt)/[`window_watcher`](https://github.com/seanbreckenridge/aw-watcher-window)), I have some other libraries I've created for this project, to provide more context to some of the data.
+Disregarding tools which actively collect data (like [`ttt`](https://github.com/seanbreckenridge/ttt)/[`window_watcher`](https://github.com/seanbreckenridge/aw-watcher-window)) or repositories which have their own exporter/parsers which are used here, there are a couple other tools/libraries I've created for this project:
 
 - [`ipgeocache`](https://github.com/seanbreckenridge/ipgeocache) - for any IPs gathered from data exports, provides geolocation info, so I have partial location info going back to 2013
-- [`url_metadata`](https://github.com/seanbreckenridge/url_metadata) - caches youtube subtitles, url metadata (title, description, image links), and a html/plaintext summary for any URL
+- [`sqlite_backup`](https://github.com/seanbreckenridge/sqlite_backup) - to safely copy/backup application sqlite databases that may currently be in use
 - [`git_doc_history`](https://github.com/seanbreckenridge/git_doc_history) - a bash script to copy/backup files into git history, with a python library to help traverse and create a history/parse diffs between commits
-- [`HPI_API`](https://github.com/seanbreckenridge/HPI_API) - automatically creates a JSON API for HPI modules
+- [`HPI_API`](https://github.com/seanbreckenridge/HPI_API) - automatically creates a JSON API/server for HPI modules
+- [`url_metadata`](https://github.com/seanbreckenridge/url_metadata) - caches youtube subtitles, url metadata (title, description, image links), and a html/plaintext summary for any URL
 
 I also use this in [`my_feed`](https://github.com/seanbreckenridge/my_feed), which creates a feed of media/data using `HPI`, live at <https://sean.fish/feed/>
 

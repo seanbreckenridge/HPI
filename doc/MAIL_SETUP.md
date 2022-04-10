@@ -60,7 +60,7 @@ class mail:
 
 You can also use both of these at the same time -- if you have some exported as individual text files and others as mbox files, setup a config like above, specifying `mailboxes` from both `imap` and `mbox`
 
-Then -- you can just use the `my.mbox.all.mail` function, which return unique messages from both sources
+Then -- you can just use the `my.mbox.all.mail` function, which returns unique messages from both sources
 
 ## Testing
 
