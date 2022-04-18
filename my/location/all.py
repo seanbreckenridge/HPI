@@ -13,7 +13,7 @@ from my.location.ip import ips
 from my.location.gpslogger import history as gpslogger_history
 from my.apple.privacy_export import events as apple_events, Location as AppleLocation
 
-from my.google_takeout import (
+from my.google.takeout.parser import (
     events as google_events,
     _cachew_depends_on as _google_cachew_depends_on,
 )

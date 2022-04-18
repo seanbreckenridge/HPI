@@ -16,7 +16,6 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 
 - `my.zsh` and `my.bash`, access to my shell history w/ timestamps
 - `my.mail.imap` and `my.mail.mbox` to parse local IMAP sync's of my mail/mbox files -- see [doc/MAIL_SETUP.md](doc/MAIL_SETUP.md)
-- `my.google_takeout`, parses lots of (~500,000) events (youtube, searches, phone usage, comments, location history) from [google takeouts](https://takeout.google.com/), using [`google_takeout_parser`](https://github.com/seanbreckenridge/google_takeout_parser)
 - `my.mpv.history_daemon`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-history-daemon)
 - `my.discord.data_export`, parses ~1,000,000 messages/events from the discord data export, parser [here](https://github.com/seanbreckenridge/discord_data)
 - `my.todotxt.git_history`, to track my to-do list history (using backups of my [`todotxt`](http://todotxt.org/) files in [`git_doc_history`](https://github.com/seanbreckenridge/git_doc_history))
@@ -57,6 +56,7 @@ I also have some more personal scripts/modules in a separate repo; [`HPI-persona
 ### In-use from [karlicoss/HPI](https://github.com/karlicoss/HPI)
 
 - `my.browser`, to parse browser history using [`browserexport`](https://github.com/seanbreckenridge/browserexport)
+- `my.google.takeout.parser`, parses lots of (~500,000) events (youtube, searches, phone usage, comments, location history) from [google takeouts](https://takeout.google.com/), using [`google_takeout_parser`](https://github.com/seanbreckenridge/google_takeout_parser)
 - `my.coding.commits` to track git commits across the system
 - `my.github` to track github events/commits and parse the GDPR export, using [`ghexport`](https://github.com/karlicoss/ghexport)
 - `my.reddit`, get saved posts, comments. Uses [`rexport`](https://github.com/karlicoss/rexport) to create backups of recent activity periodically, and [`pushshift`](https://github.com/seanbreckenridge/pushshift_comment_export) to get old comments.
