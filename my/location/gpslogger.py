@@ -33,6 +33,8 @@ logger = LazyLogger(__name__, level="warning")
 
 class Location(NamedTuple):
     dt: datetime
+    accuracy: float
+    elevation: float
     lat: float
     lng: float
 
@@ -55,7 +57,13 @@ def history(from_paths: InputSource = inputs) -> Results:
     )
 
 
-def _extract_locations(path: Path) -> Iterator[Location]:
+# default accuracy for gpslogger
+DEFAULT_ACCURACY = 50.0
+
+
+def _extract_locations(
+    path: Path, accuracy: float = DEFAULT_ACCURACY
+) -> Iterator[Location]:
     with path.open("r") as gf:
         gpx_obj = gpxpy.parse(gf)
         for track in gpx_obj.tracks:
@@ -63,10 +71,11 @@ def _extract_locations(path: Path) -> Iterator[Location]:
                 for point in segment.points:
                     if point.time is None:
                         continue
-                    # TODO: use elevation?
                     yield Location(
                         lat=point.latitude,
                         lng=point.longitude,
+                        accuracy=accuracy,
+                        elevation=point.elevation,
                         dt=datetime.replace(point.time, tzinfo=timezone.utc),
                     )
 
