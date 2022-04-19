@@ -14,11 +14,14 @@ class config(user_config):
     # path[s]/glob to the synced gpx (XML) files
     export_path: Paths
 
+    # default accuracy for gpslogger
+    accuracy: float = 50.0
+
 
 from itertools import chain
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import NamedTuple, Iterator, Sequence, List
+from typing import NamedTuple, Iterator, Sequence, List, Optional
 
 import gpxpy  # type: ignore[import]
 from more_itertools import unique_everseen
@@ -34,9 +37,9 @@ logger = LazyLogger(__name__, level="warning")
 class Location(NamedTuple):
     dt: datetime
     accuracy: float
-    elevation: float
     lat: float
     lng: float
+    elevation: Optional[float]
 
 
 Results = Iterator[Location]
@@ -57,13 +60,7 @@ def history(from_paths: InputSource = inputs) -> Results:
     )
 
 
-# default accuracy for gpslogger
-DEFAULT_ACCURACY = 50.0
-
-
-def _extract_locations(
-    path: Path, accuracy: float = DEFAULT_ACCURACY
-) -> Iterator[Location]:
+def _extract_locations(path: Path) -> Iterator[Location]:
     with path.open("r") as gf:
         gpx_obj = gpxpy.parse(gf)
         for track in gpx_obj.tracks:
@@ -74,7 +71,7 @@ def _extract_locations(
                     yield Location(
                         lat=point.latitude,
                         lng=point.longitude,
-                        accuracy=accuracy,
+                        accuracy=config.accuracy,
                         elevation=point.elevation,
                         dt=datetime.replace(point.time, tzinfo=timezone.utc),
                     )
