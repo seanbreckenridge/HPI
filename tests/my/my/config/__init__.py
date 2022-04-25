@@ -133,10 +133,6 @@ class ipython:
     export_path: Paths = ""
 
 
-class google:
-    takeout_path: Paths = ""
-
-
 class ttt:
     export_path: Paths = ""
 

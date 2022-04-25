@@ -153,7 +153,6 @@ module_dependencies() {
 	echo "Installing module dependencies" | maybe_boxes
 	hpi_module my.window_watcher || return $?
 	hpi_module my.discord.data_export || return $?
-	hpi_module my.google_takeout || return $?
 	hpi_module my.time.tz.via_location || return $?
 	hpi_module my.todotxt.git_history || return $?
 	hpi_module my.location.ip || return $?
@@ -194,7 +193,6 @@ ci_mypy() {
 		-p my.chess.export \
 		-p my.discord.data_export \
 		-p my.facebook.gdpr \
-		-p my.google_takeout \
 		-p my.grouvee.export \
 		-p my.ipython \
 		-p my.league.export \
