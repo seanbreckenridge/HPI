@@ -157,7 +157,6 @@ module_dependencies() {
 	hpi_module my.todotxt.git_history || return $?
 	hpi_module my.ip.all || return $?
 	hpi_module my.linkedin.privacy_export || return $?
-	hpi_module my.location.gpslogger || return $?
 	hpi_module my.chess.export || return $?
 	hpi_module my.mpv.history_daemon || return $?
 	hpi_module my.league.export || return $?
@@ -194,16 +193,18 @@ ci_mypy() {
 		-p my.discord.data_export \
 		-p my.facebook.gdpr \
 		-p my.grouvee.export \
+		-p my.ip.all \
+		-p my.ip.blizzard \
+		-p my.ip.discord \
+		-p my.ip.facebook \
 		-p my.ipython \
 		-p my.league.export \
+		-p my.linkedin.privacy_export \
 		-p my.listenbrainz.export \
-		-p my.location.all \
-		-p my.location.gpslogger \
-		-p my.location.ip \
-		-p my.location.models \
-		-p my.mail.imap \
+		-p my.location.apple \
 		-p my.mail.all \
 		-p my.mail.common \
+		-p my.mail.imap \
 		-p my.mail.mbox \
 		-p my.mal.export \
 		-p my.mpv.history_daemon \
@@ -214,7 +215,6 @@ ci_mypy() {
 		-p my.skype.gdpr \
 		-p my.spotify.gdpr \
 		-p my.steam.scraper \
-		-p my.time.tz.via_location \
 		-p my.todotxt.git_history \
 		-p my.trakt.export \
 		-p my.ttt \
