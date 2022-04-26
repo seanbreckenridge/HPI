@@ -4,7 +4,7 @@ Combines IPs from data exports which include IP addresses
 
 from typing import Iterator
 
-from my.ip.common import IP
+from my.ip.common import IP  # type: ignore[import]
 
 from my.core.common import LazyLogger
 

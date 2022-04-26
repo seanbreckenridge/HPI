@@ -1,7 +1,7 @@
 from typing import Iterator, List
 from pathlib import Path
 
-from my.ip.common import IP, drop_private
+from my.ip.common import IP, drop_private  # type: ignore[import]
 
 from my.core.source import import_source
 from my.core.common import mcachew, LazyLogger

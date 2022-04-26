@@ -1,7 +1,7 @@
 from typing import Iterator
 
 from my.core.source import import_source
-from my.location.common import Location  # type: ignore[attr-defined]
+from my.location.common import Location  # type: ignore[import]
 
 
 @import_source(module_name="my.apple.privacy_export")

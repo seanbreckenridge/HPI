@@ -1,7 +1,7 @@
 from typing import Iterator
 
 from my.core.source import import_source
-from my.ip.common import IP
+from my.ip.common import IP  # type: ignore[import]
 
 
 @import_source(module_name="my.blizzard.gdpr")
