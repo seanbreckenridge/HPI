@@ -62,6 +62,18 @@ I also have some more personal scripts/modules in a separate repo; [`HPI-persona
 - `my.smscalls`, exports call/sms history using [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore&hl=en_US)
 - `my.stackexchange.stexport`, for stackexchange data using [`stexport`](https://github.com/karlicoss/stexport)
 
+#### Partially in-use/with overrides:
+
+- `my.location`, though since I also have some locations from `apple.privacy_export`, I have a [`my.location.apple`](./my/location/apple.py) which I then merge into `my.location.all` in my overriden [`all.py`](https://github.com/seanbreckenridge/HPI-personal/blob/master/my/location/all.py) file on my personal repo
+- similarly, I do use `my.ip` and `my.location.via_ip` from upstream, but I have [overriden `all.py` and module files here](https://github.com/seanbreckenridge/HPI/tree/master/my/ip)
+
+'Overriding' an `all.py` file means replacing the `all.py` from upstream repo (this means it can use my sources here to grab more locations/ips, since those don't exist in the upstream). For more info see [reorder_editable](https://github.com/seanbreckenridge/reorder_editable#editable-namespace-packages), and the [module design](https://github.com/karlicoss/HPI/blob/master/doc/MODULE_DESIGN.org#adding-new-modules) docs for HPI, but you might be able to get the gist by comparing:
+
+- [my.location.all](https://github.com/karlicoss/HPI/blob/master/my/location/all.py) in `karlicoss/HPI`
+- [my.location.all](https://github.com/seanbreckenridge/HPI-personal/blob/master/my/location/all.py) in `seanbreckenridge/HPI-personal`
+
+Since I've mangled my `PYTHONPATH` (see [reorder_editable](https://github.com/seanbreckenridge/reorder_editable#editable-namespace-packages)), it imports from my repo instead of `karlicoss/HPI`. `all.py` files tend to pretty small -- so overriding/changing a line to add a source is the whole point.
+
 ### Companion Tools/Libraries
 
 Disregarding tools which actively collect data (like [`ttt`](https://github.com/seanbreckenridge/ttt)/[`window_watcher`](https://github.com/seanbreckenridge/aw-watcher-window)) or repositories which have their own exporter/parsers which are used here, there are a couple other tools/libraries I've created for this project:
