@@ -155,7 +155,7 @@ module_dependencies() {
 	hpi_module my.discord.data_export || return $?
 	hpi_module my.time.tz.via_location || return $?
 	hpi_module my.todotxt.git_history || return $?
-	hpi_module my.ip.common || return $?
+	hpi_module my.ip.all || return $?
 	hpi_module my.linkedin.privacy_export || return $?
 	hpi_module my.location.gpslogger || return $?
 	hpi_module my.chess.export || return $?
