@@ -1,5 +1,6 @@
 from typing import Iterator
 
+from my.core.common import Stats
 from my.core.source import import_source
 from my.location.common import Location  # type: ignore[import]
 
@@ -11,3 +12,9 @@ def locations() -> Iterator[Location]:
     for a in events():
         if isinstance(a, AppleLocation) and not isinstance(a, Exception):
             yield Location(lon=a.lng, lat=a.lat, dt=a.dt, accuracy=50, elevation=None)
+
+
+def stats() -> Stats:
+    from my.core import stat
+
+    return {**stat(locations)}
