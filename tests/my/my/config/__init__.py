@@ -162,21 +162,6 @@ class runelite:
         export_path: Paths = ""
 
 
-class gpslogger:
-    export_path: Paths = ""
-
-
 class time:
     class tz:
         policy = "convert"
-
-
-from typing import Sequence, Union, Tuple
-from datetime import datetime, date
-
-DateIsh = Union[datetime, date, str]
-LatLon = Tuple[float, float]
-
-
-class location:
-    home: Union[LatLon, Sequence[Tuple[DateIsh, LatLon]]] = (1.0, -1.0)
