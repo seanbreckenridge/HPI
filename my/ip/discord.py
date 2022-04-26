@@ -4,7 +4,7 @@ from my.ip.common import IP, drop_private  # type: ignore[import]
 
 
 from my.core.source import import_source
-from my.core.common import mcachew, LazyLogger
+from my.core.common import mcachew, LazyLogger, Stats
 
 logger = LazyLogger(__name__)
 
@@ -21,3 +21,9 @@ def ips() -> Iterator[IP]:
                 yield IP(dt=a.timestamp, addr=a.fingerprint.ip)
 
     yield from drop_private(_discord_ips())
+
+
+def stats() -> Stats:
+    from my.core import stat
+
+    return {**stat(ips)}

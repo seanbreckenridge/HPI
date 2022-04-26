@@ -1,5 +1,6 @@
 from typing import Iterator
 
+from my.core import Stats
 from my.core.source import import_source
 from my.ip.common import IP  # type: ignore[import]
 
@@ -11,3 +12,9 @@ def ips() -> Iterator[IP]:
     for e in blizzard_events():
         if e.event_tag == "Activity History":
             yield IP(dt=e.dt, addr=e.metadata[-2])
+
+
+def stats() -> Stats:
+    from my.core import stat
+
+    return {**stat(ips)}

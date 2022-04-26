@@ -8,7 +8,7 @@ from typing import Iterator
 
 from my.ip.common import IP  # type: ignore[import]
 
-from my.core.common import LazyLogger
+from my.core.common import LazyLogger, Stats
 
 logger = LazyLogger(__name__)
 
@@ -22,3 +22,9 @@ def ips() -> Iterator[IP]:
     yield from facebook.ips()
     yield from discord.ips()
     yield from blizzard.ips()
+
+
+def stats() -> Stats:
+    from my.core import stat
+
+    return {**stat(ips)}
