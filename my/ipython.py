@@ -38,8 +38,10 @@ from itertools import chain
 
 from IPython.core.history import HistoryAccessor  # type: ignore[import]
 
-from my.core import get_files, warn_if_empty, Stats, Res
+from my.core import get_files, warn_if_empty, Stats, Res, LazyLogger
 from my.utils.input_source import InputSource
+
+logger = LazyLogger(__name__)
 
 
 class Command(NamedTuple):
@@ -92,7 +94,8 @@ def _parse_database(sqlite_database: str) -> Results:
     hist = HistoryAccessor(hist_file=sqlite_database)
     try:
         total_sessions: Optional[int] = hist.get_last_session_id()
-    except Exception:
+    except Exception as e:
+        logger.debug(f"Failed to get last session id: {e}")
         # if database is corrupt/fails to compute sessions, skip
         return
     if total_sessions is None:
