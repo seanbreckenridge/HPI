@@ -3,6 +3,8 @@ from pathlib import Path
 
 import click
 
+from my.core import __NOT_HPI_MODULE__  # noqa: F401
+
 # if the HPIDATA environment variable is set (which points to my data)
 # use that. Else, just default to ~/data
 BASE_PREFIX: Path = Path(environ.get("HPIDATA", path.join(environ["HOME"], "data")))

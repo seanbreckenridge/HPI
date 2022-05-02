@@ -8,3 +8,12 @@ def events() -> Results:
 
     yield from chatlog_events()
     yield from gdpr_events()
+
+
+from my.core import Stats
+
+
+def stats() -> Stats:
+    from my.core import stat
+
+    return {**stat(events)}

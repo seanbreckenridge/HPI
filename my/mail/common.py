@@ -17,7 +17,7 @@ from mailparser import MailParser  # type: ignore[import]
 from mailparser.exceptions import MailParserReceivedParsingError  # type: ignore[import]
 from more_itertools import unique_everseen
 
-from my.core import LazyLogger
+from my.core import LazyLogger, __NOT_HPI_MODULE__  # noqa: F401
 
 REQUIRES = ["mail-parser", "dateparser"]
 
