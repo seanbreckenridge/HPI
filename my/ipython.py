@@ -90,7 +90,11 @@ def _merge_histories(*sources: Results) -> Results:
 
 def _parse_database(sqlite_database: str) -> Results:
     hist = HistoryAccessor(hist_file=sqlite_database)
-    total_sessions: Optional[int] = hist.get_last_session_id()
+    try:
+        total_sessions: Optional[int] = hist.get_last_session_id()
+    except Exception:
+        # if database is corrupt/fails to compute sessions, skip
+        return
     if total_sessions is None:
         return
     # yes, these start at 1
