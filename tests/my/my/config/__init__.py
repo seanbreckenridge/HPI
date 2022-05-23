@@ -4,7 +4,8 @@ Config file used for testing in CI; so that config is defined
 
 
 import tempfile
-from typing import Optional, List, Sequence
+from pathlib import Path
+from typing import Optional, List, Sequence, Callable
 
 from os import environ, path
 
@@ -21,6 +22,8 @@ class core:
 class mail:
     class imap:
         mailboxes: Paths = ""
+        # filter function which filters the input paths
+        filter_path: Optional[Callable[[Path], bool]] = None
 
     class mbox:
         mailboxes: Paths = ""

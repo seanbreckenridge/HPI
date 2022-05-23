@@ -22,6 +22,9 @@ class mail:
         # mailboxes = "~/Documents/mbsync/*@*"
         # to match any files in that directory with '@' in them
         mailboxes = "~/Documents/ExportPlaintext/"
+
+        # filter function which filters the input paths
+        filter_path: Optional[Callable[[Path], bool]]
 ```
 
 To verify its finding your files, you can use `hpi query my.mail.imap.files -s` -- that'll print all the matched files

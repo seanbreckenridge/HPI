@@ -12,25 +12,33 @@ from my.config import mail as user_config  # type: ignore[attr-defined]
 from pathlib import Path
 from typing import (
     Iterator,
+    Callable,
+    Optional,
     List,
 )
 
 
-from my.core import Stats, Paths, dataclass, get_files
+from my.core import Stats, Paths, dataclass, get_files, make_config
 from .common import Email, unique_mail
 
 
 @dataclass
-class config(user_config.imap):
+class imap_conf(user_config.imap):
     # path[s]/glob to the the individual email files -- searches recusively
     mailboxes: Paths
+
+    # filter function which filters the input paths
+    filter_path: Optional[Callable[[Path], bool]] = None
+
+
+config = make_config(imap_conf)
 
 
 def mailboxes() -> List[Path]:
     return list(get_files(config.mailboxes))
 
 
-def files() -> Iterator[Path]:
+def _files() -> Iterator[Path]:
     for box in mailboxes():
         for path in box.rglob("*"):
             if not path.is_file():
@@ -38,6 +46,14 @@ def files() -> Iterator[Path]:
             if path.stem.startswith("."):
                 continue
             yield path
+
+
+def files() -> Iterator[Path]:
+    if config.filter_path is None:
+        yield from _files()
+    else:
+        assert callable(config.filter_path)
+        yield from filter(config.filter_path, _files())
 
 
 def raw_mail() -> Iterator[Email]:
