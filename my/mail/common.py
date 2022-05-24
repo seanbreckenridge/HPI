@@ -169,13 +169,8 @@ Subject: {self.subject}"""
     @property
     def subparts(self) -> Iterator[MessagePart]:
         for payload, content_type in tag_message_subparts(self.message):
-            ctype = (
-                content_type
-                if isinstance(content_type, str)
-                else str(content_type.value)
-            )
             yield MessagePart(
-                content_type=ctype,
+                content_type=content_type,
                 payload=payload,
                 _email=self,
             )

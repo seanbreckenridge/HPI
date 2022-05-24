@@ -2,8 +2,7 @@
 Some helper functions/constants for parsing message subparts/ignoring certain content types
 """
 
-from typing import Iterator, Tuple, Set, Union, Any
-from enum import Enum
+from typing import Iterator, Tuple, Set, Union, Any, Literal
 from email.message import Message
 
 # explicity ignored types, anything else sends a warning
@@ -44,9 +43,7 @@ def get_message_parts(m: Message) -> Iterator[Message]:
             yield part
 
 
-class EmailText(Enum):
-    html = "html"
-    text = "text"
+EmailText = Literal["html", "text"]
 
 
 EmailTextOrContentType = Union[EmailText, str]
@@ -69,9 +66,9 @@ def tag_message_subparts(
             yield payload, content_type
 
         if content_type.startswith("text") and "html" in content_type:
-            yield payload, EmailText.html
+            yield payload, "html"
         elif content_type == "text/plain":
-            yield payload, EmailText.text
+            yield payload, "text"
         else:
             # unknown ignored content types
             yield payload, content_type
