@@ -12,7 +12,7 @@ src_mbox = import_source(module_name="my.mail.mbox")
 
 
 # top-level import -- this whole module requires mail-parser/dateparser
-from .common import Email, unique_mail
+from .common import Email, unique_mail, MessagePart
 
 
 @src_imap
@@ -37,6 +37,11 @@ def mail() -> Iterator[Email]:
             _mail_imap(),
         )
     )
+
+
+def mail_subparts() -> Iterator[MessagePart]:
+    for m in mail():
+        yield from m.subparts
 
 
 def stats() -> Stats:

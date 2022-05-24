@@ -2,6 +2,8 @@ import logging
 from pathlib import Path
 from email.message import Message
 from typing import (
+    List,
+    Tuple,
     TextIO,
     Iterator,
     Optional,
@@ -11,6 +13,7 @@ from typing import (
     cast,
 )
 from datetime import datetime
+from dataclasses import dataclass
 
 import dateparser
 from mailparser import MailParser  # type: ignore[import]
@@ -18,6 +21,8 @@ from mailparser.exceptions import MailParserReceivedParsingError  # type: ignore
 from more_itertools import unique_everseen
 
 from my.core import LazyLogger, __NOT_HPI_MODULE__  # noqa: F401
+
+from .parse_parts import tag_message_subparts
 
 REQUIRES = ["mail-parser", "dateparser"]
 
@@ -30,6 +35,13 @@ mlog.addHandler(logging.NullHandler())
 mlog.propagate = False
 
 logger = LazyLogger(__name__)
+
+
+@dataclass
+class MessagePart:
+    content_type: str
+    payload: Any
+    _email: "Email"
 
 
 class Email(MailParser):
@@ -101,6 +113,12 @@ class Email(MailParser):
             "to_domains": self.to_domains,
         }
 
+    @property
+    def description(self) -> str:
+        return f"""From: {describe_persons(self.from_)}
+To: {describe_persons(self.to)}
+Subject: {self.subject}"""
+
     @classmethod
     def safe_parse(
         cls, fp: Union[str, bytes, Message, TextIO], display_filename: Path
@@ -148,6 +166,20 @@ class Email(MailParser):
         m.filepath = path
         return m
 
+    @property
+    def subparts(self) -> Iterator[MessagePart]:
+        for payload, content_type in tag_message_subparts(self.message):
+            ctype = (
+                content_type
+                if isinstance(content_type, str)
+                else str(content_type.value)
+            )
+            yield MessagePart(
+                content_type=ctype,
+                payload=payload,
+                _email=self,
+            )
+
 
 def unique_mail(emails: Iterator[Email]) -> Iterator[Email]:
     # remove duplicates (from a file being
@@ -173,3 +205,29 @@ def try_decode_buf(buf: bytes) -> str:
             return buf.decode("iso-8859-1")
         except UnicodeDecodeError:
             return buf.decode("latin-1")
+
+
+def describe_person(p: Tuple[str, str]) -> str:
+    """
+    (
+        "Person",
+        "emailhere@gmail.com"
+    )
+    converts to
+    Person <emailhere@gmail.com>
+    if theres no 'Person' text, it
+    just becomes:
+    emailhere@gmail.com
+    """
+    if p[0].strip():
+        return f"{p[0]} <{p[1]}>"
+    else:
+        return p[1]
+
+
+def describe_persons(m: List[Tuple[str, str]]) -> str:
+    """
+    >>> [('Google', 'no-reply@accounts.google.com'), ('Github', 'no-reply@github.com')]
+    'Google <no-reply@accounts.google.com>, Github <no-reply@github.com>'
+    """
+    return ", ".join([describe_person(p) for p in m])
