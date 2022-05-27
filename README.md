@@ -10,7 +10,7 @@ It's a Python library (named `my`), a collection of modules for:
 
 [_Why?_](https://github.com/karlicoss/HPI#why)
 
-This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It started out as a fork, but has since been converted to my own set of modules. This is installed alongside the upstream repository, see [#install](#install)
+This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It started out as a fork, but has since been converted to my own set of modules. This is installed alongside the upstream repository (meaning _you can use both modules from upstream and here simultaneously_), see [#install](#install)
 
 ### My Modules
 
@@ -64,8 +64,8 @@ I also have some more personal scripts/modules in a separate repo; [`HPI-persona
 
 #### Partially in-use/with overrides:
 
-- `my.location`, though since I also have some locations from `apple.privacy_export`, I have a [`my.location.apple`](./my/location/apple.py) which I then merge into `my.location.all` in my overriden [`all.py`](https://github.com/seanbreckenridge/HPI-personal/blob/master/my/location/all.py) file on my personal repo
-- similarly, I do use `my.ip` and `my.location.via_ip` from upstream, but I have [overriden `all.py` and module files here](https://github.com/seanbreckenridge/HPI/tree/master/my/ip)
+- `my.location`, though since I also have some locations from `apple.privacy_export`, I have a [`my.location.apple`](./my/location/apple.py) which I then merge into `my.location.all` in my overridden [`all.py`](https://github.com/seanbreckenridge/HPI-personal/blob/master/my/location/all.py) file on my personal repo
+- similarly, I do use `my.ip` and `my.location.via_ip` from upstream, but I have [overridden `all.py` and module files here](https://github.com/seanbreckenridge/HPI/tree/master/my/ip)
 
 'Overriding' an `all.py` file means replacing the `all.py` from upstream repo (this means it can use my sources here to grab more locations/ips, since those don't exist in the upstream). For more info see [reorder_editable](https://github.com/seanbreckenridge/reorder_editable#editable-namespace-packages), and the [module design](https://github.com/karlicoss/HPI/blob/master/doc/MODULE_DESIGN.org#adding-new-modules) docs for HPI, but you might be able to get the gist by comparing:
 
@@ -160,27 +160,36 @@ $ hpi query ttally.funcs.food --recent 1d -s | jq -r '(.quantity)*(.calories)' |
 
 ### Install
 
-The [`install` script here](./install) first installs the upstream repo ([`karlicoss/HPI`](https://github.com/karlicoss/HPI)) as a editable package, then sets up this repository along side it -- this is possible because `HPI` is a namespace package.
-
-For more information on that, and some of the complications one can run into, see [reorder_editable](https://github.com/seanbreckenridge/reorder_editable#editable-namespace-packages), and the [module design](https://github.com/karlicoss/HPI/blob/master/doc/MODULE_DESIGN.org#adding-new-modules) docs for HPI.
-
-Disregarding setting up all the dependencies for individual (e.g. `my.ipython`) modules (which is why the [`install`](./install) script exists), this is setup by doing:
+For the basic setup, I recommend you clone and install both directories as editable installs:
 
 ```bash
 # clone and install upstream as an editable package
 git clone https://github.com/karlicoss/HPI ./HPI-karlicoss
-python3 -m pip install -e ./HPI-karlicoss
+python3 -m pip install --user -e ./HPI-karlicoss
 
 # clone and install my repository as an editable package
 git clone https://github.com/seanbreckenridge/HPI ./HPI-seanb
-python3 -m pip install -e ./HPI-seanb
+python3 -m pip install --user -e ./HPI-seanb
+```
 
-# make sure my easy-install.pth is ordered correctly
-python3 -m pip install reorder_editable
+Editable install means any changes to python files reflect immediately, which is very convenient for debugging and developing new modules. To update, you can just `git pull` in those directories.
+
+If you care about [overriding modules](https://github.com/seanbreckenridge/HPI#partially-in-usewith-overrides), to make sure your `easy-install.pth` is ordered correctly:
+
+```bash
+python3 -m pip install --user reorder_editable
 python3 -m reorder_editable reorder ./HPI-seanb ./HPI-karlicoss
 ```
 
-Those directories are editable installs, meaning any changes I make to them get applied immediately, which is very convenient for debugging and developing new modules.
+Then, you likely need to run `hpi module install` for any modules you plan on using -- this can be done incrementally as you setup new modules. E.g.:
+
+- `hpi module install my.trakt.export` to install dependencies
+- Check the [stub config](./tests/my/my/config/__init__.py) or [my config](https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py) and setup the config block in your HPI configuration file
+- Run `hpi doctor my.trakt.export` to check for any possible config issues/if your data is being loaded properly
+
+(The [install](./install) script does that for all my modules, but you likely don't want to do that)
+
+Its possible to install both `my` packages because `HPI` is a namespace package. For more information on that, and some of the complications one can run into, see [reorder_editable](https://github.com/seanbreckenridge/reorder_editable#editable-namespace-packages), and the [module design](https://github.com/karlicoss/HPI/blob/master/doc/MODULE_DESIGN.org#adding-new-modules) docs for HPI.
 
 If you're having issues installing/re-installing, check the [TROUBLESHOOTING_INSTALLS.md](doc/TROUBLESHOOTING_INSTALLS.md) file.
 
