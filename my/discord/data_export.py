@@ -22,9 +22,10 @@ class config(user_config.data_export):
 
 
 from typing import Iterator, Optional, Tuple, Set
+from datetime import datetime
+
 from my.core.common import LazyLogger, Stats, mcachew, get_files
 from my.core.structure import match_structure
-
 from discord_data.parse import parse_messages, parse_activity
 from discord_data.model import Activity, Message
 from urlextract import URLExtract  # type: ignore[import]
@@ -142,10 +143,49 @@ def activity() -> Iterator[Activity]:
                     emitted.add(act.event_id)
 
 
+@dataclass
+class Reaction:
+    message_id: int
+    emote: str
+    timestamp: datetime
+
+
+@mcachew(depends_on=_cachew_depends_on, logger=logger)
+def reactions() -> Iterator[Reaction]:
+    for act in activity():
+        jd = act.json_data
+        if "emoji_name" in jd:
+            yield Reaction(
+                message_id=int(jd["message_id"]),
+                emote=jd["emoji_name"],
+                timestamp=act.timestamp,
+            )
+
+
+@dataclass
+class AppLaunch:
+    name: str
+    timestamp: datetime
+
+
+@mcachew(depends_on=_cachew_depends_on, logger=logger)
+def app_launches() -> Iterator[AppLaunch]:
+    for act in activity():
+        jd = act.json_data
+        name = jd.get("game") or jd.get("application")
+        if name is not None:
+            yield AppLaunch(
+                name=name,
+                timestamp=act.timestamp,
+            )
+
+
 def stats() -> Stats:
     from my.core import stat
 
     return {
         **stat(messages),
         **stat(activity),
+        **stat(reactions),
+        **stat(app_launches),
     }
