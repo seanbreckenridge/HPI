@@ -21,7 +21,7 @@ class config(user_config.data_export):
     export_path: PathIsh
 
 
-from typing import Iterator, Optional, Tuple, Set
+from typing import Iterator, Optional, Tuple, Set, NamedTuple
 from datetime import datetime
 
 from my.core.common import LazyLogger, Stats, mcachew, get_files
@@ -143,8 +143,7 @@ def activity() -> Iterator[Activity]:
                     emitted.add(act.event_id)
 
 
-@dataclass
-class Reaction:
+class Reaction(NamedTuple):
     message_id: int
     emote: str
     timestamp: datetime
@@ -154,7 +153,7 @@ class Reaction:
 def reactions() -> Iterator[Reaction]:
     for act in activity():
         jd = act.json_data
-        if "emoji_name" in jd:
+        if "emoji_name" in jd and "message_id" in jd:
             yield Reaction(
                 message_id=int(jd["message_id"]),
                 emote=jd["emoji_name"],
@@ -162,8 +161,7 @@ def reactions() -> Iterator[Reaction]:
             )
 
 
-@dataclass
-class AppLaunch:
+class AppLaunch(NamedTuple):
     name: str
     timestamp: datetime
 
