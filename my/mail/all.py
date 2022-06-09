@@ -6,9 +6,10 @@ from my.core.source import import_source
 
 REQUIRES = ["mail-parser", "dateparser"]
 
+MAIL_HELP = "https://github.com/seanbreckenridge/HPI/blob/master/doc/MAIL_SETUP.md"
 
-src_imap = import_source(module_name="my.mail.imap")
-src_mbox = import_source(module_name="my.mail.mbox")
+src_imap = import_source(module_name="my.mail.imap", help_url=MAIL_HELP)
+src_mbox = import_source(module_name="my.mail.mbox", help_url=MAIL_HELP)
 
 
 # top-level import -- this whole module requires mail-parser/dateparser
