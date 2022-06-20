@@ -211,6 +211,7 @@ ci_mypy() {
 		-p my.project_euler \
 		-p my.rss.newsboat.git_history \
 		-p my.runelite.screenshots \
+		-p my.minecraft.advancements \
 		-p my.skype.gdpr \
 		-p my.spotify.gdpr \
 		-p my.steam.scraper \

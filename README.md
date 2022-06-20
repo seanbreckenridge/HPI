@@ -29,6 +29,7 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 - `my.mal.export`, for anime/manga history using [`malexport`](https://github.com/seanbreckenridge/malexport)
 - `my.grouvee.export`, for my video game history/backlog using [`grouvee_export`](https://github.com/seanbreckenridge/grouvee_export)
 - `my.runelite.screenshots`, parses data from the [automatic runelite screenshots](https://github.com/runelite/runelite/wiki/Screenshot)
+- `my.minecraft.advancements`, parses advancement (local achievement data) from the `~/.minecraft` directory
 - `my.project_euler`, when I solved [Project Euler](https://projecteuler.net/) problems
 - `my.linkedin.privacy_export`, to parse the [privacy export](https://www.linkedin.com/help/linkedin/answer/50191/downloading-your-account-data?lang=en) from linkedin
 

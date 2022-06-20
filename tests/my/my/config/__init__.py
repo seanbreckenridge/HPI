@@ -165,6 +165,11 @@ class runelite:
         export_path: Paths = ""
 
 
+class minecraft:
+    class advancements:
+        export_path: Paths = ""
+
+
 class time:
     class tz:
         policy = "convert"
