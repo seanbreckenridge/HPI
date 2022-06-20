@@ -80,14 +80,13 @@ def _parse_world(world_dir: Path) -> Results:
     for f in _advancement_json_files(world_dir):
         data = json.loads(f.read_text())
         for key, val in data.items():
-            # ignore advances in 'can craft things'
-            if key.startswith("minecraft:recipes"):
+            # ignore advanced in crafting recipes
+            # and random non-dict values (version numbers etc.)
+            if key.startswith("minecraft:recipes") or not isinstance(val, dict):
                 continue
-            if not isinstance(val, dict):
+            # if just a marker and not 'done', don't include
+            if "done" in val and val["done"] is False:
                 continue
-            if "done" in val:
-                if val["done"] is False:
-                    continue
             possible_date_blobs: List[Dict[Any, Any]] = [
                 v for v in val.values() if isinstance(v, dict)
             ]
