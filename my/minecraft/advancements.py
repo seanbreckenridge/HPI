@@ -88,7 +88,7 @@ def _parse_world(world_dir: Path) -> Results:
             if "done" in val:
                 if val["done"] is False:
                     continue
-            possible_date_blobs: list[Dict[Any, Any]] = [
+            possible_date_blobs: List[Dict[Any, Any]] = [
                 v for v in val.values() if isinstance(v, dict)
             ]
             for blob in possible_date_blobs:
