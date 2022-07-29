@@ -9,18 +9,24 @@ REQUIRES = ["git+https://github.com/seanbreckenridge/mpv-history-daemon"]
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import mpv as user_config  # type: ignore[attr-defined]
 
-from my.core import Paths, dataclass
+from typing import Iterator, Sequence, List, Optional
+from my.core import Paths, dataclass, make_config
 
 
 @dataclass
-class config(user_config.history_daemon):
+class mpv_config(user_config.history_daemon):
     # glob to the JSON files that the daemon writes whenever Im using mpv
     export_path: Paths
+
+    # amount of song I should have listened to to qualify it as a listen (e.g. 0.5, 0.75)
+    require_percent: Optional[float] = None
+
+
+config = make_config(mpv_config)
 
 
 import os
 from pathlib import Path
-from typing import Iterator, Sequence, List
 
 from mpv_history_daemon.events import (
     Media,
@@ -74,8 +80,9 @@ def _filter_by(m: Media) -> bool:
         if m.listen_time > 10800:
             logger.debug(f"Assuming this is a broken file: {str(m)}")
             return False
+    perc = config.require_percent or 0.75
     # fallback to library func
-    return _actually_listened_to(m)
+    return _actually_listened_to(m, require_listened_to_percent=perc)
 
 
 @mcachew(depends_on=_cachew_depends_on, logger=logger)

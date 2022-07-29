@@ -53,6 +53,7 @@ class rss:
 class mpv:
     class history_daemon:
         export_path: Paths = ""
+        require_percent: Optional[float] = 0.75
 
 
 class league:
