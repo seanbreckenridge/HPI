@@ -35,7 +35,6 @@ from mpv_history_daemon.events import (
 )
 
 from my.core import get_files, Stats, LazyLogger
-from my.core.common import mcachew
 from my.utils.input_source import InputSource
 
 # monkey patch logs
@@ -66,10 +65,6 @@ def inputs() -> Sequence[Path]:
     return get_files(config.export_path)
 
 
-def _cachew_depends_on(for_paths: InputSource = inputs) -> List[float]:
-    return [p.stat().st_mtime for p in sorted(for_paths())]
-
-
 def _filter_by(m: Media) -> bool:
     if m.is_stream:
         return True
@@ -85,12 +80,9 @@ def _filter_by(m: Media) -> bool:
     return _actually_listened_to(m, require_listened_to_percent=perc)
 
 
-@mcachew(depends_on=_cachew_depends_on, logger=logger)
 def all_history(from_paths: InputSource = inputs) -> Results:
     yield from M_all_history(list(from_paths()))
 
 
-# filter out items I probably didn't listen to
-@mcachew(depends_on=_cachew_depends_on, logger=logger)
 def history(from_paths: InputSource = inputs) -> Results:
     yield from filter(_filter_by, all_history(from_paths))
