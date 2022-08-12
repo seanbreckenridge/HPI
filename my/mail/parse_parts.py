@@ -5,7 +5,7 @@ Some helper functions/constants for parsing message subparts/ignoring certain co
 from typing import Iterator, Tuple, Set, Union, Any, Literal
 from email.message import Message
 
-# explicity ignored types, anything else sends a warning
+# explicitly ignored types, anything else sends a warning
 IGNORED_CONTENT_TYPES = {
     "text/calendar",
     "application/ics",
