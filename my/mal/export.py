@@ -20,6 +20,7 @@ from my.core.structure import match_structure
 from malexport.parse.combine import combine, AnimeData, MangaData
 from malexport.parse.forum import Post, iter_forum_posts
 from malexport.parse.friends import Friend, iter_friends
+from malexport.parse.messages import Thread, Message, iter_user_threads
 
 
 @dataclass
@@ -119,6 +120,16 @@ def chapters() -> Iterator[Chapter]:
 def posts() -> Iterator[Post]:
     for path in export_dirs():
         yield from iter_forum_posts(path.stem)
+
+
+def threads() -> Iterator[Thread]:
+    for path in export_dirs():
+        yield from iter_user_threads(path.stem)
+
+
+def messages() -> Iterator[Message]:
+    for t in threads():
+        yield from t.messages
 
 
 def friends() -> Iterator[Friend]:
