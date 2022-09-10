@@ -21,4 +21,7 @@ if __name__ == "__main__":
         author_email="seanbrecke@gmail.com",
         description="A Python interface to my life",
         python_requires=">=3.8",
+        entry_points={
+            "console_scripts": ["backup_to = my.utils.backup_to.__main__:main"]
+        },
     )
