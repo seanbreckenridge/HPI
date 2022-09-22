@@ -183,6 +183,8 @@ ci_tests() {
 ci_mypy() {
 	# find my -name '*.py' | grep -v '__' | sed -e 's|\.\/||' -e 's|/|.|g' -e 's/\.py$//g' -e 's/$/ \\/' -e 's/^/-p /' | sort
 	echo 'Checking types' | maybe_boxes
+	# populate cache so install types doesnt fail?
+	python3 -m mypy -p my || true
 	python3 -m mypy --install-types --non-interactive \
 		-p tests \
 		-p my.apple.privacy_export \
