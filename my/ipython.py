@@ -16,7 +16,7 @@ python3() {
 }
 """
 
-REQUIRES = ["ipython>=8.5.0"]
+REQUIRES = ["ipython>=8.5.0", "more_itertools"]
 
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
@@ -36,9 +36,10 @@ from datetime import datetime
 from typing import Iterable, NamedTuple, Iterator, Optional
 from itertools import chain
 
+from more_itertools import unique_everseen
 from IPython.core.history import HistoryAccessor  # type: ignore[import]
 
-from my.core import get_files, warn_if_empty, Stats, Res, LazyLogger
+from my.core import get_files, Stats, LazyLogger
 from my.utils.input_source import InputSource
 
 logger = LazyLogger(__name__)
@@ -49,7 +50,7 @@ class Command(NamedTuple):
     command: str
 
 
-Results = Iterator[Res[Command]]
+Results = Iterator[Command]
 
 
 # Return backed up sqlite databases
@@ -66,28 +67,15 @@ def _live_history() -> Results:
     # history file if its being run in the background? unsure why
     try:
         yield from _parse_database("")
-    except Exception as e:
-        yield e
+    except Exception:
+        return
 
 
 def history(from_paths: InputSource = inputs) -> Results:
-    yield from _merge_histories(
-        *(_parse_database(str(p)) for p in from_paths()), _live_history()
+    yield from unique_everseen(
+        chain(*(_parse_database(str(p)) for p in from_paths()), _live_history()),
+        key=lambda h: (h.command, h.dt),
     )
-
-
-@warn_if_empty
-def _merge_histories(*sources: Results) -> Results:
-    emitted = set()
-    for e in chain(*sources):
-        if isinstance(e, Exception):
-            yield e
-        else:
-            key = (e.command, e.dt)
-            if key in emitted:
-                continue
-            emitted.add(key)
-            yield e
 
 
 def _parse_database(sqlite_database: str) -> Results:
