@@ -66,8 +66,9 @@ def _live_history() -> Results:
     # seems that this has the possibility to fail to locate your live
     # history file if its being run in the background? unsure why
     try:
-        yield from _parse_database("")
-    except Exception:
+        yield from _parse_database(sqlite_database="")
+    except Exception as e:
+        logger.warning(f"Failed to get data from current ipython database: {e}")
         return
 
 
@@ -83,7 +84,7 @@ def _parse_database(sqlite_database: str) -> Results:
     try:
         total_sessions: Optional[int] = hist.get_last_session_id()
     except Exception as e:
-        logger.debug(f"Failed to get last session id: {e}")
+        logger.warning(f"Failed to get last session id: {e}")
         # if database is corrupt/fails to compute sessions, skip
         return
     if total_sessions is None:
