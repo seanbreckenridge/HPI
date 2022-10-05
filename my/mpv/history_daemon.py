@@ -74,7 +74,7 @@ def inputs() -> Sequence[Path]:
         for k, g in itertools.groupby(files, key=lambda f: "merged" in f.stem)
     }
     # merged files, then raw event files
-    return list(itertools.chain(groups[True], groups[False]))
+    return list(itertools.chain(groups.get(True, []), groups.get(False, [])))
 
 
 def _filter_by(m: Media) -> bool:
