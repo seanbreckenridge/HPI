@@ -26,6 +26,7 @@ config = make_config(mpv_config)
 
 
 import os
+import itertools
 from pathlib import Path
 
 from mpv_history_daemon.events import (
@@ -62,7 +63,18 @@ def stats() -> Stats:
 
 
 def inputs() -> Sequence[Path]:
-    return get_files(config.export_path)
+    # this takes the files, sorts it so merged event files
+    # are returned first, then the individual event ones
+    # this makes it so that history is close to (it may not be if you opened 2 mpv
+    # instances and listened to something while another was paused) chronologically sorted,
+    # because the merged files are ordered by keyname
+    files = list(get_files(config.export_path, sort=True))
+    groups = {
+        k: list(g)
+        for k, g in itertools.groupby(files, key=lambda f: "merged" in f.stem)
+    }
+    # merged files, then raw event files
+    return list(itertools.chain(groups[True], groups[False]))
 
 
 def _filter_by(m: Media) -> bool:

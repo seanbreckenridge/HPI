@@ -16,7 +16,7 @@ python3() {
 }
 """
 
-REQUIRES = ["ipython>=8.5.0", "more_itertools"]
+REQUIRES = ["ipython>=8.5.0"]
 
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
