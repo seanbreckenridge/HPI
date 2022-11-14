@@ -159,6 +159,7 @@ module_dependencies() {
 	hpi_module my.chess.export || return $?
 	hpi_module my.mpv.history_daemon || return $?
 	hpi_module my.league.export || return $?
+	hpi_module my.scramble.history || return $?
 	hpi_module my.trakt.export || return $?
 	hpi_module my.mail.all || return $?
 	hpi_module my.piazza.scraper || return $?
@@ -215,6 +216,7 @@ ci_mypy() {
 		-p my.project_euler \
 		-p my.rss.newsboat.git_history \
 		-p my.runelite.screenshots \
+		-p my.scramble.history \
 		-p my.skype.gdpr \
 		-p my.spotify.gdpr \
 		-p my.steam.scraper \

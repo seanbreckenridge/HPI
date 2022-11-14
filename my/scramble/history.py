@@ -3,6 +3,8 @@ Timed Rubiks Cube Solve History from multiple sources using
 https://github.com/seanbreckenridge/scramble-history
 """
 
+REQUIRES = ["git+https://github.com/seanbreckenridge/scramble-history"]
+
 from pathlib import Path
 from my.core import dataclass, PathIsh, make_config
 
