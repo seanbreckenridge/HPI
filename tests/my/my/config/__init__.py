@@ -156,6 +156,12 @@ class linkedin:
         gdpr_dir: PathIsh = ""
 
 
+class scramble:
+    class history:
+        sourcemap: PathIsh = ""
+        config: PathIsh = ""
+
+
 class discord:
     class data_export:
         export_path: Paths = ""

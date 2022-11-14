@@ -32,6 +32,7 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 - `my.minecraft.advancements`, parses advancement (local achievement data) from the `~/.minecraft` directory
 - `my.project_euler`, when I solved [Project Euler](https://projecteuler.net/) problems
 - `my.linkedin.privacy_export`, to parse the [privacy export](https://www.linkedin.com/help/linkedin/answer/50191/downloading-your-account-data?lang=en) from linkedin
+- `my.scramble.history` for merged (timed) rubiks cube solves from multiple sources, using [scramble_history](https://github.com/seanbreckenridge/scramble-history)
 
 #### 'Historical' Modules
 
