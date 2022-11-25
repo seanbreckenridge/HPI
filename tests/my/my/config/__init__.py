@@ -158,8 +158,7 @@ class linkedin:
 
 class scramble:
     class history:
-        sourcemap: PathIsh = ""
-        config: PathIsh = ""
+        config_dir: Optional[PathIsh] = None
 
 
 class discord:
