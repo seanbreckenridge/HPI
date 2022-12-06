@@ -37,4 +37,6 @@ parsed_conf = parse_config_file(config_dir / conf_name)
 
 
 def solves() -> Iterator[Solve]:
-    yield from merge_solves(sourcemap_file=config_dir / sourcemap_name, conf=parsed_conf)
+    yield from merge_solves(
+        sourcemap_file=config_dir / sourcemap_name, conf=parsed_conf
+    )
