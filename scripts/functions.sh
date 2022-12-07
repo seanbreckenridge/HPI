@@ -32,14 +32,20 @@ scrobble-describe() {
 
 # functions to replay music I've listened to recently
 mpv-recent() {
-	hpi query my.mpv.history_daemon.history --order-type datetime --reverse -s --limit "${1:-1}"
+	local args=()
+	if [[ -n "$1" ]]; then
+		args+=("--limit" "$1")
+
+	fi
+	hpi query my.mpv.history_daemon.history --order-type datetime --reverse -s "${args[@]}"
 }
 mpv-recent-path() {
 	mpv-recent "$1" | jq -r .path
 }
 alias replay='mpv-recent-path | mpv-from-stdin'
+# requires https://github.com/seanbreckenridge/exists
 replay-recent() {
-	mpv-recent-path "${1:-$LINES}" | fzf | mpv-from-stdin
+	mpv-recent-path "$1" | exists | head -n "${1:-$LINES}" | fzf | mpv-from-stdin
 }
 
 ##########
