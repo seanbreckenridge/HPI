@@ -63,9 +63,8 @@ def _parse_file(histfile: Path) -> Results:
                     command=row[2],
                     directory=None if row[1] == "-" else row[1],
                 )
-        except csv.Error:
-            print(f"While parsing {histfile}...")
-            raise
+        except csv.Error as e:
+            print(f"While parsing {histfile}... {e}")
 
 
 def stats() -> Stats:

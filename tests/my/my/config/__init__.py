@@ -141,9 +141,9 @@ class ttt:
     export_path: Paths = ""
 
 
-class window_watcher:
-    export_path: Paths = ""
-    force_individual: Optional[List[str]] = None
+class activitywatch:
+    class active_window:
+        export_path: Paths = ""
 
 
 class apple:

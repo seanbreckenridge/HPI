@@ -151,7 +151,7 @@ module_dependencies() {
 		esac
 	fi
 	echo "Installing module dependencies" | maybe_boxes
-	hpi_module my.window_watcher || return $?
+	hpi_module my.activitywatch.active_window || return $?
 	hpi_module my.discord.data_export || return $?
 	hpi_module my.todotxt.git_history || return $?
 	hpi_module my.ip.all || return $?
@@ -188,6 +188,7 @@ ci_mypy() {
 	pip_install types-urllib3 types-simplejson types-setuptools types-PyYAML types-pytz types-dateparser types-requests
 	python3 -m mypy \
 		-p tests \
+		-p my.activitywatch.active_window \
 		-p my.apple.privacy_export \
 		-p my.bash \
 		-p my.blizzard.gdpr \
@@ -229,7 +230,6 @@ ci_mypy() {
 		-p my.twitch.overrustle_logs \
 		-p my.utils.input_source \
 		-p my.utils.time \
-		-p my.window_watcher \
 		-p my.zsh \
 		--txt-report .coverage.mypy || return $?
 }
