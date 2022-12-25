@@ -12,7 +12,7 @@ REQUIRES = [
 from my.config import activitywatch as user_config  # type: ignore[attr-defined]
 
 from pathlib import Path
-from typing import Iterator, Sequence, Union, List
+from typing import Iterator, Sequence, Union
 from itertools import chain
 
 from my.core import get_files, Stats, Paths, dataclass
