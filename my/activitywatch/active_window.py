@@ -25,7 +25,7 @@ import active_window.parse as AW
 
 @dataclass
 class config(user_config.active_window):
-    # path[s]/glob to the backed up window_watcher history files
+    # path[s]/glob to the backed up aw-window JSON/window_watcher CSV history files
     export_path: Paths
 
 
