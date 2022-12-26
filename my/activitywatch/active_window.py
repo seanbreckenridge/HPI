@@ -13,14 +13,17 @@ from my.config import activitywatch as user_config  # type: ignore[attr-defined]
 
 from pathlib import Path
 from typing import Iterator, Sequence, Union
+from functools import partial
 from itertools import chain
 
-from my.core import get_files, Stats, Paths, dataclass
+from my.core import get_files, Stats, Paths, dataclass, LazyLogger
 from my.utils.input_source import InputSource
 
 from more_itertools import unique_everseen
 
 import active_window.parse as AW
+
+logger = LazyLogger(__name__)
 
 
 @dataclass
@@ -39,7 +42,8 @@ def inputs() -> Sequence[Path]:
 
 def history(from_paths: InputSource = inputs) -> Results:
     yield from unique_everseen(
-        chain(*map(AW.parse_window_events, from_paths())), key=lambda e: e.timestamp
+        chain(*map(partial(AW.parse_window_events, logger=logger), from_paths())),
+        key=lambda e: e.timestamp,
     )
 
 
