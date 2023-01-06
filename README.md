@@ -156,7 +156,7 @@ Movie I've watched most?
 
 ```bash
 # how many calories have I eaten today (from https://github.com/seanbreckenridge/ttally)
-$ hpi query ttally.funcs.food --recent 1d -s | jq -r '(.quantity)*(.calories)' | datamash sum 1
+$ hpi query ttally.__main__.food --recent 1d -s | jq -r '(.quantity)*(.calories)' | datamash sum 1
 2258.5
 ```
 
