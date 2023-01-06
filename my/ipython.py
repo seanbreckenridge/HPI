@@ -37,7 +37,7 @@ from typing import Iterable, NamedTuple, Iterator, Optional
 from itertools import chain
 
 from more_itertools import unique_everseen
-from IPython.core.history import HistoryAccessor  # type: ignore[import]
+from IPython.core.history import HistoryAccessor
 
 from my.core import get_files, Stats, LazyLogger
 from my.utils.input_source import InputSource
@@ -80,7 +80,7 @@ def history(from_paths: InputSource = inputs) -> Results:
 
 
 def _parse_database(sqlite_database: str) -> Results:
-    hist = HistoryAccessor(hist_file=sqlite_database)
+    hist = HistoryAccessor(hist_file=sqlite_database)  # type: ignore[no-untyped-call]
     try:
         total_sessions: Optional[int] = hist.get_last_session_id()
     except Exception as e:
