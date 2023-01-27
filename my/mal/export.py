@@ -29,10 +29,8 @@ class mal_config(user_config.export):
     # path[s]/glob to the exported data
     export_path: PathIsh
 
-    # path[s]/glob to the backup zip files
-    # see https://github.com/seanbreckenridge/malexport/#recover_deleted
-    #
     # this should be the top level directory, not the zip files or username directories
+    # see https://github.com/seanbreckenridge/malexport/#recover_deleted
     zip_backup_path: Optional[PathIsh] = None
 
 
