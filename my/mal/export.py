@@ -10,10 +10,10 @@ from my.config import mal as user_config  # type: ignore[attr-defined]
 
 from pathlib import Path
 from datetime import datetime
-from typing import Iterator, List, Tuple, NamedTuple
+from typing import Iterator, List, Tuple, NamedTuple, Optional
 from functools import lru_cache
 
-from my.core import Stats, LazyLogger, PathIsh, dataclass
+from my.core import Stats, LazyLogger, PathIsh, dataclass, make_config, get_files
 from my.core.common import mcachew
 from my.core.structure import match_structure
 
@@ -21,12 +21,22 @@ from malexport.parse.combine import combine, AnimeData, MangaData
 from malexport.parse.forum import Post, iter_forum_posts
 from malexport.parse.friends import Friend, iter_friends
 from malexport.parse.messages import Thread, Message, iter_user_threads
+from malexport.parse.recover_deleted_entries import recover_deleted as rec_del, Approved
 
 
 @dataclass
-class config(user_config.export):
+class mal_config(user_config.export):
     # path[s]/glob to the exported data
     export_path: PathIsh
+
+    # path[s]/glob to the backup zip files
+    # see https://github.com/seanbreckenridge/malexport/#recover_deleted
+    #
+    # this should be the top level directory, not the zip files or username directories
+    zip_backup_path: Optional[PathIsh] = None
+
+
+config = make_config(mal_config)
 
 
 logger = LazyLogger(__name__, level="warning")
@@ -45,7 +55,9 @@ def _history_depends_on() -> List[float]:
     json_history_files: List[Path] = []
     for p in export_dirs():
         json_history_files.extend(list((p / "history").rglob("*.json")))
+        json_history_files.extend(list(p.glob("*_history.json")))
     json_history_files.sort()
+    logger.debug("History files: %s", json_history_files)
     return [p.lstat().st_mtime for p in json_history_files]
 
 
@@ -55,6 +67,28 @@ Export = Tuple[List[AnimeData], List[MangaData]]
 @lru_cache(maxsize=None)
 def _read_malexport(username: str) -> Export:
     return combine(username)
+
+
+@lru_cache(maxsize=None)
+def _find_deleted_aux(username: str, zips: Tuple[Path, ...]) -> Export:
+    return rec_del(
+        approved=Approved.parse_from_git_dir(),
+        username=username,
+        backups=list(zips),
+        filter_with_activity=False,
+        logger=logger,
+    )
+
+
+def _find_deleted_inputs(username: str) -> Tuple[Path, ...]:
+    if config.zip_backup_path is None:
+        return tuple()
+    directory_for_user: Path = Path(config.zip_backup_path) / username
+    return get_files(directory_for_user, sort=True, glob="*.zip")
+
+
+def _find_deleted(username: str) -> Optional[Export]:
+    return _find_deleted_aux(username, _find_deleted_inputs(username))
 
 
 ### Expose all the parsed information from malexport
@@ -70,6 +104,20 @@ def manga() -> Iterator[MangaData]:
     for path in export_dirs():
         _, manga = _read_malexport(path.stem)
         yield from manga
+
+
+def deleted_anime() -> Iterator[AnimeData]:
+    for path in export_dirs():
+        if export := _find_deleted(path.stem):
+            anime, _ = export
+            yield from anime
+
+
+def deleted_manga() -> Iterator[MangaData]:
+    for path in export_dirs():
+        if export := _find_deleted(path.stem):
+            _, manga = export
+            yield from manga
 
 
 class Episode(NamedTuple):

@@ -80,6 +80,7 @@ class trakt:
 class mal:
     class export:
         export_path: PathIsh = ""
+        zip_backup_path: Optional[PathIsh] = ""
 
 
 class grouvee:
