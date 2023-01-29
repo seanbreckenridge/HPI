@@ -14,7 +14,6 @@ from typing import Iterator, List, Tuple, NamedTuple, Optional
 from functools import lru_cache
 
 from my.core import Stats, LazyLogger, PathIsh, dataclass, make_config, get_files
-from my.core.common import mcachew
 from my.core.structure import match_structure
 
 from malexport.parse.combine import combine, AnimeData, MangaData
@@ -47,16 +46,6 @@ def export_dirs() -> List[Path]:
     base: Path = Path(config.export_path).expanduser().absolute()
     with match_structure(base, expected="animelist.xml") as matches:
         return list(matches)
-
-
-def _history_depends_on() -> List[float]:
-    json_history_files: List[Path] = []
-    for p in export_dirs():
-        json_history_files.extend(list((p / "history").rglob("*.json")))
-        json_history_files.extend(list(p.glob("*_history.json")))
-    json_history_files.sort()
-    logger.debug("History files: %s", json_history_files)
-    return [p.lstat().st_mtime for p in json_history_files]
 
 
 Export = Tuple[List[AnimeData], List[MangaData]]
@@ -128,7 +117,6 @@ class Episode(NamedTuple):
 # use the combined data when reading history
 # since it removes entries you may have deleted
 # which still have local history files left over
-@mcachew(depends_on=_history_depends_on, logger=logger)
 def episodes() -> Iterator[Episode]:
     for path in export_dirs():
         anime, _ = _read_malexport(path.stem)
@@ -149,7 +137,6 @@ class Chapter(NamedTuple):
     at: datetime
 
 
-@mcachew(depends_on=_history_depends_on, logger=logger)
 def chapters() -> Iterator[Chapter]:
     for path in export_dirs():
         _, manga = _read_malexport(path.stem)
