@@ -16,6 +16,7 @@ from functools import lru_cache
 from my.core import Stats, LazyLogger, PathIsh, dataclass, make_config, get_files
 from my.core.structure import match_structure
 
+from malexport.paths import LocalDir
 from malexport.parse.combine import combine, AnimeData, MangaData
 from malexport.parse.forum import Post, iter_forum_posts
 from malexport.parse.friends import Friend, iter_friends
@@ -51,9 +52,17 @@ def export_dirs() -> List[Path]:
 Export = Tuple[List[AnimeData], List[MangaData]]
 
 
-@lru_cache(maxsize=None)
-def _read_malexport(username: str) -> Export:
+@lru_cache(maxsize=2)
+def _read_malexport_aux(username: str, *, mtimes: Tuple[float, ...]) -> Export:
+    logger.debug(f"reading {username}; cache miss: {mtimes}")
     return combine(username)
+
+
+def _read_malexport(username: str) -> Export:
+    paths = LocalDir.from_username(username).data_dir.rglob("*")
+    return _read_malexport_aux(
+        username, mtimes=tuple(sorted(map(lambda f: f.stat().st_mtime, paths)))
+    )
 
 
 @lru_cache(maxsize=None)
