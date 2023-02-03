@@ -36,7 +36,6 @@ class config(user_config.git_history):
 
 
 class Todo(Task):
-
     # support serializing with hpi query
     def _serialize(self) -> Dict[str, Any]:
         assert self._raw is not None

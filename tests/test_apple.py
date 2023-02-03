@@ -6,7 +6,6 @@ from .common import skip_if_not_seanb
 
 @skip_if_not_seanb
 def test_apple_types() -> None:
-
     from my.apple.privacy_export import (
         events,
         Game,

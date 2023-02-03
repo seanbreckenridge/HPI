@@ -11,7 +11,6 @@ logger = LazyLogger(__name__)
 
 @import_source(module_name="my.discord.data_export")
 def ips() -> Iterator[IP]:
-
     from my.discord.data_export import activity, _cachew_depends_on
 
     @mcachew(depends_on=_cachew_depends_on, logger=logger)

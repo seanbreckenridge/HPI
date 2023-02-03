@@ -15,7 +15,6 @@ from my.core import PathIsh, dataclass
 
 @dataclass
 class config(user_config.data_export):
-
     # path to the top level discord export directory
     # see https://github.com/seanbreckenridge/discord_data for more info
     export_path: PathIsh
@@ -50,7 +49,7 @@ extractor = URLExtract()
 
 
 def _remove_link_suppression(
-    content: str, urls: Optional[List[Tuple[str, Tuple[int, int]]]] = None
+    content: str, *, urls: Optional[List[Tuple[str, Tuple[int, int]]]] = None
 ) -> str:
     # fix content to remove discord link suppression if any links had any
     # e.g. this is a suppressed link <https://github.com>
@@ -58,13 +57,17 @@ def _remove_link_suppression(
     if urls is None:
         urls = extractor.find_urls(content, get_indices=True)
 
-    for (_, (start_index, end_index)) in urls:
+    if not urls:
+        return content.strip()
+
+    for _, (start_index, end_index) in urls:
         before_ind = start_index - 1
         after_ind = end_index
         try:
             if content[before_ind] == "<" and content[after_ind] == ">":
                 content = _remove_suppression(content, before_ind, after_ind)
-        except IndexError:  # could happen if the url didn't have braces and we hit the end of a string
+        # could happen if the url didn't have braces and we hit the end of a string
+        except IndexError:
             continue
     return content.strip()
 
