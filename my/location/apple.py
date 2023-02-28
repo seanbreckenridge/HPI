@@ -11,7 +11,14 @@ def locations() -> Iterator[Location]:
 
     for a in events():
         if isinstance(a, AppleLocation) and not isinstance(a, Exception):
-            yield Location(lon=a.lng, lat=a.lat, dt=a.dt, accuracy=50, elevation=None)
+            yield Location(
+                lon=a.lng,
+                lat=a.lat,
+                dt=a.dt,
+                accuracy=50,
+                elevation=None,
+                datasource="apple",
+            )
 
 
 def stats() -> Stats:
