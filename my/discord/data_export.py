@@ -7,6 +7,7 @@ REQUIRES = [
 ]
 
 
+from pathlib import Path
 from typing import List
 
 from my.config import discord as user_config  # type: ignore[attr-defined]
@@ -110,40 +111,47 @@ def _cachew_depends_on() -> List[str]:
 EXPECTED_DISCORD_STRUCTURE = ("messages/index.json", "account/user.json")
 
 
-@mcachew(depends_on=_cachew_depends_on, logger=logger)
-def messages() -> Iterator[Message]:
-    emitted: Set[int] = set()
+def get_discord_exports() -> Iterator[Path]:
     for exp in get_files(config.export_path):
+        # weak type check here, ZipPath is a bit experimental, so don't want a dependency
+        # see https://github.com/karlicoss/HPI/blob/master/my/core/kompress.py#L160
+        if type(exp).__name__ == 'ZipPath':
+            yield exp
+            continue
         with match_structure(
             exp, expected=EXPECTED_DISCORD_STRUCTURE
         ) as discord_export:
-            for message_dir in [d / "messages" for d in discord_export]:
-                for msg in parse_messages(message_dir):
-                    if msg.message_id in emitted:
-                        continue
-                    yield Message(
-                        message_id=msg.message_id,
-                        timestamp=msg.timestamp,
-                        channel=msg.channel,
-                        content=_remove_link_suppression(msg.content),
-                        attachments=msg.attachments,
-                    )
-                    emitted.add(msg.message_id)
+            yield from discord_export
+
+
+@mcachew(depends_on=_cachew_depends_on, logger=logger)
+def messages() -> Iterator[Message]:
+    emitted: Set[int] = set()
+    for discord_export in get_discord_exports():
+        message_dir = discord_export / "messages"
+        for msg in parse_messages(message_dir):
+            if msg.message_id in emitted:
+                continue
+            yield Message(
+                message_id=msg.message_id,
+                timestamp=msg.timestamp,
+                channel=msg.channel,
+                content=_remove_link_suppression(msg.content),
+                attachments=msg.attachments,
+            )
+            emitted.add(msg.message_id)
 
 
 @mcachew(depends_on=_cachew_depends_on, logger=logger)
 def activity() -> Iterator[Activity]:
     emitted: Set[str] = set()
-    for exp in get_files(config.export_path):
-        with match_structure(
-            exp, expected=EXPECTED_DISCORD_STRUCTURE
-        ) as discord_export:
-            for activity_dir in [d / "activity" for d in discord_export]:
-                for act in parse_activity(activity_dir):
-                    if act.event_id in emitted:
-                        continue
-                    yield act
-                    emitted.add(act.event_id)
+    for discord_export in get_discord_exports():
+        activity_dir = discord_export / "activity"
+        for act in parse_activity(activity_dir):
+            if act.event_id in emitted:
+                continue
+            yield act
+            emitted.add(act.event_id)
 
 
 class Reaction(NamedTuple):
