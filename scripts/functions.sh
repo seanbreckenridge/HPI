@@ -43,9 +43,9 @@ mpv-recent-path() {
 	mpv-recent "$1" | jq -r .path
 }
 alias replay='mpv-recent-path 1 | mpv-from-stdin'
-# requires https://github.com/seanbreckenridge/exists
+# requires https://github.com/seanbreckenridge/exists, https://github.com/seanbreckenridge/core
 replay-recent() {
-	mpv-recent-path "$1" | exists | head -n "${1:-$LINES}" | fzf | mpv-from-stdin
+	mpv-recent-path "$1" | exists | head -n "${1:-$LINES}" | unique | fzf | mpv-from-stdin
 }
 
 ##########
