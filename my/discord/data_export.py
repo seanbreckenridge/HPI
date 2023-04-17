@@ -130,6 +130,9 @@ def messages() -> Iterator[Message]:
     for discord_export in get_discord_exports():
         message_dir = discord_export / "messages"
         for msg in parse_messages(message_dir):
+            if isinstance(msg, Exception):
+                logger.warning(msg)
+                continue
             if msg.message_id in emitted:
                 continue
             yield Message(
@@ -148,6 +151,9 @@ def activity() -> Iterator[Activity]:
     for discord_export in get_discord_exports():
         activity_dir = discord_export / "activity"
         for act in parse_activity(activity_dir):
+            if isinstance(act, Exception):
+                logger.warning(act)
+                continue
             if act.event_id in emitted:
                 continue
             yield act
