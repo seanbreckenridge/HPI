@@ -115,7 +115,7 @@ def get_discord_exports() -> Iterator[Path]:
     for exp in get_files(config.export_path):
         # weak type check here, ZipPath is a bit experimental, so don't want a dependency
         # see https://github.com/karlicoss/HPI/blob/master/my/core/kompress.py#L160
-        if type(exp).__name__ == 'ZipPath':
+        if type(exp).__name__ == "ZipPath":
             yield exp
             continue
         with match_structure(
