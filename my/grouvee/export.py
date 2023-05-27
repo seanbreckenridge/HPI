@@ -40,7 +40,7 @@ def games() -> Iterator[G.Game]:
 
 def _filter_games_for_shelf(name: str) -> Iterator[G.Game]:
     for game in games():
-        if name in [s.name for s in game.shelves]:
+        if name in (s.name for s in game.shelves):
             yield game
 
 
