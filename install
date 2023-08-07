@@ -164,6 +164,7 @@ module_dependencies() {
 	hpi_module my.mail.all || return $?
 	hpi_module my.piazza.scraper || return $?
 	hpi_module my.grouvee.export || return $?
+	hpi_module my.offline.listens || return $?
 	hpi_module my.mal.export || return $?
 	hpi_module my.listenbrainz.export || return $?
 	hpi_module my.skype.gdpr || return $?
