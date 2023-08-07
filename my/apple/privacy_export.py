@@ -19,7 +19,7 @@ import os
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Iterator, Dict, Any, NamedTuple, Union, Optional
+from typing import Iterator, Dict, Any, NamedTuple, Union, Optional, Sequence
 
 from lxml import etree  # type: ignore[import]
 from more_itertools import sliced, first
@@ -73,10 +73,11 @@ Event = Union[
 Results = Iterator[Res[Event]]
 
 
-@mcachew(
-    depends_on=lambda: sorted(Path(config.gdpr_dir).expanduser().rglob("*")),
-    logger=logger,
-)
+def _depends_on() -> Sequence[Path]:
+    return sorted(Path(config.gdpr_dir).expanduser().absolute().rglob("*"))
+
+
+@mcachew(depends_on=_depends_on, logger=logger)
 def events() -> Results:
     gdpr_dir = Path(config.gdpr_dir).expanduser().absolute()  # expand path
     handler_map = {

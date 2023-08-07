@@ -176,6 +176,7 @@ class minecraft:
     class advancements:
         export_path: Paths = ""
 
+
 class offline:
     class listens:
         export_path: Paths = ""
