@@ -214,6 +214,7 @@ ci_mypy() {
 		-p my.mal.export \
 		-p my.minecraft.advancements \
 		-p my.mpv.history_daemon \
+		-p my.offline.listens \
 		-p my.piazza.scraper \
 		-p my.project_euler \
 		-p my.rss.newsboat.git_history \

@@ -13,7 +13,6 @@ REQUIRES = ["dateparser"]
 from my.config import skype as user_config  # type: ignore[attr-defined]
 
 from my.core import Paths, Stats, dataclass
-from my.core.common import mcachew
 
 
 @dataclass
@@ -43,10 +42,6 @@ def inputs() -> Sequence[Path]:
     return get_files(config.export_path)
 
 
-@mcachew(
-    depends_on=lambda: [str(p) for p in sorted(inputs())],
-    logger=logger,
-)
 def timestamps(from_paths: InputSource = inputs) -> Results:
     yield from chain(*map(_parse_file, from_paths()))
 
