@@ -19,7 +19,7 @@ from functools import partial
 from pathlib import Path
 from datetime import datetime
 from typing import NamedTuple, Iterator, Sequence, Dict, List, Optional, Any
-from itertools import chain
+from itertools import groupby
 
 from my.core import get_files, Stats, Res
 from my.utils.time import parse_datetime_sec
@@ -40,6 +40,7 @@ class Achievement(NamedTuple):
 
 
 class Game(NamedTuple):
+    id: int
     name: str
     hours_played: float
     achievements: List[Achievement]
@@ -74,7 +75,27 @@ def games(from_paths: InputSource = inputs) -> Results:
 
 def all_games(from_paths: InputSource = inputs) -> Results:
     # combine the results from multiple files
-    yield from chain(*map(_read_parsed_json, from_paths()))
+    games_no_exc: List[Game] = []
+    for json_file in from_paths():
+        for g in _read_parsed_json(json_file):
+            if isinstance(g, Exception):
+                yield g
+            else:
+                assert isinstance(g, Game)
+                games_no_exc.append(g)
+
+    # only return the single game with the most achievement count if there are duplicates
+    for _, gm in groupby(sorted(games_no_exc, key=lambda x: x.id), lambda x: x.id):
+        yield max(gm, key=lambda gmo: gmo.achieved)
+
+
+def all_achievements(from_paths: InputSource = inputs) -> AchievementResults:
+    # combine the results from multiple achievement lists
+    for game in all_games(from_paths):
+        if isinstance(game, Exception):
+            yield game
+        else:
+            yield from game.achievements
 
 
 # only ones which Ive actually achieved
@@ -87,21 +108,13 @@ def achievements(from_paths: InputSource = inputs) -> AchievementResults:
                 yield ach
 
 
-def all_achievements(from_paths: InputSource = inputs) -> AchievementResults:
-    # combine the results from multiple achievement lists
-    for game in all_games(from_paths):
-        if isinstance(game, Exception):
-            yield game
-        else:
-            yield from game.achievements
-
-
 def _read_parsed_json(p: Path) -> Results:
     items = json.loads(p.read_text())
     for _, game in items.items():
         ach_lambda = partial(_parse_achievement, game_name=game["name"])
         try:
             yield Game(
+                id=game["id"],
                 name=game["name"],
                 hours_played=game["hours"],
                 image_url=game["image"],
