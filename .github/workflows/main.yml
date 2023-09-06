@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: "*"
+    branches: ["master", "main"]
   pull_request: # needed to trigger on others' PRs
   workflow_dispatch: # needed to trigger workflows manually
 
@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest, macos-latest]
-        python-version: [3.8, 3.9, "3.10"]
+        python-version: [3.8, 3.9, "3.10", "3.11"]
 
     runs-on: ${{ matrix.platform }}
 
