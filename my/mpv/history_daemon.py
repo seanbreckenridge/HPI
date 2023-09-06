@@ -25,7 +25,6 @@ class mpv_config(user_config.history_daemon):
 config = make_config(mpv_config)
 
 
-import os
 import itertools
 from pathlib import Path
 
