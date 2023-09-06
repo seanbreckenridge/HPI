@@ -54,7 +54,7 @@ class config(user_config):
     live_file: Optional[PathIsh]
 
 
-logger = LazyLogger(__name__, level="warning")
+logger = LazyLogger(__name__)
 
 
 def backup_inputs() -> Sequence[Path]:

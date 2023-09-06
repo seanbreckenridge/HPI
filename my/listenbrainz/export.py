@@ -26,7 +26,7 @@ class config(user_config.export):
     export_path: Paths
 
 
-logger = LazyLogger(__name__, level="warning")
+logger = LazyLogger(__name__)
 
 
 def inputs() -> Sequence[Path]:

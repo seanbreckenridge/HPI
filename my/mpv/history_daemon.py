@@ -38,18 +38,17 @@ from mpv_history_daemon.events import (
 from my.core import get_files, Stats, LazyLogger
 from my.utils.input_source import InputSource
 
+
+logger = LazyLogger(__name__)
+
 # monkey patch logs
-if "HPI_LOGS" in os.environ:
-    from logzero import setup_logger  # type: ignore[import]
-    from my.core.logging import mklevel
-    import mpv_history_daemon.events
 
-    mpv_history_daemon.events.logger = setup_logger(
-        name="mpv_history_events", level=mklevel(os.environ["HPI_LOGS"])
-    )
+from logzero import setup_logger  # type: ignore[import]
+import mpv_history_daemon.events
 
-
-logger = LazyLogger(__name__, level="warning")
+mpv_history_daemon.events.logger = setup_logger(
+    name="mpv_history_events", level=logger.level
+)
 
 Results = Iterator[Media]
 

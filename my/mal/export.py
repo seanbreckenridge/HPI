@@ -37,7 +37,7 @@ class mal_config(user_config.export):
 config = make_config(mal_config)
 
 
-logger = LazyLogger(__name__, level="warning")
+logger = LazyLogger(__name__)
 
 
 # malexport supports multiple accounts

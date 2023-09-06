@@ -24,7 +24,7 @@ from my.core import get_files, Stats, Res, Json, LazyLogger
 from my.utils.time import parse_datetime_sec
 
 
-logger = LazyLogger(__name__, level="warning")
+logger = LazyLogger(__name__)
 
 FacebookJson = Dict[Any, Any]
 

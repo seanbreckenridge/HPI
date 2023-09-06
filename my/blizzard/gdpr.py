@@ -26,7 +26,7 @@ from my.utils.time import parse_datetime_sec
 from my.utils.input_source import InputSource
 
 
-logger = LazyLogger(__name__, level="warning")
+logger = LazyLogger(__name__)
 
 
 def inputs() -> Sequence[Path]:

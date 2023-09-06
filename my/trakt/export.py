@@ -25,7 +25,7 @@ class config(user_config.export):
     export_path: Paths
 
 
-logger = LazyLogger(__name__, level="warning")
+logger = LazyLogger(__name__)
 
 
 def inputs() -> Sequence[Path]:
@@ -59,7 +59,8 @@ def likes() -> Iterator[D.Like]:
     yield from _read_trakt_exports().likes
 
 
-@mcachew(depends_on=_cachew_depends_on, logger=logger)
+# TODO: hmm, cachew seems to fail with this one, not sure why
+# @mcachew(depends_on=_cachew_depends_on, logger=logger)
 def watchlist() -> Iterator[D.WatchListEntry]:
     yield from _read_trakt_exports().watchlist
 

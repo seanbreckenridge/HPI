@@ -28,7 +28,7 @@ from my.core import Stats, Res, LazyLogger
 from my.core.common import mcachew
 
 
-logger = LazyLogger(__name__, level="warning")
+logger = LazyLogger(__name__)
 
 
 class Game(NamedTuple):

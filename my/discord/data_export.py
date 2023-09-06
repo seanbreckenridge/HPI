@@ -31,7 +31,7 @@ from discord_data.model import Activity, Message
 from urlextract import URLExtract  # type: ignore[import]
 
 
-logger = LazyLogger(__name__, level="warning")
+logger = LazyLogger(__name__)
 
 
 def _remove_suppression(text: str, first_index: int, second_index: int) -> str:

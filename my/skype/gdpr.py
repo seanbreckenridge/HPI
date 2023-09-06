@@ -32,7 +32,7 @@ import dateparser
 from my.core import get_files, LazyLogger
 from my.utils.input_source import InputSource
 
-logger = LazyLogger(__name__, level="warning")
+logger = LazyLogger(__name__)
 
 
 Results = Iterator[datetime]

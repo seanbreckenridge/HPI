@@ -24,7 +24,7 @@ from my.utils.input_source import InputSource
 
 from .common import Event, Results
 
-logger = LazyLogger(__name__, level="warning")
+logger = LazyLogger(__name__)
 
 
 def inputs() -> Sequence[Path]:
