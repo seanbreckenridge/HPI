@@ -19,23 +19,20 @@ class config(user_config.export):
     username: str
 
 
-import os
 from pathlib import Path
 from typing import Iterator, Sequence, Optional
 
-from my.core import get_files, Stats, Res
-from my.core.logging import mklevel
+from my.core import get_files, Stats, Res, make_logger
 from my.utils.input_source import InputSource
 
 from lolexport.merge import Game, merge_game_histories
 import lolexport.log as llog
 from logzero import setup_logger  # type: ignore[import]
 
+logger = make_logger(__name__)
+
 # configure logs
-llog.logger = setup_logger(
-    name="lolexport",
-    level=mklevel(os.environ["HPI_LOGS"] if "HPI_LOGS" in os.environ else "INFO"),
-)
+llog.logger = setup_logger(name="lolexport", level=logger.level)
 
 
 def inputs() -> Sequence[Path]:
