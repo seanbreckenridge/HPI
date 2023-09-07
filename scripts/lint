@@ -70,11 +70,11 @@ update_fork() {
 
 main() {
 	(update_fork) # cd in subshell
-	pytest "$@" || prompt ''
+	python3 -m pytest "$@" || prompt ''
 	echo "Running mypy..."
 	MY_CONFIG="${BASE_DIR}/tests/my" mypy --install-types --non-interactive --color-output -p my || prompt ''
-	mypy ~/.config/my/my/config/ || prompt ''
-	flake8 ./my || prompt ''
+	python3 -m mypy ~/.config/my/my/config/ || prompt ''
+	python3 -m flake8 ./my || prompt ''
 	echo "Running shellcheck..."
 	shellcheck_scripts
 	# format everything in the repo

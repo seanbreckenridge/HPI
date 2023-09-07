@@ -239,7 +239,7 @@ ci_mypy() {
 ci_lint() {
 	pip_install flake8 || return $?
 	echo 'Linting...' | maybe_boxes
-	flake8 ./my || return $?
+	python3 -m flake8 ./my || return $?
 }
 
 ci_run() {
