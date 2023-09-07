@@ -179,7 +179,7 @@ ci_config() {
 ci_tests() {
 	echo 'Running tests' | maybe_boxes
 	ci && unset HPI_TESTS_SEANB
-	pytest ./tests || return $?
+	python3 -m pytest ./tests || return $?
 }
 
 ci_mypy() {
