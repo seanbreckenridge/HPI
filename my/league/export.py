@@ -27,12 +27,11 @@ from my.utils.input_source import InputSource
 
 from lolexport.merge import Game, merge_game_histories
 import lolexport.log as llog
-from logzero import setup_logger  # type: ignore[import]
 
 logger = make_logger(__name__)
 
 # configure logs
-llog.logger = setup_logger(name="lolexport", level=logger.level)
+llog.logger = llog.setup_logger(name="lolexport", level=logger.level)
 
 
 def inputs() -> Sequence[Path]:

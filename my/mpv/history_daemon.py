@@ -41,11 +41,9 @@ from my.utils.input_source import InputSource
 logger = LazyLogger(__name__)
 
 # monkey patch logs
-
-from logzero import setup_logger  # type: ignore[import]
 import mpv_history_daemon.events
 
-mpv_history_daemon.events.logger = setup_logger(
+mpv_history_daemon.events.logger = mpv_history_daemon.events.setup_logger(
     name="mpv_history_events", level=logger.level
 )
 
