@@ -24,7 +24,7 @@ from .common import Email, unique_mail
 
 @dataclass
 class imap_conf(user_config.imap):
-    # path[s]/glob to the the individual email files -- searches recusively
+    # path[s]/glob to the the individual email files -- searches recursively
     mailboxes: Paths
 
     # filter function which filters the input paths

@@ -14,7 +14,7 @@ havecmd() {
 	local BINARY ERRMSG
 	# error if first argument isn't provided
 	BINARY="${1:?Must provide command to check}"
-	# the commend exists, exit with 0 (success!)
+	# the command exists, exit with 0 (success!)
 	if command -v "${BINARY}" >/dev/null 2>&1; then
 		return 0
 	else

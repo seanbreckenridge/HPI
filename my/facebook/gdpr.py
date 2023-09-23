@@ -361,7 +361,7 @@ def _parse_messages_in_conversation(
                     content=m["content"],
                     metadata=m.get("share"),
                 )
-            # if this just actually doesnt have a field with content for some reason, ignore it
+            # if this just actually does not have a field with content for some reason, ignore it
             elif set(m.keys()).issubset(set(["sender_name", "timestamp_ms", "type"])):
                 continue
             else:
@@ -457,7 +457,7 @@ def _parse_posts(d: FacebookJson) -> Iterator[Res[Union[Post, Action]]]:
                                     )
                             # seems like bad data handling on facebooks part.
                             # these are still events,
-                            # but it doesnt have an external context,
+                            # but it does not have an external context,
                             # its like a stringified version of the data
                             elif "text" in dat:
                                 yield Action(

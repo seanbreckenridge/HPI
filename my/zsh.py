@@ -100,7 +100,7 @@ def history(from_paths: InputSource = backup_inputs) -> Results:
         yield from _merge_histories(_history_from_backups(from_paths), _parse_file(lf))
     else:
         # if we're not merging the live history file
-        # dont ned to spend the time doing the additional _merge_histories
+        # dont need to spend the time doing the additional _merge_histories
         yield from _history_from_backups(from_paths)
 
 

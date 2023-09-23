@@ -54,7 +54,7 @@ def playlists() -> Playlists:
         "Inferences": None,
         "Payments": None,
         "Playlist": _filter_playlists,
-        "StreamingHistory": None,  # doesnt save any of the old play history, not worth parsing
+        "StreamingHistory": None,  # does not save any of the old play history, not worth parsing
         "Userdata": None,
         "YourLibrary": None,
     }

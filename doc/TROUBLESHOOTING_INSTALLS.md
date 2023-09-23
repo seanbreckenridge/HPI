@@ -8,7 +8,7 @@ Note: though the repository is `promnesia`, the module it installs is `promnesia
 
 These are directions for installing a package as non-editable (into your python `site-packages`), though it covers uninstalling editable packages -- in case your path is misconfigured in some way. If you want to install as editable, see [reorder_editable](https://github.com/seanbreckenridge/reorder_editable) and the [install section](https://github.com/seanbreckenridge/HPI#install) of the README for issues you may run into, or see the [editable](#editable) section of this doc
 
-Whenever there are directions to use `pip` to do something -- its safer to do `python3 -m pip` (unless you know exactly what youre doing with managing multiple python installs on your system). That makes sure the `pip` that is being used is the same version as when you use `python3`
+Whenever there are directions to use `pip` to do something -- its safer to do `python3 -m pip` (unless you know exactly what you're doing with managing multiple python installs on your system). That makes sure the `pip` that is being used is the same version as when you use `python3`
 
 Uninstall the package you're using:
 

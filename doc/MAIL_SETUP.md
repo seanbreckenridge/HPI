@@ -47,7 +47,7 @@ Note: you can set the `Overwrite the mbox files with the same name in the destin
 
 ### Setup mbox
 
-Once you've exported, setup your configuration to point at the directory. Note that since this uses `my.mail.imap` to parse the messages, you may have to setup a basic config with no files so that module doesnt fail:
+Once you've exported, setup your configuration to point at the directory. Note that since this uses `my.mail.imap` to parse the messages, you may have to setup a basic config with no files so that module does not fail:
 
 ```python
 class mail:
