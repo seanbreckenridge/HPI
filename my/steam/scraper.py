@@ -120,9 +120,9 @@ def _read_parsed_json(p: Path) -> Results:
                 image_url=game["image"],
                 achievements=list(map(ach_lambda, game["achievements"])),
             )
-        except TypeError as te:
+        except TypeError as e:
             # error creating datetime?
-            yield te
+            yield e
 
 
 def _parse_achievement(ach: Dict[str, Any], game_name: str) -> Achievement:
