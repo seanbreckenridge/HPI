@@ -16,7 +16,7 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 
 - `my.zsh` and `my.bash`, access to my shell history w/ timestamps
 - `my.mail.imap` and `my.mail.mbox` to parse local IMAP sync's of my mail/mbox files -- see [doc/MAIL_SETUP.md](doc/MAIL_SETUP.md)
-- `my.mpv.history_daemon`, accesses movies/music w/ activity/metdata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-history-daemon)
+- `my.mpv.history_daemon`, accesses movies/music w/ activity/metadata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-history-daemon)
 - `my.discord.data_export`, parses ~1,000,000 messages/events from the discord data export, parser [here](https://github.com/seanbreckenridge/discord_data)
 - `my.todotxt.git_history`, to track my to-do list history (using backups of my [`todotxt`](http://todotxt.org/) files in [`git_doc_history`](https://github.com/seanbreckenridge/git_doc_history))
 - `my.rss.newsboat`, keeps track of when I added/removed RSS feeds (for [`newsboat`](https://newsboat.org/))

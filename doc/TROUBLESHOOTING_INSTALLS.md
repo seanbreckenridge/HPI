@@ -4,7 +4,7 @@ If you're having issues -- try doing the following
 
 I'll use my promnesia modules (at <https://github.com/seanbreckenridge/promnesia>) as an example.
 
-Note: though the repository is `promnesia`, the module it installs is `promnesia_sean`. In python packages in general, its not necessary for the module name to match the repository (thats just where its hosted). To figure out what the name of the package is, use `python3 -m pip list`. For this HPI repository, it installs as `HPI-seanbreckenridge`, so its possible to differentiate between this and upstream HPI.
+Note: though the repository is `promnesia`, the module it installs is `promnesia_sean`. In python packages in general, its not necessary for the module name to match the repository (that's just where its hosted). To figure out what the name of the package is, use `python3 -m pip list`. For this HPI repository, it installs as `HPI-seanbreckenridge`, so its possible to differentiate between this and upstream HPI.
 
 These are directions for installing a package as non-editable (into your python `site-packages`), though it covers uninstalling editable packages -- in case your path is misconfigured in some way. If you want to install as editable, see [reorder_editable](https://github.com/seanbreckenridge/reorder_editable) and the [install section](https://github.com/seanbreckenridge/HPI#install) of the README for issues you may run into, or see the [editable](#editable) section of this doc
 

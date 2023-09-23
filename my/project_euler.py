@@ -83,7 +83,7 @@ def _parse_file(p: Path) -> Iterator[Solution]:
         if m:
             problem, day, month_desc, year_short, hour, minute = m.groups()
             month_lowered = month_desc.lower()
-            assert month_lowered in MONTHS, f"Couldnt find {month_lowered} in {MONTHS}"
+            assert month_lowered in MONTHS, f"Couldn't find {month_lowered} in {MONTHS}"
             # datetimes in the file are UTC time
             yield Solution(
                 problem=int(problem),

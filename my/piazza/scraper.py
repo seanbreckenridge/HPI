@@ -47,7 +47,7 @@ def posts() -> Iterator[Post]:
     """
     for exp in classes():
         # hmm -- it seems that I'm always the only user in this?
-        # will check an envvar incase someone else has issues configuring this/has different results
+        # will check an envvar in case someone else has issues configuring this/has different results
         # feel free to open an issue
         user_id: Optional[str] = os.environ.get("PIAZZA_UID")
         if user_id is None:

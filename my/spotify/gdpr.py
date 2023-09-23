@@ -112,7 +112,7 @@ def _filter_playlists(d: Json) -> Iterator[Playlist]:
     # parse, then filter
     # make sure this playlist has more than one artist
     # if its just one artist, its probably just an album
-    # thats been classified as a playlist
+    # that's been classified as a playlist
     for p in _parse_all_playlists(d):
         if len(set([s.artist for s in p.songs])) > 1:
             yield p

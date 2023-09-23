@@ -22,7 +22,7 @@ def test_commits() -> None:
             biggest_repo = r
             break
     else:
-        raise RuntimeError("Couldnt find a repo with more than 100 files!")
+        raise RuntimeError("Couldn't find a repo with more than 100 files!")
     commits_for_repo = list(_cached_commits(biggest_repo))
     assert len(commits_for_repo) >= 1
     assert isinstance(commits_for_repo[0], Commit)

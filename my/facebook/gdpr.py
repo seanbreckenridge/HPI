@@ -377,7 +377,7 @@ def _parse_messages_in_conversation(
 # yikes. this is pretty much whenever I posted *anything*, or a third party app communicated
 # back to facebook that I listened to something/played a game, so it has like 5000 events
 #
-# not sure if I hit all the types, but this yields RuntimeErrors if it cant parse something,
+# not sure if I hit all the types, but this yields RuntimeErrors if it can't parse something,
 # so just check hpi doctor to make sure its all gooood
 # or
 # list(filter(lambda e: isinstance(e, Exception), events())),

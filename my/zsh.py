@@ -128,11 +128,11 @@ def _parse_file(histfile: Path) -> Results:
     dt: Optional[datetime] = None
     dur: Optional[int] = None
     command: str = ""
-    # cant parse line by line since some commands are multiline
+    # can't parse line by line since some commands are multiline
     # sort of structured like a do-while loop
     for line in histfile.open(encoding="latin-1"):
         r = _parse_metadata(line)
-        # if regex didnt match, this is a multi line command string
+        # if regex didn't match, this is a multi line command string
         if r is None:
             command += "\n" + line
         else:

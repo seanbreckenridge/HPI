@@ -210,7 +210,7 @@ def describe_person(p: Tuple[str, str]) -> str:
     )
     converts to
     Person <emailhere@gmail.com>
-    if theres no 'Person' text, it
+    if there's no 'Person' text, it
     just becomes:
     emailhere@gmail.com
     """
