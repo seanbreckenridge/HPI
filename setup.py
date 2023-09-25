@@ -9,12 +9,7 @@ def subpackages() -> Iterator[str]:
             yield p
 
 
-username = "seanbreckenridge"
 if __name__ == "__main__":
     setup(
         packages=list(subpackages()),
-        package_data={"my": ["py.typed"]},
-        entry_points={
-            "console_scripts": ["backup_to = my.utils.backup_to.__main__:main"]
-        },
     )
