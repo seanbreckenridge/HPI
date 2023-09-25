@@ -12,15 +12,8 @@ def subpackages() -> Iterator[str]:
 username = "seanbreckenridge"
 if __name__ == "__main__":
     setup(
-        name=f"HPI-{username}",  # use a different name from karlicoss/HPI, for confusion regarding egg-link reasons
-        zip_safe=False,
         packages=list(subpackages()),
         package_data={"my": ["py.typed"]},
-        url=f"https://github.com/{username}/HPI",
-        author="Sean Breckenridge",
-        author_email="seanbrecke@gmail.com",
-        description="A Python interface to my life",
-        python_requires=">=3.8",
         entry_points={
             "console_scripts": ["backup_to = my.utils.backup_to.__main__:main"]
         },
