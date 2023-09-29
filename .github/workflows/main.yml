@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: ["master", "main"]
+    branches: ['*']
   pull_request: # needed to trigger on others' PRs
   workflow_dispatch: # needed to trigger workflows manually
 
