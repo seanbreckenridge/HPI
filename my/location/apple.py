@@ -15,7 +15,7 @@ def locations() -> Iterator[Location]:
                 lon=a.lng,
                 lat=a.lat,
                 dt=a.dt,
-                accuracy=50,
+                accuracy=50.0,
                 elevation=None,
                 datasource="apple",
             )
