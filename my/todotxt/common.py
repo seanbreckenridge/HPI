@@ -26,10 +26,7 @@ class Todo(Task):
 
     @property
     def bare(self) -> str:
-        if hasattr(self, "_bare"):
-            return str(self._bare)
-        setattr(self, "_bare", self.bare_description())
-        return cast(str, self._bare)
+        return cast(str, self.bare_description())
 
     # parse the deadline created by https://github.com/seanbreckenridge/full_todotxt
     # this is optional, so if it fails, just return None
@@ -52,13 +49,13 @@ class Todo(Task):
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, Task):
             return False
-        return cast(bool, self.bare == other.bare)
+        return cast(bool, self._raw == other._raw)
 
     def __ne__(self, other: Any) -> bool:
         return not self.__eq__(other)
 
     def __hash__(self) -> int:
-        return hash(self.bare)
+        return hash(self._raw)
 
 
 TODOTXT_FILES = ["todo.txt", "done.txt"]
