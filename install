@@ -223,6 +223,7 @@ ci_mypy() {
 		-p my.skype.gdpr \
 		-p my.spotify.gdpr \
 		-p my.steam.scraper \
+		-p my.todotxt.active \
 		-p my.todotxt.git_history \
 		-p my.trakt.export \
 		-p my.ttt \
