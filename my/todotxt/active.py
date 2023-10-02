@@ -13,6 +13,7 @@ from my.config import todotxt as user_config  # type: ignore[attr-defined]
 
 from pathlib import Path
 from typing import (
+    Tuple,
     cast,
     Union,
     Iterator,
@@ -22,33 +23,25 @@ from typing import (
 from pytodotxt import TodoTxtParser  # type: ignore[import]
 
 from my.core import Stats, PathIsh, dataclass
-from .common import Todo
+from .common import Todo, TODOTXT_FILES
 
 
 @dataclass
 class config(user_config.active):
-    # path to the git backup directory
+    # path to your active todo.txt directory
+    # this is the same place todo.sh stores your files
     export_path: PathIsh
 
 
-@dataclass
-class Inputs:
-    export_path: Path
-    todo_file: Path
-    done_file: Path
-
-    @classmethod
-    def from_pathish(cls, p: PathIsh) -> "Inputs":
-        p = Path(p).expanduser().absolute()
-        return cls(
-            export_path=p,
-            todo_file=p / "todo.txt",
-            done_file=p / "done.txt",
-        )
-
-
-def inputs() -> Inputs:
-    return Inputs.from_pathish(config.export_path)
+def inputs() -> Tuple[Path, Path]:
+    p = Path(config.export_path).expanduser().absolute()
+    if not p.exists():
+        raise FileNotFoundError(f"todotxt export path {p} doesn't exist")
+    # todo.txt, done.txt
+    return (
+        p / TODOTXT_FILES[0],
+        p / TODOTXT_FILES[1],
+    )
 
 
 def _parse_todotxt_buffer(data: Union[str, bytes]) -> List[Todo]:
@@ -59,14 +52,14 @@ Results = Iterator[Todo]
 
 
 def done() -> Results:
-    df = inputs().done_file
-    if not df.exists():
+    df = inputs()[1]
+    if not Path(df).exists():
         return
-    yield from _parse_todotxt_buffer(df.read_text())
+    yield from _parse_todotxt_buffer(Path(df).read_text())
 
 
 def todos() -> Results:
-    tf = inputs().todo_file
+    tf = inputs()[0]
     if not tf.exists():
         return
     yield from _parse_todotxt_buffer(tf.read_text())

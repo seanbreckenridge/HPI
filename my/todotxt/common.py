@@ -28,10 +28,15 @@ class Todo(Task):
         setattr(self, "_bare", self.bare_description())
         return cast(str, self._bare)
 
+    # parse the deadline created by https://github.com/seanbreckenridge/full_todotxt
+    # this is optional, so if it fails, just return None
     @property
     def deadline(self) -> Optional[datetime]:
         attrs = self.attributes
-        assert isinstance(attrs, dict)
+        if not attrs:
+            return None
+        if not isinstance(attrs, dict):
+            return None
         if "deadline" in attrs:
             try:
                 data = attrs["deadline"][0]
