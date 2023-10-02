@@ -2,9 +2,7 @@
 Parses your active todotxt (http://todotxt.org/) done.txt and todo.txt
 """
 
-REQUIRES = [
-    "pytodotxt>=1.5.0",
-]
+REQUIRES = ["pytodotxt>=1.5.0"]
 
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example

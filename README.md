@@ -18,7 +18,7 @@ This is built on top of [`karlicoss/HPI`](https://github.com/karlicoss/HPI). It 
 - `my.mail.imap` and `my.mail.mbox` to parse local IMAP sync's of my mail/mbox files -- see [doc/MAIL_SETUP.md](doc/MAIL_SETUP.md)
 - `my.mpv.history_daemon`, accesses movies/music w/ activity/metadata that have played on my machine, facilitated by a [mpv history daemon](https://github.com/seanbreckenridge/mpv-history-daemon)
 - `my.discord.data_export`, parses ~1,000,000 messages/events from the discord data export, parser [here](https://github.com/seanbreckenridge/discord_data)
-- `my.todotxt.git_history`, to track my to-do list history (using backups of my [`todotxt`](http://todotxt.org/) files in [`git_doc_history`](https://github.com/seanbreckenridge/git_doc_history))
+- `my.todotxt.active` to parse my current [todo.txt](https://github.com/todotxt/todo.txt-cli) file; `my.todotxt.git_history` tracks my history using backups of those files in [`git_doc_history`](https://github.com/seanbreckenridge/git_doc_history)
 - `my.rss.newsboat`, keeps track of when I added/removed RSS feeds (for [`newsboat`](https://newsboat.org/))
 - `my.ipython`, for timestamped python REPL history
 - `my.ttt`, to parse shell/system history tracked by [`ttt`](https://github.com/seanbreckenridge/ttt)
