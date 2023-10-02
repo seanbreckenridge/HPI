@@ -12,16 +12,11 @@ from my.config import todotxt as user_config  # type: ignore[attr-defined]
 from pathlib import Path
 from typing import (
     Tuple,
-    cast,
-    Union,
     Iterator,
-    List,
 )
 
-from pytodotxt import TodoTxtParser  # type: ignore[import]
-
 from my.core import Stats, PathIsh, dataclass
-from .common import Todo, TODOTXT_FILES
+from .common import Todo, TODOTXT_FILES, parse_todotxt_buffer
 
 
 @dataclass
@@ -42,10 +37,6 @@ def inputs() -> Tuple[Path, Path]:
     )
 
 
-def _parse_todotxt_buffer(data: Union[str, bytes]) -> List[Todo]:
-    return cast(List[Todo], TodoTxtParser(task_type=Todo).parse(data))
-
-
 Results = Iterator[Todo]
 
 
@@ -53,14 +44,14 @@ def done() -> Results:
     df = inputs()[1]
     if not Path(df).exists():
         return
-    yield from _parse_todotxt_buffer(Path(df).read_text())
+    yield from parse_todotxt_buffer(Path(df).read_text())
 
 
 def todos() -> Results:
     tf = inputs()[0]
     if not tf.exists():
         return
-    yield from _parse_todotxt_buffer(tf.read_text())
+    yield from parse_todotxt_buffer(tf.read_text())
 
 
 def stats() -> Stats:

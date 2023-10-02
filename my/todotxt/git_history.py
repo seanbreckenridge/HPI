@@ -15,18 +15,12 @@ from my.config import todotxt as user_config  # type: ignore[attr-defined]
 
 from pathlib import Path
 from datetime import datetime, timezone
-from typing import (
-    cast,
-    Union,
-    Iterator,
-    List,
-)
+from typing import Iterator
 
-from git_doc_history import DocHistory, DocHistorySnapshot, parse_snapshot_diffs, Action
-from pytodotxt import TodoTxtParser  # type: ignore[import]
+from git_doc_history import DocHistory, parse_snapshot_diffs, Action
 
 from my.core import Stats, PathIsh, dataclass
-from .common import Todo, TODOTXT_FILES
+from .common import Todo, TODOTXT_FILES, parse_todotxt_buffer
 
 
 @dataclass
@@ -42,14 +36,6 @@ def input() -> DocHistory:
     )
 
 
-def _parse_todotxt_buffer(data: Union[str, bytes]) -> List[Todo]:
-    return cast(List[Todo], TodoTxtParser(task_type=Todo).parse(data))
-
-
-def _parse_into_todos(doc: DocHistorySnapshot) -> List[Todo]:
-    return _parse_todotxt_buffer(doc.data)
-
-
 Results = Iterator[Todo]
 
 
@@ -57,13 +43,13 @@ Results = Iterator[Todo]
 # from the git repo, so they may not always be up to date
 # if you don't update git_doc_history often enough
 def done() -> Results:
-    yield from _parse_todotxt_buffer(
+    yield from parse_todotxt_buffer(
         input().extract_buffer_at("done.txt", at=datetime.now())
     )
 
 
 def todos() -> Results:
-    yield from _parse_todotxt_buffer(
+    yield from parse_todotxt_buffer(
         input().extract_buffer_at("todo.txt", at=datetime.now())
     )
 
@@ -82,7 +68,7 @@ def events() -> Iterator[TodoEvent]:
     for diff in parse_snapshot_diffs(
         input(),
         file="todo.txt",
-        parse_func=_parse_into_todos,
+        parse_func=lambda doc: parse_todotxt_buffer(doc.data),
     ):
         yield TodoEvent(
             todo=diff.data,

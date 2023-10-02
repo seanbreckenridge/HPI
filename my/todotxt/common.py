@@ -1,7 +1,10 @@
-from typing import Any, Dict, cast, Optional
+from typing import Any, Dict, cast, Optional, List, Union
 from datetime import datetime
 
-from pytodotxt import Task  # type: ignore[import]
+from pytodotxt import Task, TodoTxtParser  # type: ignore[import]
+from my.core import __NOT_HPI_MODULE__  # noqa: F401
+
+REQUIRES = ["pytodotxt>=1.5.0"]
 
 
 class Todo(Task):
@@ -59,3 +62,7 @@ class Todo(Task):
 
 
 TODOTXT_FILES = ["todo.txt", "done.txt"]
+
+
+def parse_todotxt_buffer(data: Union[str, bytes]) -> List[Todo]:
+    return cast(List[Todo], TodoTxtParser(task_type=Todo).parse(data))
