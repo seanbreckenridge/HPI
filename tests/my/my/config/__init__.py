@@ -41,7 +41,12 @@ class bash:
 
 class todotxt:
     class git_history:
-        export_path: Paths = ""
+        # path to git_doc_history directory
+        export_path: Optional[PathIsh] = None
+
+    class active:
+        # path to your active todo.txt directory
+        export_path: PathIsh = ""
 
 
 class rss:
