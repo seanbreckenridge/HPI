@@ -3,6 +3,7 @@ Parses the apple privacy Export
 https://privacy.apple.com/
 """
 
+REQUIRES = ["lxml"]
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import apple as user_config  # type: ignore[attr-defined]
@@ -22,7 +23,10 @@ from pathlib import Path
 from typing import Iterator, Dict, Any, NamedTuple, Union, Optional, Sequence
 
 from lxml import etree  # type: ignore[import]
+from lxml.etree import _Element
 from more_itertools import sliced, first
+
+Element = Union[_Element, None]
 
 from my.core import Stats, Res, LazyLogger
 from my.core.common import mcachew
@@ -184,7 +188,9 @@ def _parse_calendar_recents(f: Path) -> Iterator[Location]:
 
 
 # parses apples XML file format, specifies what should be JSON as XML
-def _parse_apple_xml_val(xml_el: etree.Element) -> Any:
+def _parse_apple_xml_val(xml_el: Element) -> Any:
+    if xml_el is None:
+        return None
     if xml_el.tag == "array":
         return [_parse_apple_xml_val(el) for el in xml_el]
     elif xml_el.tag == "dict":
@@ -194,12 +200,15 @@ def _parse_apple_xml_val(xml_el: etree.Element) -> Any:
     elif xml_el.tag == "string":
         return xml_el.text
     elif xml_el.tag == "integer":
+        assert xml_el.text is not None, f"integer tag has no text: {xml_el}"
         return int(xml_el.text)
     elif xml_el.tag == "real":
+        assert xml_el.text is not None, f"real tag has no text: {xml_el}"
         return float(xml_el.text)
     elif xml_el.tag == "date":
         # TODO: make sure this is parsing dates properly
         # is this UTC? probably, since others are
+        assert xml_el.text is not None, f"date tag has no text: {xml_el}"
         return datetime.astimezone(
             datetime.fromisoformat(xml_el.text.rstrip("Z")), tz=timezone.utc
         )

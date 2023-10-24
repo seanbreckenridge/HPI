@@ -163,6 +163,7 @@ module_dependencies() {
 	hpi_module my.trakt.export || return $?
 	hpi_module my.mail.all || return $?
 	hpi_module my.piazza.scraper || return $?
+	hpi_module my.apple.privacy_export || return $?
 	hpi_module my.grouvee.export || return $?
 	hpi_module my.offline.listens || return $?
 	hpi_module my.mal.export || return $?
@@ -183,59 +184,14 @@ ci_tests() {
 }
 
 ci_mypy() {
-	# find my -name '*.py' | grep -v '__' | sed -e 's|\.\/||' -e 's|/|.|g' -e 's/\.py$//g' -e 's/$/ \\/' -e 's/^/-p /' | sort
 	echo 'Checking types' | maybe_boxes
 	pip_install 'git+https://github.com/python/mypy'
-	pip_install types-urllib3 types-simplejson types-setuptools types-PyYAML types-pytz types-dateparser types-requests
-	python3 -m mypy \
-		-p tests \
-		-p my.activitywatch.active_window \
-		-p my.apple.privacy_export \
-		-p my.bash \
-		-p my.blizzard.gdpr \
-		-p my.chess.export \
-		-p my.discord.data_export \
-		-p my.facebook.gdpr \
-		-p my.grouvee.export \
-		-p my.ip.all \
-		-p my.ip.blizzard \
-		-p my.ip.discord \
-		-p my.ip.facebook \
-		-p my.ipython \
-		-p my.league.export \
-		-p my.linkedin.privacy_export \
-		-p my.listenbrainz.export \
-		-p my.location.apple \
-		-p my.mail.all \
-		-p my.mail.common \
-		-p my.mail.imap \
-		-p my.mail.mbox \
-		-p my.mail.parse_parts \
-		-p my.mal.export \
-		-p my.minecraft.advancements \
-		-p my.mpv.history_daemon \
-		-p my.offline.listens \
-		-p my.piazza.scraper \
-		-p my.project_euler \
-		-p my.rss.newsboat.git_history \
-		-p my.runelite.screenshots \
-		-p my.scramble.history \
-		-p my.skype.gdpr \
-		-p my.spotify.gdpr \
-		-p my.steam.scraper \
-		-p my.todotxt.active \
-		-p my.todotxt.common \
-		-p my.todotxt.git_history \
-		-p my.trakt.export \
-		-p my.ttt \
-		-p my.twitch.all \
-		-p my.twitch.common \
-		-p my.twitch.gdpr \
-		-p my.twitch.overrustle_logs \
-		-p my.utils.input_source \
-		-p my.utils.time \
-		-p my.zsh \
-		--txt-report .coverage.mypy || return $?
+	pip_install types-urllib3 types-simplejson types-setuptools types-PyYAML types-pytz types-dateparser types-requests lxml-stubs
+	local mypy_args=(-p tests --txt-report .coverage.mypy)
+	while read -r pkg; do
+		mypy_args+=(-p "${pkg}")
+	done < <(find my -name '*.py' | grep -v '__' | sed -e 's|\.\/||' -e 's|/|.|g' -e 's/\.py$//g' | sort)
+	python3 -m mypy "${mypy_args[@]}" || return $?
 }
 
 ci_lint() {
