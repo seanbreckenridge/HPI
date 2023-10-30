@@ -16,14 +16,14 @@ from typing import Iterator, Sequence, Union
 from functools import partial
 from itertools import chain
 
-from my.core import get_files, Stats, Paths, dataclass, LazyLogger
+from my.core import get_files, Stats, Paths, dataclass, make_logger
 from my.utils.input_source import InputSource
 
 from more_itertools import unique_everseen
 
 import active_window.parse as AW
 
-logger = LazyLogger(__name__)
+logger = make_logger(__name__)
 
 
 @dataclass

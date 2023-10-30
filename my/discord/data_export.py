@@ -24,14 +24,15 @@ class config(user_config.data_export):
 from typing import Iterator, Optional, Tuple, Set, NamedTuple
 from datetime import datetime
 
-from my.core.common import LazyLogger, Stats, mcachew, get_files
+from my.core import make_logger, Stats, get_files
+from my.core.common import mcachew
 from my.core.structure import match_structure
 from discord_data.parse import parse_messages, parse_activity
 from discord_data.model import Activity, Message
 from urlextract import URLExtract  # type: ignore[import]
 
 
-logger = LazyLogger(__name__)
+logger = make_logger(__name__)
 
 
 def _remove_suppression(text: str, first_index: int, second_index: int) -> str:

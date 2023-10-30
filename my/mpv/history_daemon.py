@@ -34,11 +34,11 @@ from mpv_history_daemon.events import (
     _actually_listened_to,
 )
 
-from my.core import get_files, Stats, LazyLogger
+from my.core import get_files, Stats, make_logger
 from my.utils.input_source import InputSource
 
 
-logger = LazyLogger(__name__)
+logger = make_logger(__name__)
 
 # monkey patch logs
 import mpv_history_daemon.events

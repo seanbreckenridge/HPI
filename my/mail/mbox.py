@@ -12,12 +12,12 @@ from pathlib import Path
 from typing import List, Iterator, Optional, Sequence, IO, Any
 
 from my.core import Stats, Paths, dataclass, get_files
-from my.core.common import LazyLogger
+from my.core import make_logger
 
 from .common import Email, unique_mail, try_decode_buf
 
 
-logger = LazyLogger(__name__)
+logger = make_logger(__name__)
 
 
 @dataclass

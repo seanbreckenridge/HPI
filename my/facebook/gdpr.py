@@ -20,11 +20,11 @@ from itertools import chain
 from typing import Iterator, Dict, Any, NamedTuple, Union, Optional, List
 
 
-from my.core import get_files, Stats, Res, Json, LazyLogger
+from my.core import get_files, Stats, Res, Json, make_logger
 from my.utils.time import parse_datetime_sec
 
 
-logger = LazyLogger(__name__)
+logger = make_logger(__name__)
 
 FacebookJson = Dict[Any, Any]
 

@@ -18,13 +18,14 @@ import json
 from pathlib import Path
 from typing import Sequence, List
 
-from my.core.common import get_files, mcachew, LazyLogger, Stats
+from my.core import make_logger
+from my.core.common import get_files, mcachew, Stats
 from my.utils.time import parse_datetime_sec
 from my.utils.input_source import InputSource
 
 from .common import Event, Results
 
-logger = LazyLogger(__name__)
+logger = make_logger(__name__)
 
 
 def inputs() -> Sequence[Path]:

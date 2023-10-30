@@ -19,9 +19,9 @@ from datetime import date
 from pathlib import Path
 from typing import Iterator, Any, NamedTuple, List, Set, Tuple, Sequence, Optional
 
-from my.core import Res, get_files, LazyLogger, Json
+from my.core import Res, get_files, make_logger, Json
 
-logger = LazyLogger(__name__)
+logger = make_logger(__name__)
 
 
 class Song(NamedTuple):

@@ -39,10 +39,10 @@ from itertools import chain
 from more_itertools import unique_everseen
 from IPython.core.history import HistoryAccessor
 
-from my.core import get_files, Stats, LazyLogger
+from my.core import get_files, Stats, make_logger
 from my.utils.input_source import InputSource
 
-logger = LazyLogger(__name__)
+logger = make_logger(__name__)
 
 
 class Command(NamedTuple):

@@ -17,7 +17,7 @@ import chess_export.chessdotcom.model as cmodel
 import chess_export.lichess.model as lmodel
 from more_itertools import unique_everseen
 
-from my.core import get_files, Stats, LazyLogger, Paths, dataclass
+from my.core import get_files, Stats, make_logger, Paths, dataclass
 from my.core.common import mcachew
 from my.utils.input_source import InputSource
 
@@ -28,7 +28,7 @@ class config(user_config.export):
     export_path: Paths
 
 
-logger = LazyLogger(__name__)
+logger = make_logger(__name__)
 
 
 def inputs() -> Sequence[Path]:

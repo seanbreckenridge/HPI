@@ -8,9 +8,9 @@ from typing import Iterator
 
 from my.ip.common import IP  # type: ignore[import]
 
-from my.core.common import LazyLogger, Stats
+from my.core import make_logger, Stats
 
-logger = LazyLogger(__name__)
+logger = make_logger(__name__)
 
 
 # can add more sources here, or disable them through core.disabled_modules

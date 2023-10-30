@@ -5,7 +5,7 @@ from: https://github.com/seanbreckenridge/blizzard_gdpr_parser
 
 # see https://github.com/seanbreckenridge/dotfiles/blob/master/.config/my/my/config/__init__.py for an example
 from my.config import blizzard as user_config  # type: ignore[attr-defined]
-from my.core import PathIsh, dataclass, LazyLogger
+from my.core import PathIsh, dataclass, make_logger
 from my.core.common import mcachew
 
 
@@ -26,7 +26,7 @@ from my.utils.time import parse_datetime_sec
 from my.utils.input_source import InputSource
 
 
-logger = LazyLogger(__name__)
+logger = make_logger(__name__)
 
 
 def inputs() -> Sequence[Path]:

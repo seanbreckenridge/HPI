@@ -15,7 +15,7 @@ from functools import lru_cache
 import traktexport.dal as D
 from traktexport.merge import read_and_merge_exports
 
-from my.core import get_files, Stats, LazyLogger, Paths, dataclass
+from my.core import get_files, Stats, make_logger, Paths, dataclass
 from my.core.common import mcachew
 
 
@@ -25,7 +25,7 @@ class config(user_config.export):
     export_path: Paths
 
 
-logger = LazyLogger(__name__)
+logger = make_logger(__name__)
 
 
 def inputs() -> Sequence[Path]:

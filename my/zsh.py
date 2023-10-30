@@ -32,7 +32,7 @@ from my.core import (
     get_files,
     warn_if_empty,
     Stats,
-    LazyLogger,
+    make_logger,
     PathIsh,
     Paths,
     dataclass,
@@ -54,7 +54,7 @@ class config(user_config):
     live_file: Optional[PathIsh]
 
 
-logger = LazyLogger(__name__)
+logger = make_logger(__name__)
 
 
 def backup_inputs() -> Sequence[Path]:

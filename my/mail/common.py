@@ -20,7 +20,7 @@ from mailparser import MailParser  # type: ignore[import]
 from mailparser.exceptions import MailParserReceivedParsingError  # type: ignore[import]
 from more_itertools import unique_everseen
 
-from my.core import LazyLogger, __NOT_HPI_MODULE__  # noqa: F401
+from my.core import make_logger, __NOT_HPI_MODULE__  # noqa: F401
 
 from .parse_parts import tag_message_subparts
 
@@ -34,7 +34,7 @@ for handler in mlog.handlers.copy():
 mlog.addHandler(logging.NullHandler())
 mlog.propagate = False
 
-logger = LazyLogger(__name__)
+logger = make_logger(__name__)
 
 
 @dataclass

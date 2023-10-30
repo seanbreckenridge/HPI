@@ -28,11 +28,11 @@ from more_itertools import sliced, first
 
 Element = Union[_Element, None]
 
-from my.core import Stats, Res, LazyLogger
+from my.core import Stats, Res, make_logger
 from my.core.common import mcachew
 
 
-logger = LazyLogger(__name__)
+logger = make_logger(__name__)
 
 
 class Game(NamedTuple):

@@ -25,11 +25,11 @@ from io import StringIO
 
 import dateparser
 
-from my.core.common import Stats, LazyLogger
+from my.core import Stats, make_logger
 from my.core.structure import match_structure
 
 
-logger = LazyLogger(__name__)
+logger = make_logger(__name__)
 
 
 EXPECTED = (

@@ -21,10 +21,11 @@ from typing import Iterator, Union, Sequence, List
 
 from .common import Event, Results
 
-from my.core.common import get_files, LazyLogger, mcachew, Stats
+from my.core import make_logger
+from my.core.common import get_files, mcachew, Stats
 from my.utils.input_source import InputSource
 
-logger = LazyLogger(__name__)
+logger = make_logger(__name__)
 
 
 def inputs() -> Sequence[Path]:
