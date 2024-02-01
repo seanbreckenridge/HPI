@@ -16,7 +16,7 @@ from typing import Iterator, Sequence, Union
 from functools import partial
 from itertools import chain
 
-from my.core import get_files, Stats, Paths, dataclass, make_logger
+from my.core import get_files, Stats, Paths, dataclass, make_logger, make_config
 from my.utils.input_source import InputSource
 
 from more_itertools import unique_everseen
@@ -27,9 +27,13 @@ logger = make_logger(__name__)
 
 
 @dataclass
-class config(user_config.active_window):
+class window_config(user_config.active_window):
     # path[s]/glob to the backed up aw-window JSON/window_watcher CSV history files
     export_path: Paths
+    error_policy: AW.ErrorPolicy = "drop"
+
+
+config = make_config(window_config)
 
 
 Result = Union[AW.AWAndroidEvent, AW.AWComputerEvent, AW.AWWindowWatcherEvent]
@@ -42,7 +46,16 @@ def inputs() -> Sequence[Path]:
 
 def history(from_paths: InputSource = inputs) -> Results:
     yield from unique_everseen(
-        chain(*map(partial(AW.parse_window_events, logger=logger), from_paths())),
+        chain(
+            *map(
+                partial(
+                    AW.parse_window_events,
+                    logger=logger,
+                    error_policy=config.error_policy,
+                ),
+                from_paths(),
+            )
+        ),
         key=lambda e: e.timestamp,
     )
 

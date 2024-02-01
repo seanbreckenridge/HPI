@@ -47,6 +47,7 @@ class todotxt:
     class active:
         # path to your active todo.txt directory
         export_path: PathIsh = ""
+        error_policy = "drop"
 
 
 class rss:
