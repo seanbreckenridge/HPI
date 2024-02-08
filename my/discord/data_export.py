@@ -117,14 +117,14 @@ def test_remove_link_suppression() -> None:
 
 
 def _cachew_depends_on() -> List[str]:
-    return [str(p) for p in get_files(config.export_path, guess_compression=config.guess_compression)]
+    return [str(p) for p in get_files(config.export_path)]
 
 
 EXPECTED_DISCORD_STRUCTURE = ("messages/index.json", "account/user.json")
 
 
 def get_discord_exports() -> Iterator[Path]:
-    for exp in get_files(config.export_path):
+    for exp in get_files(config.export_path, guess_compression=config._use_zippath):
         # weak type check here, ZipPath is a bit experimental, so don't want a dependency
         # see https://github.com/karlicoss/HPI/blob/master/my/core/kompress.py#L160
         if type(exp).__name__ == "ZipPath":
