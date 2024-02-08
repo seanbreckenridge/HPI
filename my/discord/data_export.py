@@ -1,6 +1,7 @@
 """
 Discord Data: messages and events data
 """
+
 REQUIRES = [
     "git+https://github.com/seanbreckenridge/discord_data",
     "urlextract",
@@ -11,21 +12,31 @@ from pathlib import Path
 from typing import List
 
 from my.config import discord as user_config  # type: ignore[attr-defined]
-from my.core import PathIsh, dataclass
+from my.core import PathIsh, dataclass, make_config
+from my.core.common import mcachew
 
 
 @dataclass
-class config(user_config.data_export):
+class discord_config(user_config.data_export):
     # path to the top level discord export directory
     # see https://github.com/seanbreckenridge/discord_data for more info
     export_path: PathIsh
+
+    # whether to guess the compression of the files in the export_path
+    # this uses kompress.ZipPath, which is a bit experimental
+    #
+    # NOTE: before adding this config flag, this was enabled,
+    # since guess_compression=True on get_files by default
+    _use_zippath: bool = True
+
+
+config = make_config(discord_config)
 
 
 from typing import Iterator, Optional, Tuple, Set, NamedTuple
 from datetime import datetime
 
 from my.core import make_logger, Stats, get_files
-from my.core.common import mcachew
 from my.core.structure import match_structure
 from discord_data.parse import parse_messages, parse_activity
 from discord_data.model import Activity, Message
@@ -106,7 +117,7 @@ def test_remove_link_suppression() -> None:
 
 
 def _cachew_depends_on() -> List[str]:
-    return [str(p) for p in get_files(config.export_path)]
+    return [str(p) for p in get_files(config.export_path, guess_compression=config.guess_compression)]
 
 
 EXPECTED_DISCORD_STRUCTURE = ("messages/index.json", "account/user.json")
