@@ -109,6 +109,17 @@ required_commands() {
 	havecmd git || return $?
 }
 
+ci_realpath() {
+	if ci; then
+		if [[ "$OSTYPE" == "darwin"* ]]; then
+			# need to use g-prefixed things on CI
+			grealpath "$@"
+			return $?
+		fi
+	fi
+	realpath "$@"
+}
+
 setup_fork() {
 	local FORK_ABBREV UPSTREAM_URL UPSTREAM_DIR
 	echo 'Setting up upstream fork...' | maybe_boxes
@@ -116,7 +127,7 @@ setup_fork() {
 	FORK_ABBREV="${HPI_UPSTREAM_FOLDER_NAME:-HPI-karlicoss}"
 	UPSTREAM_URL='https://github.com/karlicoss/HPI'
 
-	UPSTREAM_DIR="$(realpath "../${FORK_ABBREV}")"
+	UPSTREAM_DIR="$(ci_realpath "../${FORK_ABBREV}")"
 
 	# clone my fork one level up from here if it does not exist
 	if [[ ! -e "${UPSTREAM_DIR}" ]]; then
@@ -172,7 +183,7 @@ module_dependencies() {
 }
 
 ci_config() {
-	CONF="$(realpath "${BASE_DIR}/tests/my")" || return $?
+	CONF="$(ci_realpath "${BASE_DIR}/tests/my")" || return $?
 	MY_CONFIG="${CONF}" python3 -m my.core config check 1>&2 || return $?
 	echo "${CONF}"
 }
@@ -212,7 +223,7 @@ main() {
 	install_dependencies || prompt_if_fails || return $?
 	required_commands || prompt_if_fails || return $?
 	# use realpath to make sure BASE_DIR is set properly
-	BASE_DIR="$(realpath "${BASE_DIR}")" || return $?
+	BASE_DIR="$(ci_realpath "${BASE_DIR}")" || return $?
 	(setup_fork) || prompt_if_fails || return $?
 	module_dependencies || prompt_if_fails || return $?
 	ci_run || return $?
