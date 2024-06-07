@@ -10,6 +10,4 @@ def subpackages() -> Iterator[str]:
 
 
 if __name__ == "__main__":
-    setup(
-        packages=list(subpackages()),
-    )
+    setup(packages=list(subpackages()))
